@@ -176,7 +176,6 @@
 
 			src.averbs += /obj/admins/proc/spawn_atom
 			src.averbs += /client/proc/qsowtoggle
-			src.averbs += /client/proc/testjson
 			src.averbs += /client/proc/cmd_debug_tog_aliens
 			src.averbs += /client/proc/Zone_Info
 
