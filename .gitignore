@@ -1,0 +1,8 @@
+*.log
+*.int
+*.rsc
+*.dmb
+*.lk
+info.json
+/data/logs
+/data/player_saves

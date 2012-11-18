@@ -1,0 +1,8 @@
+# set a hosted by name for unix platforms
+HOSTEDBY ANIMUS
+
+DB_SERVER 127.0.0.1
+DB_USER tgdb
+DB_PASSWORD tgdb
+DB_DBNAME white
+DB_PORT 3306
