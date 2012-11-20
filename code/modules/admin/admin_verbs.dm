@@ -584,7 +584,7 @@
 
 
 /client/proc/warn(var/mob/M in world)
-	set category = "Special Verbs"
+	set category = "Admin"
 	set name = "Warn"
 	set desc = "Warn a player"
 	if(!src.holder)
@@ -653,7 +653,7 @@
 	QML_loadMap(map)
 
 /client/proc/delay()
-	set category = "Admin"
+	set category = "Server"
 	set name = "Delay start"
 	if(delay_start == 0)
 		delay_start = 1

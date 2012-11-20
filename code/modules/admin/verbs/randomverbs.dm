@@ -64,7 +64,7 @@ proc/remove_virus2(mob/by)
 			message_admins("\blue [key_name_admin(usr)] sent [key_name_admin(M)] to the prison station.", 1)
 
 /client/proc/cmd_admin_subtle_message(mob/M as mob in world)
-	set category = "Special Verbs"
+	set category = "Admin"
 	set name = "Subtle Message"
 
 	if (!src.holder)
@@ -401,7 +401,7 @@ proc/remove_virus2(mob/by)
 */
 
 /client/proc/cmd_admin_check_contents(mob/M as mob in world)
-	set category = "Special Verbs"
+	set category = "Admin"
 	set name = "Check Contents"
 
 	var/list/L = M.get_contents()

@@ -9,6 +9,9 @@
 			src << "\blue You are no longer listening to messages on the OOC channel."
 
 /mob/verb/ooc(msg as text)
+	set name = "OOC"
+	set category = "OOC"
+
 	msg = copytext(sanitize(msg), 1, MAX_MESSAGE_LEN)
 	if(!msg)
 		return

@@ -1617,7 +1617,7 @@
 	message_admins("[key_name_admin(usr)] toggled Traitor Scaling [traitor_scaling ? "on" : "off"].", 1)
 
 /obj/admins/proc/startnow()
-	set category = "Special Verbs"
+	set category = "Server"
 	set desc="Start the round RIGHT NOW"
 	set name="Start Now"
 	if(!ticker)

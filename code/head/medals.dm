@@ -40,7 +40,7 @@
 
 mob/verb/show_medal()
 	set name = "Show Achievements"
-	set category = "Commands"
+	set category = "OOC"
 	var/DBQuery/xquery = dbcon.NewQuery("SELECT `ckey` FROM `medals` WHERE ckey='[src.ckey]'")
 	var/DBQuery/gquery = dbcon.NewQuery("SELECT * FROM `medals` WHERE ckey='[src.ckey]'")
 	var/list/keys = list()

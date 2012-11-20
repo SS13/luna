@@ -2,10 +2,12 @@
 	return
 
 /mob/verb/whisper()
+	set name = "Whisper"
+	set category = "IC"
 	return
 
 /mob/verb/say_verb(message as text)
-	set name = "say"
+	set name = "Say"
 	usr.say(message)
 
 /mob/verb/me_verb(message as text)

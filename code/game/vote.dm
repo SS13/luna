@@ -170,6 +170,7 @@
 
 /mob/verb/vote()
 	set name = "Vote"
+	set category = "OOC"
 	usr.client.showvote = 1
 
 

@@ -1,5 +1,6 @@
 /client/verb/adminsounds()
 	set name = "Toggle admin sounds"
+	set category = "OOC"
 
 	src.play_adminsound = !src.play_adminsound
 	if(src.play_adminsound == 0)

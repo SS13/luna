@@ -1,6 +1,6 @@
 /mob/verb/adminhelp(msg as text)
-	set category = "Commands"
-	set name = "adminhelp"
+	set category = "Admin"
+	set name = "Adminhelp"
 
 	msg = copytext(sanitize(msg), 1, MAX_MESSAGE_LEN)
 

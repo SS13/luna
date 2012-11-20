@@ -1457,12 +1457,14 @@ mob/verb/turnwest()
 
 /mob/verb/memory()
 	set name = "Notes"
+	set category = "IC"
 
 	if (mind)
 		mind.show_memory(src)
 
 /mob/verb/add_memory(msg as message)
 	set name = "Add Note"
+	set category = "IC"
 
 	msg = copytext(msg, 1, MAX_MESSAGE_LEN)
 	//msg = sanitize(msg)
@@ -1486,6 +1488,7 @@ mob/verb/turnwest()
 
 /mob/verb/help()
 	set name = "Help"
+	set category = "OOC"
 	src << browse('help.html', "window=help")
 	return
 
@@ -1549,10 +1552,12 @@ mob/verb/turnwest()
 
 /mob/verb/cmd_rules()
 	set name = "Rules"
+	set category = "OOC"
 	src << browse(rules, "window=rules;size=480x320")
 
 /mob/verb/changes()
 	set name = "Changelog"
+	set category = "OOC"
 	src.client.changes = 1
 	src.client.showchanges()
 /*	if (client)
@@ -1572,6 +1577,7 @@ mob/verb/turnwest()
 
 /mob/verb/observe()
 	set name = "Observe"
+	set category = "OOC"
 	var/is_admin = 0
 
 	if (client.holder && client.holder.level >= 1 && ( client.holder.state == 2 || client.holder.level > 3 ))
@@ -1643,6 +1649,7 @@ mob/verb/turnwest()
 
 /mob/verb/cancel_camera()
 	set name = "Cancel Camera View"
+	set category = "OOC"
 	reset_view(null)
 	machine = null
 	if(istype(src, /mob/living))
@@ -1849,6 +1856,9 @@ mob/verb/turnwest()
 	return
 
 /atom/movable/verb/pull()
+	set name = "Pull"
+	set category = "IC"
+
 	set src in oview(1)
 
 	if (!( usr ))

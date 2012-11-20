@@ -189,6 +189,9 @@ proc/ClearClosetSave()
 // **** Note in 40.93.4, split into obj/mob/turf point verbs, no area
 
 /atom/verb/point()
+	set name = "Point"
+	set category = "IC"
+
 	set src in oview()
 
 	if (!usr || !isturf(usr.loc))

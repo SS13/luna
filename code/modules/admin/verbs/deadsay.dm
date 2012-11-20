@@ -1,6 +1,6 @@
 /client/proc/dsay(msg as text)
-	set category = "Special Verbs"
-	set name = "dsay"
+	set category = "Admin"
+	set name = "Dead say"
 	set hidden = 1
 	//	All admins should be authenticated, but... what if?
 	if(!src.holder)
