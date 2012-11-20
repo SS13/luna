@@ -1574,7 +1574,7 @@
 			vote.nextvotetime = world.timeofday
 
 /obj/admins/proc/restart()
-	set category = "Special Verbs"
+	set category = "Server"
 	set name = "Restart"
 	set desc="Restarts the world"
 	var/confirm = alert("Restart the game world?", "Restart", "Yes", "Cancel")

@@ -1494,6 +1494,7 @@ mob/verb/turnwest()
 
 /mob/verb/abandon_mob()
 	set name = "Respawn"
+	set category = "OOC"
 
 	if (!( abandon_allowed ))
 		return
@@ -1868,6 +1869,8 @@ mob/verb/turnwest()
 	return
 
 /atom/verb/examine()
+	set name = "Examine"
+	set category = "IC"
 	set src in oview(12)	//make it work from farther away
 
 	if (!( usr ))

@@ -1,5 +1,6 @@
 /mob/verb/who()
 	set name = "Who"
+	set category = "OOC"
 
 	usr << "<b>Current Players:</b>"
 
@@ -20,7 +21,7 @@
 
 /client/verb/adminwho()
 	set name = "Adminwho"
-	set category = "Commands"
+	set category = "Admin"
 
 	usr << "<b>Current Tyrants:</b>"
 
