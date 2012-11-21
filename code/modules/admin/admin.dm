@@ -1700,7 +1700,7 @@
 	message_admins("\blue Toggled reviving to [config.allow_admin_rev].")
 
 /obj/admins/proc/immreboot()
-	set category = "Special Verbs"
+	set category = "Server"
 	set desc="Reboots the server post haste"
 	set name="Immediate Reboot"
 	if( alert("Reboot server?",,"Yes","No") == "No")
@@ -1712,7 +1712,7 @@
 /client/proc/deadchat()
 	set category = "Special Verbs"
 	set desc="Toggles Deadchat"
-	set name="Deadchat"
+	set name="Toggle Deadchat"
 	if(deadchat == 0)
 		deadchat = 1
 		usr << "Deadchat turned on"

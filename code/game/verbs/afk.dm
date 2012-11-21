@@ -3,6 +3,8 @@
 
 
 /mob/verb/go_afk()
+	set name = "Go afk"
+	set category = "OOC"
 	if(client)
 		client.afkSince = world.time
 

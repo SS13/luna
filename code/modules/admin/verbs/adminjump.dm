@@ -1,4 +1,5 @@
 /client/proc/Jump(var/area/A in world)
+	set name = "Jump to Area"
 	set desc = "Area to jump to"
 	set category = "Admin"
 	if(!src.holder)
