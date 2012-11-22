@@ -7,12 +7,18 @@
 // If the rev icons start going wrong for some reason, ticker.mode:update_all_rev_icons() can be called to correct them.
 // If the game somtimes isn't registering a win properly, then ticker.mode.check_win() isn't being called somewhere.
 
+
+/datum/game_mode
+	var/list/datum/mind/head_revolutionaries = list()
+	var/list/datum/mind/revolutionaries = list()
+
+
 /datum/game_mode/revolution
 	name = "revolution"
 	config_tag = "revolution"
 
-	var/list/datum/mind/head_revolutionaries = list()
-	var/list/datum/mind/revolutionaries = list()
+//	var/list/datum/mind/head_revolutionaries = list()
+//	var/list/datum/mind/revolutionaries = list()
 	var/finished = 0
 	var/const/waittime_l = 600 //lower bound on time before intercept arrives (in tenths of seconds)
 	var/const/waittime_h = 1800 //upper bound on time before intercept arrives (in tenths of seconds)

@@ -1,9 +1,12 @@
+/datum/game_mode
+	var/list/datum/mind/syndicates = list()
+
 /datum/game_mode/nuclear
 	name = "nuclear emergency"
 	config_tag = "nuclear"
 	enabled = 1
 
-	var/list/datum/mind/syndicates = list()
+//	var/list/datum/mind/syndicates = list()
 	var/finished = 0
 	var/nuke_detonated = 0 //Has the nuke gone off?
 	var/agents_possible = 0 //If we ever need more syndicate agents.

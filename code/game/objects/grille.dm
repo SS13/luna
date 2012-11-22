@@ -88,6 +88,8 @@
 		if(!shock(user, 100))
 			playsound(src.loc, 'Wirecutter.ogg', 100, 1)
 			src.health = 0
+			if(!destroyed)
+				src.health = -100
 	else if ((istype(W, /obj/item/weapon/screwdriver) && (istype(src.loc, /turf/simulated) || src.anchored)))
 		if(!shock(user, 90))
 			playsound(src.loc, 'Screwdriver.ogg', 100, 1)

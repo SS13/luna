@@ -8,7 +8,7 @@
 
 	var/agents_possible = 0
 
-	var/list/datum/mind/syndicates = list()
+//	var/list/datum/mind/syndicates = list()
 	var/finished = 0
 	var/list/hostile_spawns = list()
 	var/list/crew_spawns = list()
