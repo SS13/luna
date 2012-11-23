@@ -167,7 +167,9 @@ datum/controller/game_controller
 			world << "\blue <b>Automatic Announcement:</b>\n \t The forum went down, so we're now at http://whoopshop.com"
 			lastannounce = start_time*/
 
-		//world.keepalive()
+		if(tick % 60 == 0)
+			world.keepalive()
+
 		// reduce frequency of the air process
 		if(tick % 5 == 0)
 			sleep(1 * tick_multiplier)

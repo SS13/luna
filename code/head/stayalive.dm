@@ -10,7 +10,8 @@ world
 		keepalive()
 			if(!dbcon.IsConnected())
 				dbcon.Connect("dbi:mysql:[DB_DBNAME]:[DB_SERVER]:[DB_PORT]","[DB_USER]","[DB_PASSWORD]")
-
+			var/DBQuery/ping = dbcon.NewQuery("SELECT 1")
+			ping.Execute()
 
 			//updateserverstatus()
 
