@@ -421,6 +421,17 @@
 	force = 14.0
 	m_amt = 1000
 
+/obj/item/weapon/gun/smaw
+	desc = "Is a shoulder-launched rocket weapon."
+	name = "SMAW"
+	icon_state = "smaw"
+	var/bullets = 5.0
+	w_class = 3.0
+	throw_speed = 2
+	throw_range = 10
+	force = 14.0
+	m_amt = 1000
+
 /obj/item/weapon/hand_tele
 	name = "hand tele"
 	icon = 'device.dmi'
