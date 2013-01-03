@@ -24,7 +24,12 @@
 			/obj/admins/proc/unprison,
 			/obj/admins/proc/vmode,   				//start vote
 			/obj/admins/proc/votekill, 				//abort vote
-			/obj/admins/proc/voteres 				//toggle votes
+			/obj/admins/proc/voteres, 				//toggle votes
+			/client/proc/Jump,
+			/client/proc/jumptokey,
+			/client/proc/jumptomob,
+			/client/proc/jumptoturf,
+			/client/proc/secrets                    //secrets panel(info and commands)
 			)
 
 	//Verbs for everyone secondary administrator and up.
@@ -91,10 +96,6 @@
 			/client/proc/givedisease,
 			/client/proc/givedisease_deadly,
 			/client/proc/jobban_panel,
-			/client/proc/Jump,
-			/client/proc/jumptokey,
-			/client/proc/jumptomob,
-			/client/proc/jumptoturf,
 			/client/proc/loadmap,
 			/client/proc/loadmaphere,
 			/client/proc/modifytemperature,
@@ -322,8 +323,8 @@
 			src.averbs += /client/proc/stealth
 			src.averbs += /client/proc/admin_invis
 
-		if(( src.holder.state == 2 ) || ( src.holder.level > 3 ))
-			src.averbs += /client/proc/secrets
+//		if(( src.holder.state == 2 ) || ( src.holder.level > 3 ))
+//			src.averbs += /client/proc/secrets
 
 	src.verbs += src.averbs
 	src.verbs += /client/proc/disable_averbs
