@@ -1299,9 +1299,14 @@
 				dat += "<td>Alien</td>"
 			dat += {"<td>[(M.client ? "[M.client]" : "No client")]</td>
 			<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
-			<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>
-			<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td></tr>
-			"}
+			<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>"}
+			//<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td></tr>
+			//"}
+			switch(checktraitor(M))
+				if(0)
+					dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td>"}
+				if(1)
+					dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'><font color=red>Traitor?</font></A></td>"}
 
 	dat += "</table></body></html>"
 
