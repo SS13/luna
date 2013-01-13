@@ -1725,6 +1725,14 @@
 			hair_icon_state = "hair_a"
 		if("Long Hair")
 			hair_icon_state = "hair_b"
+		if("Long Fringe")
+			hair_icon_state = "hair_longfringe"
+		if("Very Long Fringe")
+			hair_icon_state = "hair_vlongfringe"
+		if("Longest Fringe")
+			hair_icon_state = "hair_longest"
+		if("Ladylike hair")
+			hair_icon_state = "hair_test"
 		if("Cut Hair")
 			hair_icon_state = "hair_c"
 		if("Mohawk")
@@ -1735,8 +1743,20 @@
 			hair_icon_state = "hair_f"
 		if("Bedhead")
 			hair_icon_state = "hair_bedhead"
+		if("Bedhead2")
+			hair_icon_state = "hair_bedheadv2"
+		if("Spikey")
+			hair_icon_state = "hair_spikey"
 		if("Dreadlocks")
 			hair_icon_state = "hair_dreads"
+		if("Afro")
+			hair_icon_state = "hair_afro"
+		if("Big Afro")
+			hair_icon_state = "hair_bigafro"
+		if("Braid")
+			hair_icon_state = "hair_braid"
+		if("Kagami")
+			hair_icon_state = "hair_kagami"
 		if("Ponytail")
 			hair_icon_state = "hair_ponytail"
 		else

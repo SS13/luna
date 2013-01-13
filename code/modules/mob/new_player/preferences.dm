@@ -590,7 +590,7 @@ datum/preferences
 				s_tone =  -s_tone + 35
 
 		if (link_tags["h_style"])
-			var/new_style = input(user, "Please select hair style", "Character Generation")  as null|anything in list( "Cut Hair", "Short Hair", "Long Hair", "Mohawk", "Balding", "Wave", "Bedhead", "Dreadlocks", "Ponytail", "Bald" )
+			var/new_style = input(user, "Please select hair style", "Character Generation")  as null|anything in list( "Short Hair", "Long Hair", "Long Fringe", "Very Long Fringe", "Longest Fringe", "Ladylike hair", "Cut Hair", "Mohawk", "Balding", "Wave", "Bedhead", "Bedhead2", "Spikey", "Dreadlocks", "Afro", "Big Afro", "Braid", "Kagami", "Ponytail", "Bald" )
 
 			if (new_style)
 				h_style = new_style
@@ -765,6 +765,14 @@ datum/preferences
 				character.hair_icon_state = "hair_a"
 			if("Long Hair")
 				character.hair_icon_state = "hair_b"
+			if("Long Fringe")
+				character.hair_icon_state = "hair_longfringe"
+			if("Very Long Fringe")
+				character.hair_icon_state = "hair_vlongfringe"
+			if("Longest Fringe")
+				character.hair_icon_state = "hair_longest"
+			if("Ladylike hair")
+				character.hair_icon_state = "hair_test"
 			if("Cut Hair")
 				character.hair_icon_state = "hair_c"
 			if("Mohawk")
@@ -775,8 +783,20 @@ datum/preferences
 				character.hair_icon_state = "hair_f"
 			if("Bedhead")
 				character.hair_icon_state = "hair_bedhead"
+			if("Bedhead2")
+				character.hair_icon_state = "hair_bedheadv2"
+			if("Spikey")
+				character.hair_icon_state = "hair_spikey"
 			if("Dreadlocks")
 				character.hair_icon_state = "hair_dreads"
+			if("Afro")
+				character.hair_icon_state = "hair_afro"
+			if("Big Afro")
+				character.hair_icon_state = "hair_bigafro"
+			if("Braid")
+				character.hair_icon_state = "hair_braid"
+			if("Kagami")
+				character.hair_icon_state = "hair_kagami"
 			if("Ponytail")
 				character.hair_icon_state = "hair_ponytail"
 			else
