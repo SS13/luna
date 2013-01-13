@@ -75,6 +75,14 @@ datum/preferences
 				h_style_r = "hair_a"
 			if("Long Hair")
 				h_style_r = "hair_b"
+			if("Long Fringe")
+				h_style_r = "hair_longfringe"
+			if("Very Long Fringe")
+				h_style_r = "hair_vlongfringe"
+			if("Longest Fringe")
+				h_style_r = "hair_longest"
+			if("Ladylike hair")
+				h_style_r = "hair_test"
 			if("Cut Hair")
 				h_style_r = "hair_c"
 			if("Mohawk")
@@ -85,8 +93,20 @@ datum/preferences
 				h_style_r = "hair_f"
 			if("Bedhead")
 				h_style_r = "hair_bedhead"
+			if("Bedhead2")
+				h_style_r = "hair_bedheadv2"
+			if("Spikey")
+				h_style_r = "hair_spikey"
 			if("Dreadlocks")
 				h_style_r = "hair_dreads"
+			if("Afro")
+				h_style_r = "hair_afro"
+			if("Big Afro")
+				h_style_r = "hair_bigafro"
+			if("Braid")
+				h_style_r = "hair_braid"
+			if("Kagami")
+				h_style_r = "hair_kagami"
 			if("Ponytail")
 				h_style_r = "hair_ponytail"
 			else
