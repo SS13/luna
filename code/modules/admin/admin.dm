@@ -221,6 +221,11 @@
 					var/reason = input(usr,"Reason?","reason","Griefer") as text
 					if(!reason)
 						return
+
+					var/m_delete = 0
+					switch(alert("Delete mob?",,"Yes","No"))
+						if("Yes")
+							m_delete = 1
 					AddBan(M.ckey, M.computer_id,M.client.address, reason, usr.ckey, 1, mins)
 					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [sanitize_spec(reason)].</B></BIG>"
 					M << "\red This is a temporary ban, it will be removed in [mins] minutes."
@@ -228,11 +233,16 @@
 					message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
 
 					del(M.client)
-					del(M)
+					if (m_delete)
+						del(M)
 				if("No")
 					var/reason = input(usr,"Reason?","reason","Griefer") as text
 					if(!reason)
 						return
+
+					switch(alert("Delete mob?",,"Yes","No"))
+						if("Yes")
+							m_delete = 1
 					AddBan(M.ckey, M.computer_id,M.client.address, reason, usr.ckey, 0, 0)
 					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [reason].</B></BIG>"
 					M << "\red This is a permanent ban."
@@ -241,7 +251,8 @@
 					message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis is a permanent ban.")
 
 					del(M.client)
-					del(M)
+					if (m_delete)
+						del(M)
 
 	if (href_list["mute2"])
 		if ((src.rank in list( "Moderator", "Secondary Administrator", "Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
@@ -1297,7 +1308,8 @@
 				dat += "<td>Monkey</td>"
 			if(istype(M, /mob/living/carbon/alien))
 				dat += "<td>Alien</td>"
-			dat += {"<td>[(M.client ? "[M.client]" : "No client")]</td>
+			//dat += {"<td>[(M.client ? "[M.client]" : "No client")]</td>
+			dat += {"<td>[M.key][(M.client ? "" : "\n(No client)")]</td>
 			<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
 			<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>"}
 			//<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td></tr>
