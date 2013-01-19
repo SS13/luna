@@ -158,7 +158,7 @@
 		build_click(usr, usr.client.buildmode, location, control, params, src)
 		return
 
-	return DblClick()
+	return DblClick(location, control, params)
 
 /atom/DblClick() //TODO: DEFERRED: REWRITE
 	if (world.time <= usr:lastDblClick+2)
@@ -338,6 +338,41 @@
 					else
 						if (istype(usr, /mob/living/carbon/alien/humanoid))
 							src.hand_al(usr, usr.hand)
+	return
+
+
+	if( iscarbon(usr) && !usr.buckled )
+		if( src.x && src.y && usr.x && usr.y )
+			var/dx = src.x - usr.x
+			var/dy = src.y - usr.y
+
+			if(dy || dx)
+				if(abs(dx) < abs(dy))
+					if(dy > 0)	usr.dir = NORTH
+					else		usr.dir = SOUTH
+				else
+					if(dx > 0)	usr.dir = EAST
+					else		usr.dir = WEST
+			else
+				if(pixel_y > 16)		usr.dir = NORTH
+				else if(pixel_y < -16)	usr.dir = SOUTH
+				else if(pixel_x > 16)	usr.dir = EAST
+				else if(pixel_x < -16)	usr.dir = WEST
+
+/atom/proc/CtrlClick()
+	if(hascall(src,"pull"))
+		src:pull()
+	return
+
+/atom/proc/ShiftClick(var/mob/M as mob)
+
+	if(istype(M.machine, /obj/machinery/computer/security)) //No examining by looking through cameras
+		return
+
+	//I dont think this was ever really a problem and it's only creating more bugs...
+//	if(( abs(src.x-M.x)<8 || abs(src.y-M.y)<8 ) && src.z == M.z ) //This should prevent non-observers to examine stuff from outside their view.
+	examine()
+
 	return
 
 /atom/proc/CanReachThrough(turf/srcturf, turf/targetturf, atom/target)
