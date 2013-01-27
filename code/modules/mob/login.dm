@@ -1,6 +1,8 @@
 /mob/Login()
 	log_access("Login: [key_name(src)] from [client.address ? client.address : "localhost"]")
 	lastKnownIP = client.address
+	lastKnownID = client.computer_id
+	lastKnownCkey = client.ckey
 	computer_id = client.computer_id
 	if (config.log_access)
 		for (var/mob/M in world)

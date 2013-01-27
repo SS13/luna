@@ -82,6 +82,8 @@
 	O.anchored = 1
 	O.aiRestorePowerRoutine = 0
 	O.lastKnownIP = client.address
+	O.lastKnownID = client.computer_id
+	O.lastKnownCkey = client.ckey
 
 	log_admin("AIizing: Mind transfer")
 	mind.transfer_to(O)
@@ -197,6 +199,9 @@
 	O.name = "Cyborg"
 	O.real_name = "Cyborg"
 	O.lastKnownIP = client.address
+	O.lastKnownID = client.computer_id
+	O.lastKnownCkey = client.ckey
+
 	if (client)
 		client.mob = O
 	mind.transfer_to(O)		//Added to fix robot gibbing disconnecting the player. - Strumpetplaya

@@ -599,14 +599,16 @@
 		M.client.warned = 1
 		message_admins("\blue [src.ckey] warned [M.ckey].")
 	else
-		AddBan(M.ckey, M.computer_id,address, "Autobanning due to previous warn", src.ckey, 1, 10)
+		AddBan(M.ckey, M.computer_id,M.client.address, "Autobanning due to previous warn", src.ckey, 1, 10)
 		M << "\red<BIG><B>You have been autobanned by [src.ckey]. This is what we in the biz like to call a \"second warning\".</B></BIG>"
 		M << "\red This is a temporary ban; it will automatically be removed in 10 minutes."
 		log_admin("[src.ckey] warned [M.ckey], resulting in a 10 minute autoban.")
 		message_admins("\blue [src.ckey] warned [M.ckey], resulting in a 10 minute autoban.")
-
 		del(M.client)
-		del(M)
+		switch(alert("Delete mob?",,"Yes","No"))
+			if("Yes")
+				del(M)
+
 
 /client/proc/givedisease(var/mob/living/carbon/M in world)
 	set category = "Debug"

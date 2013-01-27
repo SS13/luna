@@ -206,53 +206,54 @@
 				href_list["ban"] = 1 // lets it fall through and refresh
 */
 	if (href_list["newban"])
+		//var/m_delete = 0
+		var/temp = 0
+		var/mins
 		if ((src.rank in list( "Secondary Administrator", "Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
 			var/mob/M = locate(href_list["newban"])
 			if(!ismob(M)) return
 			if ((M.client && M.client.holder && (M.client.holder.level >= src.level)))
 				alert("You cannot perform this action. You must be of a higher administrative rank!")
 				return
+
 			switch(alert("Temporary Ban?",,"Yes","No"))
 				if("Yes")
-					var/mins = input(usr,"How long (in minutes)?","Ban time",1440) as num
+					temp = 1
+					mins = input(usr,"How long (in minutes)?","Ban time",1440) as num
 					if(!mins)
 						return
 					if(mins >= 525600) mins = 525599
-					var/reason = input(usr,"Reason?","reason","Griefer") as text
-					if(!reason)
-						return
 
-					var/m_delete = 0
-					switch(alert("Delete mob?",,"Yes","No"))
-						if("Yes")
-							m_delete = 1
-					AddBan(M.ckey, M.computer_id,M.client.address, reason, usr.ckey, 1, mins)
-					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [sanitize_spec(reason)].</B></BIG>"
-					M << "\red This is a temporary ban, it will be removed in [mins] minutes."
-					log_admin("[usr.client.ckey] has banned [M.ckey].\nReason: [sanitize_spec(reason)]\nThis will be removed in [mins] minutes.")
-					message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
-
-					del(M.client)
-					if (m_delete)
-						del(M)
 				if("No")
-					var/reason = input(usr,"Reason?","reason","Griefer") as text
-					if(!reason)
-						return
+					temp = 0
 
-					switch(alert("Delete mob?",,"Yes","No"))
-						if("Yes")
-							m_delete = 1
-					AddBan(M.ckey, M.computer_id,M.client.address, reason, usr.ckey, 0, 0)
-					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [reason].</B></BIG>"
-					M << "\red This is a permanent ban."
-					M << "\red To try to resolve this matter by pming one of the admins on http://www.whoopshop.com/"
-					log_admin("[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis is a permanent ban.")
-					message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis is a permanent ban.")
 
-					del(M.client)
-					if (m_delete)
-						del(M)
+			var/reason = input(usr,"Reason?","reason","Griefer") as text
+			if(!reason)
+				return
+
+
+			/*switch(alert("Delete mob?",,"Yes","No"))
+				if("Yes")
+					m_delete = 1
+				else
+					m_delete =0
+			*/
+			if (M.client)
+				AddBan(M.ckey, M.computer_id,M.client.address, reason, usr.ckey, temp, mins)
+				M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [sanitize_spec(reason)].</B></BIG>"
+				M << "\red This is a temporary ban, it will be removed in [mins] minutes."
+				log_admin("[usr.client.ckey] has banned [M.ckey].\nReason: [sanitize_spec(reason)]\nThis will be removed in [mins] minutes.")
+				message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
+				del(M.client)
+			else
+				AddBan(M.lastKnownCkey, M.lastKnownID,M.lastKnownIP, reason, usr.ckey, temp, mins)
+				log_admin("[usr.client.ckey] has banned [M.lastKnownCkey].\nReason: [sanitize_spec(reason)]\nThis will be removed in [mins] minutes.")
+				message_admins("\blue[usr.client.ckey] has banned [M.lastKnownCkey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
+
+			/*if (m_delete)
+				del(M)	*/
+
 
 	if (href_list["mute2"])
 		if ((src.rank in list( "Moderator", "Secondary Administrator", "Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
@@ -1284,7 +1285,7 @@
 
 /obj/admins/proc/player()
 	var/dat = "<html><head><title>Player Menu</title></head>"
-	dat += "<body><table border=1 cellspacing=5><B><tr><th>Name</th><th>Real Name</th><th>Key</th><th>Options</th><th>PM</th><th>Traitor?</th></tr></B>"
+	dat += "<body><table border=1 cellspacing=5><B><tr><th>Name</th><th>Real Name</th><th>Last IP</th><th>Last Key</th><th>Options</th><th>PM</th><th>Traitor?</th></tr></B>"
 	//add <th>IP:</th> to this if wanting to add back in IP checking
 	//add <td>(IP: [M.lastKnownIP])</td> if you want to know their ip to the lists below
 	var/list/mobs = sortmobs()
@@ -1309,7 +1310,8 @@
 			if(istype(M, /mob/living/carbon/alien))
 				dat += "<td>Alien</td>"
 			//dat += {"<td>[(M.client ? "[M.client]" : "No client")]</td>
-			dat += {"<td>[M.key][(M.client ? "" : "\n(No client)")]</td>
+			dat +="<td>[M.lastKnownIP]</td>"
+			dat += {"<td>[M.lastKnownCkey][(M.client ? "" : "\n(No client [M.lastKnownCkey])")]</td>
 			<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
 			<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>"}
 			//<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td></tr>

@@ -115,6 +115,8 @@
 /mob/var/m_intent = "run"
 /mob/var/lastDblClick = 0
 /mob/var/lastKnownIP = null
+/mob/var/lastKnownCkey = null
+/mob/var/lastKnownID = null
 /mob/var/obj/stool/buckled = null
 /mob/var/obj/item/weapon/handcuffs/handcuffed = null
 /mob/var/obj/item/l_hand = null
@@ -2096,8 +2098,8 @@ mob/verb/turnwest()
 //		del(src)
 	var/isbanned = CheckBan(src)
 	if (isbanned)
-		log_access("Failed Login: [src] - Banned")
-		message_admins("\blue Failed Login: [src] - Banned")
+		log_access("Failed Login: [src] ID:[src.computer_id] / IP: [address] - Banned")
+		message_admins("\blue Failed Login: [src]  ID:[src.computer_id] / IP:[address] - Banned")
 		alert(src,"You have been banned.\nReason : [isbanned]","You're banned!","OK")
 		del(src)
 	if(IsGuestKey(src.key))
