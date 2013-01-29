@@ -208,7 +208,7 @@
 	if (href_list["newban"])
 		//var/m_delete = 0
 		var/temp = 0
-		var/mins
+		var/mins/
 		if ((src.rank in list( "Secondary Administrator", "Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
 			var/mob/M = locate(href_list["newban"])
 			if(!ismob(M)) return
@@ -239,17 +239,19 @@
 				else
 					m_delete =0
 			*/
+			var/text = "[usr.client.ckey] has banned [M.ckey].\nReason: [sanitize_spec(reason)]\nThis [(temp ? "will be removed in [mins] minutes" : "is permanent ban.")]"
 			if (M.client)
 				AddBan(M.ckey, M.computer_id,M.client.address, reason, usr.ckey, temp, mins)
 				M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [sanitize_spec(reason)].</B></BIG>"
-				M << "\red This is a temporary ban, it will be removed in [mins] minutes."
-				log_admin("[usr.client.ckey] has banned [M.ckey].\nReason: [sanitize_spec(reason)]\nThis will be removed in [mins] minutes.")
-				message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
+				M << "\red This is [(temp ? "a temporary ban, it will be removed in [mins] minutes" : "permanent ban.")]"
+				log_admin(text)
+				message_admins("\blue"+text)
+				M.client.ckey = null
 				del(M.client)
 			else
 				AddBan(M.lastKnownCkey, M.lastKnownID,M.lastKnownIP, reason, usr.ckey, temp, mins)
-				log_admin("[usr.client.ckey] has banned [M.lastKnownCkey].\nReason: [sanitize_spec(reason)]\nThis will be removed in [mins] minutes.")
-				message_admins("\blue[usr.client.ckey] has banned [M.lastKnownCkey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
+				log_admin(text)
+				message_admins("\blue"+text)
 
 			/*if (m_delete)
 				del(M)	*/
@@ -611,7 +613,7 @@
 		foo += text("<A href='?src=\ref[src];jumpto=\ref[M]'>Jump to</A> | ")
 		foo += text("<A href='?src=\ref[src];newban=\ref[M]'>Ban</A> | ")
 		dat += text("<body>[foo]</body></html>")
-		usr << browse(dat, "window=adminplayeropts;size=480x100")
+		usr << browse(dat, "window=adminplayeropts;size=500x200")
 
 	if (href_list["jumpto"])
 		if(( src.level in list(6, 5, 4) ) || ((src.level in list(3, 2)) && (src.state == 2)))
@@ -1311,7 +1313,7 @@
 				dat += "<td>Alien</td>"
 			//dat += {"<td>[(M.client ? "[M.client]" : "No client")]</td>
 			dat +="<td>[M.lastKnownIP]</td>"
-			dat += {"<td>[M.lastKnownCkey][(M.client ? "" : "\n(No client [M.lastKnownCkey])")]</td>
+			dat += {"<td>[M.key][(M.client ? "" : "  <font color=red><b>(OFF)</b></font>")]</td>
 			<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
 			<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>"}
 			//<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td></tr>
@@ -1324,7 +1326,7 @@
 
 	dat += "</table></body></html>"
 
-	usr << browse(dat, "window=players;size=540x480")
+	usr << browse(dat, "window=players;size=750x480")
 
 
 /obj/admins/proc/Game()

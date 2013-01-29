@@ -182,6 +182,9 @@
 
 			if (src.brain.owner.client)
 				O.lastKnownIP = src.brain.owner.client.address
+				O.lastKnownID = src.brain.owner.client.computer_id
+				O.lastKnownCkey = src.brain.owner.client.ckey
+
 				src.brain.owner.client.mob = O
 			else
 				for(var/mob/dead/observer/G in world)
