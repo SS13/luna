@@ -158,7 +158,7 @@ var/savefile/Banlist
 		while(kquery.NextRow())
 			var/list/ban = kquery.GetRowData()
 			keys += ban["ckey"]
-			dat += text("<tr><td><A href='?src=\ref[src];unbanf=[ban["ckey"]]'>(U)</A><A href='?src=\ref[src];unbane=[ban["ckey"]]'>(E)</A> Key: <B>[ban["ckey"]]</B></td><td> ([text2num(ban["temp"]) ? "[GetExp(text2num(ban["minute"])) ? GetExp(text2num(ban["minute"])) : "Removal pending" ]" : "Permaban"])</td><td>(By: [ban["bannedby"]])</td><td>id : [ban["computerid"]]</td><td>ip : [ban["ips"]]</td><td>(Reason: [ban["reason"]])</td></tr>")
+			dat += text("<tr><td><A href='?src=\ref[src];unbanf=[ban["ckey"]]'>(U)</A>[(src.level>0 ? "<A href='?src=\ref[src];unbane=[ban["ckey"]]'>(E)</A>":"")] Key: <B>[ban["ckey"]]</B></td><td> ([text2num(ban["temp"]) ? "[GetExp(text2num(ban["minute"])) ? GetExp(text2num(ban["minute"])) : "Removal pending" ]" : "Permaban"])</td><td>(By: [ban["bannedby"]])</td><td>id : [ban["computerid"]]</td><td>ip : [ban["ips"]]</td><td>(Reason: [ban["reason"]])</td></tr>")
 	var/count = 0
 
 	count = keys.len
