@@ -5,13 +5,13 @@
 	var/medal_hub = null				// medal hub name
 	var/medal_password = null			// medal hub password
 
-	var/log_ooc = 1						// log OOC channek
-	var/log_access = 1					// log login/logout
-	var/log_say = 1						// log client say
-	var/log_admin = 1					// log admin actions
-	var/log_game = 1					// log game events
-	var/log_vote = 1					// log voting
-	var/log_whisper = 1					// log client whisper
+	var/log_ooc = 0						// log OOC channek
+	var/log_access = 0					// log login/logout
+	var/log_say = 0						// log client say
+	var/log_admin = 0					// log admin actions
+	var/log_game = 0					// log game events
+	var/log_vote = 0					// log voting
+	var/log_whisper = 0					// log client whisper
 	var/allow_vote_restart = 0 			// allow votes to restart
 	var/allow_vote_mode = 0				// allow votes to change mode
 	var/allow_admin_jump = 1			// allows admin jumping
