@@ -8,6 +8,7 @@
 	//Verbs for everyone moderator and up.
 	//Put them here rather than having to copy/paste and/or miss a few places they should be.
 	var/list/averbs_moderator = list(
+			/client/proc/UnpedalMe,
 			/client/proc/cmd_admin_gib_self,
 			/client/proc/cmd_admin_pm,
 			/client/proc/cmd_admin_prison,
@@ -469,6 +470,14 @@
 				src << "[C.mob.key] is undefined - [C.holder.state]"
 
 //admin client procs ported over from mob.dm
+/client/proc/UnpedalMe()
+	set name = "UnPedalMe!"
+	set category = "Admin"
+	log_admin("[key_name(usr)] has Unpedaling himself")
+	message_admins("[key_name_admin(usr)] has Unpedaling himself", 1)
+	src.clear_admin_verbs()
+	src.update_admins("Remove")
+	admins[src.ckey] = "Remove"
 
 /client/proc/player_panel()
 	set name = "Player Panel"
