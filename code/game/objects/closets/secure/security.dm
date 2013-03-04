@@ -67,13 +67,30 @@
 	new /obj/item/clothing/under/rank/head_of_security( src )
 	new /obj/item/clothing/shoes/brown( src )
 	new /obj/item/clothing/glasses/sunglasses( src )
-	new /obj/item/clothing/suit/storage/armourrigvest( src )
+	new /obj/item/clothing/suit/hos( src )
 	new /obj/item/clothing/head/helmet/HoS(src)
 	new /obj/item/weapon/storage/id_kit( src )
 	new /obj/item/weapon/storage/flashbang_kit(src)
 	new /obj/item/weapon/handcuffs(src)
 	new /obj/item/weapon/baton(src)
 	new /obj/item/clothing/gloves/red(src)
+	return
+
+/obj/secure_closet/warden/New()
+	..()
+	sleep(2)
+	new/obj/item/device/radio/headset/heads/hos(src)
+	new /obj/item/weapon/gun/energy/general( src )
+	new /obj/item/device/flash( src )
+	new /obj/item/clothing/under/rank/warden( src )
+	new /obj/item/clothing/shoes/brown( src )
+	new /obj/item/clothing/glasses/sunglasses( src )
+	new /obj/item/clothing/suit/warden_jacket( src )
+	new /obj/item/clothing/head/helmet/wardencap(src)
+	new /obj/item/weapon/storage/handcuff_kit(src)
+	new /obj/item/weapon/handcuffs(src)
+	new /obj/item/weapon/baton(src)
+	new /obj/item/clothing/gloves/black(src)
 	return
 
 

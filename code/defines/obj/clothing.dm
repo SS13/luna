@@ -302,6 +302,24 @@
 	icon_state = "hoscap"
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
 
+/obj/item/clothing/head/helmet/Secsoft
+	name = "Security Soft"
+	icon_state = "secsoft"
+	item_state = "secsoft"
+	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+
+/obj/item/clothing/head/helmet/Policehat
+	name = "Police Hat"
+	icon_state = "policehat"
+	item_state = "policehat"
+	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+
+/obj/item/clothing/head/helmet/wardencap
+	name = "Warden Cap"
+	icon_state = "wardencap"
+	item_state = "wardencap"
+	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+
 // MASK WAS THAT MOVIE WITH THAT GUY WITH THE MESSED UP FACE. WHAT'S HIS NAME . . . JIM CARREY, I THINK.
 
 /obj/item/clothing/mask
@@ -548,6 +566,13 @@
 	item_state = "chef"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
 
+/obj/item/clothing/suit/storage/chicken
+	name = "chiken suit"
+	desc = "A chicken suit."
+	icon_state = "chickensuit"
+	item_state = "chickensuit"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+
 /obj/item/clothing/suit/storage/apron
 	name = "apron"
 	desc = "A simple blue apron. It has a big pocket on the front you could store something in."
@@ -566,6 +591,18 @@
 	name = "waistcoat"
 	icon_state = "vest"
 	item_state = "wcoat"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+
+/obj/item/clothing/suit/hos
+	name = "hos"
+	icon_state = "hos"
+	item_state = "hos"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+
+/obj/item/clothing/suit/warden_jacket
+	name = "warden jacket"
+	icon_state = "warden_jacket"
+	item_state = "warden_jacket"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
 
 /obj/item/clothing/suit/wizrobe
@@ -853,6 +890,13 @@
 	icon_state = "hos"
 	item_state = "r_suit"
 	color = "hosred"
+
+/obj/item/clothing/under/rank/warden
+	desc = "It has a Warden rank stripe on it."
+	name = "Warden Jumpsuit"
+	icon_state = "darkred"
+	item_state = "r_suit"
+	color = "darkred"
 
 /obj/item/clothing/under/rank/chief_engineer
 	desc = "It has a Chief Engineer rank stripe on it."
