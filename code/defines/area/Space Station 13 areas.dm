@@ -608,6 +608,10 @@
 	name = "Cafeteria"
 	icon_state = "cafeteria"
 
+/area/crew_quarters/theater
+	name = "Theater"
+	icon_state = "cafeteria"
+
 
 /area/crew_quarters/kitchen
 	name = "Kitchen"
@@ -787,6 +791,18 @@
 	name = "Security Lobby"
 	icon_state = "security_lobby"
 
+/area/security/security_check_lobby
+	name = "Security Check Lobby"
+	icon_state = "security_lobby"
+
+/area/security/security_stair_lobby
+	name = "Security Stair Lobby"
+	icon_state = "security_lobby"
+
+/area/security/security_hallway
+	name = "Security Hallway"
+	icon_state = "security_lobby"
+
 /area/security/checkpoint
 	name = "Arrivals Checkpoint"
 	icon_state = "checkpoint1"
@@ -820,6 +836,10 @@
 
 /area/security/head_of_security_office
 	name = "Head of Security's Office"
+	icon_state = "hos"
+
+/area/security/warden_office
+	name = "Warden's Office"
 	icon_state = "hos"
 
 /area/security/officer_lounge

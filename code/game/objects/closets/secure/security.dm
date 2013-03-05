@@ -14,6 +14,7 @@
 	new /obj/item/weapon/baton(src)
 	new /obj/item/device/flash(src)
 	new /obj/item/weapon/storage/flashbang_kit(src)
+	new /obj/item/clothing/head/helmet/Secsoft(src)
 	return
 
 /obj/secure_closet/security2/New()
@@ -96,7 +97,7 @@
 
 
 //Added by Strumpetplaya - Research Director's Closet for office.
-/obj/secure_closet/research_director/New()
+/obj/secure_closet/rd/New()
 	..()
 	sleep(2)
 	new /obj/item/device/radio/headset/heads/rd( src )
