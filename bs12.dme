@@ -477,6 +477,7 @@
 #include "code\game\objects\closets\secure\personal.dm"
 #include "code\game\objects\closets\secure\scientist.dm"
 #include "code\game\objects\closets\secure\security.dm"
+#include "code\game\objects\closets\secure\eng.dm"
 #include "code\game\objects\devices\chameleonproj.dm"
 #include "code\game\objects\devices\device.dm"
 #include "code\game\objects\devices\flash.dm"
