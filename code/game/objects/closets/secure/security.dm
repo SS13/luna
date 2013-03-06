@@ -106,3 +106,13 @@
 	new /obj/item/clothing/glasses/regular( src )
 	new /obj/item/clothing/suit/storage/labcoat( src )
 	return
+/obj/secure_closet/qm/New()
+	..()
+	sleep(2)
+	new /obj/item/clothing/under/cargo ( src )
+	new /obj/item/clothing/gloves/black ( src )
+	new /obj/item/weapon/hand_labeler ( src )
+	new /obj/item/device/radio/headset/headset_cargo(src)
+	new /obj/item/clothing/glasses/sunglasses(src)
+	new /obj/item/clothing/head/helmet/cargosoft(src)
+	return

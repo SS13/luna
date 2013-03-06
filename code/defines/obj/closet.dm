@@ -48,6 +48,14 @@
 	icon_closed = "emergency"
 	icon_opened = "emergencyopen"
 
+/obj/closet/firecloset
+	desc = "A firecloset."
+	name = "Fire Closet"
+	icon_state = "firecloset"
+	icon_closed = "firecloset"
+	icon_opened = "fireclosetopen"
+
+
 /obj/closet/jcloset
 	desc = "A bulky (yet mobile) closet. Comes with janitor's clothes and biohazard gear."
 	name = "Custodial Closet"
@@ -278,7 +286,7 @@
 	icon_opened = "wardensecureopen"
 	icon_broken = "wardensecurebroken"
 	icon_off = "wardensecureoff"
-	req_access = list(access_heads)
+	req_access = list(access_armory)
 
 /obj/secure_closet/rd
 	name = "Research Director"
@@ -310,6 +318,36 @@
 	icon_off = "secureengoff"
 	req_access = list(access_engine)
 
+/obj/secure_closet/engelec
+	name = "Engineering Electrical Closet"
+	icon_state = "secureengelec1"
+	icon_closed = "secureengelec"
+	icon_locked = "secureengelec1"
+	icon_opened = "secureengelecopen"
+	icon_broken = "secureengelecbroken"
+	icon_off = "secureengelecoff"
+	req_access = list(access_engine_equip)
+
+/obj/secure_closet/ce
+	name = "CE Closet"
+	icon_state = "securece1"
+	icon_closed = "securece"
+	icon_locked = "securece1"
+	icon_opened = "secureceopen"
+	icon_broken = "securecebroken"
+	icon_off = "secureceoff"
+	req_access = list(access_heads)
+
+/obj/secure_closet/qm
+	name = "QM Closet"
+	icon_state = "secureqm1"
+	icon_closed = "secureqm"
+	icon_locked = "secureqm1"
+	icon_opened = "secureqmopen"
+	icon_broken = "secureqmbroken"
+	icon_off = "secureqmoff"
+	req_access = list(access_cargo)
+
 /obj/secure_closet/medical	//Empty medical closet
 	name = "Medical Closet"
 	icon_state = "medical1"
@@ -337,6 +375,15 @@
 	icon_opened = "medicalopen"
 	icon_broken = "medicalbroken"
 	icon_off = "medical1"
+	req_access = list(access_medical)
+/obj/secure_closet/medical4
+	name = "Medical Closet"
+	icon_state = "securemed1"
+	icon_closed = "securemed"
+	icon_locked = "securemed1"
+	icon_opened = "securemedopen"
+	icon_broken = "securemedbroken"
+	icon_off = "securemedoff"
 	req_access = list(access_medical)
 /obj/secure_closet/chemical
 	name = "Chemical Closet"

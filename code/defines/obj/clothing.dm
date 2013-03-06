@@ -286,6 +286,12 @@
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
 	item_state = "plump"
 
+/obj/item/clothing/head/helmet/cargosoft
+	name = "Cargo Soft"
+	icon_state = "cargosoft"
+	item_state = "cargosoft"
+	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+
 /obj/item/clothing/head/helmet/welding
 	name = "welding helmet"
 	desc = "A head-mounted face cover designed to protect the wearer completely from space-arc eye."
@@ -963,6 +969,7 @@
 	name = "clown suit"
 	desc = "Wearing this, all the children love you, for all the wrong reasons."
 	icon_state = "clown"
+	item_state = "clown"
 	color = "clown"
 
 /obj/item/clothing/under/chef

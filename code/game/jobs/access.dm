@@ -38,7 +38,7 @@
 	access_maintenance_hall = 38
 	access_shield_generator = 39
 	access_hydroponics = 40
-
+	access_theater = 41
 
 // these are big, seperate numbers
 	access_syndicate = 70
@@ -178,7 +178,7 @@
 		if("Janitor")
 			return list(access_janitor, access_maint_tunnels, access_laboratories_doors, access_incinerator, access_maintenance_hall)
 		if("Clown")
-			return list()
+			return list(access_maint_tunnels, access_theater)
 		if("Chef")
 			return list(access_kitchen, access_maint_tunnels)
 		if("Roboticist")
@@ -196,6 +196,10 @@
 			            access_tox_storage, access_chemistry, access_teleporter, access_security_passthrough, access_laboratories_doors, access_hydroponics)
 		if("Hydroponicist")
 			return list(access_medical, access_hydroponics, access_maint_tunnels)
+		if("Warden")
+			return list(access_security, access_laboratories_doors, access_incinerator, access_brig, access_forensics_lockers,
+						access_maint_tunnels, access_medical, access_security_passthrough, access_maintenance_hall,
+						access_shield_generator, access_armory)
 		else
 			return list()
 
@@ -208,7 +212,7 @@
 	            access_tech_storage, access_chapel_office, access_atmospherics, access_kitchen,
 	            access_bar, access_janitor, access_crematorium, access_robotics, access_cargo, access_cargo_bot, access_construction,
 	            access_security_passthrough, access_laboratories_doors, access_incinerator, access_maintenance_hall,
-	            access_shield_generator, access_hydroponics)
+	            access_shield_generator, access_hydroponics, access_theater)
 /proc/get_access_num(A)
 	switch(A)
 		if("CargoBay")
@@ -289,6 +293,9 @@
 			return "Robotics"
 		if(access_hydroponics)
 			return "Hydroponics"
+		if(access_theater)
+			return "Theater"
+
 /proc/get_access_desc(A)
 	switch(A)
 		if(access_cargo)
@@ -369,6 +376,8 @@
 			return "Robotics"
 		if(access_hydroponics)
 			return "Hydroponics"
+		if(access_theater)
+			return "Theater"
 
 /proc/get_job_types()
 	return list("Civilian", "Security", "Med/Sci", "Maintenance", "Management")
@@ -376,9 +385,9 @@
 /proc/get_type_jobs(T)
 	switch(T)
 		if ("Civilian")
-			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster")
+			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster", "Clown")
 		if ("Security")
-			return list("Security Officer", "Forensic Technician")
+			return list("Security Officer", "Forensic Technician", "Warden")
 		if ("Med/Sci")
 			return list("Chemist", "Geneticist", "Scientist", "Roboticist", "Medical Doctor", "Hydroponicist")
 		if ("Maintenance")

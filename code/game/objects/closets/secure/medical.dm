@@ -32,6 +32,7 @@
 	new/obj/item/weapon/reagent_containers/glass/bloodpack/B(src)
 	new/obj/item/weapon/reagent_containers/glass/bloodpack/O(src)
 	new/obj/item/weapon/reagent_containers/glass/bloodpack/AB(src)
+	return
 /obj/secure_closet/medical2/New()
 	..()
 	sleep(2)
