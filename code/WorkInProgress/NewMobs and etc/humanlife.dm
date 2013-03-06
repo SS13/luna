@@ -135,6 +135,8 @@
 			if(!client.adminobs)
 				reset_view(null)
 
+
+
 	return 1
 /mob/living/carbon/human/proc/drip(var/amt as num)
 	if(!amt)
@@ -494,6 +496,18 @@
 			org.burn_dam -= 2
 			org.brute_dam = max(org.brute_dam, 0)
 			org.burn_dam = max(org.burn_dam, 0)
+
+	if (zombi_infected && !zombie && stat==2)
+		if (zombietime<=0)
+			if (prob(80))
+				zombify()
+				stat=0
+				health=100
+				return
+			else
+				zombi_infected = 0
+				return
+		zombietime-=1
 
 
 	if (disabilities & 2)

@@ -376,3 +376,16 @@
 	// new /obj/item/device/radio/headset/headset_med(src) // You don't spawn with those
 	// new /obj/item/device/radio/headset/headset_med(src) // You don't get those
 	return
+/obj/closet/toolcloset/New()
+    ..()
+    new /obj/item/weapon/storage/toolbox/mechanical(src)
+    new /obj/item/weapon/storage/toolbox/mechanical(src)
+    new /obj/item/weapon/wrench(src)
+    new /obj/item/weapon/wrench(src)
+    new /obj/item/weapon/wirecutters(src)
+    new /obj/item/weapon/wirecutters(src)
+    new /obj/item/weapon/screwdriver(src)
+    new /obj/item/weapon/screwdriver(src)
+    new /obj/item/device/flashlight(src)
+    new /obj/item/device/flashlight(src)
+    return

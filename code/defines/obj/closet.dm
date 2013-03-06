@@ -85,6 +85,13 @@
 	icon_closed = "syndicate"
 	icon_opened = "syndicateopen"
 
+/obj/closet/toolcloset
+	desc = "Tools closet."
+	name = "Tools Closet"
+	icon_state = "toolcloset"
+	icon_closed = "toolcloset"
+	icon_opened = "toolclosetopen"
+
 /obj/closet/syndicate/personal
 	desc = "Gear preparations closet."
 
@@ -326,6 +333,16 @@
 	icon_opened = "secureengelecopen"
 	icon_broken = "secureengelecbroken"
 	icon_off = "secureengelecoff"
+	req_access = list(access_engine_equip)
+
+/obj/secure_closet/engweld
+	name = "Engineering Welding Closet"
+	icon_state = "secureengweld1"
+	icon_closed = "secureengweld"
+	icon_locked = "secureengweld1"
+	icon_opened = "secureengweldopen"
+	icon_broken = "secureengweldbroken"
+	icon_off = "secureengweldoff"
 	req_access = list(access_engine_equip)
 
 /obj/secure_closet/ce

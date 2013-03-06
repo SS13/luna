@@ -45,6 +45,7 @@
 /mob/living/carbon/human/var/pale = 0
 /mob/living/carbon/human/var/zombietime = 0
 /mob/living/carbon/human/var/zombifying = 0
+/mob/living/carbon/human/var/zombi_infected = 0
 /mob/living/carbon/human/var/image/zombieimage = null
 /mob/living/carbon/human/var/organs2 = list()
 /mob/living/carbon/human/var/datum/organ/external/DEBUG_lfoot
@@ -1597,7 +1598,10 @@
 							else
 								for(var/mob/O in viewers(src, null))
 									O.show_message(text("\red <B>[] has bit []!</B>", M, src), 1)
-								infect_mob_zombie(src)
+								if (prob(75))
+									zombi_infected = 1
+									zombietime=rand(50,110)
+									infect_mob_zombie(src)
 						else
 							affecting.take_damage(rand(1,7),0)
 							var/mes = pick(list("clawed","scraped"))
@@ -2602,7 +2606,7 @@
 	see_in_dark = 4
 	see_invisible = 2
 	for(var/mob/O in viewers(src, null))
-		O.show_message(text("\red <B>[src] seizes up and falls limp, \his eyes dead and lifeless...</B>"), 1)
+		O.show_message(text("\red <B>[src] seizes up and falls limp, \his eyes dead and lifeless...[src] is ZOMBIE! HARM CLAW! CLAW! CLAW!</B>"), 1)
 	UpdateZombieIcons()
 	UpdateDamageIcon()
 
