@@ -151,7 +151,7 @@
 		if("Captain")
 			return get_all_accesses()
 		if("Security Officer")
-			return list(access_security, access_laboratories_doors, access_incinerator, access_brig, access_forensics_lockers,
+			return list(access_security, access_laboratories_doors, access_incinerator, access_brig,
 						access_maint_tunnels, access_medical, access_security_passthrough, access_maintenance_hall,
 						access_shield_generator)
 		if("Scientist")
@@ -197,7 +197,7 @@
 		if("Hydroponicist")
 			return list(access_medical, access_hydroponics, access_maint_tunnels)
 		if("Warden")
-			return list(access_security, access_laboratories_doors, access_incinerator, access_brig, access_forensics_lockers,
+			return list(access_security, access_laboratories_doors, access_incinerator, access_brig,
 						access_maint_tunnels, access_medical, access_security_passthrough, access_maintenance_hall,
 						access_shield_generator, access_armory)
 		else

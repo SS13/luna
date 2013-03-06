@@ -46,3 +46,15 @@
 	new /obj/item/clothing/mask/medical( src )
 	new /obj/item/clothing/mask/medical( src )
 	return
+/obj/secure_closet/medicalcloset/New()
+	..()
+	sleep(2)
+	new /obj/item/clothing/under/rank/medical( src )
+	new /obj/item/clothing/shoes/white( src )
+	new /obj/item/weapon/storage/stma_kit( src )
+	new /obj/item/clothing/suit/storage/labcoat(src)
+	new /obj/item/device/radio/headset/headset_med(src)
+	new /obj/item/device/pda/medical(src)
+	new /obj/item/clothing/gloves/latex(src)
+	new /obj/item/weapon/storage/belt/medical(src)
+	return

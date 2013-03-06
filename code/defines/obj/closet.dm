@@ -376,7 +376,7 @@
 	icon_broken = "medicalbroken"
 	icon_off = "medical1"
 	req_access = list(access_medical)
-/obj/secure_closet/medical4
+/obj/secure_closet/medicalcloset
 	name = "Medical Closet"
 	icon_state = "securemed1"
 	icon_closed = "securemed"
@@ -432,8 +432,14 @@
 
 /obj/secure_closet/scientist
 	name = "Scientist Locker"
-
+	icon_state = "secureres1"
+	icon_closed = "secureres"
+	icon_locked = "secureres1"
+	icon_opened = "secureresopen"
+	icon_broken = "secureresbroken"
+	icon_off = "secureresoff"
 	req_access = list(access_tox_storage)
+
 /obj/secure_closet/chemtoxin
 	name = "Chemistry Locker"
 

@@ -7,10 +7,10 @@ Captain has access to everything.
 The Mule has QM access. The Medibot has access to Medical, Genetics, Morgue and Robotics. Floorbot and Cleanbot dont even have a botID.
 Checked jobs: HoP, HoS, Security Officer, Doctor, CE, Detective, Scientist RD, Chemist, Geneticist, Roboticist, Janitor, Barman, Chef, Counselor, Atmos Tec, Engineer
 
-    access_security = 1 (HoS, Security Officer, Detective, HoP)
-    access_brig = 2 (HoS, Security Officer, HoP) (only lockers)
-    access_armory = 3 (HoS)
-    access_forensic= 4 (HoS, Security Officer, Detective, HoP)
+    access_security = 1 (HoS, Security Officer, Detective, HoP, Warden)
+    access_brig = 2 (HoS, Security Officer, HoP, Warden) (only lockers)
+    access_armory = 3 (HoS, Warden)
+    access_forensic= 4 (HoS, Detective, HoP)
     access_medical = 5 (Geneticist, Doctor, RD, Security Officer, Detective, HoS, HoP, Chemist, Roboticist)
     access_morgue = 6 (HoS, Detective, RD, Doctor, Geneticist, Roboticist, Counselor)
     access_toxins = 7 (HoP, HoS, RD, Scientist)
