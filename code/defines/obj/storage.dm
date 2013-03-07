@@ -8,9 +8,34 @@
 
 /obj/item/weapon/storage/backpack
 	name = "backpack"
+	desc = "You wear this on your back and put items into it."
 	icon_state = "backpack"
 	w_class = 4.0
 	flags = 259.0
+
+/obj/item/weapon/storage/backpack/clown
+	name = "Giggles Von Honkerton"
+	desc = "It's a backpack made by Honk! Co."
+	icon_state = "clownpack"
+	item_state = "clownpack"
+
+/obj/item/weapon/storage/backpack/medic
+	name = "Medical backpack"
+	desc = "It's a backpack especially designed for use in a sterile environment."
+	icon_state = "medicalpack"
+	item_state = "medicalpack"
+
+/obj/item/weapon/storage/backpack/security
+	name = "Security backpack"
+	desc = "It's a very robust backpack."
+	icon_state = "securitypack"
+	item_state = "securitypack"
+
+/obj/item/weapon/storage/backpack/industrial
+	name = "Industrial backpack"
+	desc = "It's a tough backpack for the daily grind of station life."
+	icon_state = "engiepack"
+	item_state = "engiepack"
 
 /obj/item/weapon/storage/pill_bottle
 	name = "Pill bottle"

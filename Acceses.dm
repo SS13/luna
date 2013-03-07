@@ -50,6 +50,7 @@ Checked jobs: HoP, HoS, Security Officer, Doctor, CE, Detective, Scientist RD, C
     ??? = 38 (HoS, Security Officer, HoP, CE, Janitor, Atmos Tec, Engineer)
     access_shields = 39 (HoS, Security Officer, HoP, CE, Engineer)
     access_hydroponics = 40 (Botanist)
-    aceess_theater = 41 (Clown)
+    access_theater = 41 (Clown, Mime)
+    access_HoSoffice = 42 (HoS)
 
     */

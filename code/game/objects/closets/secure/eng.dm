@@ -10,6 +10,7 @@
 	new /obj/item/weapon/storage/belt/utility(src)
 	new /obj/item/device/radio/headset/headset_eng(src)
 	new /obj/item/device/pda/engineering(src)
+	new /obj/item/clothing/shoes/magnetic(src)
 	return
 
 /obj/secure_closet/ce/New()

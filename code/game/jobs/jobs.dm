@@ -18,6 +18,9 @@ var/list/occupations = list(
 	"Chef",
 	"Janitor",
 	"Chemist",
+	"Warden",
+	"Clown",
+	"Mime",
 	"Quartermaster","Quartermaster","Quartermaster")
 
 var/list/assistant_occupations = list(
@@ -74,6 +77,10 @@ var/list/assistant_occupations = list(
 			return 1
 		if("Barman")
 			return 0
+		if("Clown")
+			return 0
+		if("Mime")
+			return 0
 		if("Chef")
 			return 0
 		if("Janitor")
@@ -91,6 +98,8 @@ var/list/assistant_occupations = list(
 	if("Security Officer")
 		return 1
 	if("Forensic Technician")
+		return 1
+	if("Warden")
 		return 1
 	if("Head of Security")
 		return 2

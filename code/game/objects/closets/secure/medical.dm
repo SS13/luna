@@ -49,6 +49,7 @@
 /obj/secure_closet/medicalcloset/New()
 	..()
 	sleep(2)
+	new /obj/item/device/pda/medical(src)
 	new /obj/item/clothing/under/rank/medical( src )
 	new /obj/item/clothing/shoes/white( src )
 	new /obj/item/weapon/storage/stma_kit( src )

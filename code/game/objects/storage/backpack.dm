@@ -4,6 +4,14 @@
 	..()
 	return
 
+/obj/item/weapon/storage/backpack/clown/New()
+
+/obj/item/weapon/storage/backpack/medic/New()
+
+/obj/item/weapon/storage/backpack/security/New()
+
+/obj/item/weapon/storage/backpack/industrial/New()
+
 /obj/item/weapon/storage/backpack/MouseDrop(obj/over_object as obj)
 
 //	if (src.loc != usr)

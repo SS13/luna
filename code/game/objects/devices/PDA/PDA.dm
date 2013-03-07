@@ -39,26 +39,57 @@
 
 	var/obj/item/device/paicard/pai = null	// A slot for a personal AI device
 
+/obj/item/device/pda/bar
+	icon_state = "pda-bar"
+
+/obj/item/device/pda/chef
+	icon_state = "pda-chef"
+
 /obj/item/device/pda/medical
 	default_cartridge = /obj/item/weapon/cartridge/medical
-	icon_state = "pda-m"
+	icon_state = "pda-medical"
+
+/obj/item/device/pda/robot
+	default_cartridge = /obj/item/weapon/cartridge/medical
+	icon_state = "pda-robot"
+
+/obj/item/device/pda/hydro
+	default_cartridge = /obj/item/weapon/cartridge/medical
+	icon_state = "pda-hydro"
+
+/obj/item/device/pda/gene
+	default_cartridge = /obj/item/weapon/cartridge/medical
+	icon_state = "pda-gene"
 
 /obj/item/device/pda/engineering
 	default_cartridge = /obj/item/weapon/cartridge/engineering
-	icon_state = "pda-e"
+	icon_state = "pda-engineering"
 
 /obj/item/device/pda/security
 	default_cartridge = /obj/item/weapon/cartridge/security
-	icon_state = "pda-s"
+	icon_state = "pda-security"
+
+/obj/item/device/pda/det
+	default_cartridge = /obj/item/weapon/cartridge/security
+	icon_state = "pda-det"
+
+/obj/item/device/pda/warden
+	default_cartridge = /obj/item/weapon/cartridge/security
+	icon_state = "pda-warden"
 
 /obj/item/device/pda/janitor
 	default_cartridge = /obj/item/weapon/cartridge/janitor
-	icon_state = "pda-j"
+	icon_state = "pda-janitor"
 	ttone = "slip"
 
 /obj/item/device/pda/toxins
 	default_cartridge = /obj/item/weapon/cartridge/signal/toxins
 	icon_state = "pda-tox"
+	ttone = "boom"
+
+/obj/item/device/pda/chem
+	default_cartridge = /obj/item/weapon/cartridge/signal/toxins
+	icon_state = "pda-chem"
 	ttone = "boom"
 
 /obj/item/device/pda/clown
@@ -75,7 +106,7 @@
 
 /obj/item/device/pda/heads
 	default_cartridge = /obj/item/weapon/cartridge/head
-	icon_state = "pda-h"
+	icon_state = "pda-heads"
 
 /obj/item/device/pda/heads/hop
 	default_cartridge = /obj/item/weapon/cartridge/hop
@@ -97,14 +128,14 @@
 	default_cartridge = /obj/item/weapon/cartridge/rd
 	icon_state = "pda-rd"
 
-/obj/item/device/pda/captain
+/obj/item/device/pda/heads/captain
 	default_cartridge = /obj/item/weapon/cartridge/captain
-	icon_state = "pda-c"
+	icon_state = "pda-cap"
 	toff = 1
 
 /obj/item/device/pda/quartermaster
 	default_cartridge = /obj/item/weapon/cartridge/quartermaster
-	icon_state = "pda-q"
+	icon_state = "pda-qm"
 
 /obj/item/device/pda/syndicate
 	default_cartridge = /obj/item/weapon/cartridge/syndicate

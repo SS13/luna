@@ -48,7 +48,7 @@
 /obj/item/clothing/glasses/meson
 	name = "Optical Meson Scanner"
 	icon_state = "meson"
-	item_state = "glasses"
+	item_state = "meson"
 
 /obj/item/clothing/glasses/regular
 	name = "Prescription Glasses"
@@ -64,10 +64,10 @@
 	var/already_worn = 0
 
 /obj/item/clothing/glasses/thermal
-	name = "Sunglasses"
-	desc = "These don't look like ordinary sunglasses."
-	icon_state = "sun"
-	item_state = "glasses"
+	name = "Thermal"
+	desc = "Optical Thermal Scanner."
+	icon_state = "thermal"
+	item_state = "thermal"
 
 // NO GLOVES NO LOVES
 
@@ -229,6 +229,12 @@
 	name = "Chef's hat"
 	icon_state = "chef"
 	item_state = "chef"
+	flags = FPRINT | TABLEPASS
+
+/obj/item/clothing/head/beret
+	name = "Red beret"
+	icon_state = "beret"
+	item_state = "beret"
 	flags = FPRINT | TABLEPASS
 
 
@@ -394,6 +400,11 @@
 	desc = "You're gay for even considering wearing this."
 	icon_state = "clown"
 	item_state = "clown"
+
+/obj/item/clothing/mask/mime
+	name = "Mime mask"
+	icon_state = "mime"
+	item_state = "mime"
 
 /obj/item/clothing/mask/medical
 	name = "medical mask"
@@ -966,11 +977,17 @@
 	color = "ba_suit"
 
 /obj/item/clothing/under/clown
-	name = "clown suit"
+	name = "Clown suit"
 	desc = "Wearing this, all the children love you, for all the wrong reasons."
 	icon_state = "clown"
 	item_state = "clown"
 	color = "clown"
+
+/obj/item/clothing/under/mime
+	name = "Mime suit"
+	icon_state = "mime"
+	item_state = "mime"
+	color = "mime"
 
 /obj/item/clothing/under/chef
 	desc = "Issued only to the most hardcore chefs in space."

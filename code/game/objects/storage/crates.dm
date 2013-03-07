@@ -40,22 +40,31 @@
 	openicon = "crateopen"
 	closedicon = "crate"
 
+/obj/crate/hydro
+	desc = "A hydroponical crate."
+	name = "Hydroponical crate"
+	icon = 'storage.dmi'
+	icon_state = "hydrocrate"
+	density = 1
+	openicon = "hydrocrateopen"
+	closedicon = "hydrocrate"
+
 /obj/crate/engineering
 	desc = "A crate for the storage of engineering equipment."
 	name = "Engineering crate"
 	icon = 'storage.dmi'
-	icon_state = "crate"
+	icon_state = "engineering_crate"
 	density = 1
-	openicon = "crateopen"
-	closedicon = "crate"
+	openicon = "engineering_crate_open"
+	closedicon = "engineering_crate"
 /obj/crate/engineeringsuits
 	desc = "A crate for the storage of engineering space suits."
 	name = "Engineering crate"
 	icon = 'storage.dmi'
-	icon_state = "crate"
+	icon_state = "engineering_crate"
 	density = 1
-	openicon = "crateopen"
-	closedicon = "crate"
+	openicon = "engineering_crate_open"
+	closedicon = "engineering_crate"
 
 /obj/crate/freezer
 	desc = "A freezer."

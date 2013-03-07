@@ -39,6 +39,7 @@
 	access_shield_generator = 39
 	access_hydroponics = 40
 	access_theater = 41
+	access_HoSoffice = 42
 
 // these are big, seperate numbers
 	access_syndicate = 70
@@ -157,7 +158,7 @@
 		if("Scientist")
 			return list(access_tox, access_tox_storage, access_maint_tunnels, access_medlab, access_laboratories_doors)
 		if("Head of Security")
-			return list(access_incinerator, access_medical, access_morgue, access_tox, access_tox_storage, access_chemistry, access_medlab,
+			return list(access_HoSoffice, access_incinerator, access_medical, access_morgue, access_tox, access_tox_storage, access_chemistry, access_medlab,
 			            access_teleporter, access_heads, access_tech_storage, access_security, access_brig, access_atmospherics,
 			            access_maint_tunnels, access_bar, access_janitor, access_kitchen, access_robotics, access_laboratories_doors,
 			             access_armory, access_engine, access_security_passthrough, access_maintenance_hall, access_shield_generator, access_forensics_lockers, access_hydroponics)
@@ -178,6 +179,8 @@
 		if("Janitor")
 			return list(access_janitor, access_maint_tunnels, access_laboratories_doors, access_incinerator, access_maintenance_hall)
 		if("Clown")
+			return list(access_maint_tunnels, access_theater)
+		if("Mime")
 			return list(access_maint_tunnels, access_theater)
 		if("Chef")
 			return list(access_kitchen, access_maint_tunnels)
@@ -271,6 +274,8 @@
 			return "Technical Storage"
 		if(access_atmospherics)
 			return "Atmospherics"
+		if (access_HoSoffice)
+			return "Head of Security Office"
 		if(access_crematorium)
 			return "Crematorium"
 		if(access_armory)
@@ -298,6 +303,8 @@
 
 /proc/get_access_desc(A)
 	switch(A)
+		if (access_HoSoffice)
+			return "Head of Security Office"
 		if(access_cargo)
 			return "Cargo Bay"
 		if(access_cargo_bot)
@@ -385,7 +392,7 @@
 /proc/get_type_jobs(T)
 	switch(T)
 		if ("Civilian")
-			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster", "Clown")
+			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster", "Clown", "Mime")
 		if ("Security")
 			return list("Security Officer", "Forensic Technician", "Warden")
 		if ("Med/Sci")

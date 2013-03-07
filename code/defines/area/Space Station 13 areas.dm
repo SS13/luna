@@ -803,6 +803,14 @@
 	name = "Security Hallway"
 	icon_state = "security_lobby"
 
+/area/security/security_dormitory
+	name = "Security Dormitory"
+	icon_state = "security_lobby"
+
+/area/security/security_range
+	name = "Security Range"
+	icon_state = "security_lobby"
+
 /area/security/checkpoint
 	name = "Arrivals Checkpoint"
 	icon_state = "checkpoint1"

@@ -313,14 +313,14 @@
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 
 		if ("Geneticist")
-			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/gene(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/geneticist(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/storage/labcoat(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci,slot_ears)
 
 		if ("Chemist")
-			src.equip_if_possible(new /obj/item/device/pda/toxins(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/chem(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/chemist(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/storage/labcoat(src), slot_wear_suit)
@@ -340,6 +340,14 @@
 			src.equip_if_possible(new /obj/item/weapon/bikehorn(src), slot_in_backpack)
 			src.mutations |= 16
 
+		if ("Mime")
+			src.equip_if_possible(new /obj/item/device/pda/mime(src), slot_belt)
+			src.equip_if_possible(new /obj/item/clothing/under/mime(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
+			src.equip_if_possible(new /obj/item/clothing/mask/mime(src), slot_wear_mask)
+			src.equip_if_possible(new /obj/item/clothing/gloves/latex(src), slot_gloves)
+			src.equip_if_possible(new /obj/item/clothing/head/beret(src), slot_head)
+
 		if ("Engineer")
 			src.equip_if_possible(new /obj/item/device/pda/engineering(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/engineer(src), slot_w_uniform)
@@ -356,7 +364,7 @@
 
 		if ("Forensic Technician")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec(src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/det(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/ftech(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			//src.equip_if_possible(new /obj/item/clothing/head/det_hat(src), slot_head)
@@ -377,7 +385,7 @@
 
 		if ("Captain")
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/captain(src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/captain(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/heads/captain(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/captain(src), slot_w_uniform)
 		//	src.equip_if_possible(new /obj/item/clothing/suit/armor/captain(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
@@ -392,8 +400,6 @@
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec(src), slot_ears)
 			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/color/red(src), slot_w_uniform)
-			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
-			src.equip_if_possible(new /obj/item/clothing/head/helmet(src), slot_head)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 //			src.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(src), slot_glasses)
 //			src.equip_if_possible(new /obj/item/weapon/gun/taser_gun(src), slot_in_backpack)
@@ -416,16 +422,16 @@
 
 		if ("Head of Security")
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/hos(src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/heads(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/heads/hos(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/head_of_security(src), slot_w_uniform)
-			src.equip_if_possible(new /obj/item/clothing/suit/storage/armourrigvest(src), slot_wear_suit)
+			src.equip_if_possible(new /obj/item/clothing/suit/hos(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet/HoS(src), slot_head)
-			src.equip_if_possible(new /obj/item/clothing/gloves/red(src), slot_gloves)
+			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)
 
 		if ("Head of Personnel")
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/hop(src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/heads(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/heads/hop(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/head_of_personnel(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
@@ -436,6 +442,14 @@
 			src.equip_if_possible(new /obj/item/weapon/storage/id_kit(src), slot_in_backpack)
 //			src.equip_if_possible(new /obj/item/device/flash(src), slot_l_store)
 
+		if ("Warden")
+			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec(src), slot_ears)
+			src.equip_if_possible(new /obj/item/device/pda/warden(src), slot_belt)
+			src.equip_if_possible(new /obj/item/clothing/under/rank/warden(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/clothing/suit/warden_jacket(src), slot_wear_suit)
+			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
+			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)
+
 		if ("Atmospheric Technician")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_eng(src), slot_ears)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/atmospheric_technician(src), slot_w_uniform)
@@ -445,17 +459,19 @@
 
 		if ("Barman")
 			src.equip_if_possible(new /obj/item/clothing/under/bartender(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/warden(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
 
 		if ("Chef")
 			src.equip_if_possible(new /obj/item/clothing/under/chef(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/chef(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/chefhat(src), slot_head)
 			src.equip_if_possible(new /obj/item/weapon/kitchen/rollingpin(src), slot_in_backpack)
 
 		if ("Roboticist")
-			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/robot(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/roboticist(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/storage/labcoat(src), slot_wear_suit)
@@ -466,7 +482,7 @@
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci,slot_ears) // Med + Science? That's okay.
 
 		if ("Hydroponicist")
-			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/hydro(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/hydroponics(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/gloves/latex(src), slot_gloves)
