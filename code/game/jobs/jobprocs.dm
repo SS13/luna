@@ -405,6 +405,7 @@
 //			src.equip_if_possible(new /obj/item/weapon/gun/taser_gun(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/handcuffs(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/handcuffs(src), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/clothing/head/helmet/Secsoft(src), slot_head)
 //			src.equip_if_possible(new /obj/item/weapon/storage/flashbang_kit(src), slot_in_backpack)
 //			src.equip_if_possible(new /obj/item/weapon/baton(src), slot_belt)
 //			src.equip_if_possible(new /obj/item/device/flash(src), slot_l_store)

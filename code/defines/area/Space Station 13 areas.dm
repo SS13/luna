@@ -829,6 +829,10 @@
 	name = "Brig"
 	icon_state = "brig"
 
+/area/security/questingr
+	name = "Questing Room"
+	icon_state = "brig"
+
 /area/security/prison
 	name = "Prison"
 	icon_state = "brig"

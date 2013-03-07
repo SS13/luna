@@ -79,7 +79,7 @@
 				tmob << "\red You stumble and hit your head."
 				tmob.weakened = max(rand(3,10), tmob.weakened)
 				tmob.stuttering = max(rand(0,3), tmob.stuttering)
-				tmob.make_dizzy(150)
+			//	tmob.make_dizzy(150)
 	for(var/atom/A as mob|obj|turf|area in src)
 		spawn( 0 )
 			if ((A && M))
