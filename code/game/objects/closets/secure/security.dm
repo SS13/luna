@@ -46,8 +46,6 @@
 	new /obj/item/device/detective_scanner( src )
 	new /obj/item/device/detective_scanner( src )
 	new /obj/item/weapon/storage/box/evidence( src )
-	new /obj/item/weapon/storage/backpack/security(src)
-	new /obj/item/weapon/storage/backpack/security(src)
 	return
 
 /obj/secure_closet/highsec/New() // HoP closet
@@ -63,7 +61,6 @@
 	new /obj/item/clothing/glasses/sunglasses( src )
 	new /obj/item/clothing/suit/armor/vest( src )
 	new /obj/item/clothing/head/helmet( src )
-	new /obj/item/weapon/storage/backpack(src)
 	return
 
 /obj/secure_closet/hos/New()
@@ -118,7 +115,7 @@
 	new /obj/item/clothing/shoes/brown( src )
 	new /obj/item/clothing/glasses/regular( src )
 	new /obj/item/clothing/suit/storage/labcoat( src )
-	new /obj/item/weapon/storage/backpack/medical(src)
+	new /obj/item/weapon/storage/backpack/medic(src)
 	return
 /obj/secure_closet/qm/New()
 	..()

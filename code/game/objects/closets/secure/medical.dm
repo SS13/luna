@@ -58,5 +58,5 @@
 	new /obj/item/device/pda/medical(src)
 	new /obj/item/clothing/gloves/latex(src)
 	new /obj/item/weapon/storage/belt/medical(src)
-	new /obj/item/weapon/storage/backpack/medical(src)
+	new /obj/item/weapon/storage/backpack/medic(src)
 	return
