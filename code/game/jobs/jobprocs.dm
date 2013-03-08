@@ -498,7 +498,7 @@
 			//src.equip_if_possible(new /obj/item/clothing/suit/exo_suit(src), slot_wear_suit)
 
 		if ("Chief Engineer")
-			src.equip_if_possible(new /obj/item/device/pda/heads(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/pda/heads/ce(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/gloves/yellow(src), slot_gloves)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet/hardhat(src), slot_head)

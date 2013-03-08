@@ -311,7 +311,7 @@
 	icon_closed = "capsecure"
 	icon_locked = "capsecure1"
 	icon_opened = "capsecureopen"
-	icon_broken = "capdensecurebroken"
+	icon_broken = "capsecurebroken"
 	icon_off = "capsecureoff"
 	req_access = list(access_captain)
 

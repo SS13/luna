@@ -18,24 +18,40 @@
 	desc = "It's a backpack made by Honk! Co."
 	icon_state = "clownpack"
 	item_state = "clownpack"
+	w_class = 4.0
+	flags = 259.0
 
 /obj/item/weapon/storage/backpack/medic
 	name = "Medical backpack"
 	desc = "It's a backpack especially designed for use in a sterile environment."
 	icon_state = "medicalpack"
 	item_state = "medicalpack"
+	w_class = 4.0
+	flags = 259.0
 
 /obj/item/weapon/storage/backpack/security
 	name = "Security backpack"
 	desc = "It's a very robust backpack."
 	icon_state = "securitypack"
 	item_state = "securitypack"
+	w_class = 4.0
+	flags = 259.0
 
 /obj/item/weapon/storage/backpack/industrial
 	name = "Industrial backpack"
 	desc = "It's a tough backpack for the daily grind of station life."
 	icon_state = "engiepack"
 	item_state = "engiepack"
+	w_class = 4.0
+	flags = 259.0
+
+/obj/item/weapon/storage/backpack/captain
+	name = "Captain's backpack"
+	desc = "It's a special backpack made exclusively for Nanotrasen officers."
+	icon_state = "captainpack"
+	item_state = "captainpack"
+	w_class = 4.0
+	flags = 259.0
 
 /obj/item/weapon/storage/pill_bottle
 	name = "Pill bottle"
