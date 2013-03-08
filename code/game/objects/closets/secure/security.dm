@@ -16,6 +16,7 @@
 	new /obj/item/device/flash(src)
 	new /obj/item/weapon/storage/flashbang_kit(src)
 	new /obj/item/clothing/head/helmet/Secsoft(src)
+	new /obj/item/weapon/storage/backpack/security(src)
 	return
 
 /obj/secure_closet/security2/New()
@@ -23,6 +24,7 @@
 	sleep(2)
 	new /obj/item/device/radio/headset/headset_sec(src)
 	new /obj/item/device/pda/det(src)
+	new /obj/item/device/pda/security(src)
 	new /obj/item/clothing/under/det( src )
 	new /obj/item/clothing/under/ftech( src )
 	new /obj/item/clothing/suit/storage/det_suit( src )
@@ -44,6 +46,8 @@
 	new /obj/item/device/detective_scanner( src )
 	new /obj/item/device/detective_scanner( src )
 	new /obj/item/weapon/storage/box/evidence( src )
+	new /obj/item/weapon/storage/backpack/security(src)
+	new /obj/item/weapon/storage/backpack/security(src)
 	return
 
 /obj/secure_closet/highsec/New() // HoP closet
@@ -59,6 +63,7 @@
 	new /obj/item/clothing/glasses/sunglasses( src )
 	new /obj/item/clothing/suit/armor/vest( src )
 	new /obj/item/clothing/head/helmet( src )
+	new /obj/item/weapon/storage/backpack(src)
 	return
 
 /obj/secure_closet/hos/New()
@@ -79,6 +84,7 @@
 	new /obj/item/weapon/handcuffs(src)
 	new /obj/item/weapon/baton(src)
 	new /obj/item/clothing/gloves/black(src)
+	new /obj/item/weapon/storage/backpack/security(src)
 	return
 
 /obj/secure_closet/warden/New()
@@ -97,6 +103,7 @@
 	new /obj/item/weapon/handcuffs(src)
 	new /obj/item/weapon/baton(src)
 	new /obj/item/clothing/gloves/black(src)
+	new /obj/item/weapon/storage/backpack/security(src)
 	return
 
 
@@ -111,6 +118,7 @@
 	new /obj/item/clothing/shoes/brown( src )
 	new /obj/item/clothing/glasses/regular( src )
 	new /obj/item/clothing/suit/storage/labcoat( src )
+	new /obj/item/weapon/storage/backpack/medical(src)
 	return
 /obj/secure_closet/qm/New()
 	..()

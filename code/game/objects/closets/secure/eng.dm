@@ -11,6 +11,7 @@
 	new /obj/item/device/radio/headset/headset_eng(src)
 	new /obj/item/device/pda/engineering(src)
 	new /obj/item/clothing/shoes/magnetic(src)
+	new /obj/item/weapon/storage/backpack/industrial(src)
 	return
 
 /obj/secure_closet/ce/New()
@@ -24,6 +25,7 @@
 	new /obj/item/device/pda/heads/ce(src)
 	new /obj/item/weapon/storage/belt/utility(src)
 	new /obj/item/device/radio/headset/heads/ce(src)
+	new /obj/item/weapon/storage/backpack/industrial(src)
 	return
 
 /obj/secure_closet/engelec/New()

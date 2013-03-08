@@ -13,4 +13,6 @@
 	new /obj/item/clothing/under/rank/captain/suit(src)
 	new /obj/item/clothing/gloves/green(src)
 	new /obj/item/clothing/gloves/green(src)
+	new /obj/item/weapon/storage/backpack/captain(src)
+	new /obj/item/device/pda/heads/captain(src)
 	return
