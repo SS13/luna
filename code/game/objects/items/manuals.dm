@@ -4,7 +4,7 @@
 /obj/item/weapon/book/manual/security_space_law
 	name = "Space Law"
 	desc = "A set of NanoTrasen guidelines for keeping law and order on their space ships."
-	icon_state = "spacelaw"
+	icon_state = "spacelaws"
 	text = {"
 
 		<html><head>

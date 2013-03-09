@@ -484,7 +484,7 @@
 	icon_opened = "securemedopen"
 	icon_broken = "securemedbroken"
 	icon_off = "securemedoff"
-	req_access = list(access_chemistry)
+	req_access = list(access_robotics)
 
 /obj/secure_closet/medical2
 	name = "Anesthetic"
