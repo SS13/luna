@@ -137,6 +137,12 @@
 	icon_state = "flashbang"
 	item_state = "syringe_kit"
 
+/obj/item/weapon/storage/cleaner_kit
+	desc = "A box with 5 cleaner grenades."
+	name = "Cleaner grenades"
+	icon_state = "flashbang"
+	item_state = "syringe_kit"
+
 /obj/item/weapon/storage/gl_kit
 	name = "Prescription Glasses"
 	icon_state = "id"

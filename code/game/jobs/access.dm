@@ -188,6 +188,8 @@
 			return list(access_robotics, access_tech_storage, access_medical, access_morgue, access_maint_tunnels)
 		if("Quartermaster")
 			return list(access_maint_tunnels, access_cargo, access_cargo_bot)
+		if("Cargo")
+			return list(access_maint_tunnels, access_cargo, access_cargo_bot)
 		if("Chief Engineer")
 			return list(access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels,
 			            access_external_airlocks, access_atmospherics, access_emergency_storage, access_eva,
@@ -392,7 +394,7 @@
 /proc/get_type_jobs(T)
 	switch(T)
 		if ("Civilian")
-			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster", "Clown", "Mime")
+			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster", "Cargo", "Clown", "Mime")
 		if ("Security")
 			return list("Security Officer", "Forensic Technician", "Warden")
 		if ("Med/Sci")

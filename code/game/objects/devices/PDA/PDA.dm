@@ -137,6 +137,9 @@
 	default_cartridge = /obj/item/weapon/cartridge/quartermaster
 	icon_state = "pda-qm"
 
+/obj/item/device/pda/cargo
+	icon_state = "pda-cargo"
+
 /obj/item/device/pda/syndicate
 	default_cartridge = /obj/item/weapon/cartridge/syndicate
 	icon_state = "pda-syn"

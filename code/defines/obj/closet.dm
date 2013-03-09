@@ -78,6 +78,27 @@
 	icon_closed = "bio"
 	icon_opened = "bioopen"
 
+/obj/closet/l3seccloset
+	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
+	name = "Level 3 Security Biohazard Suit"
+	icon_state = "bio_security"
+	icon_closed = "bio_security"
+	icon_opened = "bio_securityopen"
+
+/obj/closet/l3jancloset
+	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
+	name = "Level 3 Janitor Biohazard Suit"
+	icon_state = "bio_janitor"
+	icon_closed = "bio_janitor"
+	icon_opened = "bio_janitoropen"
+
+/obj/closet/l3scicloset
+	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
+	name = "Level 3 Scientist Biohazard Suit"
+	icon_state = "bio_scientist"
+	icon_closed = "bio_scientist"
+	icon_opened = "bio_scientistopen"
+
 /obj/closet/syndicate
 	desc = "Syndicate preparations closet."
 	name = "Weapons Closet"
@@ -266,7 +287,7 @@
 	var/id = null
 
 /obj/secure_closet/highsec
-	name = "Head of Personnel"
+	name = "Head of Personnel's Closet"
 	icon_state = "hopsecure1"
 	icon_closed = "hopsecure"
 	icon_locked = "hopsecure1"
@@ -276,7 +297,7 @@
 	req_access = list(access_heads)
 
 /obj/secure_closet/hos
-	name = "Head Of Security"
+	name = "Head Of Security's Closet"
 	icon_state = "hossecure1"
 	icon_closed = "hossecure"
 	icon_locked = "hossecure1"
@@ -286,7 +307,7 @@
 	req_access = list(access_heads)
 
 /obj/secure_closet/warden
-	name = "Warden"
+	name = "Warden's Closet"
 	icon_state = "wardensecure1"
 	icon_closed = "wardensecure"
 	icon_locked = "wardensecure1"
@@ -296,7 +317,7 @@
 	req_access = list(access_armory)
 
 /obj/secure_closet/rd
-	name = "Research Director"
+	name = "Research Director's Closet"
 	icon_state = "rdsecure1"
 	icon_closed = "rdsecure"
 	icon_locked = "rdsecure1"
@@ -346,7 +367,7 @@
 	req_access = list(access_engine_equip)
 
 /obj/secure_closet/ce
-	name = "CE Closet"
+	name = "Chief Engineer's Closet"
 	icon_state = "securece1"
 	icon_closed = "securece"
 	icon_locked = "securece1"
@@ -356,7 +377,7 @@
 	req_access = list(access_heads)
 
 /obj/secure_closet/qm
-	name = "QM Closet"
+	name = "Quartermaster's Closet"
 	icon_state = "secureqm1"
 	icon_closed = "secureqm"
 	icon_locked = "secureqm1"
@@ -364,6 +385,36 @@
 	icon_broken = "secureqmbroken"
 	icon_off = "secureqmoff"
 	req_access = list(access_cargo)
+
+/obj/secure_closet/cargo
+	name = "Cargo Closet"
+	icon_state = "securecargo1"
+	icon_closed = "securecargo"
+	icon_locked = "securecargo1"
+	icon_opened = "securecargoopen"
+	icon_broken = "securecargobroken"
+	icon_off = "securecargooff"
+	req_access = list(access_cargo)
+
+/obj/secure_closet/mining
+	name = "Miner Closet"
+	icon_state = "miningsec1"
+	icon_closed = "miningsec"
+	icon_locked = "miningsec1"
+	icon_opened = "miningsecopen"
+	icon_broken = "miningsecbroken"
+	icon_off = "miningsecoff"
+	req_access = list(access_cargo)
+
+/obj/secure_closet/hydro
+	name = "Hydroponical Closet"
+	icon_state = "hydrosecure1"
+	icon_closed = "hydrosecure"
+	icon_locked = "hydrosecure1"
+	icon_opened = "hydrosecureopen"
+	icon_broken = "hydrosecurebroken"
+	icon_off = "hydrosecureoff"
+	req_access = list(access_hydroponics)
 
 /obj/secure_closet/medical	//Empty medical closet
 	name = "Medical Closet"
@@ -384,6 +435,7 @@
 	icon_broken = "medicalbroken"
 	icon_off = "medical1"
 	req_access = list(access_medical)
+
 /obj/secure_closet/medical3
 	name = "Blood Freezer"
 	icon_state = "medical1"
@@ -393,6 +445,7 @@
 	icon_broken = "medicalbroken"
 	icon_off = "medical1"
 	req_access = list(access_medical)
+
 /obj/secure_closet/medicalcloset
 	name = "Medical Closet"
 	icon_state = "securemed1"
@@ -402,6 +455,17 @@
 	icon_broken = "securemedbroken"
 	icon_off = "securemedoff"
 	req_access = list(access_medical)
+
+/obj/secure_closet/cmo
+	name = "Chief Medical Officer's Closet"
+	icon_state = "cmosecure1"
+	icon_closed = "cmosecure"
+	icon_locked = "cmosecure1"
+	icon_opened = "cmosecureopen"
+	icon_broken = "cmosecurebroken"
+	icon_off = "cmosecureoff"
+	req_access = list(access_medical)
+
 /obj/secure_closet/chemical
 	name = "Chemical Closet"
 	icon_state = "secureres1"
@@ -410,6 +474,16 @@
 	icon_opened = "secureresopen"
 	icon_broken = "secureresbroken"
 	icon_off = "secureresoff"
+	req_access = list(access_chemistry)
+
+/obj/secure_closet/robot
+	name = "Robotic Closet"
+	icon_state = "securemed1"
+	icon_closed = "securemed"
+	icon_locked = "securemed1"
+	icon_opened = "securemedopen"
+	icon_broken = "securemedbroken"
+	icon_off = "securemedoff"
 	req_access = list(access_chemistry)
 
 /obj/secure_closet/medical2
@@ -459,8 +533,8 @@
 
 /obj/secure_closet/chemtoxin
 	name = "Chemistry Locker"
-
 	req_access = list(access_medical)
+
 /obj/secure_closet/bar
 	name = "Booze"
 	req_access = list(access_bar)

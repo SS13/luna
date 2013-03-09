@@ -1,0 +1,22 @@
+/obj/secure_closet/qm/New()
+	..()
+	sleep(2)
+	new /obj/item/clothing/under/cargo ( src )
+	new /obj/item/device/pda/quartermaster(src)
+	new /obj/item/clothing/gloves/black ( src )
+	new /obj/item/weapon/hand_labeler ( src )
+	new /obj/item/device/radio/headset/headset_cargo(src)
+	new /obj/item/clothing/glasses/sunglasses(src)
+	new /obj/item/clothing/head/helmet/cargosoft(src)
+	return
+
+/obj/secure_closet/cargo/New()
+	..()
+	sleep(2)
+	new /obj/item/clothing/under/cargo ( src )
+	new /obj/item/device/pda/cargo(src)
+	new /obj/item/clothing/gloves/black ( src )
+	new /obj/item/weapon/hand_labeler ( src )
+	new /obj/item/device/radio/headset/headset_cargo(src)
+	new /obj/item/clothing/head/helmet/cargosoft(src)
+	return

@@ -102,29 +102,3 @@
 	new /obj/item/clothing/gloves/black(src)
 	new /obj/item/weapon/storage/backpack/security(src)
 	return
-
-
-
-//Added by Strumpetplaya - Research Director's Closet for office.
-/obj/secure_closet/rd/New()
-	..()
-	sleep(2)
-	new /obj/item/device/radio/headset/heads/rd( src )
-	new /obj/item/device/pda/heads/rd(src)
-	new /obj/item/clothing/under/rank/research_director( src )
-	new /obj/item/clothing/shoes/brown( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/suit/storage/labcoat( src )
-	new /obj/item/weapon/storage/backpack/medic(src)
-	return
-/obj/secure_closet/qm/New()
-	..()
-	sleep(2)
-	new /obj/item/clothing/under/cargo ( src )
-	new /obj/item/device/pda/quartermaster(src)
-	new /obj/item/clothing/gloves/black ( src )
-	new /obj/item/weapon/hand_labeler ( src )
-	new /obj/item/device/radio/headset/headset_cargo(src)
-	new /obj/item/clothing/glasses/sunglasses(src)
-	new /obj/item/clothing/head/helmet/cargosoft(src)
-	return

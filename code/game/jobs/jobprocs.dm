@@ -331,7 +331,7 @@
 		if ("Janitor")
 			src.equip_if_possible(new /obj/item/device/pda/janitor(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/janitor(src), slot_w_uniform)
-			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
+			src.equip_if_possible(new /obj/item/clothing/shoes/galoshes(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 
 		if ("Clown")
@@ -506,9 +506,12 @@
 			src.equip_if_possible(new /obj/item/device/pda/hydro(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/hydroponics(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
-			src.equip_if_possible(new /obj/item/clothing/gloves/latex(src), slot_gloves)
-			//src.equip_if_possible(new /obj/item/device/radio/headset/headset_med,slot_ears) // standard radio for you
+			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)
+			src.equip_if_possible(new /obj/item/device/radio/headset,slot_ears)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
+			src.equip_if_possible(new /obj/item/clothing/head/green_band(src), slot_head)
+			src.equip_if_possible(new /obj/item/clothing/suit/storage/apron(src), slot_wear_suit)
+
 
 		if ("Quartermaster")
 			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)
@@ -516,6 +519,15 @@
 			src.equip_if_possible(new /obj/item/clothing/under/cargo(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/quartermaster(src), slot_belt)
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/qm, slot_ears) // heads(!)/qm
+			//src.equip_if_possible(new /obj/item/clothing/suit/exo_suit(src), slot_wear_suit)
+			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
+
+		if ("Cargo")
+			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)
+			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
+			src.equip_if_possible(new /obj/item/clothing/under/cargo(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/cargo(src), slot_belt)
+			src.equip_if_possible(new /obj/item/device/radio/headset/headset_cargo, slot_ears)
 			//src.equip_if_possible(new /obj/item/clothing/suit/exo_suit(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 

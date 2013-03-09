@@ -4,7 +4,7 @@ var/list/occupations = list(
 	"Forensic Technician",
 	"Geneticist",
 	"Scientist",	"Scientist", "Scientist",
-	"Atmospheric Technician", "Atmospheric Technician", "Atmospheric Technician",
+	"Atmospheric Technician", "Atmospheric Technician",
 	"Medical Doctor", "Medical Doctor",
 	"Head of Personnel",
 	"Head of Security",
@@ -21,7 +21,8 @@ var/list/occupations = list(
 	"Warden",
 	"Clown",
 	"Mime",
-	"Quartermaster","Quartermaster","Quartermaster")
+	"Quartermaster",
+	"Cargo","Cargo")
 
 var/list/assistant_occupations = list(
 	"Unassigned")
@@ -89,6 +90,8 @@ var/list/assistant_occupations = list(
 			return 2
 		if("Quartermaster")
 			return 2
+		if("Cargo")
+			return 1
 		if("Captain")
 			return 4
 		else

@@ -576,26 +576,36 @@
 /obj/item/weapon/storage/lightbox
 	name = "replacement lights"
 	icon = 'storage.dmi'
-	icon_state = "light"
+	icon_state = "light_tube"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/lightbox/New(flag as text)
-	..()
-	if(!flag == "NODUPE")
-		new /obj/item/weapon/light/tube(src)
-		new /obj/item/weapon/light/tube(src)
-		new /obj/item/weapon/light/tube(src)
+/obj/item/weapon/storage/lightbox/tubes
+	name = "Replacement tubes"
+	icon = 'storage.dmi'
+	icon_state = "light_tube"
+	item_state = "syringe_kit"
 
-		new /obj/item/weapon/light/bulb(src)
-		new /obj/item/weapon/light/bulb(src)
-		new /obj/item/weapon/light/bulb(src)
+/obj/item/weapon/storage/lightbox/bulb
+	name = "Replacement bulbs"
+	icon = 'storage.dmi'
+	icon_state = "light_bulb"
+	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/lightbox/tubes/New()
-	..(flag = "NODUPE")
+	..()
+	new /obj/item/weapon/light/tube(src)
+	new /obj/item/weapon/light/tube(src)
+	new /obj/item/weapon/light/tube(src)
 	new /obj/item/weapon/light/tube(src)
 	new /obj/item/weapon/light/tube(src)
 	new /obj/item/weapon/light/tube(src)
 
-	new /obj/item/weapon/light/tube(src)
-	new /obj/item/weapon/light/tube(src)
-	new /obj/item/weapon/light/tube(src)
+/obj/item/weapon/storage/lightbox/bulb/New()
+	..()
+	new /obj/item/weapon/light/bulb(src)
+	new /obj/item/weapon/light/bulb(src)
+	new /obj/item/weapon/light/bulb(src)
+
+	new /obj/item/weapon/light/bulb(src)
+	new /obj/item/weapon/light/bulb(src)
+	new /obj/item/weapon/light/bulb(src)

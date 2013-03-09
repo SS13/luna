@@ -11,3 +11,15 @@
 	new /obj/item/clothing/head/bio_hood( src )
 	new /obj/item/clothing/suit/storage/labcoat(src)
 	return
+
+/obj/secure_closet/rd/New()
+	..()
+	sleep(2)
+	new /obj/item/device/radio/headset/heads/rd( src )
+	new /obj/item/device/pda/heads/rd(src)
+	new /obj/item/clothing/under/rank/research_director( src )
+	new /obj/item/clothing/shoes/brown( src )
+	new /obj/item/clothing/glasses/regular( src )
+	new /obj/item/clothing/suit/storage/labcoat( src )
+	new /obj/item/weapon/storage/backpack/medic(src)
+	return

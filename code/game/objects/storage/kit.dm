@@ -22,6 +22,16 @@
 	..()
 	return
 
+/obj/item/weapon/storage/cleaner_kit/New()
+
+	new /obj/item/weapon/chem_grenade/cleaner( src )
+	new /obj/item/weapon/chem_grenade/cleaner( src )
+	new /obj/item/weapon/chem_grenade/cleaner( src )
+	new /obj/item/weapon/chem_grenade/cleaner( src )
+	new /obj/item/weapon/chem_grenade/cleaner( src )
+	..()
+	return
+
 /obj/item/weapon/storage/emp_kit/New()
 
 	new /obj/item/weapon/empgrenade( src )
