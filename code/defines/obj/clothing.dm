@@ -243,7 +243,7 @@
 /obj/item/clothing/head/beret
 	name = "Red beret"
 	icon_state = "beret"
-	item_state = "beret"
+	item_state = "secsoft"
 	flags = FPRINT | TABLEPASS
 
 /obj/item/clothing/head/green_band

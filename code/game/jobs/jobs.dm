@@ -91,7 +91,7 @@ var/list/assistant_occupations = list(
 		if("Quartermaster")
 			return 2
 		if("Cargo")
-			return 1
+			return 0
 		if("Captain")
 			return 4
 		else
