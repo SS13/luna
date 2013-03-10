@@ -456,6 +456,16 @@
 	icon_off = "securemedoff"
 	req_access = list(access_medical)
 
+/obj/secure_closet/genetics
+	name = "Genetic's Closet"
+	icon_state = "securemed1"
+	icon_closed = "securemed"
+	icon_locked = "securemed1"
+	icon_opened = "securemedopen"
+	icon_broken = "securemedbroken"
+	icon_off = "securemedoff"
+	req_access = list(access_medlab)
+
 /obj/secure_closet/cmo
 	name = "Chief Medical Officer's Closet"
 	icon_state = "cmosecure1"
@@ -468,6 +478,16 @@
 
 /obj/secure_closet/chemical
 	name = "Chemical Closet"
+	icon_state = "secureres1"
+	icon_closed = "secureres"
+	icon_locked = "secureres1"
+	icon_opened = "secureresopen"
+	icon_broken = "secureresbroken"
+	icon_off = "secureresoff"
+	req_access = list(access_chemistry)
+
+/obj/secure_closet/chem
+	name = "Chemical's Closet"
 	icon_state = "secureres1"
 	icon_closed = "secureres"
 	icon_locked = "secureres1"

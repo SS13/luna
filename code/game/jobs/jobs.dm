@@ -3,7 +3,7 @@ var/list/occupations = list(
 	"Security Officer", "Security Officer", "Security Officer", "Security Officer", "Security Officer",
 	"Forensic Technician",
 	"Geneticist",
-	"Scientist",	"Scientist", "Scientist",
+	"Scientist", "Scientist", "Scientist",
 	"Atmospheric Technician", "Atmospheric Technician",
 	"Medical Doctor", "Medical Doctor",
 	"Head of Personnel",
@@ -22,7 +22,7 @@ var/list/occupations = list(
 	"Clown",
 	"Mime",
 	"Quartermaster",
-	"Cargo","Cargo")
+	"Cargo")
 
 var/list/assistant_occupations = list(
 	"Unassigned")

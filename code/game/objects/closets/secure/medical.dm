@@ -86,3 +86,17 @@
 	new /obj/item/clothing/gloves/latex(src)
 	new /obj/item/weapon/storage/backpack/medic(src)
 	return
+
+/obj/secure_closet/genetics/New()
+    ..()
+    sleep(2)
+    new /obj/item/device/pda/gene(src)
+    new /obj/item/clothing/under/rank/geneticist( src )
+    new /obj/item/clothing/shoes/white( src )
+    new /obj/item/weapon/storage/stma_kit( src )
+    new /obj/item/clothing/suit/storage/labcoat/gen(src)
+    new /obj/item/device/radio/headset/headset_medsci(src)
+    new /obj/item/clothing/gloves/latex(src)
+    new /obj/item/weapon/storage/belt/medical(src)
+    new /obj/item/weapon/storage/backpack/medic(src)
+    return

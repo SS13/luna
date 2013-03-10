@@ -108,6 +108,15 @@
 	protective_temperature = 310
 	heat_transfer_coefficient = 0.90
 
+/obj/item/clothing/gloves/captain
+	name = "Captain Gloves"
+	icon_state = "captain"
+	item_state = "swat_gl"
+	siemens_coefficient = 0.30
+
+	protective_temperature = 310
+	heat_transfer_coefficient = 0.90
+
 /obj/item/clothing/gloves/swat
 	desc = "These tactical gloves are somewhat fire and impact-resistant."
 	name = "SWAT Gloves"
@@ -466,13 +475,15 @@
 /obj/item/clothing/shoes/black
 	name = "Black shoes"
 	icon_state = "black"
+	item_state = "bl_shoes"
 
 	protective_temperature = 1500
 	heat_transfer_coefficient = 0.01
 
 /obj/item/clothing/shoes/magnetic
-	name = "Magnetic Boots"
-	icon_state = "boots"
+	name = "Magboots"
+	icon_state = "magboots"
+	item_state = "o_shoes"
 
 	protective_temperature = 1500
 	heat_transfer_coefficient = 0.01
@@ -480,14 +491,27 @@
 /obj/item/clothing/shoes/brown
 	name = "Brown Shoes"
 	icon_state = "brown"
+	item_state = "b_shoes"
 
 /obj/item/clothing/shoes/orange
 	name = "Orange Shoes"
 	icon_state = "orange"
+	item_state = "o_shoes"
+
+/obj/item/clothing/shoes/blue
+	name = "Blue Shoes"
+	icon_state = "blue"
+	item_state = "bl_shoes"
+
+/obj/item/clothing/shoes/green
+	name = "Green Shoes"
+	icon_state = "green"
+	item_state = "bl_shoes"
 
 /obj/item/clothing/shoes/swat
 	name = "SWAT shoes"
 	icon_state = "swat"
+	item_state = "bl_shoes"
 
 /obj/item/clothing/shoes/boots
 	name = "Black boots"
@@ -523,7 +547,7 @@
 	desc = "Damn, thems some big shoes."
 	name = "Clown shoes"
 	icon_state = "clown"
-	item_state = "clown"
+	item_state = "clown_shoes"
 
 // SUITS
 
@@ -582,18 +606,38 @@
 	permeability_coefficient = 0.25
 	heat_transfer_coefficient = 0.75
 
+/obj/item/clothing/suit/storage/labcoat/gen
+	name = "Genetic's labcoat"
+	desc = "A suit that protects against minor chemical spills."
+	icon_state = "labcoat_gen"
+	item_state = "labcoat"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	permeability_coefficient = 0.25
+	heat_transfer_coefficient = 0.75
+
+/obj/item/clothing/suit/storage/labcoat/chem
+	name = "Chemical's labcoat"
+	desc = "A suit that protects against minor chemical spills."
+	icon_state = "labcoat_chem"
+	item_state = "labcoat"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	permeability_coefficient = 0.25
+	heat_transfer_coefficient = 0.75
+
+/obj/item/clothing/suit/storage/labcoat/tox
+	name = "Scienist's labcoat"
+	desc = "A suit that protects against minor chemical spills."
+	icon_state = "labcoat_tox"
+	item_state = "labcoat"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	permeability_coefficient = 0.25
+	heat_transfer_coefficient = 0.75
+
 /obj/item/clothing/suit/storage/chef
 	name = "Chef coat"
 	desc = "A fancy chef's coat."
 	icon_state = "chef"
 	item_state = "chef"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
-
-/obj/item/clothing/suit/storage/chicken
-	name = "Chiken suit"
-	desc = "A chicken suit."
-	icon_state = "chickensuit"
-	item_state = "chickensuit"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
 
 /obj/item/clothing/suit/storage/apron
@@ -602,6 +646,46 @@
 	icon_state = "apron"
 	item_state = "apron"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/suit/chicken
+	name = "Chiken suit"
+	desc = "A chicken suit."
+	icon_state = "chickensuit"
+	item_state = "chickensuit"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS|FEET
+
+/obj/item/clothing/suit/holydaypriest
+	name = "Holidaypriest robe"
+	desc = "A white robe."
+	icon_state = "holidaypriest"
+	item_state = "w_suit"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+
+/obj/item/clothing/suit/chaplain_hoodie
+	name = "Chaplain hoodie"
+	desc = "A black hoodie."
+	icon_state = "chaplain_hoodie"
+	item_state = "judge"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+
+/obj/item/clothing/suit/captunic
+	name = "Captain tunic"
+	desc = "A captain tunic."
+	icon_state = "captunic"
+	item_state = "w_suit"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+
+/obj/item/clothing/suit/hazard
+	name = "Hazard west"
+	desc = "A orange west."
+	icon_state = "hazard"
+	item_state = "orangebook"
+	permeability_coefficient = 0.50
+	protective_temperature = 300
+	siemens_coefficient = 0.30
+	heat_transfer_coefficient = 0.50
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
 
 /obj/item/clothing/suit/straight_jacket
 	name = "Straight jacket"
@@ -626,7 +710,7 @@
 /obj/item/clothing/suit/warden_jacket
 	name = "Warden jacket"
 	icon_state = "warden_jacket"
-	item_state = "warden_jacket"
+	item_state = "r_suit"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
@@ -685,6 +769,12 @@
 	item_state = "caparmor"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 
+/obj/item/clothing/suit/armor/captain_b
+	name = "Captain's armor"
+	icon_state = "caparmor_b"
+	item_state = "caparmor_b"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+
 /obj/item/clothing/suit/armor/centcomm
 	name = "Cent. Com. armor"
 	desc = "A suit that protects against some damage."
@@ -732,7 +822,7 @@
 	name = "Firesuit"
 	desc = "A suit that protects against fire and heat."
 	icon_state = "fire"
-	item_state = "fire_suit"
+	item_state = "fire"
 	gas_transfer_coefficient = 0.90
 	permeability_coefficient = 0.50
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
@@ -975,6 +1065,13 @@
 	color = "robotics"
 	siemens_coefficient = 0.50
 
+/obj/item/clothing/under/rank/qm
+	name = "Quartermaster's Jumpsuit"
+	desc = "What can brown do for you?"
+	icon_state = "qm"
+	item_state = "s_suit"
+	color = "qm"
+
 // OTHER NONRANKED STATION JOBS
 
 /obj/item/clothing/under/bartender
@@ -1045,18 +1142,18 @@
 	color = "sl_suit"
 
 /obj/item/clothing/under/cargo
-	name = "Quartermaster's Jumpsuit"
-	desc = "What can brown do for you?"
-	icon_state = "lightbrown"
-	item_state = "lb_suit"
-	color = "cargo"
-
-/obj/item/clothing/under/cargo
 	name = "Cargo's Jumpsuit"
 	desc = "What can brown do for you?"
-	icon_state = "lightbrown"
-	item_state = "lb_suit"
+	icon_state = "cargo"
+	item_state = "s_suit"
 	color = "cargo"
+
+/obj/item/clothing/under/miner
+	name = "Miner's Jumpsuit"
+	desc = "What can brown do for you?"
+	icon_state = "miner"
+	item_state = "s_suit"
+	color = "miner"
 
 /obj/item/clothing/under/syndicate
 	name = "Tactical Turtleneck"

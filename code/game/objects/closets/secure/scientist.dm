@@ -4,12 +4,13 @@
 	new /obj/item/weapon/tank/air( src )
 	new /obj/item/device/pda/toxins(src)
 	new /obj/item/clothing/mask/gas( src )
-	new /obj/item/clothing/suit/bio_suit( src )
+	new /obj/item/clothing/suit/bio_suit/yellow( src )
 	new /obj/item/clothing/under/rank/scientist( src )
 	new /obj/item/clothing/shoes/white( src )
 	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/head/bio_hood( src )
+	new /obj/item/clothing/head/bio_hood/yellow( src )
 	new /obj/item/clothing/suit/storage/labcoat(src)
+	new /obj/item/device/radio/headset/headset_sci(src)
 	return
 
 /obj/secure_closet/rd/New()
@@ -21,5 +22,17 @@
 	new /obj/item/clothing/shoes/brown( src )
 	new /obj/item/clothing/glasses/regular( src )
 	new /obj/item/clothing/suit/storage/labcoat( src )
+	new /obj/item/weapon/storage/backpack/medic(src)
+	return
+
+/obj/secure_closet/chem/New()
+	..()
+	sleep(2)
+	new /obj/item/device/radio/headset/headset_medsci(src)
+	new /obj/item/device/pda/chem(src)
+	new /obj/item/clothing/under/rank/chemist( src )
+	new /obj/item/clothing/shoes/brown( src )
+	new /obj/item/clothing/glasses/regular( src )
+	new /obj/item/clothing/suit/storage/labcoat/chem( src )
 	new /obj/item/weapon/storage/backpack/medic(src)
 	return
