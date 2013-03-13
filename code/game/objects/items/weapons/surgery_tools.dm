@@ -413,8 +413,8 @@ and then you have (1-3sec to respond to this eg by applying cotton.
 
 /obj/item/weapon/surgical_tool/bonegel
 	name = "Bone-gel"
-	icon = 'janitor.dmi'
-	icon_state = "cleaner"
+	icon = 'surgery.dmi'
+	icon_state = "bone gel"
 
 /obj/item/weapon/surgical_tool/bonegel/New()
 	stage += 0
@@ -437,8 +437,8 @@ and then you have (1-3sec to respond to this eg by applying cotton.
 
 /obj/item/weapon/surgical_tool/bonecracker
 	name = "Bone-cracker"
-	icon = 'items.dmi'
-	icon_state = "wrench"
+	icon = 'surgery.dmi'
+	icon_state = "bone-setter"
 
 /obj/item/weapon/surgical_tool/bonecracker/New()
 	stage += 1

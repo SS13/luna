@@ -17,7 +17,7 @@
 		message += "vomits."
 		nutrition = 0
 		for(var/datum/reagent/R in reagents)
-			if(istype(R, /datum/reagent/beer) || istype(R, /datum/reagent/vodka) || istype(R, /datum/reagent/dwine))
+			if(istype(R, /datum/reagent/ethanol))
 				R.volume = 0
 	else              //retch
 		message += "retches."

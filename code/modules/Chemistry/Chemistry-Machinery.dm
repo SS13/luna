@@ -10,7 +10,36 @@
 	icon_state = "dispenser"
 	var/energy = 10
 	//var/max_energy = 25
-	var/list/dispensable_reagents = list("water","oxygen","nitrogen","hydrogen","potassium","mercury","sulfur","carbon","chlorine","fluorine","phosphorus","lithium","acid","radium","iron","aluminium","silicon","plasma","sugar","ethanol", "milk")
+	var/list/dispensable_reagents = list(
+	"water",
+	"oxygen",
+	"nitrogen",
+	"hydrogen",
+	"potassium",
+	"mercury",
+	"sulfur",
+	"carbon",
+	"chlorine",
+	"fluorine",
+	"sodium",
+	"phosphorus",
+	"lithium",
+	"acid",
+	"pacid",
+	"glycerol",
+	"nitroglycerin",
+	"ryetalyn",
+	"radium",
+	"iron",
+	"gold",
+	"silver",
+	"uranium",
+	"aluminium",
+	"silicon",
+	"plasma",
+	"sugar",
+	"ethanol",
+	"milk")
 
 	//proc
 		//recharge()

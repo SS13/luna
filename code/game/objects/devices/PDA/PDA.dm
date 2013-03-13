@@ -140,6 +140,9 @@
 /obj/item/device/pda/cargo
 	icon_state = "pda-cargo"
 
+/obj/item/device/pda/miner
+	icon_state = "pda-miner"
+
 /obj/item/device/pda/syndicate
 	default_cartridge = /obj/item/weapon/cartridge/syndicate
 	icon_state = "pda-syn"

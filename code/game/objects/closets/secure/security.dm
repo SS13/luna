@@ -74,7 +74,7 @@
 	new /obj/item/clothing/under/rank/head_of_security( src )
 	new /obj/item/clothing/shoes/brown( src )
 	new /obj/item/clothing/glasses/sunglasses( src )
-	new /obj/item/clothing/suit/hos( src )
+	new /obj/item/clothing/suit/storage/hos( src )
 	new /obj/item/clothing/head/helmet/HoS(src)
 	new /obj/item/weapon/storage/id_kit( src )
 	new /obj/item/weapon/storage/flashbang_kit(src)

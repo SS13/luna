@@ -206,6 +206,9 @@
 	src.LL += new /obj/item/weapon/handcuffs(src)
 	src.LL += new /obj/item/weapon/ammo/a357(src)
 	src.LL += new /obj/item/weapon/ammo/a38(src)
+	src.LL += new /obj/item/weapon/voicedisk(src)
+	src.LL += new /obj/item/weapon/recorder(src)
+	src.LL += new /obj/item/weapon/reagent_containers/glass/bucket(src)
 	src.wires["Light Red"] = 0
 	src.wires["Dark Red"] = 0
 	src.wires["Blue"] = 0

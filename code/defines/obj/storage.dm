@@ -4,7 +4,8 @@
 	var/list/can_hold = new/list()
 	var/obj/screen/storage/boxes = null
 	var/obj/screen/close/closer = null
-	w_class = 3.0
+	w_class = 4.0
+	flags = FPRINT|TABLEPASS
 
 /obj/item/weapon/storage/backpack
 	name = "backpack"

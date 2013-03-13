@@ -404,7 +404,7 @@
 	icon_opened = "miningsecopen"
 	icon_broken = "miningsecbroken"
 	icon_off = "miningsecoff"
-	req_access = list(access_cargo)
+	req_access = list(access_mining)
 
 /obj/secure_closet/hydro
 	name = "Hydroponical Closet"

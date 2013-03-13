@@ -40,6 +40,7 @@
 	access_hydroponics = 40
 	access_theater = 41
 	access_HoSoffice = 42
+	access_mining = 43
 
 // these are big, seperate numbers
 	access_syndicate = 70
@@ -190,6 +191,8 @@
 			return list(access_maint_tunnels, access_cargo, access_cargo_bot)
 		if("Cargo")
 			return list(access_maint_tunnels, access_cargo, access_cargo_bot)
+		if("Miner")
+			return list(access_maint_tunnels, access_mining, access_cargo)
 		if("Chief Engineer")
 			return list(access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels,
 			            access_external_airlocks, access_atmospherics, access_emergency_storage, access_eva,
@@ -217,7 +220,7 @@
 	            access_tech_storage, access_chapel_office, access_atmospherics, access_kitchen,
 	            access_bar, access_janitor, access_crematorium, access_robotics, access_cargo, access_cargo_bot, access_construction,
 	            access_security_passthrough, access_laboratories_doors, access_incinerator, access_maintenance_hall,
-	            access_shield_generator, access_hydroponics, access_theater)
+	            access_shield_generator, access_hydroponics, access_theater, access_mining)
 /proc/get_access_num(A)
 	switch(A)
 		if("CargoBay")
@@ -302,6 +305,8 @@
 			return "Hydroponics"
 		if(access_theater)
 			return "Theater"
+		if(access_mining)
+			return "Mining Base"
 
 /proc/get_access_desc(A)
 	switch(A)
@@ -387,6 +392,8 @@
 			return "Hydroponics"
 		if(access_theater)
 			return "Theater"
+		if(access_mining)
+			return "Mining Base"
 
 /proc/get_job_types()
 	return list("Civilian", "Security", "Med/Sci", "Maintenance", "Management")
@@ -394,7 +401,7 @@
 /proc/get_type_jobs(T)
 	switch(T)
 		if ("Civilian")
-			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster", "Cargo", "Clown", "Mime")
+			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster", "Cargo", "Clown", "Mime", "Miner")
 		if ("Security")
 			return list("Security Officer", "Forensic Technician", "Warden")
 		if ("Med/Sci")

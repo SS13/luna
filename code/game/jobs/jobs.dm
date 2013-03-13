@@ -22,7 +22,8 @@ var/list/occupations = list(
 	"Clown",
 	"Mime",
 	"Quartermaster",
-	"Cargo")
+	"Cargo","Cargo",
+	"Miner", "Miner")
 
 var/list/assistant_occupations = list(
 	"Unassigned")
@@ -94,6 +95,8 @@ var/list/assistant_occupations = list(
 			return 0
 		if("Captain")
 			return 4
+		if("Miner")
+			return 1
 		else
 			//world << "[job] NOT GIVEN RANK, REPORT JOB.DM ERROR TO CODER"
 

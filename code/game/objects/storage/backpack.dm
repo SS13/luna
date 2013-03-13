@@ -7,7 +7,6 @@
 	..()
 	new /obj/item/weapon/storage/box( src )
 
-
 /obj/item/weapon/storage/backpack/medic/New()
 	..()
 	new /obj/item/weapon/storage/box( src )
@@ -16,11 +15,9 @@
 	..()
 	new /obj/item/weapon/storage/box( src )
 
-
 /obj/item/weapon/storage/backpack/industrial/New()
 	..()
 	new /obj/item/weapon/storage/box( src )
-
 
 /obj/item/weapon/storage/backpack/captain/New()
 	..()

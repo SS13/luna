@@ -90,6 +90,14 @@
 	luminosity = 1
 	ul_Lighting = 0
 
+/area/shuttle/mining
+	name = "Mining Shuttle"
+	icon_state = "shuttle1_2"
+
+/area/shuttle/miningsast
+	name = "Mining Shuttle Asteroid"
+	icon_state = "shuttle1_2"
+
 /area/shuttle/arrival
 	name = "Arrival Shuttle"
 
@@ -876,7 +884,7 @@
 	icon_state = "yellow"
 
 
-/area/solar/asteroid
+/area/solar/
 	name = "Mining Base Solar Array"
 	icon_state = "yellow"
 
@@ -884,6 +892,11 @@
 /area/solar/aft
 	name = "Aft Solar Array"
 	icon_state = "aft"
+
+
+/area/solar/asteroid
+	name = "Mining Base Solar Array"
+	icon_state = "yellow"
 
 
 /area/solar/starboard
@@ -922,6 +935,10 @@
 
 /area/quartermaster/storage
 	name = "Quartermaster's Storage"
+	icon_state = "quartstorage"
+
+/area/quartermaster/miningshut
+	name = "Mining Shuttle Room"
 	icon_state = "quartstorage"
 
 /area/quartermaster/quart_med
@@ -1251,6 +1268,46 @@
 
 /area/asteroid/base
 	name = "Mining base"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/arrivalhall
+	name = "Mining Arrival Hall"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/hallway
+	name = "Mining Hallway"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/dormitory
+	name = "Mining Dormitory"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/exitroom
+	name = "Mining Exit Room"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/bar
+	name = "Mining Bar"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/factory
+	name = "Mining Factory"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/storage
+	name = "Mining Storage"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/medbay
+	name = "Mining Medbay"
 	icon_state = "asbase"
 	applyalertstatus = 0
 

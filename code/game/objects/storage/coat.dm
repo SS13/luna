@@ -3,6 +3,7 @@
 	var/obj/screen/close/closer
 	var/obj/slot1
 	var/obj/slot2
+	var/storage_slots = 2
 
 
 /obj/item/clothing/suit/storage/New()

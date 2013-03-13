@@ -53,98 +53,8 @@ datum
 			getcolour()
 				return rgb(red,green,blue)
 
-		milk
-			name = "Milk"
-			id = "milk"
-			description = "An opaque white liquid produced by the mammary glands of mammals."
-			reagent_state = LIQUID
-			red = 240
-			green = 240
-			blue = 240
 
-		beer
-			name = "Beer"
-			id = "beer"
-			description = "An alcoholic beverage made from malted grains, hops, yeast, and water."
-			reagent_state = LIQUID
-			red = 150
-			green = 75
-			blue = 0
-			on_mob_life(var/mob/M)
-				if(!data) data = 1
-				data++
-				M:jitteriness = max(M:jitteriness-3,0)
-				if(data >= 25)
-					M.make_dizzy(3)
-				if(data >= 40)
-					if (!M:intoxicated) M:intoxicated = 1
-					M:intoxicated += 3
-				if(data >= 90 && prob(33))
-					if (!M:staggering) M:staggering = 1
-					M:staggering += 2
-				if(data >= 245)
-					M.eye_blurry = max(M.eye_blurry, 10)
-					M:drowsyness  = max(M:drowsyness, 20)
-				if(data >= 290)
-					M:paralysis = max(M:paralysis, 20)
-					M:drowsyness  = max(M:drowsyness, 30)
-				..()
-
-		vodka
-			name = "Vodka"
-			id = "vodka"
-			description = "Traditionally made of potatoes, NanoTrasen vodka contains NO organic material!"
-			reagent_state = LIQUID
-			alpha = 50
-			on_mob_life(var/mob/M)
-				if(!data) data = 1
-				data++
-				M:jitteriness = max(M:jitteriness-3,0)
-				if(data >= 20)
-					M.make_dizzy(4)
-				if(data >= 30)
-					if (!M:intoxicated) M:intoxicated = 1
-					M:intoxicated += 4
-				if(data >= 70 && prob(20))
-					if (!M:confused) M:confused = 1
-					M:confused += 3
-				if(data >= 200)
-					M.eye_blurry = max(M.eye_blurry, 15)
-					M:drowsyness  = max(M:drowsyness, 25)
-				if(data >= 250)
-					M:paralysis = max(M:paralysis, 30)
-					M:drowsyness  = max(M:drowsyness, 40)
-				..()
-
-		dwine
-			name = "Dwarven Wine"
-			id = "dwine"
-			description = "Strike the planet! Celebratory NanoTrasen drink, limited edition."
-			reagent_state = LIQUID
-			red = 128
-			green = 0
-			blue = 128
-			on_mob_life(var/mob/M)
-				if(!data) data = 1
-				data++
-				M:jitteriness = max(M:jitteriness-3,0)
-				if(data >= 5)
-					M.make_dizzy(4)
-				if(data >= 20)
-					if (!M:intoxicated) M:intoxicated = 1
-					M:intoxicated += 5
-				if(data >= 50 && prob(5))
-					if (!M:confused) M:confused = 1
-					M:confused += 4
-				if(data >= 100)
-					M.eye_blurry = max(M.eye_blurry, 20)
-					M:drowsyness  = max(M:drowsyness, 30)
-				if(data >= 125)
-					M:paralysis = max(M:paralysis, 40)
-					M:drowsyness  = max(M:drowsyness, 50)
-					M:r_Tourette = 1
-				..()
-
+/////////////////////////////////////////////////////////////////CHIM////////////////////////////////////////
 		water
 			name = "Water"
 			id = "water"
@@ -366,6 +276,40 @@ datum
 				..()
 				return
 
+		srejuvinate
+			name = "Sleep Rejuvinate"
+			id = "stoxin"
+			description = "Put people to sleep, and heals them."
+			reagent_state = LIQUID
+			red = 200
+			green = 165
+			blue = 220
+
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				if(!data) data = 1
+				data++
+				if(M.losebreath >= 10)
+					M.losebreath = max(10, M.losebreath-10)
+				holder.remove_reagent(src.id, 0.2)
+				switch(data)
+					if(1 to 15)
+						M.eye_blurry = max(M.eye_blurry, 10)
+					if(15 to 25)
+						M:drowsyness  = max(M:drowsyness, 20)
+					if(25 to INFINITY)
+						M.sleeping += 1
+						M.dizziness = 0
+						M.drowsyness = 0
+						M.stuttering = 0
+						M.confused = 0
+						M.jitteriness = 0
+//					if(125 to INFINITY)
+//						M:adjustToxLoss(0.1)
+				..()
+				return
+
+
 		inaprovaline
 			name = "Inaprovaline"
 			id = "inaprovaline"
@@ -406,17 +350,33 @@ datum
 					O.icon = I
 				return
 
+		copper
+			name = "Copper"
+			id = "copper"
+			description = "A highly ductile metal."
+			red = 110
+			green = 59
+			blue = 8
+
+
 		oxygen
 			name = "Oxygen"
 			id = "oxygen"
 			description = "A colorless, odorless gas."
 			reagent_state = GAS
+			red = 128
+			green = 128
+			blue = 128
 
 		nitrogen
 			name = "Nitrogen"
 			id = "nitrogen"
 			description = "A colorless, odorless, tasteless gas."
 			reagent_state = GAS
+			red = 128
+			green = 128
+			blue = 128
+
 
 		hydrogen
 			name = "Hydrogen"
@@ -481,6 +441,12 @@ datum
 				M:toxloss++
 				..()
 				return
+
+		sodium
+			name = "Sodium"
+			id = "sodium"
+			description = "A chemical element."
+			reagent_state = SOLID
 
 		phosphorus
 			name = "Phosphorus"
@@ -621,6 +587,18 @@ datum
 						M << "\red \the [O] melts."
 					del(O)
 
+		glycerol
+			name = "Glycerol"
+			id = "glycerol"
+			description = "Glycerol is a simple polyol compound. Glycerol is sweet-tasting and of low toxicity."
+			reagent_state = LIQUID
+
+		nitroglycerin
+			name = "Nitroglycerin"
+			id = "nitroglycerin"
+			description = "Nitroglycerin is a heavy, colorless, oily, explosive liquid obtained by nitrating glycerol."
+			reagent_state = LIQUID
+
 		radium
 			name = "Radium"
 			id = "radium"
@@ -687,23 +665,78 @@ datum
 				..()
 				return
 
+
+
+
 		iron
 			name = "Iron"
 			id = "iron"
 			description = "Pure iron is a metal."
 			reagent_state = SOLID
+			red = 200
+			green = 165
+			blue = 220
+			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
+				src = null
+				if ( (method==TOUCH && prob(33)) || method==INGEST)
+					randmuti(M)
+					if(prob(98))
+						randmutb(M)
+					else
+						randmutg(M)
+					domutcheck(M, null, 1)
+					updateappearance(M,M.dna.uni_identity)
+				return
+			on_mob_life(var/mob/M)
+				if(!M) M = holder.my_atom
+				M.radiation += 2
+				..()
+				return
+
+		gold
+			name = "Gold"
+			id = "gold"
+			description = "Gold is a dense, soft, shiny metal and the most malleable and ductile metal known."
+			reagent_state = SOLID
+			red = 247
+			green = 196
+			blue = 48
+
+		silver
+			name = "Silver"
+			id = "silver"
+			description = "A soft, white, lustrous transition metal, it has the highest electrical conductivity of any element and the highest thermal conductivity of any metal."
+			reagent_state = SOLID
+			red = 208
+			green = 208
+			blue = 208
+
+		uranium
+			name ="Uranium"
+			id = "uranium"
+			description = "A silvery-white metallic chemical element in the actinide series, weakly radioactive."
+			reagent_state = SOLID
+			red = 184
+			green = 184
+			blue = 192
 
 		aluminium
 			name = "Aluminium"
 			id = "aluminium"
 			description = "A silvery white and ductile member of the boron group of chemical elements."
 			reagent_state = SOLID
+			red = 168
+			green = 168
+			blue = 168
 
 		silicon
 			name = "Silicon"
 			id = "silicon"
 			description = "A tetravalent metalloid, silicon is less reactive than its chemical analog carbon."
 			reagent_state = SOLID
+			red = 168
+			green = 168
+			blue = 168
 
 		fuel
 			name = "Welding fuel"
@@ -779,6 +812,41 @@ datum
 							C:gloves.clean_blood()
 						if(C:head)
 							C:head.clean_blood()
+
+		plantbgone
+			name = "Plant-B-Gone"
+			id = "plantbgone"
+			description = "A harmful toxic mixture to kill plantlife. Do not ingest!"
+			reagent_state = LIQUID
+			red = 73
+			green = 0
+			blue = 46
+			/* Don't know if this is necessary.
+			on_mob_life(var/mob/living/carbon/M)
+				if(!M) M = holder.my_atom
+				M:adjustToxLoss(3.0)
+				..()
+				return
+			*/
+			reaction_obj(var/obj/O, var/volume)
+		//		if(istype(O,/obj/plant/vine/))
+		//			O:life -= rand(15,35) // Kills vines nicely // Not tested as vines don't work in R41
+				if(istype(O,/obj/alien/weeds/))
+					O:health -= rand(15,35) // Kills alien weeds pretty fast
+					O:healthcheck()
+					del(O)
+				// Damage that is done to growing plants is separately
+				// at code/game/machinery/hydroponics at obj/item/hydroponics
+
+			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
+				src = null
+				if(istype(M, /mob/living/carbon))
+					if(!M.wear_mask) // If not wearing a mask
+						M:toxloss += 4 // 4 toxic damage per application, doubled for some reason
+					if(istype(M,/mob/living/carbon/human) && M:mutantrace == "plant") //plantmen take a LOT of damage
+						M:toxloss += 10
+						//if(prob(10))
+							//M.make_dizzy(1) doesn't seem to do anything
 
 
 		space_cola
@@ -918,6 +986,56 @@ datum
 				..()
 				return
 
+/*		adminordrazine //An OP chemical for adminis
+			name = "Adminordrazine"
+			id = "adminordrazine"
+			description = "It's magic. We don't have to explain it."
+			reagent_state = LIQUID
+			red = 200
+			green = 165
+			blue = 220
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom ///This can even heal dead people.
+				M.radiation = 0
+				M.toxloss += -5
+				if(holder.has_reagent("toxin"))
+					holder.remove_reagent("toxin", 5)
+				if(holder.has_reagent("stoxin"))
+					holder.remove_reagent("stoxin", 5)
+				if(holder.has_reagent("plasma"))
+					holder.remove_reagent("plasma", 5)
+				if(holder.has_reagent("acid"))
+					holder.remove_reagent("acid", 5)
+				if(holder.has_reagent("pacid"))
+					holder.remove_reagent("pacid", 5)
+				if(holder.has_reagent("cyanide"))
+					holder.remove_reagent("cyanide", 5)
+				if(holder.has_reagent("lexorin"))
+					holder.remove_reagent("lexorin", 5)
+				if(holder.has_reagent("amatoxin"))
+					holder.remove_reagent("amatoxin", 5)
+				if(holder.has_reagent("chloralhydrate"))
+					holder.remove_reagent("chloralhydrate", 5)
+				if(holder.has_reagent("carpotoxin"))
+					holder.remove_reagent("carpotoxin", 5)
+				if(holder.has_reagent("zombiepowder"))
+					holder.remove_reagent("zombiepowder", 5)
+				M.brainloss += -3
+				M.disabilities = 0
+				M.eye_blurry = 0
+				M.eye_blind = 0
+				M.disabilities &= ~1
+				M.dizziness = 0
+				M.drowsyness = 0
+				M.stuttering = 0
+				M.confused = 0
+				M.weakened=0
+				M.stunned=0
+				M.paralysis=0
+				M.jitteriness = 0
+				..()
+				return */
+
 		synaptizine
 			name = "Synaptizine"
 			id = "synaptizine"
@@ -981,6 +1099,28 @@ datum
 				..()
 				return
 
+		imidazoline
+			name = "Imidazoline"
+			id = "imidazoline"
+			description = "Heals eye damage"
+			reagent_state = LIQUID
+			red = 200
+			green = 165
+			blue = 220
+
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				if(!data) data = 1
+				data++
+				M:eye_blurry = max(M:eye_blurry-5 , 0)
+				M:eye_blind = max(M:eye_blind-5 , 0)
+				M:disabilities &= ~1
+				M:eye_stat = max(M:eye_stat-5, 0)
+//				if(data >= 100)
+//					M:adjustToxLoss(0.2)
+				..()
+				return
+
 		bicaridine
 			name = "Bicaridine"
 			id = "bicaridine"
@@ -1041,7 +1181,19 @@ datum
 					holder.remove_reagent(src.id, 0.2)
 				return
 
-
+		carpotoxin
+			name = "Carpotoxin"
+			id = "carpotoxin"
+			description = "A deadly neurotoxin produced by the dreaded spess carp."
+			reagent_state = LIQUID
+			red = 0
+			green = 51
+			blue = 51
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M:toxloss += -1
+				..()
+				return
 
 		LSD
 			name = "LSD"
@@ -1098,25 +1250,97 @@ datum
 			id = "ethanol"
 			description = "A well-known alcohol with a variety of applications."
 			reagent_state = LIQUID
-			on_mob_life(var/mob/M)
-				if(!data) data = 1
-				data++
-				M:jitteriness = max(M:jitteriness-5,0)
-				if(data >= 25)
-					M.make_dizzy(5)
-				if(data >= 40)
+			red = 64
+			green = 64
+			blue = 48
+			var/dizzy_adj = 3
+			var/confused_adj = 2
+			var/intox_adj = 4
+			var/confused_start = 130
+			var/pass_out = 325
+			var/blur_start = 260
+			var/dizzy_start = 20
+			var/intox_start = 30
+			on_mob_life(var/mob/living/M as mob)
+				if(!src.data) data = 1
+				src.data++
+				var/d = data
+				for(var/datum/reagent/ethanol/A in holder.reagent_list)
+				M:jitteriness = max(M:jitteriness-3,0)
+				if(d >= dizzy_start)
+					M.make_dizzy(dizzy_adj)
+				if(d >= intox_start)
 					if (!M:intoxicated) M:intoxicated = 1
-					M:intoxicated += 4
-				if(data >= 165)
+					M:intoxicated += intox_adj
+				if(d >= confused_start && prob(33))
 					if (!M:confused) M:confused = 1
-					M:confused += 3
-				if(data >= 205)
+					M.confused = max(M:confused+confused_adj,0)
+				if(d >= blur_start)
 					M.eye_blurry = max(M.eye_blurry, 10)
-					M:drowsyness  = max(M:drowsyness, 20)
-				if(data >= 245)
+					M:drowsyness  = max(M:drowsyness, 0)
+				if(d >= pass_out)
 					M:paralysis = max(M:paralysis, 20)
 					M:drowsyness  = max(M:drowsyness, 30)
+
+				holder.remove_reagent(src.id, 0.4)
 				..()
+				return
+		ultraglue
+			name = "Ulta Glue"
+			id = "glue"
+			description = "An extremely powerful bonding agent."
+
+		diethylamine
+			name = "Diethylamine"
+			id = "diethylamine"
+			description = "A secondary amine, mildly corrosive."
+			reagent_state = LIQUID
+			red = 96
+			green = 64
+			blue = 64
+
+		ethylredoxrazine						// FUCK YOU, ALCOHOL
+			name = "Ethylredoxrazine"
+			id = "ethylredoxrazine"
+			description = "A powerfuld oxidizer that reacts with ethanol."
+			reagent_state = SOLID
+			red = 96
+			green = 80
+			blue = 72
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M.dizziness = 0
+				M:drowsyness = 0
+				M:confused = 0
+				M.eye_blurry = 0
+				..()
+				return
+
+		chloralhydrate							//Otherwise known as a "Mickey Finn"
+			name = "Chloral Hydrate"
+			id = "chloralhydrate"
+			description = "A powerful sedative."
+			reagent_state = SOLID
+			red = 0
+			green = 0
+			blue = 103
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				if(!data) data = 1
+				data++
+				switch(data)
+					if(5 to 10)
+						M:confused += 2
+						M:drowsyness += 2
+						M:sleeping += 2
+					if(11 to 50)
+						M:sleeping += 3
+					if(51 to INFINITY)
+						M:sleeping += 4
+						M:toxloss += -2
+				holder.remove_reagent(src.id, 0.07)
+				..()
+				return
 
 		ammonia
 			name = "Ammonia"
@@ -1129,7 +1353,6 @@ datum
 			id = "diethylamine"
 			description = "A secondary amine, mildly corrosive."
 			reagent_state = LIQUID
-
 
 
 
@@ -1169,3 +1392,669 @@ datum
 			id = "weedkiller"
 			description = "A chemical, poisonous to weeds."
 			reagent_state = LIQUID
+
+/////////////////////////////////////////////////////FOODS////////////////////////////
+		amatoxin
+			name = "Amatoxin"
+			id = "amatoxin"
+			description = "A powerful poison derived from certain species of mushroom."
+			red = 121
+			green = 35
+			blue = 0
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M:toxloss += 1
+				..()
+				return
+
+   /////////////////////////////////////////////////////////DRINKS////////////////////////////////////////////////////////
+
+		milk
+			name = "Milk"
+			id = "milk"
+			description = "An opaque white liquid produced by the mammary glands of mammals."
+			reagent_state = LIQUID
+			red = 240
+			green = 240
+			blue = 240
+
+		orangejuice
+			name = "Orange juice"
+			id = "orangejuice"
+			description = "Both delicious AND rich in Vitamin C, what more do you need?"
+			reagent_state = LIQUID
+			red = 255
+			green = 117
+			blue = 56
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M:oxyloss = max(M:oxyloss-1, 0)
+				..()
+				return
+
+		tomatojuice
+			name = "Tomato juice"
+			id = "tomatojuice"
+			description = "Tomatoes made into juice. What a waste of big, juicy tomatoes, huh?"
+			reagent_state = LIQUID
+			red = 115
+			green = 16
+			blue = 8
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M:fireloss = max(M:fireloss-1,0)
+				..()
+				return
+
+		limejuice
+			name = "Lime juice"
+			id = "limejuice"
+			description = "The sweet-sour juice of limes."
+			reagent_state = LIQUID
+			red = 54
+			green = 94
+			blue = 48
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M:toxloss = max(M:toxloss-1,0)
+				..()
+				return
+
+		carrotjuice
+			name = "Carrot juice"
+			id = "carrotjuice"
+			description = "It is just like a carrot but without crunching."
+			reagent_state = LIQUID
+			red = 151
+			green = 56
+			blue = 0
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M.eye_blurry = max(M:eye_blurry-1,0)
+				M:eye_blind = max(M:eye_blind-1 , 0)
+				..()
+				return
+
+		grapejuice
+			name = "Grape juice"
+			id = "grapejuice"
+			description = "The sweet-sour juice of limes."
+			reagent_state = LIQUID
+			red = 51
+			green = 51
+			blue = 134
+
+		berryjuice
+			name = "Berry Juice"
+			id = "berryjuice"
+			description = "A delicious blend of several different kinds of berries."
+			reagent_state = LIQUID
+			red = 134
+			green = 51
+			blue = 51
+
+		lemonjuice
+			name = "Lemon Juice"
+			id = "lemonjuice"
+			description = "This juice is VERY sour."
+			reagent_state = LIQUID
+			red = 175
+			green = 175
+			blue = 0
+
+		bananajuice
+			name = "Banana Juice"
+			id = "bananajuice"
+			description = "The raw essence of a banana. HONK"
+			reagent_state = LIQUID
+			red = 175
+			green = 175
+			blue = 0
+			on_mob_life(var/mob/living/M as mob)
+				if(istype(M, /mob/living/carbon/human) && M.job in list("Clown"))
+					if(!M) M = holder.my_atom
+					M.bruteloss = max(M:bruteloss+1,0)
+					..()
+					return
+				if(istype(M, /mob/living/carbon/monkey))
+					if(!M) M = holder.my_atom
+					M.bruteloss = max(M:bruteloss+1,0)
+					..()
+					return
+				..()
+		cream
+			name = "Cream"
+			id = "cream"
+			description = "The fatty, still liquid part of milk. Why don't you mix this with sum scotch, eh?"
+			reagent_state = LIQUID
+			red = 223
+			green = 215
+			blue = 175
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M.bruteloss = max(M:bruteloss+1,0)
+				..()
+				return
+
+		tea
+			name = "Tea"
+			id = "tea"
+			description = "Tasty black tea, it has antioxidants, it's good for you!"
+			reagent_state = LIQUID
+			red = 16
+			green = 16
+			blue = 0
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M:toxloss = max(M:toxloss-1,0)
+				if (M.bodytemperature > 310)
+					M.bodytemperature = max(310, M.bodytemperature+5)
+				..()
+				return
+///////////////////////////////////////////////ALHO////////////////////////////////////////////////////////////
+
+		ethanol
+			name = "Ethanol"
+			id = "ethanol"
+			description = "A well-known alcohol with a variety of applications."
+			reagent_state = LIQUID
+			red = 64
+			green = 64
+			blue = 48
+			on_mob_life(var/mob/living/M as mob)
+				if(!src.data) data = 1
+				src.data++
+				var/d = data
+				for(var/datum/reagent/ethanol/A in holder.reagent_list)
+				M:jitteriness = max(M:jitteriness-3,0)
+				if(d >= dizzy_start)
+					M.make_dizzy(dizzy_adj)
+				if(d >= intox_start)
+					if (!M:intoxicated) M:intoxicated = 1
+					M:intoxicated += intox_adj
+				if(d >= confused_start && prob(33))
+					if (!M:confused) M:confused = 1
+					M.confused = max(M:confused+confused_adj,0)
+				if(d >= blur_start)
+					M.eye_blurry = max(M.eye_blurry, 10)
+					M:drowsyness  = max(M:drowsyness, 0)
+				if(d >= pass_out)
+					M:paralysis = max(M:paralysis, 20)
+					M:drowsyness  = max(M:drowsyness, 30)
+
+				holder.remove_reagent(src.id, 0.4)
+				..()
+				return
+
+			beer	//It's really much more stronger than other drinks.
+				name = "Beer"
+				id = "beer"
+				description = "An alcoholic beverage made from malted grains, hops, yeast, and water."
+				red = 150
+				green = 75
+				blue = 0
+
+			vodka
+				name = "Vodka"
+				id = "vodka"
+				description = "Number one drink AND fueling choice for Russians worldwide."
+				alpha = 50
+
+			dwine
+				name = "Dwarven Wine"
+				id = "dwine"
+				description = "Strike the planet! Celebratory NanoTrasen drink, limited edition."
+				red = 128
+				green = 0
+				blue = 128
+				dizzy_adj = 2
+				confused_start = 145
+
+			whiskey
+				name = "Whiskey"
+				id = "whiskey"
+				description = "A superb and well-aged single-malt whiskey. Damn."
+				red = 102
+				green = 67
+				blue = 0
+				dizzy_adj = 4
+
+			gin
+				name = "Gin"
+				id = "gin"
+				description = "It's gin. In space. I say, good sir."
+				red = 102
+				green = 67
+				blue = 0
+				dizzy_adj = 3
+
+			rum
+				name = "Rum"
+				id = "rum"
+				description = "Yohoho and all that."
+				red = 102
+				green = 67
+				blue = 0
+
+			tequilla
+				name = "Tequilla"
+				id = "tequilla"
+				description = "A strong and mildly flavoured, mexican produced ethanol. Feeling thirsty hombre?"
+				red = 168
+				green = 176
+				blue = 183
+
+			cognac
+				name = "Cognac"
+				id = "cognac"
+				description = "A sweet and strongly alchoholic drink, made after numerous distillations and years of maturing. Classy as fornication."
+				red = 102
+				green = 67
+				blue = 0
+				dizzy_adj = 4
+				confused_start = 115
+
+			vermouth
+				name = "Vermouth"
+				id = "vermouth"
+				description = "You suddenly feel a craving for a martini..."
+				red = 102
+				green = 67
+				blue = 0
+
+			hooch
+				name = "Hooch"
+				id = "hooch"
+				description = "Either someone's failure at cocktail making or attempt in alchohol production. In any case, do you really want to drink that?"
+				red = 102
+				green = 67
+				blue = 0
+				dizzy_adj = 6
+				confused_start = 90
+
+			absinthe
+				name = "Absinthe"
+				id = "absinthe"
+				description = "Watch out that the Green Fairy doesn't come for you!"
+				red = 115
+				green = 211
+				blue = 20
+				dizzy_adj = 5
+				confused_start = 100
+//////////////////////////////////////////////////////cocktail entities/////////////////////////////////////////////////
+
+			atomicbomb
+				name = "Atomic Bomb"
+				id = "atomicbomb"
+				description = "Nuclear proliferation never tasted so good."
+				reagent_state = LIQUID
+				red = 102
+				green = 99
+				blue = 0
+
+			goldschlager
+				name = "Goldschlager"
+				id = "goldschlager"
+				description = "100 proof cinnamon schnapps, made for alcoholic teen girls on spring break."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			patron
+				name = "Patron"
+				id = "patron"
+				description = "Tequila with silver in it, a favorite of alcoholic women in the club scene."
+				reagent_state = LIQUID
+				red = 88
+				green = 88
+				blue = 64
+
+			gintonic
+				name = "Gin and Tonic"
+				id = "gintonic"
+				description = "An all time classic, mild cocktail."
+				reagent_state = LIQUID
+				alpha = 50
+
+			cuba_libre
+				name = "Cuba Libre"
+				id = "cubalibre"
+				description = "Rum, mixed with cola. Viva la revolution."
+				reagent_state = LIQUID
+				red = 62
+				green = 27
+				blue = 0
+
+			whiskey_cola
+				name = "Whiskey Cola"
+				id = "whiskeycola"
+				description = "Whiskey, mixed with cola. Surprisingly refreshing."
+				reagent_state = LIQUID
+				red = 62
+				green = 27
+				blue = 0
+
+			martini
+				name = "Classic Martini"
+				id = "martini"
+				description = "Vermouth with Gin. Not quite how 007 enjoyed it, but still delicious."
+				reagent_state = LIQUID
+				alpha = 50
+
+			vodkamartini
+				name = "Vodka Martini"
+				id = "vodkamartini"
+				description = "Vodka with Gin. Not quite how 007 enjoyed it, but still delicious."
+				reagent_state = LIQUID
+				alpha = 50
+
+			white_russian
+				name = "White Russian"
+				id = "whiterussian"
+				description = "That's just, like, your opinion, man..."
+				reagent_state = LIQUID
+				red = 166
+				green = 131
+				blue = 64
+
+			screwdrivercocktail
+				name = "Screwdriver"
+				id = "screwdrivercocktail"
+				description = "Vodka, mixed with plain ol' orange juice. The result is surprisingly delicious."
+				reagent_state = LIQUID
+				red = 166
+				green = 131
+				blue = 16
+
+			booger
+				name = "Booger"
+				id = "booger"
+				description = "Ewww..."
+				reagent_state = LIQUID
+				red = 166
+				green = 131
+				blue = 16
+
+			bloody_mary
+				name = "Bloody Mary"
+				id = "bloodymary"
+				description = "A strange yet pleasurable mixture made of vodka, tomato and lime juice. Or at least you THINK the red stuff is tomato juice."
+				reagent_state = LIQUID
+				red = 150
+				green = 0
+				blue = 24
+
+			gargle_blaster
+				name = "Pan-Galactic Gargle Blaster"
+				id = "gargleblaster"
+				description = "Whoah, this stuff looks volatile!"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			brave_bull
+				name = "Brave Bull"
+				id = "bravebull"
+				description = "A strange yet pleasurable mixture made of vodka, tomato and lime juice. Or at least you THINK the red stuff is tomato juice."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			tequilla_sunrise
+				name = "Tequila Sunrise"
+				id = "tequillasunrise"
+				description = "Tequila and orange juice. Much like a Screwdriver, only Mexican~"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			toxins_special
+				name = "Toxins Special"
+				id = "toxinsspecial"
+				description = "This thing is FLAMING!. CALL THE DAMN SHUTTLE!"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			beepsky_smash
+				name = "Beepsky Smash"
+				id = "beepskysmash"
+				description = "Deny drinking this and prepare for THE LAW."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			doctor_delight
+				name = "The Doctor's Delight"
+				id = "doctorsdelight"
+				description = "A gulp a day keeps the MediBot away. That's probably for the best."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			irish_cream
+				name = "Irish Cream"
+				id = "irishcream"
+				description = "Whiskey-imbued cream, what else would you expect from the Irish."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			manly_dorf
+				name = "The Manly Dorf"
+				id = "manlydorf"
+				description = "Beer and Ale, brought together in a delicious mix. Intended for true men only."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			longislandicedtea
+				name = "Long Island Iced Tea"
+				id = "longislandicedtea"
+				description = "The liquor cabinet, brought together in a delicious mix. Intended for middle-aged alcoholic women only."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			moonshine
+				name = "Moonshine"
+				id = "moonshine"
+				description = "You've really hit rock bottom now... your liver packed its bags and left last night."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			b52
+				name = "B-52"
+				id = "b52"
+				description = "Coffee, Irish Cream, and congac. You will get bombed."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			irishcoffee
+				name = "Irish Coffee"
+				id = "irishcoffee"
+				description = "Coffee, and alcohol. More fun than a Mimosa to drink in the morning."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			margarita
+				name = "Margarita"
+				id = "margarita"
+				description = "On the rocks with salt on the rim. Arriba~!"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			black_russian
+				name = "Black Russian"
+				id = "blackrussian"
+				description = "For the lactose-intolerant. Still as classy as a White Russian."
+				reagent_state = LIQUID
+				red = 57
+				green = 0
+				blue = 0
+
+			manhattan
+				name = "Manhattan"
+				id = "manhattan"
+				description = "The Detective's undercover drink of choice. He never could stomach gin..."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			manhattan_proj
+				name = "Manhattan Project"
+				id = "manhattan_proj"
+				description = "A scienitst's drink of choice, for pondering ways to blow up the station."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			whiskeysoda
+				name = "Whiskey Soda"
+				id = "whiskeysoda"
+				description = "Ultimate refreshment."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			antifreeze
+				name = "Anti-freeze"
+				id = "antifreeze"
+				description = "Ultimate refreshment."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			barefoot
+				name = "Barefoot"
+				id = "barefoot"
+				description = "Barefoot and pregnant"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			snowwhite
+				name = "Snow White"
+				id = "snowwhite"
+				description = "A cold refreshment"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			demonsblood
+				name = "Demons Blood"
+				id = "demonsblood"
+				description = "AHHHH!!!!"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+				dizzy_adj = 10
+
+			vodkatonic
+				name = "Vodka and Tonic"
+				id = "vodkatonic"
+				description = "For when a gin and tonic isn't russian enough."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+				dizzy_adj = 4
+
+			ginfizz
+				name = "Gin Fizz"
+				id = "ginfizz"
+				description = "Refreshingly lemony, deliciously dry."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+				dizzy_adj = 4
+
+			bahama_mama
+				name = "Bahama mama"
+				id = "bahama_mama"
+				description = "Tropic cocktail."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			singulo
+				name = "Singulo"
+				id = "singulo"
+				description = "A blue-space beverage!"
+				reagent_state = LIQUID
+				red = 46
+				green = 102
+				blue = 113
+				dizzy_adj = 15
+
+			sbiten
+				name = "Sbiten"
+				id = "sbiten"
+				description = "A spicy Vodka! Might be a little hot for the little guys!"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			devilskiss
+				name = "Devils Kiss"
+				id = "devilskiss"
+				description = "Creepy time!"
+				reagent_state = LIQUID
+				red = 166
+				green = 131
+				blue = 16
+
+			iced_beer
+				name = "Iced Beer"
+				id = "iced_beer"
+				description = "A beer which is so cold the air around it freezes."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			cafe_latte
+				name = "Cafe Latte"
+				id = "cafe_latte"
+				description = "A nice, strong and tasty beverage while you are reading."
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			amasec
+				name = "Amasec"
+				id = "amasec"
+				description = "Always before COMBAT!!!"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
