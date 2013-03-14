@@ -150,6 +150,7 @@
 /obj/item/weapon/vending_charge/bar
 	name = "Bar Charge"
 	charge_type = "bar"
+	charge_amt = 50
 	icon_state = "bar-charge"
 
 /obj/item/weapon/vending_charge/kitchen

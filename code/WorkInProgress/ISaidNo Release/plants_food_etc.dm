@@ -1897,7 +1897,7 @@
 		R.my_atom = src
 		R.add_reagent("water", 50)
 
-/obj/item/weapon/reagent_containers/food/drinks/cola_bottle/grones
+/* /obj/item/weapon/reagent_containers/food/drinks/cola_bottle/grones
 	name = "Grones Soda"
 	desc = "They make all kinds of flavors these days, good lord."
 	label = "grones"
@@ -1952,7 +1952,7 @@
 				src.name = "Grones Soda - Cool Keratin Rush"
 				R.add_reagent("hairgrownium", 10)
 		R.add_reagent("cola", 20)
-
+*/
 /obj/item/weapon/reagent_containers/food/drinks/cola_bottle/orange
 	name = "Orange-Aid"
 	desc = "A vitamin tonic that promotes good eyesight."
@@ -1966,7 +1966,7 @@
 		R.add_reagent("imidazoline", 20)
 		R.add_reagent("juice_orange", 20)
 
-/obj/item/weapon/reagent_containers/food/drinks/beer
+/*/obj/item/weapon/reagent_containers/food/drinks/beer
 	name = "Space Beer"
 	desc = "Beer. in space."
 	icon_state = "beer"
@@ -1989,6 +1989,7 @@
 		reagents = R
 		R.my_atom = src
 		R.add_reagent("wine", 30)
+
 
 /obj/item/weapon/reagent_containers/food/drinks/cider
 	name = "Cider"
@@ -2100,3 +2101,4 @@
 		reagents = R
 		R.my_atom = src
 		R.add_reagent("chickensoup", 30)
+		*/

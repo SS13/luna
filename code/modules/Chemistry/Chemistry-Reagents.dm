@@ -1551,6 +1551,73 @@ datum
 					M.bodytemperature = max(310, M.bodytemperature+5)
 				..()
 				return
+
+		icetea
+			name = "Iced Tea"
+			id = "icetea"
+			description = "No relation to a certain rap artist/actor."
+			reagent_state = LIQUID
+			red = 16
+			green = 64
+			blue = 56
+			alpha = 50
+
+			on_mob_life(var/mob/living/M as mob)
+				..()
+				M.dizziness = max(0,M.dizziness-2)
+				M:drowsyness = max(0,M:drowsyness-1)
+				if(!M) M = holder.my_atom
+				M:toxloss = max(M:toxloss-1,0)
+				if (M.bodytemperature > 310)//310 is the normal bodytemp. 310.055
+					M.bodytemperature = min(310, M.bodytemperature-5)
+				return
+
+		ice
+			name = "Ice"
+			id = "ice"
+			description = "Frozen water, your dentist wouldn't like you chewing this."
+			reagent_state = SOLID
+			red = 255
+			green = 255
+			blue = 255
+			alpha = 50
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M:bodytemperature -= 5
+				..()
+				return
+
+		tonic
+			name = "Tonic Water"
+			id = "tonic"
+			description = "It tastes strange but at least the quinine keeps the Space Malaria at bay."
+			reagent_state = LIQUID
+			red = 152
+			green = 255
+			blue = 152
+			alpha = 40
+
+			on_mob_life(var/mob/living/M as mob)
+				M.dizziness = max(0,M.dizziness-5)
+				M:drowsyness = max(0,M:drowsyness-3)
+				if (M.bodytemperature > 310)
+					M.bodytemperature = max(310, M.bodytemperature-5)
+				..()
+				return
+
+		hot_coco
+			name = "Hot Chocolate"
+			id = "hot_coco"
+			description = "Made with love! And coco beans."
+			reagent_state = LIQUID
+			red = 64
+			green = 48
+			blue = 16
+			on_mob_life(var/mob/living/M as mob)
+				if (M.bodytemperature < 310)//310 is the normal bodytemp. 310.055
+					M.bodytemperature = min(310, M.bodytemperature+5)
+				..()
+				return
 ///////////////////////////////////////////////ALHO////////////////////////////////////////////////////////////
 
 		ethanol
@@ -1561,6 +1628,7 @@ datum
 			red = 64
 			green = 64
 			blue = 48
+			alpha = 50
 			on_mob_life(var/mob/living/M as mob)
 				if(!src.data) data = 1
 				src.data++
@@ -1623,9 +1691,10 @@ datum
 				name = "Gin"
 				id = "gin"
 				description = "It's gin. In space. I say, good sir."
-				red = 102
-				green = 67
-				blue = 0
+				red = 218
+				green = 216
+				blue = 205
+				alpha = 50
 				dizzy_adj = 3
 
 			rum
@@ -1643,6 +1712,7 @@ datum
 				red = 168
 				green = 176
 				blue = 183
+				alpha = 60
 
 			cognac
 				name = "Cognac"
@@ -1658,9 +1728,10 @@ datum
 				name = "Vermouth"
 				id = "vermouth"
 				description = "You suddenly feel a craving for a martini..."
-				red = 102
-				green = 67
-				blue = 0
+				red = 132
+				green = 47
+				blue = 47
+				alpha = 60
 
 			hooch
 				name = "Hooch"
@@ -2054,6 +2125,31 @@ datum
 				name = "Amasec"
 				id = "amasec"
 				description = "Always before COMBAT!!!"
+				reagent_state = LIQUID
+				red = 102
+				green = 67
+				blue = 0
+
+			thirteenloko
+				name = "Thirteen Loko"
+				id = "thirteenloko"
+				description = "A potent mixture of caffeine and alcohol."
+				reagent_state = LIQUID
+				red = 16
+				green = 32
+				blue = 0
+
+				on_mob_life(var/mob/living/M as mob)
+					M:drowsyness = max(0,M:drowsyness-7)
+					if (M.bodytemperature > 310)
+						M.bodytemperature = max(310, M.bodytemperature-5)
+					M.make_jittery(1)
+					return
+
+			ale
+				name = "Ale"
+				id = "ale"
+				description = "A dark alchoholic beverage made by malted barley and yeast."
 				reagent_state = LIQUID
 				red = 102
 				green = 67

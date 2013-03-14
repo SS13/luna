@@ -32,7 +32,6 @@
 					LaunchControl.start()
 					world << "\blue <B>Alert: The escape pods are being launched. They will launch in [round(LaunchControl.timeleft()/60)] minutes.</B>"
 					log_admin("[key_name(usr)] launched the escape pods")
-					playsound('sound/announcer/shuttlecalled.ogg', vol = 30)
 					message_admins("\blue [key_name_admin(usr)] launched the escape pods", 1)
 
 				if("2")
@@ -43,13 +42,11 @@
 							LaunchControl.start()
 							world << "\blue <B>Alert: The escape pods are being launched. They will launch in [round(LaunchControl.timeleft()/60)] minutes.</B>"
 							log_admin("[key_name(usr)] launched the escape pods")
-							playsound('sound/announcer/shuttlecalled.ogg', vol = 30)
 							message_admins("\blue [key_name_admin(usr)] launched the escape pods", 1)
 						if(1)
 							LaunchControl.stop()
 							world << "\blue <B>Alert: The escape pod launch sequence has been cancelled!</B>"
 							log_admin("[key_name(usr)] cancelled the escape pod launch sequence")
-							playsound('sound/announcer/shuttlerecalled.ogg', vol = 30)
 							message_admins("\blue [key_name_admin(usr)] cancelled the escape pod launch sequence", 1)
 
 			href_list["secretsadmin"] = "check_antagonist"

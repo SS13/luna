@@ -344,9 +344,22 @@
 	icon_state = null
 	w_class = 1
 	var/amount_per_transfer_from_this = 5
+	var/possible_transfer_amounts = list(5,10,15,25,30)
+	var/volume = 30
+
+	verb/set_APTFT() //set amount_per_transfer_from_this
+		set name = "Set transfer amount"
+		set category = "Object"
+		set src in range(0)
+		var/N = input("Amount per transfer from this:","[src]") as null|anything in possible_transfer_amounts
+		if (N)
+			amount_per_transfer_from_this = N
 
 	New()
-		var/datum/reagents/R = new/datum/reagents(50)
+		..()
+		if (!possible_transfer_amounts)
+			src.verbs -= /obj/item/weapon/reagent_containers/verb/set_APTFT
+		var/datum/reagents/R = new/datum/reagents(volume)
 		reagents = R
 		R.my_atom = src
 
@@ -371,27 +384,40 @@
 	icon_state = "null"
 	item_state = "null"
 	amount_per_transfer_from_this = 10
+	possible_transfer_amounts = list(5,10,15,25,30,50)
+	volume = 50
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
 
+	var/list/can_be_placed_into = list(
+		/obj/machinery/chem_master/,
+		/obj/machinery/chem_dispenser/,
+		/obj/table,
+		/obj/secure_closet,
+		/obj/closet,
+		/obj/item/weapon/storage,
+		/obj/machinery/atmospherics/unary/cryo_cell,
+		/obj/item/weapon/chem_grenade,
+		/obj/machinery/bot/medbot,
+		/obj/item/weapon/secstorage/ssafe,
+		/obj/machinery/disposal
+	)
+
 	examine()
-		set src in view(2)
+		set src in view()
 		..()
+		if (!(usr in view(2)) && usr!=src.loc) return
 		usr << "\blue It contains:"
-		if(!reagents) return
-		if(reagents.total_volume)
-			reagents.update_total()
-			usr << "\blue [reagents.total_volume] units of liquid."
+		if(reagents && reagents.reagent_list.len)
+			for(var/datum/reagent/R in reagents.reagent_list)
+				usr << "\blue [R.volume] units of [R.name]"
 		else
 			usr << "\blue Nothing."
 
 
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-
 	afterattack(obj/target, mob/user , flag)
-
+		for(var/type in src.can_be_placed_into)
+			if(istype(target, type))
+				return
 		if(ismob(target) && target.reagents && reagents.total_volume)
 			user << "\blue You splash the solution onto [target]."
 			for(var/mob/O in viewers(world.view, user))
@@ -400,6 +426,7 @@
 			message_admins("[target] has been splashed with a container filled with [src.reagents.get_master_reagent_name()] by [user]")
 			spawn(5) src.reagents.clear_reagents()
 			return
+
 		else if(istype(target, /obj/reagent_dispensers)) //A dispenser. Transfer FROM it TO us.
 
 			if(!target.reagents.total_volume && target.reagents)
@@ -410,12 +437,9 @@
 				user << "\red [src] is full."
 				return
 
-			if(istype(src, /obj/item/weapon/reagent_containers/glass/wateringcan))
-				var/trans = target.reagents.trans_to(src, 30)
-				user << "\blue You fill [src] with [trans] units of the contents of [target]."
-			else
-				var/trans = target.reagents.trans_to(src, 10)
-				user << "\blue You fill [src] with [trans] units of the contents of [target]."
+			var/trans = target.reagents.trans_to(src, target:amount_per_transfer_from_this)
+			user << "\blue You fill [src] with [trans] units of the contents of [target]."
+
 
 		else if(target.is_open_container() && target.reagents) //Something like a glass. Player probably wants to transfer TO it.
 			if(!reagents.total_volume)
@@ -429,7 +453,7 @@
 			var/trans = src.reagents.trans_to(target, 10)
 			user << "\blue You transfer [trans] units of the solution to [target]."
 
-		else if(reagents.total_volume  && !istype(target,/obj/machinery/chem_master/) && !istype(target,/obj/machinery/disease2/incubator) && !istype(target,/obj/machinery/disposal) && !istype(target,/obj/table) && !istype(target,/obj/secure_closet) && !istype(target,/obj/closet) && !istype(target,/obj/item/weapon/storage) && !istype(target, /obj/machinery/atmospherics/unary/cryo_cell) && !istype(target, /obj/item/weapon/chem_grenade) && !istype(target, /obj/machinery/bot/medbot) && !istype(target, /obj/machinery/plantpot))
+		else if(reagents.total_volume)
 			user << "\blue You splash the solution onto [target]."
 			src.reagents.reaction(target, TOUCH)
 			spawn(5) src.reagents.clear_reagents()
@@ -448,12 +472,14 @@
 	icon = 'chemical.dmi'
 	icon_state = "dropper0"
 	amount_per_transfer_from_this = 5
+	possible_transfer_amounts = list(1,2,3,4,5)
+	volume = 5
 	var/filled = 0
 
-	New()
+/*	New()
 		var/datum/reagents/R = new/datum/reagents(5)
 		reagents = R
-		R.my_atom = src
+		R.my_atom = src */
 
 	afterattack(obj/target, mob/user , flag)
 		if(!target.reagents) return
@@ -474,10 +500,11 @@
 					message_admins("[user] drips something filled with [src.reagents.get_master_reagent_name()] onto [target]")
 				src.reagents.reaction(target, TOUCH)
 
-			spawn(5) src.reagents.trans_to(target, 5)
-			user << "\blue You transfer 5 units of the solution."
-			filled = 0
-			icon_state = "dropper[filled]"
+			var/trans = src.reagents.trans_to(target, amount_per_transfer_from_this)
+			user << "\blue You transfer [trans] units of the solution."
+			if (src.reagents.total_volume<=0)
+				filled = 0
+				icon_state = "dropper[filled]"
 
 		else
 
@@ -504,6 +531,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 /// Syringes.
 ////////////////////////////////////////////////////////////////////////////////
+#define SYRINGE_DRAW 0
+#define SYRINGE_INJECT 1
+
 /obj/item/weapon/reagent_containers/syringe
 	name = "Syringe"
 	desc = "A syringe."
@@ -511,14 +541,10 @@
 	item_state = "syringe_0"
 	icon_state = "0"
 	amount_per_transfer_from_this = 5
-	var/mode = "d"
+	possible_transfer_amounts = null //list(5,10,15)
+	volume = 15
 	var/has_blood = 0
-
-	New()
-		var/datum/reagents/R = new/datum/reagents(15)
-		reagents = R
-		R.maximum_volume = 15
-		R.my_atom = src
+	var/mode = SYRINGE_DRAW
 
 	on_reagent_change()
 		update_icon()
@@ -530,19 +556,23 @@
 	dropped(mob/user)
 		..()
 		update_icon()
-
-	attack_self(mob/user as mob)
+/*
+		attack_self(mob/user as mob)
+		return */
+/*
 		switch(mode)
-			if("d")
-				mode = "i"
-			if("i")
-				mode = "d"
+			if(SYRINGE_DRAW)
+				mode = SYRINGE_INJECT
+			if(SYRINGE_INJECT)
+				mode = SYRINGE_DRAW
+*/
+		mode = !mode
 		update_icon()
 
 	attack_hand()
 		..()
 		update_icon()
-
+////////////////////////////////////////////FUCK THIS SHIT///////////////////////////////////////////////////
 	attack_paw()
 		return attack_hand()
 
@@ -722,12 +752,13 @@
 	icon = 'chemical.dmi'
 	icon_state = null
 	item_state = "pill"
+	possible_transfer_amounts = null
+	volume = 50
 
 	New()
-		var/datum/reagents/R = new/datum/reagents(100)
-		reagents = R
-		R.my_atom = src
-		icon_state = "pill[rand(1,20)]"
+		..()
+		if(!icon_state)
+			icon_state = "pill[rand(1,20)]"
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
 		return
@@ -826,7 +857,7 @@
 	name = "reagent glass"
 	desc = "A reagent glass."
 	icon = 'chemical.dmi'
-	icon_state = "beaker"
+	icon_state = "beaker0"
 	amount_per_transfer_from_this = 10
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
 
@@ -846,11 +877,27 @@
 	icon = 'chemical.dmi'
 	icon_state = "beakerlarge"
 	item_state = "beaker"
+	m_amt = 0
+	g_amt = 5000
+	volume = 100
 	amount_per_transfer_from_this = 10
+	possible_transfer_amounts = list(5,10,15,25,30,50,100)
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
 
+	pickup(mob/user)
+		on_reagent_change(user)
+
+	dropped(mob/user)
+		on_reagent_change()
+
+	on_reagent_change(var/mob/user)
+		overlays = null
+
 	New()
-		var/datum/reagents/R = new/datum/reagents(50)
+		..()
+		if (!possible_transfer_amounts)
+			src.verbs -= /obj/item/weapon/reagent_containers/verb/set_APTFT
+		var/datum/reagents/R = new/datum/reagents(volume)
 		reagents = R
 		R.my_atom = src
 
@@ -860,20 +907,22 @@
 			..()
 			reagents.add_reagent("cleaner", 50)
 
-/obj/item/weapon/reagent_containers/glass/bottle/
+/obj/item/weapon/reagent_containers/glass/bottle
 	name = "bottle"
 	desc = "A small bottle."
 	icon = 'chemical.dmi'
-	icon_state = "bottle16"
+	icon_state = null
 	item_state = "atoxinbottle"
 	amount_per_transfer_from_this = 10
+	possible_transfer_amounts = list(5,10,15,25,30)
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
+	volume = 50
 
 	New()
-		var/datum/reagents/R = new/datum/reagents(30)
-		reagents = R
-		R.my_atom = src
-		icon_state = "bottle[rand(1,20)]"
+		..()
+		if(!icon_state)
+			icon_state = "bottle[rand(1,20)]"
+
 /obj/item/weapon/reagent_containers/glass/bloodpack/
 	name = "Blood Pack"
 	desc = "A plastic bag of blood."
@@ -1196,6 +1245,8 @@
 	New()
 		..()
 		reagents.add_reagent("beer",1000)
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////

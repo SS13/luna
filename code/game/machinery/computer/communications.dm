@@ -357,6 +357,7 @@
 
 //	main_shuttle.incall()
 	world << "\blue <B>Alert: Escape pods launching in [round(LaunchControl.timeleft()/60)] minutes.</B>"
+	playsound('sound/announcer/shuttlecalled.ogg')
 
 	return
 
@@ -367,6 +368,7 @@
 		return
 
 	world << "\blue <B>Alert: Escape pods launch sequence aborted</B>" //marker4
+	playsound('sound/announcer/shuttlerecalled.ogg')
 
 	LaunchControl.stop()
 

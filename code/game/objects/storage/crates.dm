@@ -75,6 +75,15 @@
 	openicon = "freezeropen"
 	closedicon = "freezer"
 
+/obj/crate/freezerice
+	desc = "A freezer."
+	name = "Freezer"
+	icon = 'storage.dmi'
+	icon_state = "freezer"
+	density = 1
+	openicon = "freezeropen"
+	closedicon = "freezer"
+
 /obj/crate/bin
 	desc = "A large bin."
 	name = "Large bin"
@@ -184,6 +193,24 @@
 	new /obj/item/weapon/rcd_ammo(src)
 	new /obj/item/weapon/rcd_ammo(src)
 	new /obj/item/weapon/rcd(src)
+
+/obj/crate/freezerice/New()
+	..()
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
 
 /obj/crate/proc/open()
 	playsound(src.loc, 'click.ogg', 15, 1, -3)

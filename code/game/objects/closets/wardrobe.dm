@@ -351,6 +351,10 @@
 	//new /obj/item/clothing/under/bartender( src )
 	new /obj/item/clothing/head/that( src )
 	new /obj/item/clothing/head/that( src )
+	new /obj/item/clothing/shoes/black( src )
+	new /obj/item/clothing/shoes/black( src )
+	new /obj/item/device/pda/bar( src )
+	new /obj/item/device/pda/bar( src )
 	//new /obj/item/clothing/head/that( src )
 	return
 

@@ -575,6 +575,15 @@
 	icon_broken = "fridgebroken"
 	icon_off = "fridge1"
 
+/obj/secure_closet/refrigerator
+	name = "Refrigerator"
+	icon_state = "fridge1"
+	icon_closed = "fridge"
+	icon_locked = "fridge1"
+	icon_opened = "fridgeopen"
+	icon_broken = "fridgebroken"
+	icon_off = "fridge1"
+
 /obj/secure_closet/wall
 	name = "wall locker"
 	req_access = list(access_security)

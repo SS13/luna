@@ -623,7 +623,6 @@
 		src.available += new /datum/manufacture/light_tube(src)
 		src.available += new /datum/manufacture/breathmask(src)
 		src.available += new /datum/manufacture/RCDammo(src)
-		src.available += new /datum/manufacture/cola_bottle(src)
 		//src.hidden += new /datum/manufacture/vuvuzela(src)
 		//src.hidden += new /datum/manufacture/harmonica(src)
 		src.hidden += new /datum/manufacture/bikehorn(src)
@@ -735,7 +734,7 @@
 	amount1 = 1
 	time = 5
 	create = 1
-*/
+
 /datum/manufacture/cola_bottle
 	name = "Glass Bottle"
 	item = /obj/item/weapon/reagent_containers/food/drinks/cola_bottle
@@ -744,7 +743,7 @@
 	amount1 = 1
 	time = 4
 	create = 1
-
+*/
 /datum/manufacture/bikehorn
 	name = "Bicycle Horn"
 	item = /obj/item/weapon/bikehorn
