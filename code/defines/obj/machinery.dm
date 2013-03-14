@@ -737,7 +737,6 @@
 	/obj/item/weapon/reagent_containers/food/drinks/ale;
 	/obj/item/weapon/reagent_containers/food/drinks/milk;
 	/obj/item/weapon/reagent_containers/food/drinks/bottle/gin;
-	/obj/item/weapon/reagent_containers/food/drinks/waterbottle;
 	/obj/item/weapon/reagent_containers/food/drinks/bottle/vodka;
 	/obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla;
 	/obj/item/weapon/reagent_containers/food/drinks/bottle/patron;
@@ -751,10 +750,9 @@
 	/obj/item/weapon/reagent_containers/food/drinks/bottle/rum;
 	/obj/item/weapon/reagent_containers/food/drinks/bottle/vermouth;
 	/obj/item/weapon/reagent_containers/food/drinks/bottle/wine;
-	/obj/item/weapon/reagent_containers/food/drinks/drinkingglass;
-	"}
+	/obj/item/weapon/reagent_containers/food/drinks/drinkingglass"}
 	//product_amounts = "4;4;4;4;12"
-	product_prices = "1;1;1;1;2;1;1;1;1;1;1;2;1;2;2;2;2;2;1;2;1;1;1;2;2;2;1"
+	product_prices = "1;1;1;1;2;1;1;1;1;1;1;2;2;2;2;2;2;1;2;1;1;1;2;2;2;1"
 	product_hidden = ""
 	hidden_prices = ""
 	charge_type = "bar"

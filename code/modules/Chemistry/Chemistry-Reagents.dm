@@ -2154,3 +2154,26 @@ datum
 				red = 102
 				green = 67
 				blue = 0
+
+			sodawater
+				name = "Soda Water"
+				id = "sodawater"
+				description = "A can of club soda. Why not make a scotch and soda?"
+				reagent_state = LIQUID
+				red = 97
+				green = 148
+				blue = 148
+				on_mob_life(var/mob/living/M as mob)
+					M.dizziness = max(0,M.dizziness-5)
+					M:drowsyness = max(0,M:drowsyness-3)
+					..()
+					return
+			wine
+				name = "Wine"
+				id = "wine"
+				description = "An premium alchoholic beverage made from distilled grape juice."
+				red = 126
+				green = 64
+				blue = 67
+				dizzy_adj = 2
+				confused_start = 145

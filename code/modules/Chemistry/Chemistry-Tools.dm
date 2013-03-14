@@ -531,9 +531,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 /// Syringes.
 ////////////////////////////////////////////////////////////////////////////////
-#define SYRINGE_DRAW 0
-#define SYRINGE_INJECT 1
-
 /obj/item/weapon/reagent_containers/syringe
 	name = "Syringe"
 	desc = "A syringe."
@@ -541,10 +538,14 @@
 	item_state = "syringe_0"
 	icon_state = "0"
 	amount_per_transfer_from_this = 5
-	possible_transfer_amounts = null //list(5,10,15)
-	volume = 15
+	var/mode = "d"
 	var/has_blood = 0
-	var/mode = SYRINGE_DRAW
+
+	New()
+		var/datum/reagents/R = new/datum/reagents(15)
+		reagents = R
+		R.maximum_volume = 15
+		R.my_atom = src
 
 	on_reagent_change()
 		update_icon()
@@ -556,23 +557,19 @@
 	dropped(mob/user)
 		..()
 		update_icon()
-/*
-		attack_self(mob/user as mob)
-		return */
-/*
+
+	attack_self(mob/user as mob)
 		switch(mode)
-			if(SYRINGE_DRAW)
-				mode = SYRINGE_INJECT
-			if(SYRINGE_INJECT)
-				mode = SYRINGE_DRAW
-*/
-		mode = !mode
+			if("d")
+				mode = "i"
+			if("i")
+				mode = "d"
 		update_icon()
 
 	attack_hand()
 		..()
 		update_icon()
-////////////////////////////////////////////FUCK THIS SHIT///////////////////////////////////////////////////
+
 	attack_paw()
 		return attack_hand()
 
@@ -737,7 +734,6 @@
 			else
 				icon_state = "[(has_blood?"b":"")][rounded_vol]"
 			item_state = "syringe_[rounded_vol]"
-
 ////////////////////////////////////////////////////////////////////////////////
 /// Syringes. END
 ////////////////////////////////////////////////////////////////////////////////
