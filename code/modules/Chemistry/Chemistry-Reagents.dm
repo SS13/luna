@@ -18,7 +18,7 @@ datum
 		var/green = 255
 		var/blue = 255
 		var/alpha = 255
-
+		var/nutriment_factor = null
 		proc
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume) //By default we have a chance to transfer some
 				var/datum/reagent/self = src
@@ -1267,6 +1267,7 @@ datum
 				var/d = data
 				for(var/datum/reagent/ethanol/A in holder.reagent_list)
 				M:jitteriness = max(M:jitteriness-3,0)
+				M:nutrition += 2
 				if(d >= dizzy_start)
 					M.make_dizzy(dizzy_adj)
 				if(d >= intox_start)
@@ -1417,6 +1418,12 @@ datum
 			red = 240
 			green = 240
 			blue = 240
+			nutriment_factor = 1
+			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
+				..()
+				return
+
 
 		orangejuice
 			name = "Orange juice"
@@ -1426,7 +1433,9 @@ datum
 			red = 255
 			green = 117
 			blue = 56
+			nutriment_factor = 2
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(!M) M = holder.my_atom
 				M:oxyloss = max(M:oxyloss-1, 0)
 				..()
@@ -1440,7 +1449,9 @@ datum
 			red = 115
 			green = 16
 			blue = 8
+			nutriment_factor = 2
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(!M) M = holder.my_atom
 				M:fireloss = max(M:fireloss-1,0)
 				..()
@@ -1454,7 +1465,9 @@ datum
 			red = 54
 			green = 94
 			blue = 48
+			nutriment_factor = 2
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(!M) M = holder.my_atom
 				M:toxloss = max(M:toxloss-1,0)
 				..()
@@ -1468,7 +1481,9 @@ datum
 			red = 151
 			green = 56
 			blue = 0
+			nutriment_factor = 2
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(!M) M = holder.my_atom
 				M.eye_blurry = max(M:eye_blurry-1,0)
 				M:eye_blind = max(M:eye_blind-1 , 0)
@@ -1483,6 +1498,11 @@ datum
 			red = 51
 			green = 51
 			blue = 134
+			nutriment_factor = 2
+			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
+				..()
+				return
 
 		berryjuice
 			name = "Berry Juice"
@@ -1492,6 +1512,11 @@ datum
 			red = 134
 			green = 51
 			blue = 51
+			nutriment_factor = 2
+			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
+				..()
+				return
 
 		lemonjuice
 			name = "Lemon Juice"
@@ -1501,6 +1526,11 @@ datum
 			red = 175
 			green = 175
 			blue = 0
+			nutriment_factor = 2
+			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
+				..()
+				return
 
 		bananajuice
 			name = "Banana Juice"
@@ -1510,15 +1540,17 @@ datum
 			red = 175
 			green = 175
 			blue = 0
+			nutriment_factor = 2
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(istype(M, /mob/living/carbon/human) && M.job in list("Clown"))
-					if(!M) M = holder.my_atom
-					M.bruteloss = max(M:bruteloss+1,0)
+					for(var/datum/organ/external/org in M:organs2)
+						if(org.brute_dam && prob(40)) org.brute_dam--
 					..()
 					return
 				if(istype(M, /mob/living/carbon/monkey))
-					if(!M) M = holder.my_atom
-					M.bruteloss = max(M:bruteloss+1,0)
+					for(var/datum/organ/external/org in M:organs2)
+						if(org.brute_dam && prob(40)) org.brute_dam--
 					..()
 					return
 				..()
@@ -1530,9 +1562,11 @@ datum
 			red = 223
 			green = 215
 			blue = 175
+			nutriment_factor = 1
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(!M) M = holder.my_atom
-				M.bruteloss = max(M:bruteloss+1,0)
+				M.bruteloss = max(M:bruteloss-1,0)
 				..()
 				return
 
@@ -1544,7 +1578,9 @@ datum
 			red = 16
 			green = 16
 			blue = 0
+			nutriment_factor = 1
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(!M) M = holder.my_atom
 				M:toxloss = max(M:toxloss-1,0)
 				if (M.bodytemperature > 310)
@@ -1561,15 +1597,17 @@ datum
 			green = 64
 			blue = 56
 			alpha = 50
+			nutriment_factor = 1
 
 			on_mob_life(var/mob/living/M as mob)
-				..()
+				M:nutrition += nutriment_factor
 				M.dizziness = max(0,M.dizziness-2)
 				M:drowsyness = max(0,M:drowsyness-1)
 				if(!M) M = holder.my_atom
 				M:toxloss = max(M:toxloss-1,0)
 				if (M.bodytemperature > 310)//310 is the normal bodytemp. 310.055
 					M.bodytemperature = min(310, M.bodytemperature-5)
+				..()
 				return
 
 		ice
@@ -1582,6 +1620,7 @@ datum
 			blue = 255
 			alpha = 50
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(!M) M = holder.my_atom
 				M:bodytemperature -= 5
 				..()
@@ -1596,8 +1635,9 @@ datum
 			green = 255
 			blue = 152
 			alpha = 40
-
+			nutriment_factor = 2
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				M.dizziness = max(0,M.dizziness-5)
 				M:drowsyness = max(0,M:drowsyness-3)
 				if (M.bodytemperature > 310)
@@ -1613,9 +1653,25 @@ datum
 			red = 64
 			green = 48
 			blue = 16
+			nutriment_factor = 2
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if (M.bodytemperature < 310)//310 is the normal bodytemp. 310.055
 					M.bodytemperature = min(310, M.bodytemperature+5)
+				..()
+				return
+
+		dry_ramen
+			name = "Dry Ramen"
+			id = "dry_ramen"
+			description = "Space age food, since August 25, 1958. Contains dried noodles, vegetables, and chemicals that boil in contact with water."
+			reagent_state = SOLID
+			red = 48
+			green = 32
+			blue = 0
+			nutriment_factor = 2
+			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				..()
 				return
 ///////////////////////////////////////////////ALHO////////////////////////////////////////////////////////////
@@ -1629,7 +1685,9 @@ datum
 			green = 64
 			blue = 48
 			alpha = 50
+			nutriment_factor = 2
 			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
 				if(!src.data) data = 1
 				src.data++
 				var/d = data
@@ -1661,12 +1719,14 @@ datum
 				red = 150
 				green = 75
 				blue = 0
+				nutriment_factor = 2
 
 			vodka
 				name = "Vodka"
 				id = "vodka"
 				description = "Number one drink AND fueling choice for Russians worldwide."
 				alpha = 50
+				nutriment_factor = 2
 
 			dwine
 				name = "Dwarven Wine"
@@ -1677,6 +1737,7 @@ datum
 				blue = 128
 				dizzy_adj = 2
 				confused_start = 145
+				nutriment_factor = 2
 
 			whiskey
 				name = "Whiskey"
@@ -1686,6 +1747,7 @@ datum
 				green = 67
 				blue = 0
 				dizzy_adj = 4
+				nutriment_factor = 2
 
 			gin
 				name = "Gin"
@@ -1696,6 +1758,7 @@ datum
 				blue = 205
 				alpha = 50
 				dizzy_adj = 3
+				nutriment_factor = 2
 
 			rum
 				name = "Rum"
@@ -1704,6 +1767,7 @@ datum
 				red = 102
 				green = 67
 				blue = 0
+				nutriment_factor = 2
 
 			tequilla
 				name = "Tequilla"
@@ -1713,6 +1777,7 @@ datum
 				green = 176
 				blue = 183
 				alpha = 60
+				nutriment_factor = 2
 
 			cognac
 				name = "Cognac"
@@ -1723,6 +1788,7 @@ datum
 				blue = 0
 				dizzy_adj = 4
 				confused_start = 115
+				nutriment_factor = 2
 
 			vermouth
 				name = "Vermouth"
@@ -1732,6 +1798,7 @@ datum
 				green = 47
 				blue = 47
 				alpha = 60
+				nutriment_factor = 2
 
 			hooch
 				name = "Hooch"
@@ -1742,6 +1809,7 @@ datum
 				blue = 0
 				dizzy_adj = 6
 				confused_start = 90
+				nutriment_factor = 2
 
 			absinthe
 				name = "Absinthe"
@@ -1752,6 +1820,7 @@ datum
 				blue = 20
 				dizzy_adj = 5
 				confused_start = 100
+				nutriment_factor = 2
 //////////////////////////////////////////////////////cocktail entities/////////////////////////////////////////////////
 
 			atomicbomb
@@ -1909,6 +1978,16 @@ datum
 				red = 102
 				green = 67
 				blue = 0
+
+				on_mob_life(var/mob/living/M as mob)
+					if(!M) M = holder.my_atom
+					M:toxloss = max(M:toxloss-1,0)
+					M:fireloss = max(M:fireloss-1,0)
+					M:oxyloss = max(M:oxyloss-1,0)
+					for(var/datum/organ/external/org in M:organs2)
+						if(org.brute_dam && prob(40)) org.brute_dam--
+					..()
+					return
 
 			irish_cream
 				name = "Irish Cream"

@@ -4,7 +4,7 @@
 	var/list/can_hold = new/list()
 	var/obj/screen/storage/boxes = null
 	var/obj/screen/close/closer = null
-	w_class = 4.0
+	w_class = 3.0
 	flags = FPRINT|TABLEPASS
 
 /obj/item/weapon/storage/backpack
@@ -12,7 +12,6 @@
 	desc = "You wear this on your back and put items into it."
 	icon_state = "backpack"
 	w_class = 4.0
-	flags = 259.0
 
 /obj/item/weapon/storage/backpack/clown
 	name = "Giggles Von Honkerton"

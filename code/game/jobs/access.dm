@@ -220,7 +220,7 @@
 	            access_tech_storage, access_chapel_office, access_atmospherics, access_kitchen,
 	            access_bar, access_janitor, access_crematorium, access_robotics, access_cargo, access_cargo_bot, access_construction,
 	            access_security_passthrough, access_laboratories_doors, access_incinerator, access_maintenance_hall,
-	            access_shield_generator, access_hydroponics, access_theater, access_mining)
+	            access_shield_generator, access_hydroponics, access_theater, access_mining, access_HoSoffice)
 /proc/get_access_num(A)
 	switch(A)
 		if("CargoBay")

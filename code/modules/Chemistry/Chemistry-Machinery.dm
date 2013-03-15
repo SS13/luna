@@ -34,6 +34,7 @@
 	"gold",
 	"silver",
 	"uranium",
+	"copper",
 	"aluminium",
 	"silicon",
 	"plasma",
