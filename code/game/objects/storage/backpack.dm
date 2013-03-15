@@ -3,23 +3,18 @@
 	..()
 	return
 /obj/item/weapon/storage/backpack/clown/New()
-	new /obj/item/weapon/storage/box( src )
 	..()
 	return
 /obj/item/weapon/storage/backpack/medic/New()
-	new /obj/item/weapon/storage/box( src )
 	..()
 	return
 /obj/item/weapon/storage/backpack/security/New()
-	new /obj/item/weapon/storage/box( src )
 	..()
 	return
 /obj/item/weapon/storage/backpack/industrial/New()
-	new /obj/item/weapon/storage/box( src )
 	..()
 	return
 /obj/item/weapon/storage/backpack/captain/New()
-	new /obj/item/weapon/storage/box( src )
 	..()
 	return
 /obj/item/weapon/storage/backpack/MouseDrop(obj/over_object as obj)

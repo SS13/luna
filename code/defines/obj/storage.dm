@@ -12,6 +12,7 @@
 	desc = "You wear this on your back and put items into it."
 	icon_state = "backpack"
 	w_class = 4.0
+	flags = 259.0
 
 /obj/item/weapon/storage/backpack/clown
 	name = "Giggles Von Honkerton"
