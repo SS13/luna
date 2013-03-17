@@ -1254,12 +1254,12 @@ datum
 			green = 64
 			blue = 48
 			var/dizzy_adj = 3
-			var/confused_adj = 2
-			var/intox_adj = 4
-			var/confused_start = 130
-			var/pass_out = 325
-			var/blur_start = 260
-			var/dizzy_start = 20
+			var/confused_adj = 5
+			var/intox_adj = 5
+			var/confused_start = 100
+			var/pass_out = 250
+			var/blur_start = 100
+			var/dizzy_start = 15
 			var/intox_start = 30
 			on_mob_life(var/mob/living/M as mob)
 				if(!src.data) data = 1
@@ -1720,6 +1720,11 @@ datum
 				green = 75
 				blue = 0
 				nutriment_factor = 2
+				confused_start = 120
+				blur_start = 120
+				dizzy_start = 30
+				intox_start = 40
+
 
 			vodka
 				name = "Vodka"
@@ -1727,6 +1732,11 @@ datum
 				description = "Number one drink AND fueling choice for Russians worldwide."
 				alpha = 50
 				nutriment_factor = 2
+				confused_start = 70
+				pass_out = 190
+				blur_start = 80
+				dizzy_start = 10
+				intox_start = 20
 
 			dwine
 				name = "Dwarven Wine"
@@ -1748,6 +1758,11 @@ datum
 				blue = 0
 				dizzy_adj = 4
 				nutriment_factor = 2
+				confused_start = 70
+				pass_out = 190
+				blur_start = 80
+				dizzy_start = 12
+				intox_start = 20
 
 			gin
 				name = "Gin"
@@ -1759,6 +1774,10 @@ datum
 				alpha = 50
 				dizzy_adj = 3
 				nutriment_factor = 2
+				pass_out = 220
+				blur_start = 100
+				dizzy_start = 20
+				intox_start = 40
 
 			rum
 				name = "Rum"
@@ -1768,6 +1787,11 @@ datum
 				green = 67
 				blue = 0
 				nutriment_factor = 2
+				confused_start = 100
+				pass_out = 200
+				blur_start = 90
+				dizzy_start = 15
+				intox_start = 30
 
 			tequilla
 				name = "Tequilla"
@@ -1778,6 +1802,9 @@ datum
 				blue = 183
 				alpha = 60
 				nutriment_factor = 2
+				confused_start = 100
+				pass_out = 210
+				blur_start = 110
 
 			cognac
 				name = "Cognac"
@@ -1789,6 +1816,11 @@ datum
 				dizzy_adj = 4
 				confused_start = 115
 				nutriment_factor = 2
+				confused_start = 100
+				pass_out = 200
+				blur_start = 90
+				dizzy_start = 15
+				intox_start = 20
 
 			vermouth
 				name = "Vermouth"
@@ -1799,6 +1831,11 @@ datum
 				blue = 47
 				alpha = 60
 				nutriment_factor = 2
+				confused_start = 100
+				pass_out = 200
+				blur_start = 90
+				dizzy_start = 15
+				intox_start = 25
 
 			hooch
 				name = "Hooch"
@@ -1810,6 +1847,10 @@ datum
 				dizzy_adj = 6
 				confused_start = 90
 				nutriment_factor = 2
+				pass_out = 200
+				blur_start = 90
+				dizzy_start = 15
+				intox_start = 30
 
 			absinthe
 				name = "Absinthe"
@@ -1821,6 +1862,17 @@ datum
 				dizzy_adj = 5
 				confused_start = 100
 				nutriment_factor = 2
+				pass_out = 200
+				blur_start = 90
+				dizzy_start = 15
+				intox_start = 10
+				on_mob_life(var/mob/M)
+					if(!M) M = holder.my_atom
+					if(!data) data = 1
+					data++
+					M:hallucination += 5
+					..()
+					return
 //////////////////////////////////////////////////////cocktail entities/////////////////////////////////////////////////
 
 			atomicbomb

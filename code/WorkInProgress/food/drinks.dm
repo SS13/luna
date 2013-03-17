@@ -8,7 +8,7 @@
 	icon_state = null
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
 	var/gulp_size = 5 //This is now officially broken ... need to think of a nice way to fix it.
-	possible_transfer_amounts = list(5,10,25)
+	possible_transfer_amounts = list(5,10,15,25,30,50)
 	volume = 50
 
 	on_reagent_change()
@@ -43,11 +43,7 @@
 			for(var/mob/O in viewers(world.view, user))
 				O.show_message("\red [user] feeds [M] [src].", 1)
 
-			log_admin("ATTACK: [user] ([user.ckey]) fed [M] ([M.ckey]) with [src].")
 			message_admins("ATTACK: [user] ([user.ckey])(<A HREF='?src=%admin_ref%;adminplayerobservejump=\ref[user]'>JMP</A>) fed [M] ([M.ckey]) with [src].", 2)
-
-			log_attack("<font color='red'>[user.name] ([user.ckey]) fed [M.name] ([M.ckey]) with [src.name] (INTENT: [uppertext(user.a_intent)])</font>")
-
 
 			if(reagents.total_volume)
 				reagents.reaction(M, INGEST)
@@ -126,12 +122,14 @@
 	desc = "A metal shaker to mix drinks in."
 	icon_state = "shaker"
 	amount_per_transfer_from_this = 10
+	possible_transfer_amounts = list(5,10,15,25,30,50)
 	volume = 100
 
 /obj/item/weapon/reagent_containers/food/drinks/flask
 	name = "Captain's Flask"
 	desc = "A metal flask belonging to the captain"
 	icon_state = "flask"
+	possible_transfer_amounts = list(5,10,15,25,30,60)
 	volume = 60
 
 /obj/item/weapon/reagent_containers/food/drinks/dflask
@@ -145,6 +143,7 @@
 	desc = "Your standard drinking glass."
 	icon_state = "glass_empty"
 	amount_per_transfer_from_this = 10
+	possible_transfer_amounts = list(5,10,15,25,30,50)
 	volume = 50
 	g_amt = 100
 	var/fired = 0

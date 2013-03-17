@@ -59,7 +59,7 @@
 				radioalert("Core control computer", "CORE EXPLOSION IMMINENT")
 			else if(det >= previousdet)   // The damage is still going up
 				radioalert("Core control computer", "CORE OVERLOAD")
-				playsound('sound/effects/alert.ogg', vol = 20)
+				playsound('sound/effects/siren.ogg')
 			else						  // Phew, we're safe
 				radioalert("Core control computer", "Core returning to safe operating levels.")
 

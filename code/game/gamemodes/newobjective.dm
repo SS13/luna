@@ -323,7 +323,7 @@ datum
 						return 35
 
 		escape
-			explanation_text = "Escape on the shuttle alive, without being arrested"
+			explanation_text = "Escape on the shuttle alive, without being arrested."
 
 			check_completion()
 				if(main_shuttle.location<2)
@@ -349,7 +349,7 @@ datum
 				return INFINITY
 
 		survive
-			explanation_text = "Stay alive until the end"
+			explanation_text = "Stay alive until the end."
 
 			check_completion()
 				if(!owner.current || owner.current.stat == 2)
@@ -373,7 +373,7 @@ datum
 
 		steal/captainslaser
 			steal_target = /obj/item/weapon/gun/energy/laser_gun/captain
-			explanation_text = "Steal the captain's antique laser gun"
+			explanation_text = "Steal the captain's antique laser gun."
 			weight = 20
 
 			get_points(var/job)
@@ -391,7 +391,7 @@ datum
 
 		steal/plasmatank
 			steal_target = /obj/item/weapon/tank/plasma
-			explanation_text = "Steal a small plasma tank"
+			explanation_text = "Steal a small plasma tank."
 			weight = 20
 
 			get_points(var/job)
@@ -426,7 +426,7 @@ datum
 
 		steal/handtele
 			steal_target = /obj/item/weapon/hand_tele
-			explanation_text = "Steal a hand teleporter"
+			explanation_text = "Steal a hand teleporter."
 			weight = 20
 
 			get_points(var/job)
@@ -442,9 +442,81 @@ datum
 					if(4)
 						return INFINITY
 
+		steal/capbackpack
+			steal_target = /obj/item/weapon/storage/backpack/captain
+			explanation_text = "Steal a captain's backpack."
+			weight = 20
+
+			get_points(var/job)
+				switch(GetRank(job))
+					if(0)
+						return 75
+					if(1)
+						return 60
+					if(2)
+						return 50
+					if(3)
+						return 30
+					if(4)
+						return INFINITY
+
+		steal/jetpack
+			steal_target = /obj/item/weapon/tank/jetpack
+			explanation_text = "Steal a blue oxygen jetpack."
+			weight = 20
+
+			get_points(var/job)
+				switch(GetRank(job))
+					if(0)
+						return 75
+					if(1)
+						return 60
+					if(2)
+						return 50
+					if(3)
+						return 30
+					if(4)
+						return INFINITY
+
+		steal/magnetic
+			steal_target = /obj/item/clothing/shoes/magnetic
+			explanation_text = "Steal a pair of \"NanoTrasen\" brand magnetic boots."
+			weight = 20
+
+			get_points(var/job)
+				switch(GetRank(job))
+					if(0)
+						return 80
+					if(1)
+						return 60
+					if(2)
+						return 50
+					if(3)
+						return 40
+					if(4)
+						return 30
+
+		steal/nukedisk
+			steal_target = /obj/item/weapon/disk/nuclear
+			explanation_text = "Steal the station's nuclear authentication disk."
+			weight = 20
+
+			get_points(var/job)
+				switch(GetRank(job))
+					if(0)
+						return 80
+					if(1)
+						return 70
+					if(2)
+						return 50
+					if(3)
+						return 40
+					if(4)
+						return 25
+
 		steal/RCD
 			steal_target = /obj/item/weapon/rcd
-			explanation_text = "Steal a rapid construction device"
+			explanation_text = "Steal a rapid construction device."
 			weight = 20
 
 			get_points(var/job)
@@ -500,7 +572,7 @@ datum
 		*/
 		steal/cyborg
 			steal_target = /obj/item/robot_parts/robot_suit
-			explanation_text = "Steal a completed cyborg shell (no brain)"
+			explanation_text = "Steal a completed cyborg shell (no brain)."
 			weight = 30
 
 			get_points(var/job)
@@ -524,7 +596,7 @@ datum
 					return 0
 		steal/AI
 			steal_target = /obj/machinery/aiconstruct
-			explanation_text = "Steal a finished AI Construct (with brain)"
+			explanation_text = "Steal a finished AI Construct (with brain)."
 			weight = 50
 
 			get_points(var/job)
@@ -550,7 +622,7 @@ datum
 
 		steal/drugs
 			steal_target = /datum/reagent/space_drugs
-			explanation_text = "Steal some space drugs"
+			explanation_text = "Steal some space drugs."
 			weight = 40
 
 			get_points(var/job)
@@ -576,7 +648,7 @@ datum
 
 		steal/pacid
 			steal_target = /datum/reagent/pacid
-			explanation_text = "Steal some polytrinic acid"
+			explanation_text = "Steal some polytrinic acid."
 			weight = 40
 
 			get_points(var/job)
