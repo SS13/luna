@@ -112,7 +112,7 @@
 
 /mob/living/carbon/alien/handle_environment()
 	//If there are alien weeds on the ground then heal if needed or give some toxins
-	if(locate(/obj/alien/weeds) in loc)
+	if(locate(/obj/item/alien/weeds) in loc)
 		if(health >= health_full)
 			if(toxloss + toxgain <= toxgainmax)
 				toxloss += toxgain
