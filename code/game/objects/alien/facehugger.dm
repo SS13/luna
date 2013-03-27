@@ -21,6 +21,7 @@
 /obj/alien/facehugger
 	name = "alien"
 	desc = "A small alien. Looks pretty scary!"
+	icon = 'alien.dmi'
 	icon_state = "facehugger"
 	layer = 5.0
 	density = 1
@@ -280,7 +281,7 @@
 
 		if(state != 2 || !alive || target) return
 
-		if(locate(/obj/alien/weeds) in src.loc && health < maxhealth)
+		if(locate(/obj/item/alien/weeds) in src.loc && health < maxhealth)
 			health++
 			spawn(cycle_pause) idle()
 			return
@@ -298,12 +299,12 @@
 						spawn(cycle_pause) src.idle()
 						return
 			else
-				var/obj/alien/weeds/W = null
+				var/obj/item/alien/weeds/W = null
 				if(health < maxhealth)
 					var/list/the_weeds = new/list()
 
 					find_weeds:
-						for(var/obj/alien/weeds/weed in range(viewrange,src.loc))
+						for(var/obj/item/alien/weeds/weed in range(viewrange,src.loc))
 							if(!can_see(src,weed,viewrange)) continue
 							for(var/atom/A in get_turf(weed))
 								if(A.density) continue find_weeds
@@ -327,7 +328,7 @@
 			if(can_see(src,trg_idle,viewrange))
 				switch(get_dist(src, trg_idle))
 					if(1)
-						if(istype(trg_idle,/obj/alien/weeds))
+						if(istype(trg_idle,/obj/item/alien/weeds))
 							step_towards_3d(src,get_step_towards_3d2(src , trg_idle))
 					if(2 to INFINITY)
 						step_towards_3d(src,get_step_towards_3d2(src , trg_idle))
