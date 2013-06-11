@@ -201,13 +201,13 @@ proc/ClearClosetSave()
 	if (!tile)
 		return
 
-	var/P = new /obj/decal/point(tile)
+	var/P = new /obj/effect/decal/point(tile)
 	spawn (20)
 		del(P)
 
 	usr.visible_message("<b>[usr]</b> points to [src]")
 
-/obj/decal/point/point()
+/obj/effect/decal/point/point()
 	set src in oview()
 	set hidden = 1
 	return

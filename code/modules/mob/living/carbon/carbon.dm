@@ -220,3 +220,54 @@
 
 /mob/living/carbon/proc/UpdateDamageIcon()
 	return
+
+
+/mob/living/carbon/attack_hand(mob/user)
+	if (!ticker)
+		user << "You cannot attack people before the game has started."
+		return
+
+	if (istype(loc, /turf) && istype(loc.loc, /area/start))
+		user << "No attacking people at spawn, you jackass."
+		return
+
+	if(!iscarbon(user)) return
+
+	for(var/datum/disease/D in viruses)
+		if(D.spread_by_touch())
+			user.contract_disease(D, 0, 1, CONTACT_HANDS)
+
+	for(var/datum/disease/D in user.viruses)
+		if(D.spread_by_touch())
+			contract_disease(D, 0, 1, CONTACT_HANDS)
+
+/*	if(lying || isslime(src))
+		if(user.a_intent == "help")
+			if(surgeries.len)
+				for(var/datum/surgery/S in surgeries)
+					if(S.next_step(user, src))
+						return 1
+	return 0*/
+
+
+/mob/living/carbon/attack_paw(mob/M as mob)
+	if (!ticker)
+		M << "You cannot attack people before the game has started."
+		return
+
+	if (istype(loc, /turf) && istype(loc.loc, /area/start))
+		M << "No attacking people at spawn, you jackass."
+		return
+
+	if(!istype(M, /mob/living/carbon)) return
+
+
+	for(var/datum/disease/D in viruses)
+		if(D.spread_by_touch())
+			M.contract_disease(D, 0, 1, CONTACT_HANDS)
+
+	for(var/datum/disease/D in M.viruses)
+		if(D.spread_by_touch())
+			contract_disease(D, 0, 1, CONTACT_HANDS)
+
+	return

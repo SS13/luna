@@ -16,7 +16,7 @@
 /datum/game_mode/malfunction/post_setup()
 	for (var/obj/landmark/A in world)
 		if (A.name == "Malf-Gear-Closet")
-			new /obj/closet/malf/suits(A.loc)
+			new /obj/structure/closet/malf/suits(A.loc)
 			del(A)
 	for (var/mob/living/silicon/ai/aiplayer in world)
 		malf_ai += aiplayer.mind

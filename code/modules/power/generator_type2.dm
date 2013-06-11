@@ -7,9 +7,9 @@
 		if(!input1 || !input2)
 			stat |= BROKEN
 
-		updateicon()
+		update_icon()
 
-/obj/machinery/power/generator_type2/proc/updateicon()
+/obj/machinery/power/generator_type2/proc/update_icon()
 
 	if(stat & (NOPOWER|BROKEN))
 		overlays = null
@@ -66,7 +66,7 @@
 	var/genlev = max(0, min( round(11*lastgen / 100000), 11))
 	if(genlev != lastgenlev)
 		lastgenlev = genlev
-		updateicon()
+		update_icon()
 
 	src.updateDialog()
 
@@ -123,4 +123,4 @@
 
 /obj/machinery/power/generator_type2/power_change()
 	..()
-	updateicon()
+	update_icon()

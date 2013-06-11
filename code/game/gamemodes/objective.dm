@@ -131,11 +131,11 @@ datum
 					if("small plasma tank")
 						steal_target = /obj/item/weapon/tank/plasma
 					if("Medical Records circuitboard")
-						steal_target = /obj/item/weapon/circuitboard/med_data
+						steal_target = /obj/item/weapon/circuitboard/computer/med_data
 					if("Security Records circuitboard")
-						steal_target = /obj/item/weapon/circuitboard/secure_data
+						steal_target = /obj/item/weapon/circuitboard/computer/secure_data
 					if("Communications circuitboard")
-						steal_target = /obj/item/weapon/circuitboard/communications
+						steal_target = /obj/item/weapon/circuitboard/computer/communications
 					if("zippo lighter")
 						steal_target = /obj/item/weapon/zippo
 

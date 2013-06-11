@@ -300,7 +300,7 @@
 					used_temperature = environment.temperature
 				var/transfer_moles = used_pressure*air_contents.volume/(max(used_temperature,TCMB) * R_IDEAL_GAS_EQUATION)
 
-				if(debug_info) world << "Transfer Amount [transfer_moles] Moles"
+				if(debug_info) world << "Transfer amount [transfer_moles] Moles"
 
 				var/datum/gas_mixture/intake = T.remove_air(transfer_moles)
 				var/datum/gas_mixture/env = air_contents.remove(transfer_moles)

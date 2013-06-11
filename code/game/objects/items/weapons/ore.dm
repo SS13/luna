@@ -10,7 +10,7 @@
 	..()
 
 /obj/item/weapon/ore/proc/cook()
-	var/obj/item/weapon/sheet/metal/m = new /obj/item/weapon/sheet/metal( src.loc )
+	var/obj/item/stack/sheet/metal/m = new /obj/item/stack/sheet/metal( src.loc )
 	m.amount = src.amt
 	m.m_amt = src.amt*3750
 	del src

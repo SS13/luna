@@ -339,8 +339,6 @@ No Implant Specifics"}
 		source.contents.Remove(src)
 
 
-
-
 /obj/item/weapon/implant/alien/implanted(mob/source as mob)
 	source.contract_disease(new/datum/disease/alien_embryo, 1)
 	del src
@@ -365,24 +363,11 @@ No Implant Specifics"}
 			src.s.loc<<"Use endmindcontrol to end."
 
 
-
 /obj/item/weapon/implanter/proc/update()
 	if (src.imp)
 		src.icon_state = "implanter1"
 	else
 		src.icon_state = "implanter0"
-	return
-
-
-/obj/item/weapon/implanter/compress/update()
-	if (src.imp)
-		var/obj/item/weapon/implant/compressed/c = src.imp
-		if(!c.scanned)
-			src.icon_state = "cimplanter0"
-		else
-			src.icon_state = "cimplanter1"
-	else
-		src.icon_state = "cimplanter2"
 	return
 
 /obj/item/weapon/implanter/compress/attack(mob/M as mob, mob/user as mob)

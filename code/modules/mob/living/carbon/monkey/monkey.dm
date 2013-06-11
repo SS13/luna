@@ -153,7 +153,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red <B>[M.name] has bit []!</B>", src), 1)
 			var/damage = rand(1, 5)
-			if (mutations & 8) damage += 10
+			if (mutations & HULK) damage += 10
 			bruteloss += damage
 			updatehealth()
 		else
@@ -162,7 +162,7 @@
 	return
 
 /mob/living/carbon/monkey/attack_paw(mob/M as mob)
-
+	..()
 	if (M.a_intent == "help")
 		sleeping = 0
 		resting = 0
@@ -185,7 +185,7 @@
 	return
 
 /mob/living/carbon/monkey/attack_hand(mob/M as mob)
-
+	..()
 	if (M.a_intent == "help")
 		sleeping = 0
 		resting = 0
@@ -266,7 +266,7 @@
 		invisibility = 0
 
 	if(buckled)
-		if(istype(buckled, /obj/stool/bed))
+		if(istype(buckled, /obj/structure/stool/bed))
 			lying = 1
 		else
 			lying = 0

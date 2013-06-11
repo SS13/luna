@@ -30,9 +30,9 @@
 	var/list/synd_spawns = list()
 
 	uplink_welcome = "Syndicate Uplink Console:"
-	uplink_items = {"/obj/item/weapon/storage/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
-/obj/item/weapon/storage/syndie_kit/imp_compress:5:Compressed matter implant, with injector;/obj/item/weapon/storage/syndie_kit/imp_vfac:5:Viral factory implant, with injector;
-/obj/item/weapon/storage/syndie_kit/imp_explosive:6:Explosive implant, with injector;/obj/item/device/hacktool:4:Hacktool;
+	uplink_items = {"/obj/item/weapon/storage/box/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
+/obj/item/weapon/storage/box/syndie_kit/imp_compress:5:Compressed matter implant, with injector;/obj/item/weapon/storage/box/syndie_kit/imp_vfac:5:Viral factory implant, with injector;
+/obj/item/weapon/storage/box/syndie_kit/imp_explosive:6:Explosive implant, with injector;/obj/item/device/hacktool:4:Hacktool;
 /obj/item/clothing/under/chameleon:2:Chameleon Jumpsuit;/obj/item/weapon/gun/revolver:7:Revolver;
 /obj/item/weapon/ammo/a357:3:Revolver Ammo;/obj/item/weapon/card/emag:3:Electromagnetic card;
 /obj/item/weapon/card/id/syndicate:4:Fake ID;/obj/item/weapon/cloaking_device:5:Cloaking device;
@@ -158,11 +158,11 @@
 
 
 	if(closet_spawn)
-		new /obj/closet/syndicate/nuclear(closet_spawn.loc)
+		new /obj/structure/closet/syndicate/nuclear(closet_spawn.loc)
 
 	for (var/obj/landmark/A in world)
 		if (A.name == "Syndicate-Gear-Closet")
-			new /obj/closet/syndicate/personal(A.loc)
+			new /obj/structure/closet/syndicate/personal(A.loc)
 			del(A)
 			continue
 

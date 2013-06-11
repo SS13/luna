@@ -14,7 +14,7 @@
 	item_state = "santa"
 
 
-/obj/item/clothing/mask/owl_mask
+/obj/item/clothing/mask/gas/owl
 	name = "Owl mask"
 	desc = "Twoooo!"
 	icon_state = "owl"

@@ -106,7 +106,7 @@ GAS ANALYZER
 /obj/item/device/detective_scanner/afterattack(atom/A as mob|obj|turf|area, mob/user as mob)
 
 	src.add_fingerprint(user)
-	if (istype(A, /obj/decal/cleanable/blood))
+	if (istype(A, /obj/effect/decal/cleanable/blood))
 		if(A.blood_DNA)
 			user << "\blue Blood type: [A.blood_type]\nDNA: [A.blood_DNA]"
 		if(A:virus)
@@ -140,7 +140,7 @@ GAS ANALYZER
 	return
 
 /obj/item/device/healthanalyzer/attack(mob/M as mob, mob/user as mob)
-	if ((user.mutations & 16 || user.brainloss >= 60) && prob(50))
+	if ((user.mutations & CLUMSY || user.brainloss >= 60) && prob(50))
 		user << text("\red You try to analyze the floor's vitals!")
 		for(var/mob/O in viewers(M, null))
 			O.show_message(text("\red [user] has analyzed the floor's vitals!"), 1)

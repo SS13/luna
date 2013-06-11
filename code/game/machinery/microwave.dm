@@ -393,7 +393,7 @@ Please clean it before use!</TT><BR>
 						src.operating = 1 // Turn it on
 						src.icon_state = "mw1"
 						src.updateUsrDialog()
-						var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+						var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 						s.set_up(2, 1, src)
 						s.start()
 						icon_state = "mwb" // Make it look all busted up and shit

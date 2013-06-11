@@ -470,7 +470,7 @@
 						if(randomturfs.len > 0)
 							M << "\red You are displaced by a strange force!"
 							M.loc = pick(randomturfs)
-							var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+							var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 							s.set_up(5, 1, M)
 							s.start()
 					src.charged = 0
@@ -559,7 +559,7 @@
 						if(randomturfs.len > 0)
 							M << "\red You are displaced by a strange force!"
 							M.loc = pick(randomturfs)
-							var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+							var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 							s.set_up(5, 1, M)
 							s.start()
 					src.charged = 0
@@ -664,7 +664,7 @@
 				if(randomturfs.len > 0)
 					user << "\red You are suddenly zapped away elsewhere!"
 					user.loc = pick(randomturfs)
-					var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+					var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 					s.set_up(5, 1, user)
 					s.start()
 

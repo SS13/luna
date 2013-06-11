@@ -79,8 +79,8 @@
 	var/obj/item/weapon/storage/backpack/bp = new /obj/item/weapon/storage/backpack(player)
 	player.back = bp
 	player.back.layer = 40
-	new /obj/item/weapon/circuitry(player.back)
-	new /obj/item/weapon/circuitry(player.back)
+	new /obj/item/weapon/circuitboard/circuitry(player.back)
+	new /obj/item/weapon/circuitboard/circuitry(player.back)
 /*		var/obj/item/clothing/suit/wear_suit = null
 	var/obj/item/clothing/under/w_uniform = null
 //	var/obj/item/device/radio/w_radio = null

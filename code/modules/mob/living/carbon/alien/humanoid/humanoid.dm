@@ -226,7 +226,7 @@
 	overlays = null
 
 	if(buckled)
-		if(istype(buckled, /obj/stool/bed))
+		if(istype(buckled, /obj/structure/stool/bed))
 			lying = 1
 		else
 			lying = 0
@@ -386,6 +386,8 @@
 	return
 
 /mob/living/carbon/alien/humanoid/attack_paw(mob/M as mob)
+	..()
+
 	if (M.a_intent == "help")
 		sleeping = 0
 		resting = 0
@@ -406,31 +408,23 @@
 	return
 
 /mob/living/carbon/alien/humanoid/attack_hand(mob/living/carbon/human/M as mob)
-	if (!ticker)
-		M << "You cannot attack people before the game has started."
-		return
+	..()
 
-	if (istype(loc, /turf) && istype(loc.loc, /area/start))
-		M << "No attacking people at spawn, you jackass."
-		return
+	if(M.gloves && istype(M.gloves,/obj/item/clothing/gloves))
+		var/obj/item/clothing/gloves/G = M.gloves
+		if(G.cell)
+			if(M.a_intent == "harm")//Stungloves.
+				if(G.cell.charge >= 2500)
+					G.cell.charge -= 2500
+					visible_message("<span class='danger'>[src] has been touched with the stun gloves by [M]!</span>")
 
-/*Removed stungloves as they are dodgy weapons :3. -CN
-	if ((M.gloves && M.gloves.elecgen == 1 && M.a_intent == "hurt") /*&& (!istype(src:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
-		if(M.gloves.uses > 0)
-			M.gloves.uses--
-			if (weakened < 5)
-				weakened = 5
-			if (stuttering < 5)
-				stuttering = 5
-			if (stunned < 5)
-				stunned = 5
-			for(var/mob/O in viewers(src, null))
-				if (O.client)
-					O.show_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>", 1, "\red You hear someone fall", 2)
-		else
-			M.gloves.elecgen = 0
-			M << "\red Not enough charge! "
-			return*/
+					Stun(10)
+					Weaken(10)
+
+					return 1
+				else
+					M << "<span class='notice'>Not enough charge!</span>"
+				return
 
 	if (M.a_intent == "help")
 		if (health > 0)
@@ -475,10 +469,10 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.elecgen == 1))
+			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.cell))
 				var/damage = rand(1, 9)
 				if (prob(90))
-					if (M.mutations & 8)
+					if (M.mutations & HULK)
 						damage += 5
 						spawn(0)
 							paralysis += 1
@@ -503,7 +497,7 @@
 						O.show_message(text("\red <B>[] has attempted to punch []!</B>", M, src), 1)
 					return
 			else
-				if (!( lying ) && !(M.gloves && M.gloves.elecgen == 1))
+				if (!( lying ) && !(M.gloves && M.gloves.cell))
 					var/randn = rand(1, 100)
 					if (randn <= 25)
 						weakened = 2

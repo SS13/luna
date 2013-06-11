@@ -166,19 +166,3 @@
 			else
 				src.orient_objs(4, 10, 4, 3)
 	return
-
-/obj/item/weapon/storage/box/New()
-//	new /obj/item/clothing/mask/breath( src )
-//	new /obj/item/weapon/tank/emergency_oxygen( src )
-	..()
-	return
-
-/obj/item/weapon/storage/mousetraps/New()
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	..()
-	return

@@ -9,7 +9,7 @@ CIRCULAR SAW
 	if(!istype(M, /mob) || istype(M, /mob/living/carbon/monkey)) //Adding basic organs to monkeys for implants.
 		return													 //TO DO: Remove the monkey check once you're sure monkey organs are safe to cut. - Abi79
 
-	if((usr.mutations & 16) && prob(50))
+	if((usr.mutations & CLUMSY) && prob(50))
 		M << "\red You stab yourself in the eye."
 		M.sdisabilities |= 1
 		M.weakened += 4
@@ -100,7 +100,7 @@ CIRCULAR SAW
 	if(!istype(M, /mob) || istype(M, /mob/living/carbon/monkey)) //Adding basic organs to monkeys for implants.
 		return													 //TO DO: Remove the monkey check once you're sure monkey organs are safe to cut. - Abi79
 
-	if((usr.mutations & 16) && prob(50))
+	if((usr.mutations & CLUMSY) && prob(50))
 		M << "\red You cut out your eyes."
 		M.sdisabilities |= 1
 		M.weakened += 4
@@ -193,7 +193,7 @@ CIRCULAR SAW
 	if(!istype(M, /mob))
 		return
 //	world << "Start"
-	if((usr.mutations & 16) && prob(50))
+	if((usr.mutations & CLUMSY) && prob(50))
 		M << "\red You stab yourself in the eye."
 		M.sdisabilities |= 1
 		M.weakened += 4
@@ -271,7 +271,7 @@ and then you have (1-3sec to respond to this eg by applying cotton.
 	if(!istype(M, /mob))
 		return
 //	world << "Start"
-	if((usr.mutations & 16) && prob(50))
+	if((usr.mutations & CLUMSY) && prob(50))
 		M << "\red You stab yourself in the eye."
 		M.sdisabilities |= 1
 		M.weakened += 4
@@ -357,7 +357,7 @@ and then you have (1-3sec to respond to this eg by applying cotton.
 	if(!istype(M, /mob))
 		return
 //	world << "Start"
-	if((usr.mutations & 16) && prob(50))
+	if((usr.mutations & CLUMSY) && prob(50))
 		M << "\red You stab yourself in the eye."
 		M.sdisabilities |= 1
 		M.weakened += 4

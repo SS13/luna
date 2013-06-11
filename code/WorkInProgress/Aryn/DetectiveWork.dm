@@ -230,7 +230,7 @@ obj/item/clothing/gloves/var
 	transfer_blood = 0
 	mob/living/carbon/human/bloody_hands_mob
 
-obj/decal/cleanable/blood/var/track_amt = 3
+obj/effect/decal/cleanable/blood/var/track_amt = 3
 
 
 turf/Exited(mob/living/carbon/human/M)
@@ -256,9 +256,9 @@ turf/Entered(mob/living/carbon/human/M)
 					M.shoes.track_blood--
 					src.add_bloody_footprints(M.shoes.track_blood_mob,0,M.dir,M.shoes.name)
 
-		for(var/obj/decal/cleanable/blood/B in src)
+		for(var/obj/effect/decal/cleanable/blood/B in src)
 			if(B.track_amt <= 0) continue
-			if(B.type != /obj/decal/cleanable/blood/tracks && B.type != /obj/decal/cleanable/blood/drip)
+			if(B.type != /obj/effect/decal/cleanable/blood/tracks && B.type != /obj/effect/decal/cleanable/blood/drip)
 				if(istype(M,/mob/living/carbon/human))
 					if(M.shoes)
 						M.shoes.add_blood(B.blood_owner)
@@ -273,7 +273,7 @@ turf/Entered(mob/living/carbon/human/M)
 	. = ..()
 
 turf/proc/add_bloody_footprints(mob/living/carbon/human/M,leaving,d,info)
-	for(var/obj/decal/cleanable/blood/tracks/T in src)
+	for(var/obj/effect/decal/cleanable/blood/tracks/T in src)
 		if(T.dir == d)
 			if((leaving && T.icon_state == "steps2") || (!leaving && T.icon_state == "steps1"))
 				T.desc = "These bloody footprints appear to have been made by [info]."
@@ -282,7 +282,7 @@ turf/proc/add_bloody_footprints(mob/living/carbon/human/M,leaving,d,info)
 					T.blood_type = M.b_type
 					T.virus = M.virus
 				return
-	var/obj/decal/cleanable/blood/tracks/this = new(src)
+	var/obj/effect/decal/cleanable/blood/tracks/this = new(src)
 	if(leaving)
 		this.icon_state = "steps2"
 	else

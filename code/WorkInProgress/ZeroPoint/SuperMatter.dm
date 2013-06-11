@@ -103,7 +103,6 @@
 
 	//Calculate how much gas to release
 	removed.toxins += max(round(device_energy / PLASMA_RELEASE_MODIFIER), 0)
-
 	removed.oxygen += max(round((device_energy + removed.temperature - T0C) / OXYGEN_RELEASE_MODIFIER), 0)
 
 	env.merge(removed)

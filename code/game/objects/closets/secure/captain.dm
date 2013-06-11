@@ -3,7 +3,7 @@
 	sleep(2)
 	new /obj/item/device/radio/headset/heads/captain(src)
 	new /obj/item/weapon/gun/energy/general( src )
-	new /obj/item/weapon/storage/id_kit( src )
+	new /obj/item/weapon/storage/box/id( src )
 	new /obj/item/clothing/under/rank/captain( src )
 	new /obj/item/clothing/shoes/brown( src )
 	new /obj/item/clothing/glasses/sunglasses( src )

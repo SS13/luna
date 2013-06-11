@@ -51,17 +51,6 @@
 	throw_speed = 4
 	throw_range = 20
 
-/obj/item/weapon/bananapeel
-	name = "Banana Peel"
-	desc = "A peel from a banana."
-	icon = 'items.dmi'
-	icon_state = "banana_peel"
-	item_state = "banana_peel"
-	w_class = 1.0
-	throwforce = 0
-	throw_speed = 4
-	throw_range = 20
-
 /obj/item/weapon/baton
 	name = "Stun Baton"
 	desc = "A stun baton for hitting people with."
@@ -85,18 +74,6 @@
 	w_class = 1.0
 	throw_speed = 2
 	throw_range = 10
-
-/obj/item/weapon/bikehorn
-	name = "Bike Horn"
-	desc = "A horn off of a bicycle."
-	icon = 'items.dmi'
-	icon_state = "bike_horn"
-	item_state = "bike_horn"
-	throwforce = 3
-	w_class = 1.0
-	throw_speed = 3
-	throw_range = 15
-	var/spam_flag = 0
 
 /obj/item/weapon/medical
 	name = "medical pack"
@@ -127,13 +104,6 @@
 	w_class = 1.0
 	throw_speed = 4
 	throw_range = 5
-
-/obj/item/weapon/camera
-	name = "camera"
-	icon_state = "camera"
-	var/last_pic = 1.0
-	item_state = "wrench"
-	w_class = 2.0
 
 /obj/item/weapon/card
 	name = "card"
@@ -182,30 +152,6 @@
 	New()
 		access = get_access("Captain")
 		..()
-
-/obj/item/weapon/cleaner
-	desc = "Space Cleaner!"
-	icon = 'janitor.dmi'
-	name = "space cleaner"
-	icon_state = "cleaner"
-	item_state = "cleaner"
-	var/saftey = 1
-	flags = ONBELT|TABLEPASS|OPENCONTAINER|FPRINT|USEDELAY|OPENCONTAINER
-	throwforce = 3
-	w_class = 2.0
-	throw_speed = 2
-	throw_range = 10
-
-/obj/item/weapon/clipboard
-	name = "clipboard"
-	icon = 'items.dmi'
-	icon_state = "clipboard00"
-	var/obj/item/weapon/pen/pen = null
-	item_state = "clipboard"
-	throwforce = 0
-	w_class = 2.0
-	throw_speed = 3
-	throw_range = 10
 
 /obj/item/weapon/cloaking_device
 	name = "cloaking device"
@@ -269,30 +215,6 @@
 	icon = 'items.dmi'
 	icon_state = "fcardholder0"
 	item_state = "clipboard"
-
-
-/obj/item/weapon/flasks
-	name = "flask"
-	icon = 'Cryogenic2.dmi'
-	var/oxygen = 0.0
-	var/plasma = 0.0
-	var/coolant = 0.0
-
-/obj/item/weapon/flasks/coolant
-	name = "light blue flask"
-	icon_state = "coolant-c"
-	coolant = 1000.0
-
-/obj/item/weapon/flasks/oxygen
-	name = "blue flask"
-	icon_state = "oxygen-c"
-	oxygen = 500.0
-
-/obj/item/weapon/flasks/plasma
-	name = "orange flask"
-	icon_state = "plasma-c"
-	plasma = 500.0
-
 
 /obj/item/weapon/game_kit
 	name = "Gaming Kit"
@@ -546,7 +468,7 @@
 	w_class = 2.0
 
 /obj/item/weapon/implanter/compress
-	icon_state = "cimplanter0"
+	icon_state = "implanter0"
 	imp = /obj/item/weapon/implant/compressed
 
 
@@ -579,21 +501,6 @@
 	throw_range = 20
 	m_amt = 400
 
-
-
-/obj/item/weapon/mop
-	desc = "The world of janitalia wouldn't be complete without a mop."
-	name = "mop"
-	icon = 'janitor.dmi'
-	icon_state = "mop"
-	var/mopping = 0
-	var/mopcount = 0
-	force = 3.0
-	throwforce = 10.0
-	throw_speed = 5
-	throw_range = 10
-	w_class = 3.0
-	flags = FPRINT | TABLEPASS
 
 /obj/item/weapon/caution
 	desc = "Caution! Wet Floor!"
@@ -793,51 +700,11 @@ Refer any breaks or cracks in the pipe to Station Maintenance for repair before 
 Total SMES charging rate should not exceed total power generation rate, or an overload condition may occur.
 "}
 
-/obj/item/weapon/paper_bin
-	name = "Paper Bin"
-	icon = 'items.dmi'
-	icon_state = "paper_bin1"
-	var/amount = 30.0
-	item_state = "sheet-metal"
-	throwforce = 1
-	w_class = 3.0
-	throw_speed = 3
-	throw_range = 7
-
-/obj/item/weapon/pen
-	desc = "It's a normal black ink pen."
-	name = "pen"
-	icon = 'items.dmi'
-	icon_state = "pen"
-	flags = FPRINT | ONBELT | TABLEPASS
-	throwforce = 0
-	w_class = 1.0
-	throw_speed = 7
-	throw_range = 15
-	m_amt = 60
-
-/obj/item/weapon/pen/sleepypen
-	desc = "It's a normal black ink pen with a sharp point."
-	flags = FPRINT | ONBELT | TABLEPASS | OPENCONTAINER
-
 /obj/item/weapon/rack_parts
 	name = "rack parts"
 	icon = 'items.dmi'
 	icon_state = "rack_parts"
 	flags = FPRINT | TABLEPASS| CONDUCT
-
-/obj/item/weapon/rods
-	name = "rods"
-	icon = 'items.dmi'
-	icon_state = "rods"
-	var/amount = 1.0
-	flags = FPRINT | TABLEPASS| CONDUCT
-	w_class = 3.0
-	force = 9.0
-	throwforce = 15.0
-	throw_speed = 5
-	throw_range = 20
-	m_amt = 1875
 
 /obj/item/weapon/screwdriver
 	name = "screwdriver"
@@ -852,78 +719,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	throw_range = 5
 	m_amt = 50
 	g_amt = 20
-
-/obj/item/weapon/shard
-	name = "shard"
-	icon = 'shards.dmi'
-	icon_state = "large"
-	desc = "Could probably be used as ... a throwing weapon?"
-	w_class = 3.0
-	force = 5.0
-	slash = 1
-	throwforce = 15.0
-	item_state = "shard-glass"
-
-/obj/item/weapon/sheet
-	name = "sheet"
-	icon = 'items.dmi'
-	var/amount = 1.0
-	var/length = 2.5
-	var/width = 1.5
-	var/height = 0.01
-	flags = FPRINT | TABLEPASS
-	throwforce = 5.0
-	throw_speed = 1
-	throw_range = 4
-	w_class = 4.0
-
-/obj/item/weapon/sheet/glass
-	name = "glass"
-	icon_state = "sheet-glass"
-	force = 5.0
-	g_amt = 3750
-	throwforce = 5
-	w_class = 3.0
-	throw_speed = 3
-	throw_range = 3
-
-/obj/item/weapon/sheet/rglass
-	name = "reinforced glass"
-	icon_state = "sheet-rglass"
-	item_state = "sheet-rglass"
-	force = 6.0
-	g_amt = 3750
-	m_amt = 1875
-	throwforce = 5
-	w_class = 3.0
-	throw_speed = 3
-	throw_range = 3
-
-/obj/item/weapon/sheet/metal
-	name = "metal"
-	icon_state = "sheet-metal"
-	desc = "A heavy sheet of metal."
-	throwforce = 14.0
-	m_amt = 3750
-	throwforce = 10.0
-	throw_speed = 1
-	throw_range = 4
-	w_class = 3.0
-	flags = FPRINT | TABLEPASS | CONDUCT
-
-/obj/item/weapon/sheet/r_metal
-	name = "reinforced metal"
-	desc = "A very heavy sheet of metal."
-	icon_state = "sheet-r_metal"
-	force = 5.0
-	throwforce = 14.0
-	item_state = "sheet-metal"
-	m_amt = 7500
-	throwforce = 15.0
-	throw_speed = 1
-	throw_range = 4
-	w_class = 3.0
-	flags = FPRINT | TABLEPASS | CONDUCT
 
 /obj/item/weapon/staff
 	name = "wizards staff"
@@ -989,26 +784,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 /obj/item/weapon/tank/plasma
 	name = "Gas Tank (BIOHAZARD)"
 	icon_state = "plasma"
-
-/obj/item/weapon/tank/emergency_oxygen
-	name = "emergency oxygentank"
-	icon_state = "emergency"
-	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
-	w_class = 2.5
-	force = 4.0
-
-/obj/item/weapon/tile
-	name = "steel floor tile"
-	desc = "... Those could work as a pretty decent throwing weapon"
-	icon = 'items.dmi'
-	icon_state = "tile"
-	var/amount = 1.0
-	w_class = 3.0
-	throw_speed = 5
-	throw_range = 20
-	force = 6.0
-	throwforce = 15.0
-
 
 /obj/item/weapon/teleportation_scroll
 	name = "Teleportation Scroll"
@@ -1199,19 +974,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	m_amt = 20000
 	g_amt = 10000
 
-/obj/item/weapon/stamp
-	desc = "A rubber stamp for stamping important documents."
-	name = "rubber stamp"
-	icon = 'items.dmi'
-	icon_state = "stamp-qm"
-	item_state = "stamp"
-	flags = FPRINT | TABLEPASS
-	throwforce = 0
-	w_class = 1.0
-	throw_speed = 7
-	throw_range = 15
-	m_amt = 60
-
 /obj/item/weapon/cigpacket
 	name = "Cigarette packet"
 	desc = "The most popular brand of Space Cigarettes, sponsors of the Space Olympics."
@@ -1252,6 +1014,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	throwforce = 4
 	lit = 0
 	flags = ONBELT | TABLEPASS
+
 /obj/item/weapon/mousetrap
 	name = "mousetrap"
 	desc = "A handy little spring-loaded trap for catching pesty rodents."

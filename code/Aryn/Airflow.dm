@@ -33,12 +33,12 @@ vs_control/var
 
 	AF_SPEED_MULTIPLIER = 4 //airspeed per movement threshold value crossed.
 	AF_SPEED_MULTIPLIER_DESC = "Airspeed increase per \[AF_TINY_MOVEMENT_THRESHOLD\] percent of airflow."
-	AF_DAMAGE_MULTIPLIER = 5 //Amount of damage applied per airflow_speed.
-	AF_DAMAGE_MULTIPLIER_DESC = "Amount of damage applied per unit of speed (1-15 units) at which mobs are thrown."
+	AF_DAMAGE_MULTIPLIER = 5 //amount of damage applied per airflow_speed.
+	AF_DAMAGE_MULTIPLIER_DESC = "amount of damage applied per unit of speed (1-15 units) at which mobs are thrown."
 	AF_STUN_MULTIPLIER = 1.5 //Seconds of stun applied per airflow_speed.
-	AF_STUN_MULTIPLIER_DESC = "Amount of stun effect applied per unit of speed (1-15 units) at which mobs are thrown."
-	AF_SPEED_DECAY = 0.5 //Amount that flow speed will decay with time.
-	AF_SPEED_DECAY_DESC = "Amount of airflow speed lost per tick on a moving object."
+	AF_STUN_MULTIPLIER_DESC = "amount of stun effect applied per unit of speed (1-15 units) at which mobs are thrown."
+	AF_SPEED_DECAY = 0.5 //amount that flow speed will decay with time.
+	AF_SPEED_DECAY_DESC = "amount of airflow speed lost per tick on a moving object."
 	AF_SPACE_MULTIPLIER = 2 //Increasing this will make space connections more DRAMATIC!
 	AF_SPACE_MULTIPLIER_DESC = "Increasing this multiplier will cause more powerful airflow to space, and vice versa."
 

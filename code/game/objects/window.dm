@@ -1,4 +1,4 @@
-/obj/window/bullet_act(flag)
+/obj/structure/window/bullet_act(flag)
 	if (flag == PROJECTILE_BULLET)
 		if(!reinf)
 			new /obj/item/weapon/shard( src.loc )
@@ -10,45 +10,45 @@
 			health -= 35
 			if(health <=0)
 				new /obj/item/weapon/shard( src.loc )
-				new /obj/item/weapon/rods( src.loc )
+				new /obj/item/stack/rods( src.loc )
 				src.density = 0
 				del(src)
 
 		return
 	return
-/obj/window/Bumped(AM as mob|obj)
+/obj/structure/window/Bumped(AM as mob|obj)
 	if(ismob(AM) && iszombie(AM))
 		src.attack_hand(AM)
 	return ..()
 
-/obj/window/ex_act(severity)
+/obj/structure/window/ex_act(severity)
 	switch(severity)
 		if(1.0)
 			del(src)
 			return
 		if(2.0)
 			new /obj/item/weapon/shard( src.loc )
-			if(reinf) new /obj/item/weapon/rods( src.loc)
+			if(reinf) new /obj/item/stack/rods( src.loc)
 			//SN src = null
 			del(src)
 			return
 		if(3.0)
 			if (prob(50))
 				new /obj/item/weapon/shard( src.loc )
-				if(reinf) new /obj/item/weapon/rods( src.loc)
+				if(reinf) new /obj/item/stack/rods( src.loc)
 
 				del(src)
 				return
 	return
 
-/obj/window/blob_act()
+/obj/structure/window/blob_act()
 	if(prob(50))
 		new /obj/item/weapon/shard( src.loc )
-		if(reinf) new /obj/item/weapon/rods( src.loc)
+		if(reinf) new /obj/item/stack/rods( src.loc)
 		density = 0
 		del(src)
 
-/obj/window/CanPass(atom/movable/mover, turf/source, height=0, air_group=0)
+/obj/structure/window/CanPass(atom/movable/mover, turf/source, height=0, air_group=0)
 	if(istype(mover, /obj/beam))
 		return 1
 	if (src.dir == SOUTHWEST || src.dir == SOUTHEAST || src.dir == NORTHWEST || src.dir == NORTHEAST)
@@ -58,20 +58,20 @@
 	else
 		return 1
 
-/obj/window/CheckExit(atom/movable/O as mob|obj, target as turf)
+/obj/structure/window/CheckExit(atom/movable/O as mob|obj, target as turf)
 	if(istype(O, /obj/beam))
 		return 1
 	if (get_dir(O.loc, target) == src.dir)
 		return 0
 	return 1
 
-/obj/window/meteorhit()
+/obj/structure/window/meteorhit()
 
 	//*****RM
 	//world << "glass at [x],[y],[z] Mhit"
 	src.health = 0
 	new /obj/item/weapon/shard( src.loc )
-	if(reinf) new /obj/item/weapon/rods( src.loc)
+	if(reinf) new /obj/item/stack/rods( src.loc)
 	src.density = 0
 
 
@@ -79,7 +79,7 @@
 	return
 
 
-/obj/window/hitby(AM as mob|obj)
+/obj/structure/window/hitby(AM as mob|obj)
 
 	..()
 	for(var/mob/O in viewers(src, null))
@@ -97,22 +97,22 @@
 		step(src, get_dir(AM, src))
 	if (src.health <= 0)
 		new /obj/item/weapon/shard( src.loc )
-		if(reinf) new /obj/item/weapon/rods( src.loc)
+		if(reinf) new /obj/item/stack/rods( src.loc)
 		src.density = 0
 		del(src)
 		return
 	..()
 	return
 
-/obj/window/attack_hand()
-	if ((usr.mutations & 8))
+/obj/structure/window/attack_hand()
+	if ((usr.mutations & HULK))
 		usr << text("\blue You smash through the window.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
 				O << text("\red [] smashes through the window.", usr)
 		src.health = 0
 		new /obj/item/weapon/shard( src.loc )
-		if(reinf) new /obj/item/weapon/rods( src.loc)
+		if(reinf) new /obj/item/stack/rods( src.loc)
 		src.density = 0
 		del(src)
 	if(istype(usr,/mob/living/carbon/human))
@@ -127,25 +127,25 @@
 						O << text("\red [] smashes through the window.", usr)
 				src.health = 0
 				new /obj/item/weapon/shard( src.loc )
-				if(reinf) new /obj/item/weapon/rods( src.loc)
+				if(reinf) new /obj/item/stack/rods( src.loc)
 				src.density = 0
 				del(src)
 	return
 
-/obj/window/attack_paw()
-	if ((usr.mutations & 8))
+/obj/structure/window/attack_paw()
+	if ((usr.mutations & HULK))
 		usr << text("\blue You smash through the window.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
 				O << text("\red [] smashes through the window.", usr)
 		src.health = 0
 		new /obj/item/weapon/shard( src.loc )
-		if(reinf) new /obj/item/weapon/rods( src.loc)
+		if(reinf) new /obj/item/stack/rods( src.loc)
 		src.density = 0
 		del(src)
 	return
 
-/obj/window/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/structure/window/attackby(obj/item/weapon/W as obj, mob/user as mob)
 
 
 	if (istype(W, /obj/item/weapon/screwdriver))
@@ -180,11 +180,11 @@
 				index = 0
 				while(index < 2)
 					new /obj/item/weapon/shard( src.loc )
-					if(reinf) new /obj/item/weapon/rods( src.loc)
+					if(reinf) new /obj/item/stack/rods( src.loc)
 					index++
 			else
 				new /obj/item/weapon/shard( src.loc )
-				if(reinf) new /obj/item/weapon/rods( src.loc)
+				if(reinf) new /obj/item/stack/rods( src.loc)
 			src.density = 0
 			del(src)
 			return
@@ -192,7 +192,7 @@
 	return
 
 
-/obj/window/verb/rotate()
+/obj/structure/window/verb/rotate()
 	set src in oview(1)
 
 	if (src.anchored)
@@ -213,7 +213,7 @@
 			L.zone.Split(L,M)
 	return
 
-/obj/window/New(Loc,re=0)
+/obj/structure/window/New(Loc,re=0)
 	..()
 
 	if(re)	reinf = re
@@ -236,7 +236,7 @@
 
 	return
 
-/obj/window/Del()
+/obj/structure/window/Del()
 	density = 0
 
 	update_nearby_tiles()
@@ -244,7 +244,7 @@
 	playsound(src, "shatter", 70, 1)
 	..()
 
-/obj/window/Move()
+/obj/structure/window/Move()
 	update_nearby_tiles(need_rebuild=1)
 
 	..()
@@ -260,7 +260,7 @@
 
 	return
 
-/obj/window/proc/update_nearby_tiles(need_rebuild)
+/obj/structure/window/proc/update_nearby_tiles(need_rebuild)
 	if(!air_master) return 0
 
 	var/turf/simulated/source = loc

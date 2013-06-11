@@ -270,11 +270,11 @@ Auto Patrol: []"},
 					var/mob/living/carbon/M = src.target
 					var/maxstuns = 4
 					if (istype(M, /mob/living/carbon/human))
-						if (M.weakened < 10 && (!(M.mutations & 8))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+						if (M.weakened < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 							M.weakened = 10
-						if (M.stuttering < 10 && (!(M.mutations & 8))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+						if (M.stuttering < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 							M.stuttering = 10
-						if (M.stunned < 10 && (!(M.mutations & 8))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+						if (M.stunned < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 							M.stunned = 10
 					else
 						M.weakened = 10
@@ -798,7 +798,7 @@ Auto Patrol: []"},
 
 	var/turf/Loc = get_turf(src)
 
-	var/obj/item/weapon/secbot_assembly/Sa = new /obj/item/weapon/secbot_assembly(Loc) // Dropping a partial assembly
+	var/obj/item/weapon/robot_assembly/secbot/Sa = new /obj/item/weapon/robot_assembly/secbot(Loc) // Dropping a partial assembly
 	Sa.build_step = 1
 	Sa.overlays += image('aibots.dmi', "hs_hole")
 	Sa.created_name = src.name
@@ -816,7 +816,7 @@ Auto Patrol: []"},
 			A.loc = Loc
 			A.captured_by_securitron = 0
 
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread // Sparks!
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread // Sparks!
 	s.set_up(3, 1, src)
 	s.start()
 
@@ -838,7 +838,7 @@ Auto Patrol: []"},
 	src.updateUsrDialog()
 //Secbot Construction
 
-/obj/item/weapon/secbot_assembly
+/obj/item/weapon/robot_assembly/secbot
 	name = "helmet/signaler assembly"
 	desc = "Some sort of bizarre assembly."
 	icon = 'aibots.dmi'
@@ -858,10 +858,10 @@ Auto Patrol: []"},
 	if (!S.b_stat)
 		return
 	else
-		src.assemble(src, S, user, /obj/item/weapon/secbot_assembly)
+		src.assemble(src, S, user, /obj/item/weapon/robot_assembly/secbot)
 		user << "You add the signaler to the helmet."
 
-/obj/item/weapon/secbot_assembly/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/weapon/robot_assembly/secbot/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if ((istype(W, /obj/item/weapon/weldingtool)) && (!src.build_step))
 		if ((W:welding) && (W:get_fuel() >= 1))
 			W:use_fuel(1)

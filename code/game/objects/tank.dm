@@ -264,10 +264,42 @@
 	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
 
+/obj/item/weapon/tank/emergency_oxygen
+	name = "emergency oxygentank"
+	icon_state = "emergency"
+	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
+	w_class = 2.5
+	force = 4.0
 /obj/item/weapon/tank/emergency_oxygen/New()
 	..()
-	src.air_contents.volume = 20 //liters
+	src.air_contents.volume = 15 //liters
 	src.air_contents.oxygen = (1*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
+	return
+
+/obj/item/weapon/tank/emergency_oxygen/engi
+	icon_state = "emergency_engi"
+/obj/item/weapon/tank/emergency_oxygen/engi/New()
+	..()
+	src.air_contents.volume = 25 //liters
+	src.air_contents.oxygen = (1*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
+	return
+
+/obj/item/weapon/tank/emergency_double
+	name = "double emergency oxygentank"
+	icon_state = "emergency_double"
+	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
+	w_class = 2.5
+	force = 6.0
+/obj/item/weapon/tank/emergency_double/New()
+	..()
+	src.air_contents.volume = 30 //liters
+	return
+
+/obj/item/weapon/tank/emergency_double/engi
+	icon_state = "emergency_double_engi"
+/obj/item/weapon/tank/emergency_double/engi/New()
+	..()
+	src.air_contents.volume = 50 //liters
 	return
 
 

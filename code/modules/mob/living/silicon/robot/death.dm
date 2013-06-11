@@ -12,6 +12,6 @@
 
 	see_in_dark = 8
 	see_invisible = 2
-	updateicon()
+	update_icon()
 
 	return ..(gibbed)

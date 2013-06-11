@@ -719,7 +719,7 @@
 	if (istype(M, /mob/living/carbon))
 		switch(scanmode)
 			if(1)
-				if ((user.mutations & 16 || user.brainloss >= 60) && prob(50))
+				if ((user.mutations & CLUMSY || user.brainloss >= 60) && prob(50))
 					user << text("\red You try to analyze the floor's vitals!")
 					for(var/mob/O in viewers(M, null))
 						O.show_message(text("\red [user] has analyzed the floor's vitals!"), 1)
@@ -917,14 +917,14 @@
 
 //Some spare PDAs in a box
 
-/obj/item/weapon/storage/PDAbox
+/obj/item/weapon/storage/box/PDA
 	name = "spare PDAs"
 	desc = "A box of spare PDA microcomputers."
 	icon = 'pda.dmi'
 	icon_state = "pdabox"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/PDAbox/New()
+/obj/item/weapon/storage/box/PDA/New()
 	..()
 	new /obj/item/device/pda(src)
 	new /obj/item/device/pda(src)

@@ -1211,10 +1211,10 @@
 		overlays += image(W.icon,icon_state = W.icon_state)
 		user << "You put [W] ontop of the [src]"
 		src.heal_amt++
-	updateicon()
+	update_icon()
 
 
-/obj/item/weapon/reagent_containers/food/snacks/breadsys/bread/proc/updateicon()
+/obj/item/weapon/reagent_containers/food/snacks/breadsys/bread/proc/update_icon()
 	src.overlays = null
 	var/num = amount
 	for(var/obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/X in src)
@@ -1267,27 +1267,6 @@
 	heal_amt = 2
 	heal(var/mob/M)
 		..()
-
-/obj/item/weapon/reagent_containers/food/snacks/donkpocket
-	name = "donk-pocket"
-	desc = "The food of choice for the seasoned traitor."
-	icon_state = "donkpocket"
-	heal_amt = 1
-	amount = 1
-	var/warm = 0
-	heal(var/mob/M)
-		if(src.warm && M.reagents)
-			M.reagents.add_reagent("tricordrazine",15)
-		else
-			M << "\red It's just not good enough cold.."
-		..()
-
-	proc/cooltime()
-		if (src.warm)
-			spawn( 4200 )
-				src.warm = 0
-				src.name = "donk-pocket"
-		return
 
 /obj/item/weapon/reagent_containers/food/snacks/humanburger
 	name = "-burger"

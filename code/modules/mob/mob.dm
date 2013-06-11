@@ -56,7 +56,6 @@
 /mob/var/disabilities = 0
 /mob/var/atom/movable/pulling = null
 /mob/var/stat = 0.0
-#define STAT_ALIVE 0
 #define STAT_ASLEEP 1
 #define STAT_DEAD 2
 /mob/var/next_move = null
@@ -117,7 +116,7 @@
 /mob/var/lastKnownIP = null
 /mob/var/lastKnownCkey = null
 /mob/var/lastKnownID = null
-/mob/var/obj/stool/buckled = null
+/mob/var/obj/structure/stool/buckled = null
 /mob/var/obj/item/weapon/handcuffs/handcuffed = null
 /mob/var/obj/item/l_hand = null
 /mob/var/obj/item/r_hand = null
@@ -1285,11 +1284,6 @@ mob/verb/turnwest()
 		hands.dir = SOUTH
 	return
 
-/mob/proc/drop_item_v()
-	if (stat == 0)
-		drop_item()
-	return
-
 /mob/proc/drop_from_slot(var/obj/item/item)
 	if(!item)
 		return
@@ -1307,55 +1301,10 @@ mob/verb/turnwest()
 	T.Entered(item)
 	return
 
-/mob/proc/drop_item()
-	var/obj/item/W = equipped()
-	if (W)
-		u_equip(W)
-		if (client)
-			client.screen -= W
-		if (W)
-			W.loc = loc
-			W.dropped(src)
-			if (W)
-				W.layer = initial(W.layer)
-		var/turf/T = get_turf(loc)
-		T.Entered(W)
-	return
-
-/mob/proc/before_take_item(var/obj/item/item)
-	item.loc = null
-	item.layer = initial(item.layer)
-	u_equip(item)
-	//if (client)
-	//	client.screen -= item
-	//update_clothing()
-	return
-
-/mob/proc/get_active_hand()
-	if (hand)
-		return l_hand
-	else
-		return r_hand
-
-/mob/proc/get_inactive_hand()
-	if ( ! hand)
-		return l_hand
-	else
-		return r_hand
-
 /mob/proc/put_in_hand(var/obj/item/I)
 	if(!I) return
 	I.loc = src
 	if (hand)
-		l_hand = I
-	else
-		r_hand = I
-	I.layer = 20
-	update_clothing()
-
-/mob/proc/put_in_inactive_hand(var/obj/item/I)
-	I.loc = src
-	if (!hand)
 		l_hand = I
 	else
 		r_hand = I
@@ -1389,20 +1338,6 @@ mob/verb/turnwest()
 	user << browse(dat, text("window=mob[];size=325x500", name))
 	onclose(user, "mob[name]")
 	return
-
-/mob/proc/u_equip(W as obj)
-	if (W == r_hand)
-		r_hand = null
-	else if (W == l_hand)
-		l_hand = null
-	else if (W == handcuffed)
-		handcuffed = null
-	else if (W == back)
-		back = null
-	else if (W == wear_mask)
-		wear_mask = null
-
-	update_clothing()
 
 /mob/proc/ret_grab(obj/list_container/mobl/L as obj, flag)
 	if ((!( istype(l_hand, /obj/item/weapon/grab) ) && !( istype(r_hand, /obj/item/weapon/grab) )))
@@ -1992,7 +1927,7 @@ mob/verb/turnwest()
 		var/j_pack = 0
 		if ((istype(mob.loc, /turf/space)))
 			if (!( mob.restrained() ))
-				if (!( (locate(/obj/grille) in oview(1, mob)) || (locate(/turf/simulated) in oview(1, mob)) || (locate(/obj/lattice) in oview(1, mob)) ))
+				if (!( (locate(/obj/structure/grille) in oview(1, mob)) || (locate(/turf/simulated) in oview(1, mob)) || (locate(/obj/structure/lattice) in oview(1, mob)) ))
 					if (istype(mob.back, /obj/item/weapon/tank/jetpack))
 						var/obj/item/weapon/tank/jetpack/J = mob.back
 						j_pack = J.allow_thrust(0.01, mob)
@@ -2149,7 +2084,7 @@ mob/verb/turnwest()
 /mob/proc/can_use_hands()
 	if(handcuffed)
 		return 0
-	if(buckled && istype(buckled, /obj/stool/bed)) // buckling does not restrict hands
+	if(buckled && istype(buckled, /obj/structure/stool/bed)) // buckling does not restrict hands
 		return 0
 	return ..()
 
@@ -2280,16 +2215,7 @@ mob/verb/turnwest()
 	return L
 
 /mob/proc/check_contents_for(A)
-	var/list/L = list()
-	L += contents
-	for(var/obj/item/weapon/storage/S in contents)
-		L += S.return_inv()
-	for(var/obj/item/weapon/secstorage/S in contents)
-		L += S.return_inv()
-	for(var/obj/item/weapon/gift/G in contents)
-		L += G.gift
-		if (istype(G.gift, /obj/item/weapon/storage))
-			L += G.gift:return_inv()
+	var/list/L = src.get_contents()
 
 	for(var/obj/B in L)
 		if(B.type == A)
@@ -2444,3 +2370,83 @@ mob/verb/turnwest()
 /mob/proc/log_m(var/text)
 	if(mind)
 		mind.log.log_m(text,src)
+
+/mob/verb/stop_pulling()
+	set name = "Stop Pulling"
+	set category = "IC"
+
+	if(pulling)
+		pulling = null
+
+
+/mob/proc/Stun(amount)
+	stunned = max(max(stunned,amount),0) //can't go below 0, getting a low amount of stun doesn't lower your current stun
+	return
+
+/mob/proc/SetStunned(amount) //if you REALLY need to set stun to a set amount without the whole "can't go below current stunned"
+	stunned = max(amount,0)
+	return
+
+/mob/proc/AdjustStunned(amount)
+	stunned = max(stunned + amount,0)
+	return
+
+/mob/proc/Weaken(amount)
+	weakened = max(max(weakened,amount),0)
+	return
+
+/mob/proc/SetWeakened(amount)
+	weakened = max(amount,0)
+	return
+
+/mob/proc/AdjustWeakened(amount)
+	weakened = max(weakened + amount,0)
+	return
+
+/mob/proc/Paralyse(amount)
+	paralysis = max(max(paralysis,amount),0)
+	return
+
+/mob/proc/SetParalysis(amount)
+	paralysis = max(amount,0)
+	return
+
+/mob/proc/AdjustParalysis(amount)
+	paralysis = max(paralysis + amount,0)
+	return
+
+/mob/proc/Sleeping(amount)
+	sleeping = max(max(sleeping,amount),0)
+	return
+
+/mob/proc/SetSleeping(amount)
+	sleeping = max(amount,0)
+	return
+
+/mob/proc/AdjustSleeping(amount)
+	sleeping = max(sleeping + amount,0)
+	return
+
+/mob/proc/Resting(amount)
+	resting = max(max(resting,amount),0)
+	return
+
+/mob/proc/SetResting(amount)
+	resting = max(amount,0)
+	return
+
+/mob/proc/AdjustResting(amount)
+	resting = max(resting + amount,0)
+	return
+
+//List of active diseases
+
+/mob/var/list/viruses = list() // replaces var/datum/disease/virus
+
+/mob/var/update_icon = 1 //Set to 1 to trigger update_icons() at the next life() call
+
+/mob/var/status_flags = CANSTUN|CANWEAKEN|CANPARALYSE|CANPUSH	//bitflags defining which status effects can be inflicted (replaces canweaken, canstun, etc)
+
+/mob/var/area/lastarea = null
+
+/mob/var/digitalcamo = 0 // Can they be tracked by the AI?

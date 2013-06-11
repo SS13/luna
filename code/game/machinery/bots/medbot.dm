@@ -43,7 +43,7 @@
 	skin = "bezerk"
 	treatment_oxy = "dexalinp"
 
-/obj/item/weapon/firstaid_arm_assembly
+/obj/item/weapon/robot_assembly/firstaid_arm
 	name = "first aid/robot arm assembly"
 	desc = "A first aid kit with a robot arm permanently grafted to it."
 	icon = 'aibots.dmi'
@@ -56,17 +56,16 @@
 	New()
 		..()
 		spawn(5)
-			if(src.skin)
-				src.overlays += image('aibots.dmi', "kit_skin_[src.skin]")
+			if(skin) src.overlays += image('aibots.dmi', "kit_skin_[skin]")
 
 
 /obj/machinery/bot/medbot/New()
 	..()
-	src.icon_state = "medibot[src.on]"
+	src.icon_state = "medibot[on]"
 
 	spawn(4)
 		if(src.skin)
-			src.overlays += image('aibots.dmi', "medskin_[src.skin]")
+			src.overlays += image('aibots.dmi', "medskin_[skin]")
 
 		src.botcard = new /obj/item/weapon/card/id(src)
 		if(isnull(src.botcard_access) || (src.botcard_access.len < 1))
@@ -179,7 +178,7 @@
 		src.anchored = 0
 		src.emagged = 1
 		src.on = 1
-		src.icon_state = "medibot[src.on]"
+		src.icon_state = "medibot[on]"
 
 	else if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
 		if (src.allowed(user))
@@ -237,7 +236,7 @@
 		src.currently_healing = 0
 
 		if(src.stunned <= 0)
-			src.icon_state = "medibot[src.on]"
+			src.icon_state = "medibot[on]"
 			src.stunned = 0
 		return
 
@@ -505,7 +504,7 @@
 	if (prob(50))
 		new /obj/item/robot_parts/l_arm(Tsec)
 
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	del(src)
@@ -549,7 +548,7 @@
 //It isn't blocked if we can open it, man.
 /proc/TurfBlockedNonWindowNonDoor(turf/loc, var/list/access)
 	for(var/obj/O in loc)
-		if(O.density && !istype(O, /obj/window) && !istype(O, /obj/machinery/door))
+		if(O.density && !istype(O, /obj/structure/window) && !istype(O, /obj/machinery/door))
 			return 1
 
 		if (O.density && (istype(O, /obj/machinery/door)) && (access.len))
@@ -565,42 +564,7 @@
  *	Medbot Assembly -- Can be made out of all three medkits.
  */
 
-/obj/item/weapon/storage/firstaid/attackby(var/obj/item/robot_parts/S, mob/user as mob)
-	if ((!istype(S, /obj/item/robot_parts/l_arm)) && (!istype(S, /obj/item/robot_parts/r_arm)))
-		if (src.contents.len >= 7)
-			return
-		if ((S.w_class >= 2 || istype(S, /obj/item/weapon/storage)))
-			return
-		..()
-		return
-
-	//Syringekit doesn't count EVER.
-	if(src.type == /obj/item/weapon/storage/firstaid/syringes)
-		return
-
-	if(src.contents.len >= 1)
-		user << "\red You need to empty [src] out first!"
-		return
-	else
-		var/obj/item/weapon/firstaid_arm_assembly/A = new /obj/item/weapon/firstaid_arm_assembly
-		if(istype(src,/obj/item/weapon/storage/firstaid/fire))
-			A.skin = "ointment"
-		else if(istype(src,/obj/item/weapon/storage/firstaid/toxin))
-			A.skin = "tox"
-
-		A.loc = user
-		if (user.r_hand == S)
-			user.u_equip(S)
-			user.r_hand = A
-		else
-			user.u_equip(S)
-			user.l_hand = A
-		A.layer = 20
-		user << "You add the robot arm to the first aid kit"
-		del(S)
-		del(src)
-
-/obj/item/weapon/firstaid_arm_assembly/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/weapon/robot_assembly/firstaid_arm/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if ((istype(W, /obj/item/device/healthanalyzer)) && (!src.build_step))
 		src.build_step++
 		user << "You add the health sensor to [src]!"

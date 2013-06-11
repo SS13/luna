@@ -30,6 +30,11 @@
 	src.hand_p(user)
 	return
 
+/*
+	if(hascall(src,"pull"))
+		call(src,/atom/movable/verb/pull)()
+*/
+	return
 
 /atom/proc/hitby(atom/movable/AM as mob|obj)
 	return
@@ -103,9 +108,9 @@
 			var/list/objsonturf = range(0,src)
 			var/i
 			for(i=1, i<=objsonturf.len, i++)
-				if(istype(objsonturf[i],/obj/decal/cleanable/blood))
+				if(istype(objsonturf[i],/obj/effect/decal/cleanable/blood))
 					return 0
-			var/obj/decal/cleanable/blood/this = new /obj/decal/cleanable/blood(source2)
+			var/obj/effect/decal/cleanable/blood/this = new /obj/effect/decal/cleanable/blood(source2)
 			this.blood_DNA = M.dna.unique_enzymes
 			this.blood_type = M.b_type
 			this.virus = M.virus
@@ -127,7 +132,7 @@
 	return 1
 
 /atom/proc/clean_blood()
-
+	if(istype(src, /obj)) src:contaminated = 0
 	if (!( src.flags ) & 256)
 		return
 	if ( src.blood_DNA )
@@ -160,15 +165,38 @@
 
 	return DblClick(location, control, params)
 
-/atom/DblClick() //TODO: DEFERRED: REWRITE
+/atom/DblClick(location, control, params) //TODO: DEFERRED: REWRITE
 	if (world.time <= usr:lastDblClick+2)
 		//world << "BLOCKED atom.DblClick() on [src] by [usr] : src.type is [src.type]"
 		return
 	else
 		//world << "atom.DblClick() on [src] by [usr] : src.type is [src.type]"
 		usr:lastDblClick = world.time
-
 	..()
+
+	//Putting it here for now. It diverts stuff to the mech clicking procs. Putting it here stops us drilling items in our inventory Carn
+	if(istype(usr.loc,/obj/mecha))
+		if(usr.client && (src in usr.client.screen))
+			return
+		var/obj/mecha/Mech = usr.loc
+		Mech.click_action(src,usr)
+		return
+
+	var/parameters = params2list(params)
+
+	// ------ SHIFT-CLICK -----
+
+	if(parameters["shift"])
+		if(!isAI(usr))
+			ShiftClick(usr)
+		return
+
+	// ------- ALT-CLICK -------
+
+	if(parameters["alt"])
+		if(!isAI(usr))
+			AltClick(usr)
+		return
 
 	usr.log_m("Clicked on [src]")
 
@@ -359,7 +387,7 @@
 				else if(pixel_x > 16)	usr.dir = EAST
 				else if(pixel_x < -16)	usr.dir = WEST
 
-/atom/proc/CtrlClick()
+/atom/proc/AltClick()
 	if(hascall(src,"pull"))
 		src:pull()
 	return
@@ -564,3 +592,12 @@
 /atom/proc/addalloverlays(var/list/overlayss)
 	src.overlayslist = overlayss
 	src.overlays = overlayss
+
+/atom/movable/proc/forceMove(atom/destination)
+	if(destination)
+		if(loc)
+			loc.Exited(src)
+		loc = destination
+		loc.Entered(src)
+		return 1
+	return 0

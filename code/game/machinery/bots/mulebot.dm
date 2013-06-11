@@ -306,7 +306,7 @@
 							usr.r_hand = cell
 
 						cell.add_fingerprint(usr)
-						cell.updateicon()
+						cell.update_icon()
 						cell = null
 
 						usr.visible_message("\blue [usr] removes the power cell from [src].", "\blue You remove the power cell from [src].")
@@ -449,7 +449,7 @@
 
 	// called to load a crate
 	proc/load(var/atom/movable/C)
-		if((wires & wire_loadcheck) && !istype(C,/obj/crate))
+		if((wires & wire_loadcheck) && !istype(C,/obj/structure/crate))
 			src.visible_message("[src] makes a sighing buzz.", "You hear an electronic buzzing sound.")
 			playsound(src.loc, 'buzz-sigh.ogg', 50, 0)
 			return		// if not emagged, only allow crates to be loaded
@@ -459,7 +459,7 @@
 		mode = 1
 
 		// if a create, close before loading
-		var/obj/crate/crate = C
+		var/obj/structure/crate/crate = C
 		if(istype(crate))
 			crate.close()
 
@@ -577,7 +577,7 @@
 					if(istype( next, /turf/simulated))
 
 						if(bloodiness && !istype(src.loc, /turf/space))
-							var/obj/decal/cleanable/blood/tracks/B = new(loc)
+							var/obj/effect/decal/cleanable/blood/tracks/B = new(loc)
 							var/newdir = get_dir(next, loc)
 							if(newdir == dir)
 								B.dir = newdir
@@ -714,7 +714,7 @@
 								AM = A
 								break
 					else			// otherwise, look for crates only
-						AM = locate(/obj/crate) in get_step(loc,loaddir)
+						AM = locate(/obj/structure/crate) in get_step(loc,loaddir)
 					if(AM)
 						load(AM)
 			// whatever happened, check to see if we return home
@@ -774,7 +774,7 @@
 		H.TakeDamage("r_arm",0.5*damage, 0)
 
 		if(!istype(src.loc, /turf/space))
-			var/obj/decal/cleanable/blood/B = new(src.loc)
+			var/obj/effect/decal/cleanable/blood/B = new(src.loc)
 			B.blood_DNA = H.dna.unique_enzymes
 			B.blood_type = H.b_type
 			if(H.virus2)

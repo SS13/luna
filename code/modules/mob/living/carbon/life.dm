@@ -122,9 +122,6 @@
 	return null
 
 /mob/living/carbon/proc/handle_virus_updates()
-	if(bodytemperature > 406)
-		resistances += virus
-		virus = null
 
 	if(!virus)
 		if(prob(40))
@@ -136,7 +133,7 @@
 						var/datum/disease/D = new M.virus.type //Making sure strain_data is preserved
 						D.strain_data = M.virus.strain_data
 						contract_disease(D)
-			for(var/obj/decal/cleanable/blood/B in view(4, src))
+			for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
 				if(B.virus && B.virus.spread == "Airborne")
 					if(B.virus.affected_species.Find(species))
 						if(resistances.Find(B.virus.type))
@@ -152,7 +149,7 @@
 		for(var/mob/living/carbon/M in oviewers(4,src))
 			if(M.virus2)
 				infect_virus2(src,M.virus2)
-		for(var/obj/decal/cleanable/blood/B in view(4, src))
+		for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
 			if(B.virus2)
 				infect_virus2(src,B.virus2)
 		for(var/obj/virus/V in src.loc)
@@ -218,20 +215,20 @@
 			handle_temperature_damage(HEAD, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
-			if(wear_suit && (wear_suit.body_parts_covered & UPPER_TORSO) && (environment.temperature < wear_suit.protective_temperature))
+			if(wear_suit && (wear_suit.body_parts_covered & CHEST) && (environment.temperature < wear_suit.protective_temperature))
 				transfer_coefficient *= wear_suit.heat_transfer_coefficient
-			if(w_uniform && (w_uniform.body_parts_covered & UPPER_TORSO) && (environment.temperature < w_uniform.protective_temperature))
+			if(w_uniform && (w_uniform.body_parts_covered & CHEST) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			handle_temperature_damage(UPPER_TORSO, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			handle_temperature_damage(CHEST, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
-			if(wear_suit && (wear_suit.body_parts_covered & LOWER_TORSO) && (environment.temperature < wear_suit.protective_temperature))
+			if(wear_suit && (wear_suit.body_parts_covered & GROIN) && (environment.temperature < wear_suit.protective_temperature))
 				transfer_coefficient *= wear_suit.heat_transfer_coefficient
-			if(w_uniform && (w_uniform.body_parts_covered & LOWER_TORSO) && (environment.temperature < w_uniform.protective_temperature))
+			if(w_uniform && (w_uniform.body_parts_covered & GROIN) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			handle_temperature_damage(LOWER_TORSO, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			handle_temperature_damage(GROIN, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & LEGS) && (environment.temperature < wear_suit.protective_temperature))
@@ -280,7 +277,7 @@
 				if(51 to 100)
 					fireloss -= 5
 
-	if (mutations & 8 && health <= 25)
+	if (mutations & HULK && health <= 25)
 		mutations &= ~8
 		src << "\red You suddenly feel very weak."
 		weakened = 3
@@ -462,11 +459,11 @@
 
 /mob/living/carbon/proc/check_if_buckled()
 	if (buckled)
-		lying = istype(buckled, /obj/stool/bed) || istype(buckled, /obj/machinery/conveyor)
+		lying = istype(buckled, /obj/structure/stool/bed) || istype(buckled, /obj/machinery/conveyor)
 		if(lying)
 			drop_item()
 		density = 1
-		if(istype(buckled,/obj/stool/chair))
+		if(istype(buckled,/obj/structure/stool/bed/chair))
 			dir = buckled.dir
 	else
 		density = !lying
@@ -604,9 +601,9 @@
 	switch(body_part)
 		if(HEAD)
 			TakeDamage("head", 0, 2.5*discomfort)
-		if(UPPER_TORSO)
+		if(CHEST)
 			TakeDamage("chest", 0, 2.5*discomfort)
-		if(LOWER_TORSO)
+		if(GROIN)
 			TakeDamage("groin", 0, 2.0*discomfort)
 		if(LEGS)
 			TakeDamage("l_leg", 0, 0.6*discomfort)
@@ -648,9 +645,9 @@
 	//Handle normal clothing
 	if(head && (head.body_parts_covered & HEAD))
 		thermal_protection += 0.5
-	if(wear_suit && (wear_suit.body_parts_covered & UPPER_TORSO))
+	if(wear_suit && (wear_suit.body_parts_covered & CHEST))
 		thermal_protection += 0.5
-	if(w_uniform && (w_uniform.body_parts_covered & UPPER_TORSO))
+	if(w_uniform && (w_uniform.body_parts_covered & CHEST))
 		thermal_protection += 0.1
 	if(wear_suit && (wear_suit.body_parts_covered & LEGS))
 		thermal_protection += 0.2

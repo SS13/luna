@@ -1,4 +1,20 @@
-/obj/table/ex_act(severity)
+/obj/structure/table
+	name = "table"
+	icon = 'structures.dmi'
+	icon_state = "table"
+	density = 1
+	anchored = 1.0
+
+/obj/structure/table/reinforced
+	name = "reinforced table"
+	icon_state = "reinf_table"
+	var/status = 2
+
+/obj/structure/table/woodentable
+	name = "wooden table"
+	icon_state = "wood_table"
+
+/obj/structure/table/ex_act(severity)
 
 	switch(severity)
 		if(1.0)
@@ -15,42 +31,41 @@
 				src.density = 0
 		else
 	return
-/obj/table/throwpass = 1
-/obj/table/blob_act()
+/obj/structure/table/throwpass = 1
+/obj/structure/table/blob_act()
 
 	if(prob(50))
 		new /obj/item/weapon/table_parts( src.loc )
 		del(src)
 
-/obj/table/hand_p(mob/user as mob)
+/obj/structure/table/hand_p(mob/user as mob)
 
 	return src.attack_paw(user)
 	return
 
-/obj/table/attack_paw(mob/user as mob)
-	if ((usr.mutations & 8))
+/obj/structure/table/attack_paw(mob/user as mob)
+	if ((usr.mutations & HULK))
 		usr << text("\blue You destroy the table.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
 				O << text("\red [] destroys the table.", usr)
-		if(istype(src, /obj/table/reinforced))
+		if(istype(src, /obj/structure/table/reinforced))
 			new /obj/item/weapon/table_parts/reinforced( src.loc )
 		else
 			new /obj/item/weapon/table_parts( src.loc )
 		src.density = 0
 		del(src)
-	if (!( locate(/obj/table, user.loc) ))
+	if (!( locate(/obj/structure/table, user.loc) ))
 		step(user, get_dir(user, src))
 		if (user.loc == src.loc)
 			user.layer = TURF_LAYER
 			for(var/mob/M in viewers(user, null))
 				M.show_message("The monkey hides under the table!", 1)
-				//Foreach goto(69)
 	return
 
-/obj/table/attack_alien(mob/user as mob)
+/obj/structure/table/attack_alien(mob/user as mob)
 	if(istype(user, /mob/living/carbon/alien/larva))
-		if (!( locate(/obj/table, user.loc) ))
+		if (!( locate(/obj/structure/table, user.loc) ))
 			step(user, get_dir(user, src))
 			if (user.loc == src.loc)
 				user.layer = TURF_LAYER
@@ -58,13 +73,13 @@
 					M.show_message("The alien larva hides under the table!", 1)
 	return
 
-/obj/table/attack_hand(mob/user as mob)
-	if ((usr.mutations & 8))
+/obj/structure/table/attack_hand(mob/user as mob)
+	if ((usr.mutations & HULK))
 		usr << text("\blue You destroy the table.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
 				O << text("\red [] destroys the table.", usr)
-		if(istype(src, /obj/table/reinforced))
+		if(istype(src, /obj/structure/table/reinforced))
 			new /obj/item/weapon/table_parts/reinforced( src.loc )
 		else
 			new /obj/item/weapon/table_parts( src.loc )
@@ -76,12 +91,11 @@
 			user.layer = TURF_LAYER
 			for(var/mob/M in viewers(user, null))
 				M.show_message("The person hides under the table!", 1)
-				//Foreach goto(69)
 	return
 
 
 
-/obj/table/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
+/obj/structure/table/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1
 
 	if ((mover.flags & 2 || istype(mover, /obj/meteor)) )
@@ -89,7 +103,7 @@
 	else
 		return 0
 
-/obj/table/MouseDrop_T(obj/O as obj, mob/user as mob)
+/obj/structure/table/MouseDrop_T(obj/O as obj, mob/user as mob)
 
 	if ((!( istype(O, /obj/item/weapon) ) || user.equipped() != O))
 		return
@@ -98,7 +112,7 @@
 		step(O, get_dir(O, src))
 	return
 
-/obj/table/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/structure/table/attackby(obj/item/weapon/W as obj, mob/user as mob)
 
 	if (istype(W, /obj/item/weapon/grab))
 		var/obj/item/weapon/grab/G = W
@@ -126,7 +140,7 @@
 	if(W && W.loc && !W.is_module)	W.loc = src.loc
 	return
 
-/obj/table/reinforced/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/structure/table/reinforced/attackby(obj/item/weapon/W as obj, mob/user as mob)
 
 	if (istype(W, /obj/item/weapon/grab))
 		var/obj/item/weapon/grab/G = W
@@ -166,7 +180,15 @@
 	if(W && W.loc && !W.is_module)	W.loc = src.loc
 	return
 
-/obj/rack/ex_act(severity)
+/obj/structure/rack
+	name = "rack"
+	icon = 'objects.dmi'
+	icon_state = "rack"
+	density = 1
+	flags = FPRINT
+	anchored = 1.0
+
+/obj/structure/rack/ex_act(severity)
 	switch(severity)
 		if(1.0)
 			del(src)
@@ -182,7 +204,7 @@
 		else
 	return
 
-/obj/rack/blob_act()
+/obj/structure/rack/blob_act()
 	if(prob(50))
 		del(src)
 		return
@@ -191,7 +213,7 @@
 		src.density = 0
 		return
 
-/obj/rack/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
+/obj/structure/rack/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1
 
 	if (mover.flags & 2)
@@ -199,7 +221,7 @@
 	else
 		return 0
 
-/obj/rack/MouseDrop_T(obj/O as obj, mob/user as mob)
+/obj/structure/rack/MouseDrop_T(obj/O as obj, mob/user as mob)
 	if ((!( istype(O, /obj/item/weapon) ) || user.equipped() != O))
 		return
 	user.drop_item()
@@ -207,7 +229,7 @@
 		step(O, get_dir(O, src))
 	return
 
-/obj/rack/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/structure/rack/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/wrench))
 		new /obj/item/weapon/rack_parts( src.loc )
 		playsound(src.loc, 'Ratchet.ogg', 50, 1)
@@ -218,7 +240,7 @@
 	if(W && W.loc && !W.is_module)	W.loc = src.loc
 	return
 
-/obj/rack/meteorhit(obj/O as obj)
+/obj/structure/rack/meteorhit(obj/O as obj)
 	if(prob(75))
 		del(src)
 		return

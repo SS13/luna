@@ -24,8 +24,8 @@ obj/rail/proc/updatetrack()
 				node2 = R
 	node1_dir = get_dir(src,node1)
 	node2_dir = get_dir(src,node2)
-	updateicon()
-obj/rail/proc/updateicon()
+	update_icon()
+obj/rail/proc/update_icon()
 	var/num
 	var/num2
 	if(!num || !num2)

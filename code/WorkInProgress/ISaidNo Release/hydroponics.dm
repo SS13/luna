@@ -1106,7 +1106,7 @@
 		src.generation = 0
 		update_icon()
 
-/obj/reagent_dispensers/compostbin
+/obj/structure/reagent_dispensers/compostbin
 	name = "compost tank"
 	desc = "A device that mulches up unwanted produce into usable fertiliser."
 	icon = 'hydroponics.dmi'
@@ -1618,7 +1618,7 @@
 	attack_hand(var/mob/user as mob)
 		user.machine = src
 		var/dat = "<B>[src.name]</B><BR><HR>"
-		dat += "<b>Amount to Vend</b>: <A href='?src=\ref[src];amount=1'>[src.vendamt]</A><br><br>"
+		dat += "<b>amount to Vend</b>: <A href='?src=\ref[src];amount=1'>[src.vendamt]</A><br><br>"
 		dat += "<b>Tomato</b>: <A href='?src=\ref[src];vend=1'><U>Vend</U></A><br>"
 		dat += "<b>Grape</b>: <A href='?src=\ref[src];vend=2'><U>Vend</U></A><br>"
 		dat += "<b>Orange</b>: <A href='?src=\ref[src];vend=3'><U>Vend</U></A><br>"
@@ -1944,7 +1944,6 @@
 		if (istype(W, /obj/item/weapon/screwdriver)) del src
 		if (istype(W, /obj/item/weapon/shard)) del src
 		if (istype(W, /obj/item/weapon/sword)) del src
-		//if (istype(W, /obj/item/weapon/saw)) del src		Strumpetplaya - Commented out as it uses components we do not support
 		if (istype(W, /obj/item/weapon/weldingtool)) del src
 		if (istype(W, /obj/item/weapon/wirecutters)) del src
 		..()
@@ -1957,7 +1956,7 @@
 	var/dogrowth = 1
 	if (!istype(Vspread, /turf/simulated/floor)) dogrowth = 0
 	for(var/obj/O in Vspread)
-		if (istype(O, /obj/window) || istype(O, /obj/forcefield) || istype(O, /obj/blob) || istype(O, /obj/alien/weeds) || istype(O, /obj/spacevine)) dogrowth = 0
+		if (istype(O, /obj/structure/window) || istype(O, /obj/forcefield) || istype(O, /obj/blob) || istype(O, /obj/alien/weeds) || istype(O, /obj/spacevine)) dogrowth = 0
 		if (istype(O, /obj/machinery/door/))
 			if(O:p_open == 0 && prob(50)) O:open()
 			else dogrowth = 0

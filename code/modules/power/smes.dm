@@ -19,10 +19,10 @@
 
 		terminal.master = src
 
-		updateicon()
+		update_icon()
 
 
-/obj/machinery/power/smes/proc/updateicon()
+/obj/machinery/power/smes/proc/update_icon()
 
 	overlays = null
 	if(stat & BROKEN)
@@ -99,7 +99,7 @@
 
 	// only update icon if state changed
 	if(last_disp != chargedisplay() || last_chrg != charging || last_onln != online)
-		updateicon()
+		update_icon()
 
 	for(var/mob/M in viewers(1, src))
 		if ((M.client && M.machine == src))
@@ -135,7 +135,7 @@
 	loaddemand = lastout-excess
 
 	if(clev != chargedisplay() )
-		updateicon()
+		update_icon()
 
 
 /obj/machinery/power/smes/AddLoad(var/amount)
@@ -219,11 +219,11 @@
 			chargemode = !chargemode
 			if(!chargemode)
 				charging = 0
-			updateicon()
+			update_icon()
 
 		else if( href_list["online"] )
 			online = !online
-			updateicon()
+			update_icon()
 		else if( href_list["input"] )
 
 			var/i = text2num(href_list["input"])

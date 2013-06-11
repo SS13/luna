@@ -18,11 +18,11 @@
 		usr.verbs += /client/proc/mutate
 	usr.say("BIRUZ BENNAR")
 	usr << text("\blue You feel strong! Your mind expands!")
-	if (!(usr.mutations & 8))
-		usr.mutations |= 8
-	if (!(usr.mutations & 1))
-		usr.mutations |= 1
+	if (!(usr.mutations & HULK))
+		usr.mutations |= HULK
+	if (!(usr.mutations & TK))
+		usr.mutations |= TK
 	spawn (300*tick_multiplier)
-		if (usr.mutations & 1) usr.mutations &= ~1
-		if (usr.mutations & 8) usr.mutations &= ~8
+		if (usr.mutations & TK) usr.mutations &= ~TK
+		if (usr.mutations & HULK) usr.mutations &= ~HULK
 	return

@@ -8,8 +8,8 @@
 
 // Unified Cable Network System - Generic Cable Coil Class
 
-/obj/item/weapon/CableCoil
-	icon_state     = "whitecoil3"
+/obj/item/weapon/cable_coil
+	icon_state = "redcoil3"
 	icon           = 'Coils.dmi'
 	flags          = TABLEPASS | USEDELAY | FPRINT | CONDUCT
 	throwforce     = 10
@@ -18,94 +18,97 @@
 	throw_range    = 5
 	item_state     = ""
 
-	var/CoilColour = "generic"
-	var/BaseName   = "Generic"
-	var/ShortDesc  = "A piece of Generic Cable"
-	var/LongDesc   = "A long piece of Generic Cable"
-	var/CoilDesc   = "A Spool of Generic Cable"
-	var/MaxAmount  = 30
-	var/Amount     = 30
-	var/CableType  = /obj/cabling
+	var/CoilColour = "red"
+	var/BaseName  = "Electrical"
+	var/ShortDesc = "A piece of electrical cable"
+	var/LongDesc  = "A long piece of electrical cable"
+	var/CoilDesc  = "A spool of electrical cable"
+	var/Maxamount  = 30
+	var/amount     = 30
+	var/CableType  = /obj/cabling/power
 	var/CanLayDiagonally = 1
 
-/obj/item/weapon/CableCoil/New(var/Location, var/Length)
+/obj/item/weapon/cable_coil/New(var/Location, var/Length)
 	if(!Length)
-		Length = MaxAmount
-	Amount = Length
+		Length = Maxamount
+	amount = Length
 	item_state     = "[CoilColour]coil"
 	icon_state     = "[CoilColour]coil"
 	pixel_x = rand(-4,4)
 	pixel_y = rand(-4,4)
-	UpdateIcon()
+	update_icon()
 	name = "[BaseName] Cable"
 	..(Location)
 
-/obj/item/weapon/CableCoil/proc/UpdateIcon()
-	if(Amount == 1)
+/obj/item/weapon/cable_coil/proc/update_icon()
+	if(amount == 1)
 		icon_state = "[CoilColour]coil1"
 		item_state = "[CoilColour]coil1"
-	else if(Amount == 2)
+	else if(amount == 2)
 		icon_state = "[CoilColour]coil2"
 		item_state = "[CoilColour]coil2"
 	else
 		icon_state = "[CoilColour]coil3"
 		item_state = "[CoilColour]coil3"
 
-/obj/item/weapon/CableCoil/examine()
+/obj/item/weapon/cable_coil/examine()
 
-	if (Amount == 1)
+	if (amount == 1)
 		usr << ShortDesc
-	else if(Amount == 2)
+	else if(amount == 2)
 		usr << LongDesc
 	else
 		usr << CoilDesc
-		usr << "There are [Amount] usable lengths on the spool"
+		usr << "There are [amount] usable lengths on the spool"
 
-/obj/item/weapon/CableCoil/attackby(obj/item/weapon/W, mob/user)
-	if( istype(W, /obj/item/weapon/wirecutters) && Amount > 2)
-		Amount--
-		new/obj/item/weapon/CableCoil(user.loc, 1)
+/obj/item/weapon/cable_coil/attackby(obj/item/weapon/W, mob/user)
+	if( istype(W, /obj/item/weapon/wirecutters) && amount > 2)
+		amount--
+		new/obj/item/weapon/cable_coil(user.loc, 1)
 		user << "You cut a length off the [name]."
-		UpdateIcon()
+		update_icon()
 		return
 
-	else if( istype(W, /obj/item/weapon/CableCoil) )
-		var/obj/item/weapon/CableCoil/C = W
+	else if( istype(W, /obj/item/weapon/cable_coil) )
+		var/obj/item/weapon/cable_coil/C = W
 		if (C.CableType != CableType)
 			user << "You can't combine different kinds of cabling!"
 			return
 
-		if(C.Amount == 30)
+		if(C.amount == 30)
 			user << "The coil is too long, you cannot add any more cable to it."
 			return
 
-		if( (C.Amount + Amount <= 30) )
-			C.Amount += Amount
+		if( (C.amount + amount <= 30) )
+			C.amount += amount
 			user << "You join the [name]s together."
-			C.UpdateIcon()
+			C.update_icon()
 			del src
 			return
 
 		else
-			user << "You transfer [30 - Amount] lengths of cable from one coil to the other."
-			Amount -= (30-C.Amount)
-			UpdateIcon()
-			C.Amount = 30
-			C.UpdateIcon()
+			user << "You transfer [30 - amount] lengths of cable from one coil to the other."
+			amount -= (30-C.amount)
+			update_icon()
+			C.amount = 30
+			C.update_icon()
 			return
 
-/obj/item/weapon/CableCoil/proc/UseCable(var/used)
-	if(Amount < used)
+/obj/item/weapon/cable_coil/proc/use(var/used)
+	if(src.amount < used)
 		return 0
-	else if (Amount == used)
-		del src
-		return 1
+	else if (src.amount == used)
+		//handle mob icon update
+		if(ismob(loc))
+			var/mob/M = loc
+			M.drop_item(src)
+		del(src)
 	else
-		Amount -= used
-		UpdateIcon()
+		amount -= used
+		update_icon()
 		return 1
 
-/obj/item/weapon/CableCoil/proc/LayOnTurf(turf/simulated/floor/Target, mob/user)
+/obj/item/weapon/cable_coil/proc/LayOnTurf(turf/simulated/floor/Target, mob/user)
 
 	if(!isturf(user.loc))
 		return
@@ -144,10 +147,10 @@
 		NewCable.Direction1 = 0
 		NewCable.Direction2 = NewDirection
 		NewCable.add_fingerprint(user)
-		NewCable.UpdateIcon()
-		UseCable(1)
+		NewCable.update_icon()
+		use(1)
 
-/obj/item/weapon/CableCoil/proc/JoinCable(obj/cabling/Cable, mob/user)
+/obj/item/weapon/cable_coil/proc/JoinCable(obj/cabling/Cable, mob/user)
 
 
 	var/turf/UserLocation = user.loc
@@ -186,8 +189,8 @@
 		var/obj/cabling/NewCable = new CableType(CableLocation, 0, DirectionToCable)
 		NewCable.add_fingerprint(user)
 		NewCable.UserTouched(user)
-		NewCable.UpdateIcon()
-		UseCable(1)
+		NewCable.update_icon()
+		use(1)
 
 	else if(Cable.Direction1 == 0)
 		var/NewDirection1 = Cable.Direction2
@@ -207,15 +210,15 @@
 		var/obj/cabling/NewCable = new CableType(CableLocation, NewDirection1, NewDirection2)
 		NewCable.add_fingerprint(user)
 		NewCable.UserTouched(user)
-		NewCable.UpdateIcon()
+		NewCable.update_icon()
 
 		del Cable
 
-		UseCable(1)
+		use(1)
 
 	return
 
-/obj/item/weapon/CableCoil/afterattack(var/atom/Target, var/mob/User, var/Flag)
+/obj/item/weapon/cable_coil/afterattack(var/atom/Target, var/mob/User, var/Flag)
 	var/obj/cabling/Cable = new CableType(null)
 
 	if (!Cable.CanConnect(Target))
@@ -241,8 +244,8 @@
 	var/obj/cabling/NewCable = new CableType(CableLocation, 0, DirectionToUser)
 	NewCable.add_fingerprint(User)
 	NewCable.UserTouched(User)
-	NewCable.UpdateIcon()
-	UseCable(1)
+	NewCable.update_icon()
+	use(1)
 	del Cable
 
 	..()
