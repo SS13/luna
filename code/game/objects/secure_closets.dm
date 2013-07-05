@@ -1,8 +1,3 @@
-/obj/secure_closet/New()
-	spawn(10)
-		for(var/obj/item/A in src.loc.contents)
-			A.loc = src
-
 /obj/secure_closet/alter_health()
 	return get_turf(src)
 
@@ -12,7 +7,7 @@
 	return src.opened
 
 /obj/secure_closet/proc/can_close()
-	for(var/obj/structure/closet/closet in get_turf(src))
+	for(var/obj/closet/closet in get_turf(src))
 		return 0
 	for(var/obj/secure_closet/closet in get_turf(src))
 		if(closet != src)
@@ -84,6 +79,20 @@
 		return src.close()
 	return src.open()
 
+/obj/secure_closet/emp_act(severity)
+	for(var/obj/O in src)
+		O.emp_act(severity)
+	if(!broken)
+		if(prob(50/severity))
+			src.locked = !src.locked
+		if(prob(20/severity) && !opened)
+			if(!locked)
+				open()
+			else
+				src.req_access = list()
+				src.req_access += pick(get_all_accesses())
+	..()
+
 /obj/secure_closet/ex_act(severity)
 	switch(severity)
 		if (1)
@@ -105,7 +114,7 @@
 				del(src)
 
 /obj/secure_closet/blob_act()
-	if (prob(50))
+	if (prob(75))
 		for(var/atom/movable/A as mob|obj in src)
 			A.loc = src.loc
 		del(src)
@@ -158,13 +167,22 @@
 	else if(src.broken)
 		user << "\red It appears to be broken."
 		return
-	else if(istype(W, /obj/item/weapon/card/emag) && !src.broken)
-		src.broken = 1
-		src.locked = 0
-		src.icon_state = src.icon_broken
-		for(var/mob/O in viewers(user, 3))
-			if ((O.client && !( O.blinded )))
-				O << text("\blue The locker has been broken by [user] with an electromagnetic card!")
+	else if( (istype(W, /obj/item/weapon/card/emag)||istype(W, /obj/item/weapon/blade)) && !src.broken)
+		broken = 1
+		locked = 0
+		desc = "It appears to be broken."
+		icon_state = src.icon_broken
+		if(istype(W, /obj/item/weapon/blade))
+			var/datum/effects/system/spark_spread/spark_system = new /datum/effects/system/spark_spread()
+			spark_system.set_up(5, 0, src.loc)
+			spark_system.start()
+			playsound(src.loc, 'blade1.ogg', 50, 1)
+			playsound(src.loc, "sparks", 50, 1)
+			for(var/mob/O in viewers(user, 3))
+				O.show_message(text("\blue The locker has been sliced open by [] with an energy blade!", user), 1, text("\red You hear metal being sliced and sparks flying."), 2)
+		else
+			for(var/mob/O in viewers(user, 3))
+				O.show_message(text("\blue The locker has been broken by [] with an electromagnetic card!", user), 1, text("You hear a faint electrical spark."), 2)
 	else if(src.allowed(user))
 		src.locked = !src.locked
 		for(var/mob/O in viewers(user, 3))
@@ -179,6 +197,8 @@
 		user << "\red Access Denied"
 	return
 
+/obj/secure_closet
+	var/lastbang
 /obj/secure_closet/relaymove(mob/user as mob)
 	if (user.stat)
 		return
@@ -192,14 +212,12 @@
 				M.client.perspective = MOB_PERSPECTIVE
 		src.icon_state = src.icon_opened
 		src.opened = 1
-	else if(src.locked && world.timeofday - bang_time >= 14)
-		user << "\blue It's locked!"
-		for(var/mob/M in hearers(src, null))
-			if(!(M.sdisabilities & 4) && M.ear_deaf == 0)
+	else
+		user << "\blue It's welded shut!"
+		if (world.time > lastbang+5)
+			lastbang = world.time
+			for(var/mob/M in hearers(src, null))
 				M << text("<FONT size=[]>BANG, bang!</FONT>", max(0, 5 - get_dist(src, M)))
-		user.unlock_medal("It's a trap!", 0, "Get locked or welded into a locker...", "easy")
-		bang_time = world.timeofday
-		return
 	return
 
 /obj/secure_closet/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
@@ -209,9 +227,9 @@
 		return
 	if(!src.opened)
 		return
-	if(istype(O, /obj/secure_closet) || istype(O, /obj/structure/closet))
+	if(istype(O, /obj/secure_closet) || istype(O, /obj/closet))
 		return
-	step_towards_3d(O, src.loc)
+	step_towards(O, src.loc)
 	if (user != O)
 		for(var/mob/B in viewers(user, 3))
 			if ((B.client && !( B.blinded )))

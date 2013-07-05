@@ -122,8 +122,8 @@
 		return
 	return
 
-/obj/m_tray/MouseDrop_T(mob/O, mob/user)
-	if (!istype(O) || O.buckled || get_dist(user, src) > 1 || get_dist(user, O) > 1 || user.stat || istype(user, /mob/living/silicon/ai))
+/obj/m_tray/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
+	if ((!( istype(O, /atom/movable) ) || O.anchored || get_dist(user, src) > 1 || get_dist(user, O) > 1 || user.contents.Find(src)))
 		return
 	O.loc = src.loc
 	if (user != O)
@@ -256,51 +256,26 @@
 	else if(contents)
 		cremating = 1
 		locked = 1
-		var/mob/dead/observer/newmob
-		for (var/M in contents)
-			if (istype(M,/mob/living) && M:client)
-				var/i
-				M:stunned = 100 //You really dont want to place this inside the loop.
-
-				newmob = new/mob/dead/observer(M)
-				M:client:mob = newmob
-
-				for(i=0, i<10, i++)
+		for (var/mob/living/M in contents)
+			M:stunned = 100 //You really dont want to place this inside the loop.
+			spawn(1)
+				for(var/i=1 to 10)
 					sleep(10)
-					M:fireloss += 30
-				var/obj/item/weapon/urn/U = new(M:loc)
-				U.name += " - " + M:real_name
-				U.desc = "This contains the ashes of " + M:real_name + "."
-
-				//newmob.loc = src.loc
-
-				if(M:mind)
-					M:mind.transfer_to(newmob)
-				for (var/obj/item/weapon/W in M)
+					M.take_overall_damage(0,30)
+					if (M.stat!=2 && prob(30))
+						M.emote("scream")
+				new /obj/decal/ash(src)
+				for (var/obj/item/W in M)
 					if (prob(10))
-						W.loc = M:loc
+						W.loc = src
+				M.death(1)
+				M.ghostize()
 				del(M)
-			else if (istype(M,/mob/living) && !(M:client)) //
-				spawn(0)
-					var/i
-					M:stunned = 100
-					for(i=0, i<10, i++)
-						sleep(10)
-						M:fireloss += 50
-					var/obj/item/weapon/urn/U = new(M:loc)
-					U.name += " - " + M:real_name
-					U.desc = "This contains the ashes of " + M:real_name + "."
-					for (var/obj/item/weapon/W in M)
-						if (prob(10))
-							W.loc = M:loc
-					del(M)
-		for (var/mob/M in viewers(user))
+				cremating = 0
+				locked = 0
+				playsound(src.loc, 'ding.ogg', 50, 1)
+		for (var/mob/M in viewers(src))
 			M.show_message("\red You hear a roar as the crematorium activates.", 1)
-		spawn(100)
-			cremating = 0
-			locked = 0
-			playsound(src.loc, 'ding.ogg', 50, 1)
-
 	return
 
 /obj/c_tray/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
@@ -326,8 +301,8 @@
 		return
 	return
 
-/obj/c_tray/MouseDrop_T(mob/O, mob/user)
-	if (!istype(O) || O.buckled || get_dist(user, src) > 1 || get_dist(user, O) > 1 || user.stat || istype(user, /mob/living/silicon/ai))
+/obj/c_tray/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
+	if ((!( istype(O, /atom/movable) ) || O.anchored || get_dist(user, src) > 1 || get_dist(user, O) > 1 || user.contents.Find(src)))
 		return
 	O.loc = src.loc
 	if (user != O)

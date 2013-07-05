@@ -1,20 +1,21 @@
 /datum/game_mode/blob
 	name = "blob"
 	config_tag = "blob"
-	enabled = 0
 
 	var/stage = 0
 	var/next_stage = 0
 
 /datum/game_mode/blob/announce()
 	world << "<B>The current game mode is - <font color='green'>Blob</font>!</B>"
+	world << "<B>A dangerous alien organism is rapidly spreading throughout the station!</B>"
+	world << "You must kill it all while minimizing the damage to the station."
 
 /datum/game_mode/blob/post_setup()
 
-	spawn(10*tick_multiplier)
+	spawn(10)
 		start_state = new /datum/station_state()
 		start_state.count()
-	spawn (20*tick_multiplier)
+	spawn (20)
 		var/turf/location = pick(blobstart)
 
 		blobs = list()
@@ -111,7 +112,7 @@
 			else
 				ground_zero = locate(45,45,1)
 
-			explosion(ground_zero, 100, 250, 500, 750, 1)
+			explosion(ground_zero, 100, 250, 500, 750)
 
 /datum/game_mode/blob/check_finished()
 	if(stage >= 4)
@@ -133,19 +134,19 @@
 		var/numPod = 0
 		var/numOffStation = 0
 		for (var/mob/living/silicon/ai/aiPlayer in world)
-			for(var/client/C)
-				if (C.mob != aiPlayer)
-					if (C.mob.stat == 2)
+			for(var/mob/M in world)
+				if ((M != aiPlayer && M.client))
+					if (M.stat == 2)
 						numDead += 1
 					else
-						var/T = C.mob.loc
+						var/T = M.loc
 						if (istype(T, /turf/space))
 							numSpace += 1
 						else
 							if (istype(T, /obj/machinery/vehicle/pod))
 								numPod += 1
 							else if (istype(T, /turf))
-								if (!(C.mob.z >= 1 && C.mob.z <= 4))
+								if (M.z!=1)
 									numOffStation += 1
 								else
 									numAlive += 1
@@ -161,7 +162,7 @@
 				log_game("AI lost at Blob mode.")
 
 		log_game("Blob mode was lost.")
-		check_round()
+
 		return 1
 
 	else
@@ -178,5 +179,5 @@
 		log_game("Blob mode was won with station [percent]% intact.")
 
 		world << "\blue Rebooting in 30s"
-		check_round()
+
 	return 1

@@ -1,20 +1,13 @@
 /datum/game_mode
-	var/name = "Invalid"
+	var/name = "invalid"
 	var/config_tag = null
 	var/votable = 1
 	var/probability = 1
 	// this includes admin-appointed traitors and multitraitors. Easy!
 	var/list/datum/mind/traitors = list()
-	var/list/logtraitors = list()
-
-	var/uplink_welcome
-	var/uplink_items
-	var/uplink_uses
-
-	var/enabled = 1
 
 /datum/game_mode/proc/announce()
-	world << "<B>The current game mode is - [name]!</B>"
+	world << "<B>[src] did not define announce()</B>"
 
 /datum/game_mode/proc/pre_setup()
 	return 1
@@ -24,7 +17,7 @@
 /datum/game_mode/proc/process()
 
 /datum/game_mode/proc/check_finished()
-	if(main_shuttle.location==2)
+	if(emergency_shuttle.location==2)
 		return 1
 	return 0
 
@@ -34,49 +27,42 @@
 		var/traitor_name
 
 		if(traitor.current)
-			traitor_name = "[traitor.current.real_name] (played by [traitor.key])"
+			if(traitor.current == traitor.original)
+				traitor_name = "[traitor.current.real_name] (played by [traitor.key])"
+			else if (traitor.original)
+				traitor_name = "[traitor.current.real_name] (originally [traitor.original.real_name]) (played by [traitor.key])"
+			else
+				traitor_name = "[traitor.current.real_name] (original character destroyed) (played by [traitor.key])"
 		else
 			traitor_name = "[traitor.key] (character destroyed)"
 
 		world << "<B>The syndicate traitor was [traitor_name]</B>"
 		var/count = 1
 		for(var/datum/objective/objective in traitor.objectives)
-			world << "<B>Objective #[count]</B>: [objective.explanation_text] \..."
-			if (objective.check_completion())
-				world << "\green <B>Success</B>"
-				for(var/client/C)
-					if(C.key == traitor.key)
-						C.mob.unlock_medal("Oh I'm a terrorist?", 0, "Kinda", "medium")
+			if(objective.check_completion())
+				world << "<B>Objective #[count]</B>: [objective.explanation_text] \green <B>Success</B>"
 			else
-				world << "\red Failed"
+				world << "<B>Objective #[count]</B>: [objective.explanation_text] \red Failed"
 				traitorwin = 0
 			count++
 
-		world << "<B>The traitor [(traitorwin ? "was successful" : "has failed")]!</B>"
-
-		var/datum/traitorinfo/info = logtraitors[traitor]
-		if (info)
-			var/DBQuery/query = dbcon.NewQuery("INSERT INTO `traitorlogs` (`CKey`, `Objective`, `Succeeded`, `Spawned`, `Occupation`, `PlayerCount`) VALUES ('[info.ckey]', [dbcon.Quote(info.starting_objective)], '[traitorwin]', '[dd_list2text(info.spawnlist, ";")]', '[info.starting_occupation]', '[info.starting_player_count]')")
-			query.Execute()
-
-	check_round()
+		if(traitorwin)
+			world << "<B>The traitor was successful!<B>"
+		else
+			world << "<B>The traitor has failed!<B>"
 	return 1
 
 /datum/game_mode/proc/check_win()
 
-/datum/game_mode/proc/latespawn(var/mob)
-
 /datum/game_mode/proc/send_intercept()
-/datum/game_mode/proc/check_round()
-	for(var/client/C)
-		if(C.mob)
-			if(C.mob.stat != 2)
-				C.mob.unlock_medal("Survivor", 0, "What do you think?", "easy")
 
 /datum/game_mode/proc/equip_traitor(mob/living/carbon/human/traitor_mob)
 	if (!istype(traitor_mob))
 		return
-
+	if (traitor_mob.mind)
+		if (traitor_mob.mind.assigned_role == "Clown")
+			traitor_mob << "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself."
+			traitor_mob.mutations &= ~16
 	// generate list of radio freqs
 	var/freq = 1441
 	var/list/freqlist = list()
@@ -96,6 +82,9 @@
 	if (!R && istype(traitor_mob.belt, /obj/item/device/pda))
 		R = traitor_mob.belt
 		loc = "on your belt"
+	if (!R && istype(traitor_mob.wear_id, /obj/item/device/pda))
+		R = traitor_mob.wear_id
+		loc = "on your jumpsuit"
 	if (!R && istype(traitor_mob.l_hand, /obj/item/weapon/storage))
 		var/obj/item/weapon/storage/S = traitor_mob.l_hand
 		var/list/L = S.return_inv()
@@ -127,16 +116,7 @@
 		traitor_mob << "Unfortunately, the Syndicate wasn't able to get you a radio."
 	else
 		if (istype(R, /obj/item/device/radio))
-			// generate list of radio freqs
-			while (freq <= 1489)
-				if (freq < 1451 || freq > 1459)
-					freqlist += freq
-				freq += 2
-				if ((freq % 2) == 0)
-					freq += 1
-			freq = freqlist[rand(1, freqlist.len)]
-
-			var/obj/item/device/uplink/radio/T = new /obj/item/device/uplink/radio(R)
+			var/obj/item/weapon/syndicate_uplink/T = new /obj/item/weapon/syndicate_uplink(R)
 			R:traitorradio = T
 			R:traitor_frequency = freq
 			T.name = R.name
@@ -145,9 +125,9 @@
 			traitor_mob << "The Syndicate have cunningly disguised a Syndicate Uplink as your [R.name] [loc]. Simply dial the frequency [format_frequency(freq)] to unlock its hidden features."
 			traitor_mob.mind.store_memory("<B>Radio Freq:</B> [format_frequency(freq)] ([R.name] [loc]).")
 		else if (istype(R, /obj/item/device/pda))
-			var/obj/item/device/uplink/pda/T = new /obj/item/device/uplink/pda(R)
+			var/obj/item/weapon/integrated_uplink/T = new /obj/item/weapon/integrated_uplink(R)
 			R:uplink = T
-			T.unlocking_code = pda_pass
+			T.lock_code = pda_pass
 			T.hostpda = R
 			traitor_mob << "The Syndicate have cunningly disguised a Syndicate Uplink as your [R.name] [loc]. Simply enter the code \"[pda_pass]\" into the ringtone select to unlock its hidden features."
 			traitor_mob.mind.store_memory("<B>Uplink Passcode:</B> [pda_pass] ([R.name] [loc]).")

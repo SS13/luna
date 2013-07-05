@@ -1,63 +1,50 @@
-/proc/jobban_fullban(mob/M, rank,mob/bywho)
-	if(M == bywho)
-		bywho << "Adding job bans for yourself isn't possible."
-		return
-	var/input = input(usr, "Please enter the reason for the job ban", "Job banning", "")
-	if(!input)
-		bywho << "Job ban not added. Please retry and complete the reason field."
-		return
+var
+	jobban_runonce	// Updates legacy bans with new info
+	jobban_keylist[0]		//to store the keys & ranks
+
+/proc/jobban_fullban(mob/M, rank)
 	if (!M || !M.key || !M.client) return
-	var/DBQuery/xquery = dbcon.NewQuery("INSERT INTO jobban VALUES ('[M.ckey]','[rank]')")
-	var/DBQuery/yquery = dbcon.NewQuery("INSERT INTO jobbanlog (`ckey`,`targetckey`,`rank`,`why`) VALUES ('[bywho.ckey]','[M.ckey]','[rank]','[input]')")
-	if(!xquery.Execute())
-		log_admin("[xquery.ErrorMsg()]")
-	if(!yquery.Execute())
-		log_admin("[yquery.ErrorMsg()]")
+	jobban_keylist.Add(text("[M.ckey] - [rank]"))
+	jobban_savebanfile()
 
 /proc/jobban_isbanned(mob/M, rank)
-	var/DBQuery/cquery = dbcon.NewQuery("SELECT `rank` FROM `jobban` WHERE ckey='[M.ckey]'")
-	var/list/ranks = list()
-	if(!cquery.Execute())
-		log_admin("[cquery.ErrorMsg()]")
-	else
-		while(cquery.NextRow())
-			var/list/derp = cquery.GetRowData()
-			ranks += derp["rank"]
-	if(ranks.Find(rank))
-		return 1
-	else
-		return 0
+	if(M)
+		if (rank == "Captain" || rank == "AI" || rank == "Head of Personnel" || rank == "Head of Security" || rank == "Chief Engineer" || rank == "Research Director" || rank == "Warden" || rank == "Detective" || rank == "Chief Medical Officer")
+			if(IsGuestKey(M.key)/* && config.guest_jobban*/)
+				return 1
+		if (jobban_keylist.Find(text("[M.ckey] - [rank]")))
+			return 1
+		else
+			return 0
+
+/proc/jobban_loadbanfile()
+	var/savefile/S=new("data/job_full.ban")
+	S["keys[0]"] >> jobban_keylist
+	log_admin("Loading jobban_rank")
+	S["runonce"] >> jobban_runonce
+	if (!length(jobban_keylist))
+		jobban_keylist=list()
+		log_admin("jobban_keylist was empty")
+
+/proc/jobban_savebanfile()
+	var/savefile/S=new("data/job_full.ban")
+	S["keys[0]"] << jobban_keylist
 
 /proc/jobban_unban(mob/M, rank)
-	var/DBQuery/xquery = dbcon.NewQuery("DELETE FROM jobban WHERE `ckey`='[M.ckey]' AND `rank`='[rank]'")
-	var/DBQuery/yquery = dbcon.NewQuery("DELETE FROM jobbanlog WHERE `targetckey`='[M.ckey]' AND `rank`='[rank]'")
-	if(!xquery.Execute())
-		log_admin("[xquery.ErrorMsg()]")
-	if(!yquery.Execute())
-		log_admin("[yquery.ErrorMsg()]")
-	log_admin("[key_name(usr)] unbanned [M.ckey] from [rank]")
+	jobban_keylist.Remove(text("[M.ckey] - [rank]"))
+	jobban_savebanfile()
 
-/proc/jobban_remove(key, rank)
-	var/DBQuery/xquery = dbcon.NewQuery("DELETE FROM jobban WHERE `ckey`='[key]' AND `rank`='[rank]'")
-	var/DBQuery/yquery = dbcon.NewQuery("DELETE FROM jobbanlog WHERE `targetckey`='[key]' AND `rank`='[rank]'")
-	if(!xquery.Execute())
-		log_admin("[xquery.ErrorMsg()]")
-	if(!yquery.Execute())
-		log_admin("[yquery.ErrorMsg()]")
-	log_admin("[key_name(usr)] unbanned [key] from [rank]")
+/proc/jobban_updatelegacybans()
+	if(!jobban_runonce)
+		log_admin("Updating jobbanfile!")
+		// Updates bans.. Or fixes them. Either way.
+		for(var/T in jobban_keylist)
+			if(!T)	continue
+		jobban_runonce++	//don't run this update again
 
-/obj/admins/proc/showjobbans()
-	var/html = "<table>"
-	var/DBQuery/cquery = dbcon.NewQuery("SELECT DISTINCT targetckey from jobbanlog")
-	if(!cquery.Execute())
-		log_admin("[cquery.ErrorMsg()]")
-	else
-		while(cquery.NextRow())
-			var/list/derp = cquery.GetRowData()
-			var/X = derp["targetckey"]
-			html += "<tr><td><A href='?src=\ref[src];jobban1=[X]'>[derp["targetckey"]]</A></td><td>"
-	html += "</table>"
-	html = "<HR><B>Jobbans:</B><HR><table border=1 rules=all frame=void cellspacing=0 cellpadding=3 >[html]"
-	usr << browse(html, "window=jobbanx1x;size=475x400")
-
-
+/proc/jobban_remove(X)
+	if(jobban_keylist.Find(X))
+		jobban_keylist.Remove(X)
+		jobban_savebanfile()
+		return 1
+	return 0

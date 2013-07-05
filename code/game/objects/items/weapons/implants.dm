@@ -16,6 +16,7 @@ IMPLANTER
 	return
 
 /obj/item/weapon/implantcase/attackby(obj/item/weapon/I as obj, mob/user as mob)
+	..()
 	if (istype(I, /obj/item/weapon/pen))
 		var/t = input(user, "What would you like the label to be?", text("[]", src.name), null)  as text
 		if (user.equipped() != I)
@@ -27,31 +28,55 @@ IMPLANTER
 			src.name = text("Glass Case- '[]'", t)
 		else
 			src.name = "Glass Case"
-	else
-		if (!( istype(I, /obj/item/weapon/implanter) ))
-			return
-	if (I:imp)
-		if ((src.imp || I:imp.implanted))
-			return
-		I:imp.loc = src
-		src.imp = I:imp
-		I:imp = null
-		src.update()
-		I:update()
-	else
-		if (src.imp)
-			if (I:imp)
+
+	else if(istype(I, /obj/item/weapon/reagent_containers/syringe))
+		if(src.imp.reagents.total_volume >= 10)
+			user << "\red [src] is full."
+		else
+			spawn(5)
+				I.reagents.trans_to(src.imp, 5)
+				user << "\blue You inject 5 units of the solution. The syringe now contains [I.reagents.total_volume] units."
+	else if (istype(I, /obj/item/weapon/implanter))
+		if (I:imp)
+			if ((src.imp || I:imp.implanted))
 				return
-			src.imp.loc = I
-			I:imp = src.imp
-			src.imp = null
-			update()
+			I:imp.loc = src
+			src.imp = I:imp
+			I:imp = null
+			src.update()
+			I:update()
+		else
+			if (src.imp)
+				if (I:imp)
+					return
+				src.imp.loc = I
+				I:imp = src.imp
+				src.imp = null
+				update()
 			I:update()
 	return
 
 /obj/item/weapon/implantcase/tracking/New()
 
 	src.imp = new /obj/item/weapon/implant/tracking( src )
+	..()
+	return
+
+/obj/item/weapon/implantcase/explosive/New()
+
+	src.imp = new /obj/item/weapon/implant/explosive( src )
+	..()
+	return
+
+/obj/item/weapon/implant/chem/New()
+	..()
+	var/datum/reagents/R = new/datum/reagents(10)
+	reagents = R
+	R.my_atom = src
+
+/obj/item/weapon/implantcase/chem/New()
+
+	src.imp = new /obj/item/weapon/implant/chem( src )
 	..()
 	return
 
@@ -87,7 +112,7 @@ IMPLANTER
 	return
 
 /obj/item/weapon/implantpad/attackby(obj/item/weapon/implantcase/C as obj, mob/user as mob)
-
+	..()
 	if (istype(C, /obj/item/weapon/implantcase))
 		if (!( src.case ))
 			user.drop_item()
@@ -135,9 +160,8 @@ ID (1-100):
 <A href='byond://?src=\ref[src];id=-1'>-</A> [T.id]
 <A href='byond://?src=\ref[src];id=1'>+</A>
 <A href='byond://?src=\ref[src];id=10'>+</A><BR>"}
-			else
-				if (istype(src.case.imp, /obj/item/weapon/implant/freedom))
-					dat += {"
+			else if (istype(src.case.imp, /obj/item/weapon/implant/freedom))
+				dat += {"
 <b>Implant Specifications:</b><BR>
 <b>Name:</b> Freedom Beacon<BR>
 <b>Zone:</b> Right Hand> Near wrist<BR>
@@ -154,8 +178,41 @@ mechanisms<BR>
 <b>Integrity:</b> The battery is extremely weak and commonly after injection its
 life can drive down to only 1 use.<HR>
 No Implant Specifics"}
-				else
-					dat += "Implant ID not in database"
+			else if (istype(src.case.imp, /obj/item/weapon/implant/explosive))
+				dat += {"
+<b>Implant Specifications:</b><BR>
+<b>Name:</b> Robust Corp RX-78 Prisoner Management Implant<BR>
+<b>Zone:</b> Spinal Column>Atlantis Vertebrae<BR>
+<b>Power Source:</b> Nervous System Ion Withdrawl Gradient<BR>
+<b>Life:</b> Deactivates upon death but remains within the body.<BR>
+<b>Important Notes:</b><BR>
+<HR>
+<b>Implant Details:</b><BR>
+<b>Function:</b> Contains a compact, electrically detonated explosive that detonates upon receiving a specially encoded signal.<BR>
+<b>Special Features:</b><BR>
+<i>Direct-Interface</i>- You can use the prisoner management system to transmit short messages directly into the brain of the implanted subject.<BR>
+<i>Safe-break</i>- Can be safely deactivated remotely.<BR>
+<b>Integrity:</b> Implant will occasionally be degraded by the body's immune system and thus will occasionally malfunction."}
+			else if (istype(src.case.imp, /obj/item/weapon/implant/chem))
+				dat += {"
+<b>Implant Specifications:</b><BR>
+<b>Name:</b> Robust Corp MJ-420 Prisoner Management Implant<BR>
+<b>Zone:</b> Abdominal Cavity>Abdominal Aorta<BR>
+<b>Power Source:</b> Techno-organtic Metabolization System<BR>
+<b>Life:</b> Deactivates upon death but remains within the body.<BR>
+<b>Important Notes: Due to the system functioning off of nutrients in the implanted subject's body, the subject<BR>
+will suffer from an increased appetite.</B><BR>
+<HR>
+<b>Implant Details:</b><BR>
+<b>Function:</b> Contains a small capsule that can contain various chemicals. Upon receiving a specially encoded signal<BR>
+the implant releases the chemicals directly into the blood stream.<BR>
+<b>Special Features:</b><BR>
+<i>Micro-Capsule</i>- Can be loaded with any sort of chemical agent via the common syringe and can hold 25 units.<BR>
+Can only be loaded while still in it's original case.<BR>
+<b>Integrity:</b> Implant will last so long as the subject is alive. However, if the subject suffers from malnutrition,<BR>
+the implant may become unstable and either pre-maturely inject the subject or simply break."}
+			else
+				dat += "Implant ID not in database"
 		else
 			dat += "The implant casing is empty."
 	else
@@ -194,39 +251,14 @@ No Implant Specifics"}
 		return
 	return
 
-/obj/item/weapon/implant/catchMessage(msg,mob/source)
-	hear(msg,source)
-	return
-
-/obj/item/weapon/implant/proc/hear(message, source as mob)
-	return
-
 /obj/item/weapon/implant/proc/trigger(emote, source as mob)
 	return
 
 /obj/item/weapon/implant/proc/implanted(source as mob)
 	return
 
-
-/obj/item/weapon/implantcase/death_alarm/New()
-	src.imp = new /obj/item/weapon/implant/death_alarm( src )
-	..()
-	return
-
-
-/obj/item/weapon/implant/death_alarm/process()
-	var/mob/M = src.loc
-	if(M.stat == 2)
-		var/turf/t = get_turf(M)
-		radioalert("[M.name]'s death alarm", "[M.name] has died in [t.loc.name]!")
-		processing_items.Remove(src)
-
-
-/obj/item/weapon/implant/death_alarm/implanted(mob/source as mob)
-	processing_items.Add(src)
-
-
 /obj/item/weapon/implant/freedom/New()
+	src.activation_emote = pick("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
 	src.uses = rand(1, 5)
 	..()
 	return
@@ -250,214 +282,29 @@ No Implant Specifics"}
 				if (W)
 					W.layer = initial(W.layer)
 
-
-/obj/item/weapon/implant/compressed/trigger(emote, mob/source as mob)
-	if (src.scanned == null)
-		return 0
-
-	if (emote == src.activation_emote)
-		source << "The air glows as \the [src.scanned.name] uncompresses."
-		var/turf/t = get_turf(source)
-		src.scanned.loc = t
-		del src
-
-
 /obj/item/weapon/implant/freedom/implanted(mob/source as mob)
-	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
 	source.mind.store_memory("Freedom implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
 	source << "The implanted freedom implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
 
-/obj/item/weapon/implant/compressed/implanted(mob/source as mob)
-	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
-	source.mind.store_memory("Compressed matter implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
-	source << "The implanted compressed matter implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
-
-/obj/item/weapon/implant/timplant/implanted(mob/source as mob)
-	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
-	source.mind.store_memory("Teleport implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
-	source << "The implanted Teleport implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
-
-/obj/item/weapon/implant/explosive/implanted(mob/source as mob)
-	src.phrase = input("Choose activation phrase:") as text
-	usr.mind.store_memory("Explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
-	usr << "The implanted explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
-
-
-/obj/item/weapon/implant/slave/implanted(mob/target as mob)
-	target.mholder=src
-
-/obj/item/weapon/implant/master/implanted(mob/target as mob)
-	target.mholder=src
-	src.phrase = input("Choose activation phrase:") as text
-	usr.mind.store_memory("Explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
-	usr << "The implanted explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
-
-
-
-/obj/item/weapon/implant/vfac/implanted(mob/source as mob)
-	src.phrase = input("Choose activation phrase:") as text
-
-
-	//	else if("GBS")
-	//		src.virus =/datum/disease/gbs
-
-	usr.mind.store_memory("Viral factory implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
-	usr << "The implanted viral factory implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
-
-
-
-/obj/item/weapon/implant/explosive/hear(var/msg)
-	if(findtext(msg,src.phrase))
-		if(istype(loc, /mob/))
-			var/mob/T = loc
-			T.gib()
-		explosion(find_loc(src), 1, 3, 4, 6, 3)
-		var/turf/t = find_loc(src)
-		if(t)
-			t.hotspot_expose(SPARK_TEMP,125)
-		del(src)
-
-/obj/item/weapon/implant/timplant/trigger(emote, mob/source as mob)
-	if (emote == src.activation_emote)
-		var/list/L = list()
-		var/list/areaindex = list()
-		if (!locate(/obj/item/device/radio/beacon/traitor) in world)
-			source << "Unable to locate suitable beacon."
-			return 0
-		for(var/obj/item/device/radio/beacon/traitor/R in world)
-			var/turf/T = find_loc(R)
-			if (!T)	continue
-			var/tmpname = T.loc.name
-			if(areaindex[tmpname])
-				tmpname = "[tmpname] ([++areaindex[tmpname]])"
-			else
-				areaindex[tmpname] = 1
-			L[tmpname] = R
-		var/desc = input("Please select a location to lock in.", "Locking Computer") in L
-		source.loc = find_loc(L[desc])
-		source << "You have used your teleport, and the circuits have burnt out."
-		source.contents.Remove(src)
-
-
-/obj/item/weapon/implant/alien/implanted(mob/source as mob)
-	source.contract_disease(new/datum/disease/alien_embryo, 1)
-	del src
-
-/obj/item/weapon/implant/vfac/hear(var/msg)
-	if(findtext(msg,src.phrase))
-		var/mob/m = loc
-		infect_mob_random_greater(m)
-
-/obj/item/weapon/implant/slave/New()
-	src.d = new/mob/living/carbon/human/limited
-
-
-/obj/item/weapon/implant/master/hear(var/msg)
-	if(findtext(msg,src.phrase))
-		if(ismob(src.s.loc)&&!src.s.d.key)
-			src.s.d.key = src.s.loc:key
-			src.s.d.client.eye = src.s.loc
-			src.s.d.loc = src.s.loc
-			src.s.loc:key = src.loc:key
-			src.s.loc:verbs+=/mob/proc/endmindcontrol
-			src.s.loc<<"Use endmindcontrol to end."
-
-
 /obj/item/weapon/implanter/proc/update()
+
 	if (src.imp)
 		src.icon_state = "implanter1"
 	else
 		src.icon_state = "implanter0"
 	return
 
-/obj/item/weapon/implanter/compress/attack(mob/M as mob, mob/user as mob)
-	var/obj/item/weapon/implant/compressed/c = src.imp
-	if (c.scanned == null)
-		user << "Please scan an object with the implanter first."
+/obj/item/weapon/implanter/attack(mob/M as mob, mob/user as mob)
+	if (!istype(M, /mob/living/carbon))
 		return
-	..()
 
-/obj/item/weapon/implanter/compress/afterattack(atom/A, mob/user as mob)
-	if(istype(A,/obj/item))
-		var/obj/item/weapon/implant/compressed/c = src.imp
-		c.scanned = A
-		A.loc.contents.Remove(A)
-		src.update()
-
-
-/obj/item/weapon/implanter/attack(mob/target as mob, mob/user as mob)
-	if (!src.imp) return
-	if(ismob(target))
-		for(var/mob/O in viewers(world.view, user))
-			if (target != user)
-				O.show_message(text("\red <B>[] is trying to implant [] with [src.name]!</B>", user, target), 1)
-			else
-				O.show_message("\red <B>[user] is trying to inject themselves with [src.name]!</B>", 1)
-		if(!do_mob(user, target,60)) return
-		var/picked = 0
-	//	world << "start"
-		if(istype(target,/mob/living/carbon))
-			var/mob/living/carbon/T = target
-		//	world << T
-			var/list/datum/organ/external/E = T.GetOrgans()
-			while(picked == 0 && E.len > 0)
-				var/datum/organ/external/O = pick(E)
-			//	world << O
-			//	world << E.len
-
-				E -= O
-				if(!E.implant)
-				//	world << "NO IMPLANT"
-					O.implant = src.imp
-					picked = 1
-		if(picked == 0)
-			for(var/mob/O in viewers(world.view, user))
-				O.show_message(text("[user.name] can't find anywhere to implant [target.name]"), 1)
-			return
-
-		for(var/mob/O in viewers(world.view, user))
-			if (target != user)
-				O.show_message(text("\red [] implants [] with [src.name]!", user, target), 1)
-			else
-				O.show_message("\red [user] implants themself with [src.name]!", 1)
-		src.imp.loc = target
+	if (user && src.imp)
+		for (var/mob/O in viewers(M, null))
+			O.show_message("\red [M] has been implanted by [user].", 1)
+		src.imp.loc = M
+		src.imp.imp_in = M
 		src.imp.implanted = 1
-		src.imp.implanted(target)
+		src.imp.implanted(M)
 		src.imp = null
+		user.show_message("\red You implanted the implant into [M].")
 		src.icon_state = "implanter0"
-
-
-
-
-
-
-/obj/item/weapon/implant/slave/proc/death()
-	if(src.m && src.d.key)
-		if(rand(5))
-			src.m.loc:key = src.loc:key
-			src.loc:key = src.d.key
-		else
-			src.m.loc:key = src.d.key
-			src.loc << "/red The implant malfunctions."
-
-/obj/item/weapon/implant/master/proc/death()
-	if(src.s && src.s.d.key)
-		if(rand(5))
-			src.loc:key = src.s.loc:key
-			src.s.loc:key = src.s.d:key
-		else
-			var/k = src.s.loc:key
-			src.s.loc:key = src.s.d.key
-			src.s.d.key = k
-			src.s.d << "/red The implant malfunctions."
-			src.s.d.client.eye = src.s.loc
-
-mob/proc/endmindcontrol()
-	usr.verbs-=/mob/proc/endmindcontrol
-	usr.contents.Remove(usr.mholder:d)
-	usr.mholder:m:loc:key = usr.key
-	usr.key = usr.mholder:d:key
-	usr.mholder:d:key = ""
-
-
-

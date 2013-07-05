@@ -2,7 +2,7 @@
   HOW IT WORKS
 
   The radio_controller is a global object maintaining all radio transmissions, think about it as about "ether".
-  Note that walkie-talkie, intercoms and headsets handle transmission using nonstandard way.
+  Note that /obj/item/device/radio handles transmission using nonstandard way.
   procs:
 
     add_object(obj/device as obj, var/new_frequency as num, var/filter as text|null = null)
@@ -63,7 +63,7 @@
 
 /*
 Frequency range: 1200 to 1600
-Radiochat range: 1441 to 1489 (most devices refuse to be tune to other frequency, even during mapmaking)
+Radiochat range: 1441 to 1489
 
 Radio:
 1459 - standard radio chat
@@ -177,7 +177,7 @@ datum/radio_frequency
 				if(!start_point)
 					del(signal)
 					return 0
-			if (filter) // here goes some copypasta. It is for optimisation. -rastaf0
+			if (filter) //here goes some copypasta. It is for optimisation. -rastaf0
 				for(var/obj/device in devices[filter])
 					if(device == source)
 						continue

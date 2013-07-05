@@ -20,40 +20,20 @@ macro "macro"
 		command = ".northwest"
 		is-disabled = false
 	elem 
-		name = "CTRL+WEST"
-		command = "turnwest"
-		is-disabled = false
-	elem 
 		name = "WEST+REP"
 		command = ".west"
-		is-disabled = false
-	elem 
-		name = "CTRL+NORTH"
-		command = "turnnorth"
 		is-disabled = false
 	elem 
 		name = "NORTH+REP"
 		command = ".north"
 		is-disabled = false
 	elem 
-		name = "CTRL+EAST"
-		command = "turneast"
-		is-disabled = false
-	elem 
 		name = "EAST+REP"
 		command = ".east"
 		is-disabled = false
 	elem 
-		name = "CTRL+SOUTH"
-		command = "turnsouth"
-		is-disabled = false
-	elem 
 		name = "SOUTH+REP"
 		command = ".south"
-		is-disabled = false
-	elem 
-		name = "ALT+S"
-		command = "sprint"
 		is-disabled = false
 	elem 
 		name = "F1"
@@ -64,24 +44,12 @@ macro "macro"
 		command = ".options"
 		is-disabled = false
 	elem 
-		name = "F2"
-		command = "ooc"
-		is-disabled = false
-	elem 
 		name = "F2+REP"
 		command = ".screenshot auto"
 		is-disabled = false
 	elem 
 		name = "SHIFT+F2+REP"
 		command = ".screenshot"
-		is-disabled = false
-	elem 
-		name = "F3"
-		command = "say"
-		is-disabled = false
-	elem 
-		name = "F5"
-		command = "asay"
 		is-disabled = false
 
 
@@ -165,7 +133,7 @@ menu "menu"
 		is-checked = false
 		can-check = true
 		group = "size"
-		is-disabled = true
+		is-disabled = false
 		saved-params = "is-checked"
 	elem 
 		name = ""
@@ -204,434 +172,6 @@ menu "menu"
 		is-disabled = false
 		saved-params = "is-checked"
 
-
-window "bookwin"
-	elem "bookwin"
-		type = MAIN
-		pos = 281,0
-		size = 515x511
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = false
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "pos;size;is-minimized;is-maximized"
-		title = "Book"
-		titlebar = true
-		statusbar = true
-		can-close = true
-		can-minimize = true
-		can-resize = true
-		is-pane = false
-		is-minimized = false
-		is-maximized = false
-		can-scroll = none
-		icon = ""
-		image = ""
-		image-mode = stretch
-		keep-aspect = false
-		transparent-color = none
-		alpha = 255
-		macro = ""
-		menu = ""
-		on-close = ""
-	elem "bookbrow"
-		type = BROWSER
-		pos = 0,0
-		size = 515x504
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = ""
-		show-history = false
-		show-url = false
-		auto-format = true
-		use-title = false
-		on-show = ""
-		on-hide = ""
-
-window "coatinv"
-	elem "coatinv"
-		type = MAIN
-		pos = 281,0
-		size = 128x64
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = false
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "pos;size;is-minimized;is-maximized"
-		title = ""
-		titlebar = false
-		statusbar = false
-		can-close = false
-		can-minimize = false
-		can-resize = false
-		is-pane = false
-		is-minimized = false
-		is-maximized = false
-		can-scroll = none
-		icon = ""
-		image = ""
-		image-mode = stretch
-		keep-aspect = false
-		transparent-color = none
-		alpha = 255
-		macro = ""
-		menu = ""
-		on-close = ""
-	elem "grid1"
-		type = GRID
-		pos = 0,0
-		size = 128x64
-		anchor1 = 0,0
-		anchor2 = 100,100
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = #ffffff
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = true
-		right-click = false
-		saved-params = ""
-		cells = 1x2
-		current-cell = 1,1
-		show-lines = none
-		small-icons = false
-		show-names = false
-		enable-http-images = false
-		link-color = #0000ff
-		visited-color = #ff00ff
-		line-color = #c0c0c0
-		style = ""
-		is-list = true
-
-window "console"
-	elem "console"
-		type = MAIN
-		pos = 281,0
-		size = 640x480
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = #000000
-		is-visible = false
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "pos;size;is-minimized;is-maximized"
-		title = ""
-		titlebar = true
-		statusbar = false
-		can-close = true
-		can-minimize = true
-		can-resize = true
-		is-pane = false
-		is-minimized = false
-		is-maximized = false
-		can-scroll = none
-		icon = ""
-		image = ""
-		image-mode = stretch
-		keep-aspect = false
-		transparent-color = none
-		alpha = 255
-		macro = ""
-		menu = ""
-		on-close = "closeconsoleV"
-	elem "console_input"
-		type = INPUT
-		pos = 0,464
-		size = 640x16
-		anchor1 = 0,93
-		anchor2 = 100,100
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #ffffff
-		background-color = #0a0a0a
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = ""
-		command = "cmd"
-		multi-line = false
-		is-password = false
-		no-command = false
-	elem "console_output"
-		type = OUTPUT
-		pos = 0,0
-		size = 640x448
-		anchor1 = 0,0
-		anchor2 = 100,93
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #ffffff
-		background-color = #000000
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "max-lines"
-		link-color = #0000ff
-		visited-color = #ff00ff
-		style = ""
-		enable-http-images = false
-		max-lines = 1000
-		image = ""
-
-window "craft"
-	elem "craft"
-		type = MAIN
-		pos = 281,0
-		size = 640x480
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = false
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "pos;size;is-minimized;is-maximized"
-		title = ""
-		titlebar = true
-		statusbar = true
-		can-close = true
-		can-minimize = true
-		can-resize = true
-		is-pane = false
-		is-minimized = false
-		is-maximized = false
-		can-scroll = none
-		icon = ""
-		image = ""
-		image-mode = stretch
-		keep-aspect = false
-		transparent-color = none
-		alpha = 255
-		macro = ""
-		menu = ""
-		on-close = ""
-	elem "craftgird"
-		type = GRID
-		pos = 0,0
-		size = 640x480
-		anchor1 = 0,0
-		anchor2 = 100,100
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = #ffffff
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = true
-		right-click = false
-		saved-params = ""
-		cells = 3x3
-		current-cell = 1,1
-		show-lines = both
-		small-icons = false
-		show-names = false
-		enable-http-images = false
-		link-color = #0000ff
-		visited-color = #ff00ff
-		line-color = #c0c0c0
-		style = ""
-		is-list = false
-
-window "derpadmin"
-	elem "derpadmin"
-		type = MAIN
-		pos = 632,239
-		size = 640x480
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = false
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "pos;size;is-minimized;is-maximized"
-		title = ""
-		titlebar = true
-		statusbar = true
-		can-close = true
-		can-minimize = true
-		can-resize = true
-		is-pane = false
-		is-minimized = false
-		is-maximized = false
-		can-scroll = none
-		icon = ""
-		image = ""
-		image-mode = stretch
-		keep-aspect = false
-		transparent-color = none
-		alpha = 255
-		macro = ""
-		menu = ""
-		on-close = ""
-	elem "info1"
-		type = INFO
-		pos = 440,0
-		size = 200x200
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = #ffffff
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = true
-		right-click = false
-		saved-params = ""
-		highlight-color = #00ff00
-		tab-text-color = #000000
-		tab-background-color = none
-		tab-font-family = ""
-		tab-font-size = 0
-		tab-font-style = ""
-		allow-html = true
-		multi-line = true
-		on-show = ""
-		on-hide = ""
-		on-tab = ""
-	elem "adminoutput"
-		type = OUTPUT
-		pos = 0,0
-		size = 640x480
-		anchor1 = 0,0
-		anchor2 = 100,100
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = #ffffff
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "max-lines"
-		link-color = #0000ff
-		visited-color = #ff00ff
-		style = ""
-		enable-http-images = false
-		max-lines = 1000
-		image = ""
-
-window "hidden"
-	elem "hidden"
-		type = MAIN
-		pos = 281,0
-		size = 116x0
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = false
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "pos;size;is-minimized;is-maximized"
-		title = ""
-		titlebar = true
-		statusbar = true
-		can-close = true
-		can-minimize = true
-		can-resize = true
-		is-pane = false
-		is-minimized = false
-		is-maximized = false
-		can-scroll = none
-		icon = ""
-		image = ""
-		image-mode = stretch
-		keep-aspect = false
-		transparent-color = none
-		alpha = 255
-		macro = ""
-		menu = ""
-		on-close = ""
 
 window "mainwindow"
 	elem "mainwindow"
@@ -672,33 +212,6 @@ window "mainwindow"
 		macro = "macro"
 		menu = "menu"
 		on-close = ""
-	elem "oocbutton"
-		type = BUTTON
-		pos = 600,420
-		size = 40x20
-		anchor1 = 100,100
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "is-checked"
-		text = "OOC"
-		image = ""
-		command = ".winset \"oocbutton.is-checked=true?input.command=\"!ooc \\\"\" macrobutton.is-checked=false:input.command=\""
-		is-flat = false
-		stretch = false
-		is-checked = false
-		group = ""
-		button-type = pushbox
 	elem "mainvsplit"
 		type = CHILD
 		pos = 3,0
@@ -727,7 +240,7 @@ window "mainwindow"
 	elem "input"
 		type = INPUT
 		pos = 3,420
-		size = 557x20
+		size = 517x20
 		anchor1 = 0,100
 		anchor2 = 100,100
 		font-family = ""
@@ -749,7 +262,7 @@ window "mainwindow"
 		no-command = false
 	elem "saybutton"
 		type = BUTTON
-		pos = 560,420
+		pos = 520,420
 		size = 40x20
 		anchor1 = 100,100
 		anchor2 = none
@@ -774,11 +287,65 @@ window "mainwindow"
 		is-checked = false
 		group = ""
 		button-type = pushbox
+	elem "macrobutton"
+		type = BUTTON
+		pos = 560,420
+		size = 30x20
+		anchor1 = 100,100
+		anchor2 = none
+		font-family = ""
+		font-size = 0
+		font-style = ""
+		text-color = #000000
+		background-color = none
+		is-visible = true
+		is-disabled = true
+		is-transparent = false
+		is-default = false
+		border = none
+		drop-zone = false
+		right-click = false
+		saved-params = "is-checked"
+		text = "Alt"
+		image = ""
+		command = ".winset \"macrobutton.is-checked=true?input.command=\"!.alt \" saybutton.is-checked=false:input.command=\""
+		is-flat = false
+		stretch = false
+		is-checked = false
+		group = ""
+		button-type = pushbox
+	elem "hostb"
+		type = BUTTON
+		pos = 590,420
+		size = 47x20
+		anchor1 = 100,100
+		anchor2 = none
+		font-family = ""
+		font-size = 0
+		font-style = ""
+		text-color = #000000
+		background-color = none
+		is-visible = true
+		is-disabled = true
+		is-transparent = false
+		is-default = false
+		border = none
+		drop-zone = false
+		right-click = false
+		saved-params = "is-checked"
+		text = "Host..."
+		image = ""
+		command = ".host"
+		is-flat = false
+		stretch = false
+		is-checked = false
+		group = ""
+		button-type = pushbutton
 
 window "mapwindow"
 	elem "mapwindow"
 		type = MAIN
-		pos = 281,0
+		pos = none
 		size = 640x480
 		anchor1 = none
 		anchor2 = none
@@ -817,7 +384,7 @@ window "mapwindow"
 	elem "map"
 		type = MAP
 		pos = 0,0
-		size = 640x480
+		size = 0x0
 		anchor1 = 0,0
 		anchor2 = 100,100
 		font-family = ""
@@ -841,7 +408,7 @@ window "mapwindow"
 window "outputwindow"
 	elem "outputwindow"
 		type = MAIN
-		pos = 281,0
+		pos = none
 		size = 640x480
 		anchor1 = none
 		anchor2 = none
@@ -880,7 +447,7 @@ window "outputwindow"
 	elem "output"
 		type = OUTPUT
 		pos = 0,0
-		size = 640x480
+		size = 0x0
 		anchor1 = 0,0
 		anchor2 = 100,100
 		font-family = ""
@@ -903,75 +470,10 @@ window "outputwindow"
 		max-lines = 1000
 		image = ""
 
-window "pda1"
-	elem "pda1"
-		type = MAIN
-		pos = 281,0
-		size = 408x364
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = false
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "pos;size;is-minimized;is-maximized"
-		title = ""
-		titlebar = true
-		statusbar = true
-		can-close = true
-		can-minimize = true
-		can-resize = true
-		is-pane = false
-		is-minimized = false
-		is-maximized = false
-		can-scroll = none
-		icon = ""
-		image = ""
-		image-mode = stretch
-		keep-aspect = false
-		transparent-color = none
-		alpha = 255
-		macro = ""
-		menu = ""
-		on-close = ""
-	elem "pda_1"
-		type = BROWSER
-		pos = 0,0
-		size = 408x383
-		anchor1 = 0,0
-		anchor2 = 100,100
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = ""
-		show-history = false
-		show-url = false
-		auto-format = true
-		use-title = false
-		on-show = ""
-		on-hide = ""
-
 window "rpane"
 	elem "rpane"
 		type = MAIN
-		pos = 281,0
+		pos = none
 		size = 640x480
 		anchor1 = none
 		anchor2 = none
@@ -1010,7 +512,7 @@ window "rpane"
 	elem "rpanewindow"
 		type = CHILD
 		pos = 0,0
-		size = 640x499
+		size = 0x0
 		anchor1 = 0,0
 		anchor2 = 100,100
 		font-family = ""
@@ -1041,7 +543,7 @@ window "rpane"
 		font-family = ""
 		font-size = 0
 		font-style = ""
-		text-color = #000000
+		text-color = none
 		background-color = none
 		is-visible = false
 		is-disabled = false
@@ -1068,7 +570,7 @@ window "rpane"
 		font-family = ""
 		font-size = 0
 		font-style = ""
-		text-color = #000000
+		text-color = none
 		background-color = none
 		is-visible = false
 		is-disabled = false
@@ -1095,7 +597,7 @@ window "rpane"
 		font-family = ""
 		font-size = 0
 		font-style = ""
-		text-color = #000000
+		text-color = none
 		background-color = none
 		is-visible = false
 		is-disabled = false
@@ -1117,7 +619,7 @@ window "rpane"
 window "browserwindow"
 	elem "browserwindow"
 		type = MAIN
-		pos = 281,0
+		pos = none
 		size = 640x480
 		anchor1 = none
 		anchor2 = none
@@ -1156,7 +658,7 @@ window "browserwindow"
 	elem "browser"
 		type = BROWSER
 		pos = 0,0
-		size = 640x499
+		size = 0x0
 		anchor1 = 0,0
 		anchor2 = 100,100
 		font-family = ""
@@ -1248,69 +750,4 @@ window "infowindow"
 		on-show = ".winset\"rpane.infob.is-visible=true;rpane.browseb.is-visible=true?rpane.infob.pos=130,0:rpane.infob.pos=65,0 rpane.textb.is-visible=true rpane.infob.is-checked=true rpane.rpanewindow.pos=0,30 rpane.rpanewindow.size=0x0 rpane.rpanewindow.left=infowindow\""
 		on-hide = ".winset\"rpane.infob.is-visible=false;rpane.browseb.is-visible=true?rpane.browseb.is-checked=true rpane.rpanewindow.left=browserwindow:rpane.textb.is-visible=false rpane.rpanewindow.pos=0,0 rpane.rpanewindow.size=0x0 rpane.rpanewindow.left=\""
 		on-tab = ""
-
-window "travel"
-	elem "travel"
-		type = MAIN
-		pos = 281,0
-		size = 400x500
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = false
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = "pos;size;is-minimized;is-maximized"
-		title = "Helm"
-		titlebar = true
-		statusbar = false
-		can-close = true
-		can-minimize = true
-		can-resize = true
-		is-pane = false
-		is-minimized = false
-		is-maximized = false
-		can-scroll = none
-		icon = ""
-		image = ""
-		image-mode = stretch
-		keep-aspect = false
-		transparent-color = none
-		alpha = 255
-		macro = ""
-		menu = ""
-		on-close = ""
-	elem "browser1"
-		type = BROWSER
-		pos = 0,0
-		size = 400x500
-		anchor1 = none
-		anchor2 = none
-		font-family = ""
-		font-size = 0
-		font-style = ""
-		text-color = #000000
-		background-color = none
-		is-visible = true
-		is-disabled = false
-		is-transparent = false
-		is-default = false
-		border = none
-		drop-zone = false
-		right-click = false
-		saved-params = ""
-		show-history = false
-		show-url = false
-		auto-format = true
-		use-title = false
-		on-show = ""
-		on-hide = ""
 

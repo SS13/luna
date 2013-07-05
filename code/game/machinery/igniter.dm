@@ -20,7 +20,7 @@
 	if (src.on && !(stat & NOPOWER) )
 		var/turf/location = src.loc
 		if (isturf(location))
-			location.hotspot_expose(6000,500,1)
+			location.hotspot_expose(1000,500,1)
 	return 1
 
 /obj/machinery/igniter/New()
@@ -36,7 +36,7 @@
 // Wall mounted remote-control igniter.
 
 /obj/machinery/sparker
-	name = "Wall-mounted Igniter"
+	name = "Mounted igniter"
 	desc = "A wall-mounted ignition device."
 	icon = 'stationobjs.dmi'
 	icon_state = "migniter"
@@ -53,11 +53,11 @@
 	if ( powered() && disable == 0 )
 		stat &= ~NOPOWER
 		icon_state = "[base_state]"
-		src.ul_SetLuminosity(2)
+		src.sd_SetLuminosity(2)
 	else
 		stat |= ~NOPOWER
 		icon_state = "[base_state]-p"
-		src.ul_SetLuminosity(0)
+		src.sd_SetLuminosity(0)
 
 /obj/machinery/sparker/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/screwdriver))
@@ -88,14 +88,14 @@
 
 
 	flick("[base_state]-spark", src)
-	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 	s.set_up(2, 1, src)
 	s.start()
 	src.last_spark = world.time
 	use_power(1000)
 	var/turf/location = src.loc
 	if (isturf(location))
-		location.hotspot_expose(6000,500,1)
+		location.hotspot_expose(1000,500,1)
 	return 1
 
 

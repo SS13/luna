@@ -6,7 +6,7 @@
 	density = 1
 
 	var/on = 0
-	var/volume_rate = 1800
+	var/volume_rate = 800
 
 	volume = 750
 
@@ -23,15 +23,13 @@
 /obj/machinery/portable_atmospherics/scrubber/process()
 	..()
 
-	var/datum/gas_mixture/environment
-	if(holding)
-		environment = holding.air_contents
-	else
-		environment = loc.return_air()
-
-
 	if(on)
-		var/transfer_moles = min(1, volume_rate/environment.volume*5)*environment.total_moles()
+		var/datum/gas_mixture/environment
+		if(holding)
+			environment = holding.air_contents
+		else
+			environment = loc.return_air()
+		var/transfer_moles = min(1, volume_rate/environment.volume)*environment.total_moles()
 
 		//Take a gas sample
 		var/datum/gas_mixture/removed
@@ -41,35 +39,33 @@
 			removed = loc.remove_air(transfer_moles)
 
 		//Filter it
-		var/datum/gas_mixture/filtered_out = new
-		filtered_out.temperature = removed.temperature
+		if (removed)
+			var/datum/gas_mixture/filtered_out = new
+
+			filtered_out.temperature = removed.temperature
 
 
-		filtered_out.toxins = removed.toxins
-		removed.toxins = 0
+			filtered_out.toxins = removed.toxins
+			removed.toxins = 0
 
-		filtered_out.carbon_dioxide = removed.carbon_dioxide
-		removed.carbon_dioxide = 0
+			filtered_out.carbon_dioxide = removed.carbon_dioxide
+			removed.carbon_dioxide = 0
 
-		if(removed.trace_gases.len>0)
-			for(var/datum/gas/trace_gas in removed.trace_gases)
-				if(istype(trace_gas, /datum/gas/oxygen_agent_b))
-					removed.trace_gases -= trace_gas
-					filtered_out.trace_gases += trace_gas
-				if(istype(trace_gas, /datum/gas/sleeping_agent))
-					removed.trace_gases -= trace_gas
-					filtered_out.trace_gases += trace_gas
+			if(removed.trace_gases.len>0)
+				for(var/datum/gas/trace_gas in removed.trace_gases)
+					if(istype(trace_gas, /datum/gas/oxygen_agent_b))
+						removed.trace_gases -= trace_gas
+						filtered_out.trace_gases += trace_gas
 
 		//Remix the resulting gases
-		air_contents.merge(filtered_out)
+			air_contents.merge(filtered_out)
 
-		if(holding)
-			environment.merge(removed)
-		else
-			loc.assume_air(removed)
-
+			if(holding)
+				environment.merge(removed)
+			else
+				loc.assume_air(removed)
+		//src.update_icon()
 	src.updateDialog()
-	src.update_icon()
 	return
 
 /obj/machinery/portable_atmospherics/scrubber/return_air()
@@ -96,7 +92,8 @@ Port Status: [(connected_port)?("Connected"):("Disconnected")]
 [holding_text]
 <BR>
 Power Switch: <A href='?src=\ref[src];power=1'>[on?("On"):("Off")]</A><BR>
-Target Pressure: <A href='?src=\ref[src];volume_adj=-10'>-</A> <A href='?src=\ref[src];volume_adj=-1'>-</A> [volume_rate] <A href='?src=\ref[src];volume_adj=1'>+</A> <A href='?src=\ref[src];pressure_adj=10'>+</A><BR>
+Power regulator: <A href='?src=\ref[src];volume_adj=-1000'>-</A> <A href='?src=\ref[src];volume_adj=-100'>-</A> <A href='?src=\ref[src];volume_adj=-10'>-</A> <A href='?src=\ref[src];volume_adj=-1'>-</A> [volume_rate] <A href='?src=\ref[src];volume_adj=1'>+</A> <A href='?src=\ref[src];volume_adj=10'>+</A> <A href='?src=\ref[src];volume_adj=100'>+</A> <A href='?src=\ref[src];volume_adj=1000'>+</A><BR>
+
 <HR>
 <A href='?src=\ref[user];mach_close=scrubber'>Close</A><BR>
 "}

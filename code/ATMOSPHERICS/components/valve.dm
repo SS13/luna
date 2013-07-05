@@ -12,6 +12,7 @@ obj/machinery/atmospherics/valve
 
 	var/obj/machinery/atmospherics/node1
 	var/obj/machinery/atmospherics/node2
+
 	var/datum/pipe_network/network_node1
 	var/datum/pipe_network/network_node2
 
@@ -22,12 +23,12 @@ obj/machinery/atmospherics/valve
 			icon_state = "valve[open]"
 
 	New()
-
 		switch(dir)
 			if(NORTH || SOUTH)
 				initialize_directions = NORTH|SOUTH
 			if(EAST || WEST)
 				initialize_directions = EAST|WEST
+		..()
 
 	network_expand(datum/pipe_network/new_network, obj/machinery/atmospherics/pipe/reference)
 
@@ -47,10 +48,12 @@ obj/machinery/atmospherics/valve
 		new_network.normal_members += src
 
 		if(open)
-			if(reference == node1 && node2)
-				return node2.network_expand(new_network, src)
-			else if(reference == node2 && node1)
-				return node1.network_expand(new_network, src)
+			if(reference == node1)
+				if(node2)
+					return node2.network_expand(new_network, src)
+			else if(reference == node2)
+				if(node1)
+					return node1.network_expand(new_network, src)
 
 		return null
 
@@ -104,32 +107,67 @@ obj/machinery/atmospherics/valve
 
 		return 1
 
+	proc/normalize_dir()
+		if(dir==3)
+			dir = 1
+		else if(dir==12)
+			dir = 4
+
+	attack_ai(mob/user as mob)
+		return
+
 	attack_paw(mob/user as mob)
 		return attack_hand(user)
 
 	attack_hand(mob/user as mob)
 		update_icon(1)
-		sleep(10 * tick_multiplier)
+		sleep(10)
 		if (src.open)
 			src.close()
 		else
 			src.open()
 
-	attack_ai(mob/user as mob)
-		return
-
 	process()
 		..()
 		if(open && (!node1 || !node2))
 			close()
+		if(!node1)
+			if(!nodealert)
+				//world << "Missing node from [src] at [src.x],[src.y],[src.z]"
+				nodealert = 1
+		else if (!node2)
+			if(!nodealert)
+				//world << "Missing node from [src] at [src.x],[src.y],[src.z]"
+				nodealert = 1
+		else if (nodealert)
+			nodealert = 0
+
 
 		return
 
 	initialize()
-		if(node1 && node2) return
+		normalize_dir()
 
+		var/node1_dir
+		var/node2_dir
+
+		for(var/direction in cardinal)
+			if(direction&initialize_directions)
+				if (!node1_dir)
+					node1_dir = direction
+				else if (!node2_dir)
+					node2_dir = direction
+
+		for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
+			if(target.initialize_directions & get_dir(target,src))
+				node1 = target
+				break
+		for(var/obj/machinery/atmospherics/target in get_step(src,node2_dir))
+			if(target.initialize_directions & get_dir(target,src))
+				node2 = target
+				break
+/*
 		var/connect_directions
-
 		switch(dir)
 			if(NORTH)
 				connect_directions = NORTH|SOUTH
@@ -147,20 +185,20 @@ obj/machinery/atmospherics/valve
 				for(var/obj/machinery/atmospherics/target in get_step(src,direction))
 					if(target.initialize_directions & get_dir(target,src))
 						connect_directions &= ~direction
-
 						node1 = target
 						break
-				break
+				if(node1)
+					break
 
 		for(var/direction in cardinal)
 			if(direction&connect_directions)
 				for(var/obj/machinery/atmospherics/target in get_step(src,direction))
 					if(target.initialize_directions & get_dir(target,src))
-
 						node2 = target
 						break
-				break
-
+				if(node1)
+					break
+*/
 	build_network()
 		if(!network_node1 && node1)
 			network_node1 = new /datum/pipe_network()
@@ -206,9 +244,6 @@ obj/machinery/atmospherics/valve
 
 		return null
 
-	examine()
-		usr << "[desc] It is [ open? "open" : "closed"]."
-
 	digital		// can be controlled by AI
 		name = "digital valve"
 		desc = "A digitally controlled valve."
@@ -217,6 +252,12 @@ obj/machinery/atmospherics/valve
 		attack_ai(mob/user as mob)
 			return src.attack_hand(user)
 
+		attack_hand(mob/user as mob)
+			if(!src.allowed(user))
+				user << "\red Access denied."
+				return
+			..()
+
 		//Radio remote control
 
 		proc
@@ -224,7 +265,7 @@ obj/machinery/atmospherics/valve
 				radio_controller.remove_object(src, frequency)
 				frequency = new_frequency
 				if(frequency)
-					radio_connection = radio_controller.add_object(src, frequency)
+					radio_connection = radio_controller.add_object(src, frequency, RADIO_ATMOSIA)
 
 		var/frequency = 0
 		var/id = null
@@ -236,7 +277,7 @@ obj/machinery/atmospherics/valve
 				set_frequency(frequency)
 
 		receive_signal(datum/signal/signal)
-			if(signal.data["tag"] && (signal.data["tag"] != id))
+			if(!signal.data["tag"] || (signal.data["tag"] != id))
 				return 0
 
 			switch(signal.data["command"])
@@ -253,3 +294,29 @@ obj/machinery/atmospherics/valve
 						close()
 					else
 						open()
+
+	attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
+		if (!istype(W, /obj/item/weapon/wrench))
+			return ..()
+		if (istype(src, /obj/machinery/atmospherics/valve/digital))
+			user << "\red You cannot unwrench this [src], it's too complicated."
+			return 1
+		var/turf/T = src.loc
+		if (level==1 && isturf(T) && T.intact)
+			user << "\red You must remove the plating first."
+			return 1
+		var/datum/gas_mixture/int_air = return_air()
+		var/datum/gas_mixture/env_air = loc.return_air()
+		if ((int_air.return_pressure()-env_air.return_pressure()) > 2*ONE_ATMOSPHERE)
+			user << "\red You cannot unwrench this [src], it too exerted due to internal pressure."
+			add_fingerprint(user)
+			return 1
+		playsound(src.loc, 'Ratchet.ogg', 50, 1)
+		user << "\blue You begin to unfasten \the [src]..."
+		if (do_after(user, 40))
+			user.visible_message( \
+				"[user] unfastens \the [src].", \
+				"\blue You have unfastened \the [src].", \
+				"You hear ratchet.")
+			new /obj/item/pipe(loc, make_from=src)
+			del(src)

@@ -2,8 +2,6 @@
 	set category = "Debug"
 	set name = "Edit Variables"
 	set desc="(target) Edit a target item's variables"
-	if(!O)
-		return
 	src.modify_variables(O)
 
 /client/proc/cmd_modify_ticker_variables()
@@ -95,7 +93,6 @@
 		if("No")
 			L += var_value
 
-
 /client/proc/mod_list(var/list/L)
 	if(!istype(L,/list)) src << "Not a List."
 
@@ -103,15 +100,10 @@
 
 	var/list/names = sortList(L)
 
-	var/variable = input("Which var?","Var") as null|anything in names + "(ADD VAR)" + "(REMOVE ALL)"
+	var/variable = input("Which var?","Var") as null|anything in names + "(ADD VAR)"
 
 	if(variable == "(ADD VAR)")
 		mod_list_add(L)
-		return
-
-	if(variable == "(REMOVE ALL)")
-		for(var/i in L)
-			L -= i
 		return
 
 	if(!variable)
@@ -121,7 +113,7 @@
 
 	var/dir
 
-	if (locked.Find(variable) && !(src.holder.rank in list("Host", "Coder")))
+	if (locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
 		return
 
 	if(isnull(variable))
@@ -237,8 +229,8 @@
 
 
 /client/proc/modify_variables(var/atom/O)
-	//var/list/locked = list("vars", "key", "ckey", "client", "firemut", "ishulk", "telekinesis", "xray", "virus", "cuffed", "ka", "last_eaten", "urine", "poo", "icon", "icon_state")
-	var/list/locked = list()
+	var/list/locked = list("vars", "key", "ckey", "client", "firemut", "ishulk", "telekinesis", "xray", "virus", "cuffed", "ka", "last_eaten", "urine", "poo", "icon", "icon_state")
+
 	if(!src.holder)
 		src << "Only administrators may use this command."
 		return
@@ -256,7 +248,7 @@
 	var/var_value = O.vars[variable]
 	var/dir
 
-	if (locked.Find(variable) && !(src.holder.rank in list("Host", "Coder")))
+	if (locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
 		return
 
 	if(isnull(var_value))
@@ -333,53 +325,51 @@
 	else
 		original_name = O:name
 
-	if (O)
-		switch(class)
+	switch(class)
 
-			if("list")
-				mod_list(O.vars[variable])
-				return
+		if("list")
+			mod_list(O.vars[variable])
+			return
 
-			if("restore to default")
-				O.vars[variable] = initial(O.vars[variable])
+		if("restore to default")
+			O.vars[variable] = initial(O.vars[variable])
 
-			if("edit referenced object")
-				return .(O.vars[variable])
+		if("edit referenced object")
+			return .(O.vars[variable])
 
-			if("text")
-				O.vars[variable] = input("Enter new text:","Text",\
-					O.vars[variable]) as text
+		if("text")
+			O.vars[variable] = input("Enter new text:","Text",\
+				O.vars[variable]) as text
 
-			if("num")
+		if("num")
+			if(variable=="luminosity")
+				var/new_value = input("Enter new number:","Num",\
+					O.vars[variable]) as num
+				O.sd_SetLuminosity(new_value)
+			else
 				O.vars[variable] = input("Enter new number:","Num",\
 					O.vars[variable]) as num
 
-			if("type")
-				O.vars[variable] = input("Enter type:","Type",O.vars[variable]) \
-					in typesof(/obj,/mob,/area,/turf)
+		if("type")
+			O.vars[variable] = input("Enter type:","Type",O.vars[variable]) \
+				in typesof(/obj,/mob,/area,/turf)
 
-			if("reference")
-				O.vars[variable] = input("Select reference:","Reference",\
-					O.vars[variable]) as mob|obj|turf|area in world
+		if("reference")
+			O.vars[variable] = input("Select reference:","Reference",\
+				O.vars[variable]) as mob|obj|turf|area in world
 
-			if("mob reference")
-				O.vars[variable] = input("Select reference:","Reference",\
-					O.vars[variable]) as mob in world
+		if("mob reference")
+			O.vars[variable] = input("Select reference:","Reference",\
+				O.vars[variable]) as mob in world
 
-			if("file")
-				var/temp = input("Pick file:","File",O.vars[variable]) \
-					as file | null
-				if(temp == null)
-					return
-				O.vars[variable] = temp
+		if("file")
+			O.vars[variable] = input("Pick file:","File",O.vars[variable]) \
+				as file
 
-			if("icon")
-				var/temp = input("Pick icon:","Icon",O.vars[variable]) \
-					as icon | null
-				if(temp == null)
-					return
-				O.vars[variable] = temp
+		if("icon")
+			O.vars[variable] = input("Pick icon:","Icon",O.vars[variable]) \
+				as icon
 
-		log_admin("[key_name(src)] modified [original_name]'s [variable] to [O.vars[variable]]")
-		message_admins("[key_name_admin(src)] modified [original_name]'s [variable] to [O.vars[variable]]", 1)
+	log_admin("[key_name(src)] modified [original_name]'s [variable] to [O.vars[variable]]")
+	message_admins("[key_name_admin(src)] modified [original_name]'s [variable] to [O.vars[variable]]", 1)
 

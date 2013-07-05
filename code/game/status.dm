@@ -6,15 +6,11 @@
 
 	s += "<b>[station_name()]</b>";
 	s += " ("
-	s += "<a href=\"http://whoopshop.com/\">"
-	s += "Forum"
-	s += "</a> "
-	s += "<a href=\"http://wiki.baystation12.co.cc/\">"
-	s += "Wiki"
+	s += "<a href=\"http://\">" //Change this to wherever you want the hub to link to.
+//	s += "[game_version]"
+	s += "Default"  //Replace this with something else. Or ever better, delete it and uncomment the game version.
 	s += "</a>"
 	s += ")"
-
-
 
 	var/list/features = list()
 
@@ -37,8 +33,9 @@
 		features += "AI allowed"
 
 	var/n = 0
-	for (var/client/C)
-		n++
+	for (var/mob/M in world)
+		if (M.client)
+			n++
 
 	if (n > 1)
 		features += "~[n] players"

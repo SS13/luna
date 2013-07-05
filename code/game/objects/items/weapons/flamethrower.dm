@@ -6,8 +6,8 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 */
 /obj/item/weapon/flamethrower
 	name = "flamethrower"
-	icon_state = "flamethrower0"
-	item_state = "flamethrower0"
+	icon_state = "flamethrower"
+	item_state = "flamethrower_0"
 	desc = "You are a firestarter!"
 	flags = FPRINT | TABLEPASS| CONDUCT
 	force = 3.0
@@ -25,6 +25,8 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 	var/obj/item/device/igniter/part3 = null
 	var/obj/item/weapon/tank/plasma/part4 = null
 	m_amt = 500
+	origin_tech = "combat=1; plasmatech=1"
+
 
 // PantsNote: Dumping this shit in here until I'm sure it works.
 
@@ -61,6 +63,7 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 	return
 
 /obj/item/assembly/weld_rod/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if (istype(W, /obj/item/weapon/wrench) )
 		var/turf/T = src.loc
 		if (ismob(T))
@@ -114,6 +117,7 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 	return
 
 /obj/item/assembly/w_r_ignite/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
@@ -137,7 +141,7 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 			src.icon_state = "flamethrower"
 		else
 			user.show_message("\blue The igniter is now unsecured!", 1)
-			src.icon_state = "welder_rods_igniter"
+			src.icon_state = "flamethrower"
 		src.add_fingerprint(user)
 		return
 
@@ -153,9 +157,10 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 			location = M.loc
 
 	if(isturf(location)) //start a fire if possible
-		location.hotspot_expose(SPARK_TEMP, 2)
+		location.hotspot_expose(700, 2)
 
-/obj/item/weapon/flamethrower/attackby(obj/item/weapon/tank/plasma/W as obj, mob/user as mob)
+/obj/item/weapon/flamethrower/attackby(obj/item/W as obj, mob/user as mob)
+	..()
 	if(user.stat || user.restrained() || user.lying)
 		return
 	if (istype(W,/obj/item/weapon/tank/plasma))
@@ -171,7 +176,7 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 		force = 3
 		damtype = "brute"
 		icon_state = "flamethrower0"
-		item_state = "flamethrower0"
+		item_state = "flamethrower_0"
 	else if (istype(W, /obj/item/device/analyzer) && get_dist(user, src) <= 1 && src.part4)
 		var/obj/item/weapon/icon = src
 
@@ -259,13 +264,13 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 		lit = !(lit)
 		if(lit)
 			icon_state = "flamethrower1"
-			item_state = "flamethrower1"
+			item_state = "flamethrower_1"
 			force = 17
 			damtype = "fire"
 			processing_items.Add(src)
 		else
 			icon_state = "flamethrower0"
-			item_state = "flamethrower0"
+			item_state = "flamethrower_0"
 			force = 3
 			damtype = "brute"
 	if (href_list["amount"])
@@ -281,7 +286,7 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 		force = 3
 		damtype = "brute"
 		icon_state = "flamethrower"
-		item_state = "flamethrower0"
+		item_state = "flamethrower_0"
 		usr.machine = null
 		usr << browse(null, "window=flamethrower")
 	for(var/mob/M in viewers(1, src.loc))
@@ -297,7 +302,7 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 	if (!src.part4)
 		user << "\red Attach a plasma tank first!"
 		return
-	var/dat = text("<TT><B>Flamethrower (<A HREF='?src=\ref[src];light=1'>[lit ? "<font color='red'>Lit</font>" : "Unlit"]</a>)</B><BR>\n Tank Pressure: [src.part4.air_contents.return_pressure()]<BR>\namount to throw: <A HREF='?src=\ref[src];amount=-100'>-</A> <A HREF='?src=\ref[src];amount=-10'>-</A> <A HREF='?src=\ref[src];amount=-1'>-</A> [src.throw_amount] <A HREF='?src=\ref[src];amount=1'>+</A> <A HREF='?src=\ref[src];amount=10'>+</A> <A HREF='?src=\ref[src];amount=100'>+</A><BR>\n<A HREF='?src=\ref[src];remove=1'>Remove plasmatank</A> - <A HREF='?src=\ref[src];close=1'>Close</A></TT>")
+	var/dat = text("<TT><B>Flamethrower (<A HREF='?src=\ref[src];light=1'>[lit ? "<font color='red'>Lit</font>" : "Unlit"]</a>)</B><BR>\n Tank Pressure: [src.part4.air_contents.return_pressure()]<BR>\nAmount to throw: <A HREF='?src=\ref[src];amount=-100'>-</A> <A HREF='?src=\ref[src];amount=-10'>-</A> <A HREF='?src=\ref[src];amount=-1'>-</A> [src.throw_amount] <A HREF='?src=\ref[src];amount=1'>+</A> <A HREF='?src=\ref[src];amount=10'>+</A> <A HREF='?src=\ref[src];amount=100'>+</A><BR>\n<A HREF='?src=\ref[src];remove=1'>Remove plasmatank</A> - <A HREF='?src=\ref[src];close=1'>Close</A></TT>")
 	user << browse(dat, "window=flamethrower;size=600x300")
 	onclose(user, "flamethrower")
 	return
@@ -326,13 +331,15 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 			src.attack_self(M)
 	return
 
-/obj/item/weapon/flamethrower/proc/ignite_turf(turf/simulated/target)
+/obj/item/weapon/flamethrower/proc/ignite_turf(turf/target)
 	//TODO: DEFERRED Consider checking to make sure tank pressure is high enough before doing this...
 
-	//Transfer current tank air contents to turf
-	var/howmuch = part4.air_contents.toxins * 0.10
-	part4.air_contents.toxins -= howmuch
-	target.air.toxins += howmuch
+	//Transfer 5% of current tank air contents to turf
+	var/datum/gas_mixture/air_transfer = part4.air_contents.remove_ratio(0.05)
+	air_transfer.toxins = air_transfer.toxins * 5 // This is me not comprehending the air system. I realize this is retarded and I could probably make it work without fucking it up like this, but there you have it. -- TLE
+	target.assume_air(air_transfer)
 
 	//Burn it based on transfered gas
-	target.hotspot_expose(SPARK_TEMP,300)
+	//target.hotspot_expose(part4.air_contents.temperature*2,300)
+	target.hotspot_expose((part4.air_contents.temperature*2) + 380,500) // -- More of my "how do I shot fire?" dickery. -- TLE
+	//location.hotspot_expose(1000,500,1)

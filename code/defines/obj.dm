@@ -3,21 +3,12 @@
 	var/m_amt = 0	// metal
 	var/g_amt = 0	// glass
 	var/w_amt = 0	// waster amounts
-	var/global/tagcnum = 0
-	var/explosionstrength = 0
-	var/spawnchance = null 	//If this is defined, this is the percent chance that this object will spawn.  Checked in New().  Intended to be defined on the map, for some randomness in item placement.
-
 	var/origin_tech = null	//Used by R&D to determine what research bonuses it grants.
 	var/reliability = 100	//Used by SOME devices to determine how reliable they are.
 	var/crit_fail = 0
-	var/throwforce = 1
-	var/unacidable = 0
-
-	var/list/NetworkNumber = list( )
-	var/list/Networks = list( )
-
+	var/unacidable = 0 //universal "unacidabliness" var, here so you can use it in any obj.
 	animate_movement = 2
-
+	var/throwforce = 0
 	proc
 		handle_internal_lifeform(mob/lifeform_inside_me, breath_request)
 			//Return: (NONSTANDARD)
@@ -31,58 +22,28 @@
 
 		initialize()
 
-	New()
-		src.tag = "obj[++tagcnum]"
-		if(spawnchance)
-			if(prob(100-spawnchance))
-				del src
-
-
-
-
-
-/obj/item/policetaperoll
-	name = "police tape roll"
-	desc = "A roll of police tape used to block off crime scenes from the public."
-	icon = 'policetape.dmi'
-	icon_state = "rollstart"
-	flags = FPRINT
-	var/tapestartx = 0
-	var/tapestarty = 0
-	var/tapestartz = 0
-	var/tapeendx = 0
-	var/tapeendy = 0
-	var/tapeendz = 0
-
-/obj/item/policetape
-	name = "police tape"
-	desc = "A length of police tape.  Do not cross."
-	icon = 'policetape.dmi'
-	anchored = 1
-	density = 1
-	throwpass = 1
-	req_access = list(access_security)
-
 /obj/blob
-	icon = 'blob.dmi'
-	icon_state = "bloba0"
-	var/health = 30
-	density = 1
-	opacity = 0
-	anchored = 1
+		name = "magma"
+		icon = 'blob.dmi'
+		icon_state = "bloba0"
+		var/health = 40
+		density = 1
+		opacity = 0
+		anchored = 1
 
 /obj/blob/idle
-	name = "blob"
-	desc = "it looks... frightened"
-	icon_state = "blobidle0"
+		name = "magma"
+		desc = "it looks... tasty"
+		icon_state = "blobidle0"
 
 /obj/mark
-	var/mark = ""
-	icon = 'mark.dmi'
-	icon_state = "blank"
-	anchored = 1
-	layer = 99
-	mouse_opacity = 0
+		var/mark = ""
+		icon = 'mark.dmi'
+		icon_state = "blank"
+		anchored = 1
+		layer = 99
+		mouse_opacity = 0
+		unacidable = 1//Just to be sure.
 
 /obj/admins
 	name = "admins"
@@ -98,6 +59,7 @@
 	desc = "FUCK FUCK FUCK AAAHHH"
 	icon_state = "bhole2"
 	opacity = 0
+	unacidable = 1
 	density = 0
 	anchored = 1
 	var/datum/effects/system/harmless_smoke_spread/smoke
@@ -107,6 +69,8 @@
 
 /obj/beam
 	name = "beam"
+	unacidable = 1//Just to be sure.
+	var/def_zone
 
 /obj/beam/a_laser
 	name = "a laser"
@@ -132,25 +96,37 @@
 	anchored = 1.0
 	flags = TABLEPASS
 
+
+/obj/bedsheetbin
+	name = "linen bin"
+	desc = "A bin for containing bedsheets."
+	icon = 'items.dmi'
+	icon_state = "bedbin"
+	var/amount = 23.0
+	anchored = 1.0
+
 /obj/begin
 	name = "begin"
 	icon = 'stationobjs.dmi'
 	icon_state = "begin"
 	anchored = 1.0
+	unacidable = 1
 
 /obj/bullet
 	name = "bullet"
 	icon = 'projectiles.dmi'
 	icon_state = "bullet"
 	density = 1
+	throwforce = 0.1 //an attempt to make it possible to shoot your way through space
+	unacidable = 1//Just to be sure.
 	var/yo = null
 	var/xo = null
 	var/current = null
 	anchored = 1.0
 	flags = TABLEPASS
+	var/def_zone
 
 /obj/bullet/weakbullet
-
 
 /obj/bullet/electrode
 	name = "electrode"
@@ -165,6 +141,10 @@
 /obj/bullet/cbbolt
 	name = "crossbow bolt"
 	icon_state = "cbbolt"
+
+/obj/bullet/neurodart
+	name = "acid"
+	icon_state = "toxin"
 
 /obj/datacore
 	name = "datacore"
@@ -188,6 +168,167 @@
 	name = "monkey"
 	var/mob/living/carbon/monkey/target = null
 
+/obj/grille
+	desc = "A piece of metal with evenly spaced gridlike holes in it. Blocks large object but lets small items, gas, or energy beams through."
+	name = "grille"
+	icon = 'structures.dmi'
+	icon_state = "grille"
+	density = 1
+	var/health = 10.0
+	var/destroyed = 0.0
+	anchored = 1.0
+	flags = FPRINT | CONDUCT
+	pressure_resistance = 5*ONE_ATMOSPHERE
+	layer = 2.9
+
+/obj/securearea
+	desc = "A warning sign which reads 'SECURE AREA'"
+	name = "SECURE AREA"
+	icon = 'decals.dmi'
+	icon_state = "securearea"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+/obj/sign/biohazard
+	desc = "A warning sign which reads 'BIOHAZARD'"
+	name = "BIOHAZARD"
+	icon = 'decals.dmi'
+	icon_state = "bio"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+/obj/sign/electricshock
+	desc = "A warning sign which reads 'HIGH VOLTAGE'"
+	name = "HIGH VOLTAGE"
+	icon = 'decals.dmi'
+	icon_state = "shock"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+/obj/sign/examroom
+	desc = "A guidance sign which reads 'EXAM ROOM'"
+	name = "EXAM"
+	icon = 'decals.dmi'
+	icon_state = "examroom"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+/obj/sign/vacuum
+	desc = "A warning sign which reads 'HARD VACUUM AHEAD'"
+	name = "HARD VACUUM AHEAD"
+	icon = 'decals.dmi'
+	icon_state = "space"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+	pixel_x = -1
+	pixel_y = -1
+
+/obj/sign/fire
+	desc = "A warning sign which reads 'HOT! HOT! AAAH! I'M BURNING!'"
+	name = "HOT! HOT! AAAH! I'M BURNING!"
+	icon = 'decals.dmi'
+	icon_state = "fire"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+
+/obj/sign/nosmoking_1
+	desc = "A warning sign which reads 'NO SMOKING'"
+	name = "NO SMOKING"
+	icon = 'decals.dmi'
+	icon_state = "nosmoking"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+
+/obj/sign/nosmoking_2
+	desc = "A warning sign which reads 'NO SMOKING'"
+	name = "NO SMOKING"
+	icon = 'decals.dmi'
+	icon_state = "nosmoking2"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+/obj/sign/redcross
+	desc = "The Intergalactic symbol of Medical institutions. You'll probably get help here.'"
+	name = "Med-Bay"
+	icon = 'decals.dmi'
+	icon_state = "redcross"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+/obj/sign/goldenplaque
+	desc = "To be Robust is not an action or a way of life, but a mental state. Only those with the force of Will strong enough to act during a crisis, saving friend from foe, are truly Robust. Stay Robust my friends."
+	name = "The Most Robust Men Award for Robustness"
+	icon = 'decals.dmi'
+	icon_state = "goldenplaque"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+/obj/item/weapon/plaque_assembly
+	desc = "Put this on a wall and engrave an epitaph"
+	name = "Plaque Assembly"
+	icon = 'decals.dmi'
+	icon_state = "goldenplaque"
+
+/obj/item/weapon/plaque_assembly/afterattack(atom/A as mob|obj|turf|area, mob/user as mob)
+	if(istype(A,/turf/simulated/wall) || istype(A,/turf/simulated/shuttle/wall) || istype(A,/turf/unsimulated/wall))
+		var/epitaph = input("What would you like to engrave", null)
+		if(epitaph)
+			var/obj/sign/goldenplaque/gp = new/obj/sign/goldenplaque(A)
+			gp.name = epitaph
+			gp.layer = 2.9
+			del(src)
+
+/obj/sign/maltesefalcon1         //The sign is 64x32, so it needs two tiles. ;3
+	desc = "The Maltese Falcon, Space Bar and Grill"
+	name = "The Maltese Falcon"
+	icon = 'decals.dmi'
+	icon_state = "maltesefalcon1"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+/obj/sign/maltesefalcon2
+	desc = "The Maltese Falcon, Space Bar and Grill"
+	name = "The Maltese Falcon"
+	icon = 'decals.dmi'
+	icon_state = "maltesefalcon2"
+	anchored = 1.0
+	opacity = 0
+	density = 0
+
+
+/obj/hud
+	name = "hud"
+	unacidable = 1
+	var/mob/mymob = null
+	var/list/adding = null
+	var/list/other = null
+	var/list/intents = null
+	var/list/mov_int = null
+	var/list/mon_blo = null
+	var/list/m_ints = null
+	var/obj/screen/druggy = null
+	var/vimpaired = null
+	var/obj/screen/alien_view = null
+	var/obj/screen/g_dither = null
+	var/obj/screen/blurry = null
+	var/list/darkMask = null
+	var/obj/screen/station_explosion = null
+
+	var/h_type = /obj/screen
+
 /obj/item
 	name = "item"
 	icon = 'items.dmi'
@@ -196,14 +337,12 @@
 	var/force = null
 	var/item_state = null
 	var/damtype = "brute"
-	throwforce = 10
 	var/r_speed = 1.0
 	var/health = null
 	var/burn_point = null
 	var/burning = null
 	var/hitsound = null
 	var/w_class = 3.0
-	var/captured_by_securitron = 0
 	flags = FPRINT | TABLEPASS
 	pressure_resistance = 50
 	var/obj/item/master = null
@@ -217,7 +356,7 @@
 	icon_state = "forensic0"
 	var/amount = 20.0
 	var/printing = 0.0
-	w_class = 2.0
+	w_class = 3.0
 	item_state = "electronic"
 	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT | USEDELAY
 
@@ -234,6 +373,30 @@
 	flags = FPRINT | TABLEPASS| CONDUCT
 	item_state = "electronic"
 	var/status = 1
+
+/obj/item/device/flashlight
+	name = "flashlight"
+	desc = "A hand-held emergency light."
+	icon_state = "flight0"
+	var/on = 0
+	var/brightness_on = 4 //luminosity when on
+	var/icon_on = "flight1"
+	var/icon_off = "flight0"
+	w_class = 2
+	item_state = "flight"
+	flags = FPRINT | ONBELT | TABLEPASS | CONDUCT
+	m_amt = 50
+	g_amt = 20
+
+/obj/item/device/flashlight/pen
+	name = "penlight"
+	desc = "A pen-sized light."
+	icon_state = "plight0"
+	flags = FPRINT | TABLEPASS | CONDUCT
+	item_state = ""
+	icon_on = "plight1"
+	icon_off = "plight0"
+	brightness_on = 3
 
 /obj/item/device/healthanalyzer
 	name = "Health Analyzer"
@@ -292,6 +455,7 @@
 	item_state = "electronic"
 	m_amt = 150
 
+
 /obj/item/device/multitool
 	name = "multitool"
 	icon_state = "multitool"
@@ -305,20 +469,6 @@
 	m_amt = 50
 	g_amt = 20
 
-// So far, its functionality is found only in code/game/machinery/doors/airlock.dm
-/obj/item/device/hacktool
-	name = "hacktool"
-	icon_state = "hacktool"
-	flags = FPRINT | TABLEPASS | CONDUCT
-	var/in_use = 0
-	force = 5.0
-	w_class = 2.0
-	throwforce = 5.0
-	throw_range = 15
-	throw_speed = 3
-	desc = "An item of dubious origins, with wires and antennas protruding out of it."
-	m_amt = 60
-	g_amt = 20
 
 /obj/item/device/prox_sensor
 	name = "Proximity Sensor"
@@ -332,6 +482,17 @@
 	m_amt = 300
 
 
+/obj/item/device/shield
+	name = "shield"
+	icon_state = "shield0"
+	var/active = 0.0
+	flags = FPRINT | TABLEPASS| CONDUCT
+	item_state = "electronic"
+	throwforce = 5.0
+	throw_speed = 1
+	throw_range = 5
+	w_class = 2.0
+
 /obj/item/device/timer
 	name = "timer"
 	icon_state = "timer0"
@@ -342,47 +503,109 @@
 	w_class = 2.0
 	m_amt = 100
 
+/obj/item/blueprints
+	name = "station blueprints"
+	desc = "Blueprints of the station. There's stamp \"Classified\" and several coffee stains on it."
+	icon = 'items.dmi'
+	icon_state = "blueprints"
+
+/obj/item/apc_frame
+	name = "APC frame"
+	desc = "Used for repairing or building APCs"
+	icon = 'apc_repair.dmi'
+	icon_state = "apc_frame"
+	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/landmark
 	name = "landmark"
 	icon = 'screen1.dmi'
 	icon_state = "x2"
 	anchored = 1.0
-
-
-/*/obj/landmark/ptarget
-	name = "portal target"
-	icon = 'screen1.dmi'
-	icon_state = "x2"
-	anchored = 1.0
-	var/t_id*/
-
-/obj/landmark/derelict
-	name = "Derelict Info Node"
-
-	nodamage
-		icon_state = "blocked"
-
-	noblast
-		icon_state = "blocked"
-
-	o2crate
-	o2canister
-	metal
-	glass
-
+	unacidable = 1
 
 /obj/landmark/alterations
 	name = "alterations"
-	nopath
-		invisibility = 101
-		name = "Bot No-Path"
 
 /obj/laser
 	name = "laser"
 	icon = 'projectiles.dmi'
 	var/damage = 0.0
 	var/range = 10.0
+
+/obj/lattice
+	desc = "A lightweight support lattice."
+	name = "lattice"
+	icon = 'structures.dmi'
+	icon_state = "latticefull"
+	density = 0
+	anchored = 1.0
+	layer = 2.3 //under pipes
+	//	flags = 64.0
+
+/obj/lattice/New()
+	..()
+	if(!(istype(src.loc, /turf/space)))
+		del(src)
+	for(var/obj/lattice/LAT in src.loc)
+		if(LAT != src)
+			del(LAT)
+	icon = 'smoothlattice.dmi'
+	icon_state = "latticeblank"
+	updateOverlays()
+	for (var/dir in cardinal)
+		var/obj/lattice/L
+		if(locate(/obj/lattice, get_step(src, dir)))
+			L = locate(/obj/lattice, get_step(src, dir))
+			L.updateOverlays()
+
+/obj/lattice/Del()
+	for (var/dir in cardinal)
+		var/obj/lattice/L
+		if(locate(/obj/lattice, get_step(src, dir)))
+			L = locate(/obj/lattice, get_step(src, dir))
+			L.updateOverlays(src.loc)
+	..()
+
+/obj/lattice/proc/updateOverlays()
+	//if(!(istype(src.loc, /turf/space)))
+	//	del(src)
+	spawn(1)
+		overlays = list()
+
+		var/dir_sum = 0
+
+		for (var/direction in cardinal)
+			if(locate(/obj/lattice, get_step(src, direction)))
+				dir_sum += direction
+			else
+				if(!(istype(get_step(src, direction), /turf/space)))
+					dir_sum += direction
+
+		icon_state = "lattice[dir_sum]"
+		return
+
+		/*
+		overlays += icon(icon,"lattice-middlebar") //the nw-se bar in the cneter
+		for (var/dir in cardinal)
+			if(locate(/obj/lattice, get_step(src, dir)))
+				src.overlays += icon(icon,"lattice-[dir2text(dir)]")
+			else
+				src.overlays += icon(icon,"lattice-nc-[dir2text(dir)]") //t for turf
+				if(!(istype(get_step(src, dir), /turf/space)))
+					src.overlays += icon(icon,"lattice-t-[dir2text(dir)]") //t for turf
+
+		//if ( !( (locate(/obj/lattice, get_step(src, SOUTH))) || (locate(/obj/lattice, get_step(src, EAST))) ))
+		//	src.overlays += icon(icon,"lattice-c-se")
+		if ( !( (locate(/obj/lattice, get_step(src, NORTH))) || (locate(/obj/lattice, get_step(src, WEST))) ))
+			src.overlays += icon(icon,"lattice-c-nw")
+		if ( !( (locate(/obj/lattice, get_step(src, NORTH))) || (locate(/obj/lattice, get_step(src, EAST))) ))
+			src.overlays += icon(icon,"lattice-c-ne")
+		if ( !( (locate(/obj/lattice, get_step(src, SOUTH))) || (locate(/obj/lattice, get_step(src, WEST))) ))
+			src.overlays += icon(icon,"lattice-c-sw")
+
+		if(!(overlays))
+			icon_state = "latticefull"
+		*/
 
 /obj/list_container
 	name = "list container"
@@ -411,10 +634,27 @@
 	var/obj/crematorium/connected = null
 	anchored = 1.0
 
+
+
+
+
+/obj/cable
+	level = 1
+	anchored =1
+	var/netnum = 0
+	name = "power cable"
+	desc = "A flexible superconducting cable for heavy-duty power transfer."
+	icon = 'power_cond.dmi'
+	icon_state = "0-1"
+	var/d1 = 0
+	var/d2 = 1
+	layer = 2.5
+
 /obj/manifest
 	name = "manifest"
 	icon = 'screen1.dmi'
 	icon_state = "x"
+	unacidable = 1//Just to be sure.
 
 /obj/morgue
 	name = "morgue"
@@ -473,16 +713,37 @@
 	triggerproc = "triggerstun"
 
 /obj/overlay
-	name = "overlays"
+	name = "overlay"
+	unacidable = 1
+
+/obj/portal
+	name = "portal"
+	icon = 'stationobjs.dmi'
+	icon_state = "portal"
+	density = 1
+	unacidable = 1//Can't destroy energy portals.
+	var/failchance = 5
+	var/obj/item/target = null
+	var/creator = null
+	anchored = 1.0
 
 /obj/projection
 	name = "Projection"
+	anchored = 1.0
+
+/obj/rack
+	name = "rack"
+	icon = 'objects.dmi'
+	icon_state = "rack"
+	density = 1
+	flags = FPRINT
 	anchored = 1.0
 
 /obj/screen
 	name = "screen"
 	icon = 'screen1.dmi'
 	layer = 20.0
+	unacidable = 1
 	var/id = 0.0
 	var/obj/master
 
@@ -516,85 +777,56 @@
 	icon_state = "x"
 	anchored = 1.0
 
-/obj/structure/stool
+/obj/stool
 	name = "stool"
 	icon = 'objects.dmi'
 	icon_state = "stool"
 	flags = FPRINT
-	anchored = 1.0
 	pressure_resistance = 3*ONE_ATMOSPHERE
 
-/obj/structure/stool/barstool
-	name = "barstool"
-	icon_state = "barstool"
-
-/obj/structure/stool/bed
+/obj/stool/bed
 	name = "bed"
-	desc = "This is used to lie in, sleep in or strap on."
 	icon_state = "bed"
 	anchored = 1.0
 	var/list/buckled_mobs = list(  )
 
-/obj/structure/stool/bed/chair
+/obj/stool/chair
 	name = "chair"
-	desc = "You sit in this. Either by will or force."
 	icon_state = "chair"
 	var/status = 0.0
 	anchored = 1.0
+	var/list/buckled_mobs = list(  )
 
-/obj/structure/stool/bed/chair/proc/handle_rotation()	//making this into a seperate proc so office chairs can call it on Move()
-	if(src.dir == NORTH)
-		src.layer = FLY_LAYER
-	else
-		src.layer = OBJ_LAYER
-
-	for(var/mob/M in src.buckled_mobs)
-		if(M.loc != src.loc)
-			M.buckled = null //Temporary, so Move() succeeds.
-			if(!M.Move(loc))
-				src:buckled_mobs -= M
-			else
-				M.buckled = src //Restoring
-		if(M)
-			M.dir = dir
-
-/obj/structure/stool/bed/chair/office
-	icon_state = "officechair_white"
-	anchored = 0
-
-/obj/structure/stool/bed/chair/office/Move()
-	..()
-	handle_rotation()
-
-/obj/structure/stool/bed/chair/office/dark
-	icon_state = "officechair_dark"
-
-/obj/structure/stool/bed/chair/e_chair
+/obj/stool/chair/e_chair
 	name = "electrified chair"
-	icon_state = "echair0"
+	icon_state = "e_chair0"
 	var/atom/movable/overlay/overl = null
 	var/on = 0.0
 	var/obj/item/assembly/shock_kit/part1 = null
 	var/last_time = 1.0
 
-/obj/structure/stool/bed/chair/comfy
-	name = "comfy chair"
-	desc = "It looks comfy."
+/obj/table
+	name = "table"
+	icon = 'structures.dmi'
+	icon_state = "table"
+	density = 1
+	anchored = 1.0
+	layer = 2.8
 
-/obj/structure/stool/bed/chair/comfy/brown
-	icon_state = "comfychair_brown"
+/obj/table/onetilethick
+	icon_state = "table_1tilethick"
 
-/obj/structure/stool/bed/chair/comfy/beige
-	icon_state = "comfychair_beige"
+/obj/table/reinforced
+	name = "reinforced table"
+	icon_state = "reinf_table"
+	var/status = 2
 
-/obj/structure/stool/bed/chair/comfy/teal
-	icon_state = "comfychair_teal"
+/obj/table/reinforced/onetilethick
+	icon_state = "reinf_1tilethick"
 
-/obj/structure/stool/bed/chair/comfy/black
-	icon_state = "comfychair_black"
-
-/obj/structure/stool/bed/chair/comfy/lime
-	icon_state = "comfychair_lime"
+/obj/table/woodentable
+	name = "wooden table"
+	icon_state = "woodentable"
 
 /obj/mopbucket
 	desc = "Fill it with water, but don't forget a mop!"
@@ -605,19 +837,41 @@
 	flags = FPRINT
 	pressure_resistance = ONE_ATMOSPHERE
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
+	var/amount_per_transfer_from_this = 5 //shit I dunno, adding this so syringes stop runtime erroring. --NeoFite
 
-/obj/structure/displaycase
+/obj/kitchenspike
+	name = "a meat spike"
+	icon = 'kitchen.dmi'
+	icon_state = "spike"
+	desc = "A spike for collecting meat from animals"
+	density = 1
+	anchored = 1
+	var/meat = 0
+	var/occupied = 0
+	var/meattype = 0 // 0 - Nothing, 1 - Monkey, 2 - Xeno
+
+/obj/displaycase
 	name = "Display Case"
 	icon = 'stationobjs.dmi'
 	icon_state = "glassbox1"
 	desc = "A display case for prized possessions."
 	density = 1
 	anchored = 1
+	unacidable = 1//Dissolving the case would also delete the gun.
 	var/health = 30
 	var/occupied = 1
 	var/destroyed = 0
 
-obj/item/brain
+/obj/showcase
+	name = "Showcase"
+	icon = 'stationobjs.dmi'
+	icon_state = "showcase_1"
+	desc = "A stand with the empty body of a cyborg bolted to it."
+	density = 1
+	anchored = 1
+	unacidable = 1//temporary until I decide whether the borg can be removed. -veyveyr
+
+/obj/item/brain
 	name = "brain"
 	icon = 'surgery.dmi'
 	icon_state = "brain2"
@@ -627,16 +881,41 @@ obj/item/brain
 	throwforce = 1.0
 	throw_speed = 3
 	throw_range = 5
+	origin_tech = "biotech=3"
 
 	var/mob/living/carbon/human/owner = null
+	var/mob/living/carbon/brain/brainmob = null
+
 
 /obj/item/brain/New()
 	..()
 	spawn(5)
 		if(src.owner)
 			src.name = "[src.owner]'s brain"
+			//Shifting the brain "mob" over to the brain object so it's easier to keep track of. --NEO
+			brainmob = new /mob/living/carbon/brain
+			brainmob.loc = src
+			brainmob.name = owner.real_name
+			brainmob.real_name = owner.real_name
+			brainmob.dna = owner.dna
+			if(src.owner.mind)
+				src.owner.mind.transfer_to(brainmob)
+			brainmob.death() //the brain is dead until stuffed into an MMI. In which case it might still be dead if it's been beat up.
+			if(brainmob.client)
+				brainmob.client.screen.len = null //clear the hud
+			brainmob << "\blue You might feel slightly disoriented. That's normal when your brain gets cut out."
 
-/obj/structure/noticeboard
+/obj/item/brain/Del()
+	if(src.brainmob)
+		if(src.brainmob.client)
+			var/mob/dead/observer/newmob
+			newmob = new/mob/dead/observer
+			newmob.loc = get_turf(src)
+			src.brainmob:client:mob = newmob
+			newmob:client:eye = newmob
+	..()
+
+/obj/noticeboard
 	name = "Notice Board"
 	icon = 'stationobjs.dmi'
 	icon_state = "nboard00"
@@ -650,19 +929,238 @@ obj/item/brain
 	name = "desk clutter"
 	icon = 'items.dmi'
 	icon_state = "deskclutter"
-	desc = "Some clutter that has accumalated over the years..."
+	desc = "Some clutter the detective has accumalated over the years..."
 	anchored = 1
 
 
 
 /obj/item/mouse_drag_pointer = MOUSE_ACTIVE_POINTER
 
+// TODO: robust mixology system! (and merge with beakers, maybe)
+/obj/item/weapon/glass
+	name = "empty glass"
+	icon = 'kitchen.dmi'
+	icon_state = "glass_empty"
+	item_state = "beaker"
+	flags = FPRINT | TABLEPASS | OPENCONTAINER
+	var/datum/substance/inside = null
+	throwforce = 5
+	g_amt = 100
+	New()
+		..()
+		src.pixel_x = rand(-5, 5)
+		src.pixel_y = rand(-5, 5)
 
-/obj/item/weapon/ore
-	name = "Rock"
-	icon = 'rubble.dmi'
-	icon_state = "ore"
-	var/amt = 1
-	var/cook = 0
-	var/cook_temp = 1000
-	var/cook_time = 30
+/obj/item/weapon/storage/glassbox
+	name = "Glassware Box"
+	icon_state = "beakerbox"
+	item_state = "syringe_kit"
+	New()
+		..()
+		new /obj/item/weapon/glass( src )
+		new /obj/item/weapon/glass( src )
+		new /obj/item/weapon/glass( src )
+		new /obj/item/weapon/glass( src )
+		new /obj/item/weapon/glass( src )
+		new /obj/item/weapon/glass( src )
+		new /obj/item/weapon/glass( src )
+
+/obj/item/weapon/storage/cupbox
+	name = "Paper-cup Box"
+	icon_state = "box"
+	item_state = "syringe_kit"
+	New()
+		..()
+		new /obj/item/weapon/reagent_containers/food/drinks/sillycup( src )
+		new /obj/item/weapon/reagent_containers/food/drinks/sillycup( src )
+		new /obj/item/weapon/reagent_containers/food/drinks/sillycup( src )
+		new /obj/item/weapon/reagent_containers/food/drinks/sillycup( src )
+		new /obj/item/weapon/reagent_containers/food/drinks/sillycup( src )
+		new /obj/item/weapon/reagent_containers/food/drinks/sillycup( src )
+		new /obj/item/weapon/reagent_containers/food/drinks/sillycup( src )
+
+/obj/falsewall
+	name = "wall"
+	icon = 'walls.dmi'
+	icon_state = ""
+	density = 1
+	opacity = 1
+	anchored = 1
+
+/obj/falserwall
+	name = "r wall"
+	icon = 'walls.dmi'
+	icon_state = "r_wall"
+	density = 1
+	opacity = 1
+	anchored = 1
+
+/obj/item/stack
+	var/singular_name
+	var/amount = 1.0
+	var/max_amount //also see stack recipes initialisation, param "max_res_amount" must be equal to this max_amount
+
+/obj/item/stack/rods
+	name = "metal rods"
+	singular_name = "metal rod"
+	icon_state = "rods"
+	flags = FPRINT | TABLEPASS| CONDUCT
+	w_class = 3.0
+	force = 9.0
+	throwforce = 15.0
+	throw_speed = 5
+	throw_range = 20
+	m_amt = 1875
+	max_amount = 60
+
+/obj/item/stack/sheet
+	name = "sheet"
+//	var/const/length = 2.5 //2.5*1.5*0.01*100000 == 3750 == m_amt
+//	var/const/width = 1.5
+//	var/const/height = 0.01
+	flags = FPRINT | TABLEPASS
+	w_class = 3.0
+	max_amount = 50
+	var/perunit = 3750
+
+/obj/item/stack/sheet/wood
+	name = "Wood Planks"
+	singular_name = "wood plank"
+	icon_state = "sheet-wood"
+	force = 5.0
+	throwforce = 5
+	throw_speed = 3
+	throw_range = 3
+
+/obj/item/stack/sheet/glass
+	name = "glass"
+	singular_name = "glass sheet"
+	icon_state = "sheet-glass"
+	force = 5.0
+	g_amt = 3750
+	throwforce = 5
+	throw_speed = 3
+	throw_range = 3
+
+
+/obj/item/stack/sheet/rglass
+	name = "reinforced glass"
+	singular_name = "reinforced glass sheet"
+	icon_state = "sheet-rglass"
+	force = 6.0
+	g_amt = 3750
+	m_amt = 1875
+	throwforce = 5
+	throw_speed = 3
+	throw_range = 3
+
+/obj/item/stack/sheet/metal
+	name = "metal"
+	singular_name = "metal sheet"
+	desc = "A heavy sheet of metal."
+	icon_state = "sheet-metal"
+	force = 5.0
+	m_amt = 3750
+	throwforce = 14.0
+	throw_speed = 1
+	throw_range = 4
+	flags = FPRINT | TABLEPASS | CONDUCT
+
+/obj/item/stack/sheet/r_metal
+	name = "reinforced metal"
+	singular_name = "reinforced metal sheet"
+	desc = "A very heavy sheet of metal."
+	icon_state = "sheet-r_metal"
+	item_state = "sheet-metal"
+	force = 5.0
+	m_amt = 7500
+	throwforce = 15.0
+	throw_speed = 1
+	throw_range = 4
+	flags = FPRINT | TABLEPASS | CONDUCT
+
+/obj/item/stack/tile/steel
+	name = "Steel floor tile"
+	singular_name = "S	teel floor tile"
+	desc = "Those could work as a pretty decent throwing weapon"
+	icon_state = "tile"
+	w_class = 3.0
+	force = 6.0
+	m_amt = 937.5
+	throwforce = 15.0
+	throw_speed = 5
+	throw_range = 20
+	flags = FPRINT | TABLEPASS | CONDUCT
+	max_amount = 60
+
+/obj/item/stack/light_w
+	name = "Wired glass tile"
+	singular_name = "Wired glass tile"
+	desc = ""
+	icon_state = "glass_wire"
+	w_class = 3.0
+	force = 6.0
+	throwforce = 15.0
+	throw_speed = 5
+	throw_range = 20
+	flags = FPRINT | TABLEPASS | CONDUCT
+	max_amount = 60
+
+	attackby(var/obj/item/O as obj, var/mob/user as mob)
+		..()
+		if(istype(O,/obj/item/weapon/wirecutters))
+			var/obj/item/weapon/cable_coil/CC = new/obj/item/weapon/cable_coil(user.loc)
+			CC.amount = 5
+			amount--
+			new/obj/item/stack/sheet/glass(user.loc)
+			if(amount <= 0)
+				user.u_equip(src)
+				del(src)
+
+		if(istype(O,/obj/item/stack/sheet/metal))
+			var/obj/item/stack/sheet/metal/M = O
+			M.amount--
+			if(M.amount <= 0)
+				user.u_equip(M)
+				del(M)
+			amount--
+			new/obj/item/stack/tile/light(user.loc)
+			if(amount <= 0)
+				user.u_equip(src)
+				del(src)
+
+/obj/item/stack/tile/light
+	name = "Light floor tile"
+	singular_name = "Light floor tile"
+	desc = ""
+	icon_state = "tile_e"
+	w_class = 3.0
+	force = 6.0
+	throwforce = 15.0
+	throw_speed = 5
+	throw_range = 20
+	flags = FPRINT | TABLEPASS | CONDUCT
+	max_amount = 60
+	var/on = 1
+	var/state //0 = fine, 1 = flickering, 2 = breaking, 3 = broken
+
+	New()
+		..()
+		if(prob(5))
+			state = 3 //broken
+		else if(prob(5))
+			state = 2 //breaking
+		else if(prob(10))
+			state = 1 //flickering occasionally
+		else
+			state = 0 //fine
+
+	attackby(var/obj/item/O as obj, var/mob/user as mob)
+		..()
+		if(istype(O,/obj/item/weapon/crowbar))
+			new/obj/item/stack/sheet/metal(user.loc)
+			amount--
+			new/obj/item/stack/light_w(user.loc)
+			if(amount <= 0)
+				user.u_equip(src)
+				del(src)

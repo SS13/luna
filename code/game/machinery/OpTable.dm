@@ -1,11 +1,9 @@
 /obj/machinery/optable/New()
 	..()
-	spawn(100) // Delaying to let the operating computers load
-		for(var/obj/machinery/computer/operating/O in world)
-			if(src.id == O.id)
-				src.computer = O
-				break
-
+	for(var/obj/machinery/computer/operating/O in world)
+		if(src.id == O.id)
+			src.computer = O
+	spawn(100)
 		process()
 
 /obj/machinery/optable/ex_act(severity)
@@ -27,7 +25,7 @@
 	return
 
 /obj/machinery/optable/blob_act()
-	if(prob(50))
+	if(prob(75))
 		del(src)
 
 /obj/machinery/optable/hand_p(mob/user as mob)
@@ -36,7 +34,7 @@
 	return
 
 /obj/machinery/optable/attack_paw(mob/user as mob)
-	if ((usr.mutations & HULK))
+	if ((usr.mutations & 8))
 		usr << text("\blue You destroy the operating table.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -49,10 +47,11 @@
 			user.layer = TURF_LAYER
 			for(var/mob/M in viewers(user, null))
 				M.show_message("The monkey hides under the table!", 1)
+				//Foreach goto(69)
 	return
 
 /obj/machinery/optable/attack_hand(mob/user as mob)
-	if ((usr.mutations & HULK))
+	if ((usr.mutations & 8))
 		usr << text("\blue You destroy the table.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -85,11 +84,8 @@
 	if(locate(/mob/living/carbon/human, src.loc))
 		var/mob/M = locate(/mob/living/carbon/human, src.loc)
 		if(M.resting)
-			if(M.stat != 2)
-				src.victim = M
-				icon_state = "table2-active"
-			else
-				icon_state = "table2-active-dead"
+			src.victim = M
+			icon_state = "table2-active"
 			return 1
 	src.victim = null
 	icon_state = "table2-idle"

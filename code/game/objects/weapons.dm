@@ -1,5 +1,11 @@
+//Banhammer deserves to be the first thing here
+
+/obj/item/weapon/banhammer/attack(mob/M as mob, mob/user as mob)
+	M << "<font color='red'><b> You have been banned FOR NO REISIN by [user]<b></font>"
+	user << "<font color='red'> You have <b>BANNED</b> [M]</font>"
+
 /obj/mine/proc/triggerrad(obj)
-	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	obj:radiation += 50
@@ -10,7 +16,7 @@
 
 /obj/mine/proc/triggerstun(obj)
 	obj:stunned += 30
-	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	spawn(0)
@@ -22,8 +28,8 @@
 
 	for (var/turf/simulated/floor/target in range(1,src))
 		if(!target.blocks_air)
-			//if(target.parent)
-				//target.parent.suspend_group_processing()
+			if(target.parent)
+				target.parent.suspend_group_processing()
 
 			var/datum/gas_mixture/payload = new
 			var/datum/gas/sleeping_agent/trace_gas = new
@@ -39,8 +45,8 @@
 /obj/mine/proc/triggerplasma(obj)
 	for (var/turf/simulated/floor/target in range(1,src))
 		if(!target.blocks_air)
-			//if(target.parent)
-				//target.parent.suspend_group_processing()
+			if(target.parent)
+				target.parent.suspend_group_processing()
 
 			var/datum/gas_mixture/payload = new
 
@@ -54,7 +60,7 @@
 		del(src)
 
 /obj/mine/proc/triggerkick(obj)
-	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	del(obj:client)
@@ -62,7 +68,7 @@
 		del(src)
 
 /obj/mine/proc/explode(obj)
-	explosion(loc, 0, 1, 2, 3, 1)
+	explosion(loc, 0, 1, 2, 3)
 	spawn(0)
 		del(src)
 
@@ -88,10 +94,13 @@
 
 //*****RM
 
-/obj/item/assembly/time_ignite/New()
-	if(init)
-		part1 = new(src)
-		part2 = new(src)
+/obj/item/assembly/time_ignite/premade/New()
+	..()
+	part1 = new(src)
+	part2 = new(src)
+	part1.master = src
+	part2.master = src
+	//part2.status = 0
 
 /obj/item/assembly/time_ignite/Del()
 	del(part1)
@@ -99,31 +108,35 @@
 	..()
 
 /obj/item/assembly/time_ignite/attack_self(mob/user as mob)
-	src.part1.attack_self(user, src.status)
+	if (src.part1)
+		src.part1.attack_self(user, src.status)
 	src.add_fingerprint(user)
 	return
 
 /obj/item/assembly/time_ignite/receive_signal()
+	if (!status)
+		return
 	for(var/mob/O in hearers(1, src.loc))
 		O.show_message(text("\icon[] *beep* *beep*", src), 3, "*beep* *beep*", 2)
 	src.part2.ignite()
 	return
 
-/obj/effect/decal/cleanable/ash/attack_hand(mob/user as mob)
+/obj/decal/ash/attack_hand(mob/user as mob)
 	usr << "\blue The ashes slip through your fingers."
 	del(src)
 	return
 
 /obj/item/assembly/time_ignite/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
 			T = T.loc
 		src.part1.loc = T
-		src.part2.loc = T
 		src.part1.master = null
-		src.part2.master = null
 		src.part1 = null
+		src.part2.loc = T
+		src.part2.master = null
 		src.part2 = null
 
 		del(src)
@@ -146,15 +159,16 @@
 //***********
 
 /obj/item/assembly/anal_ignite/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
 			T = T.loc
 		src.part1.loc = T
-		src.part2.loc = T
 		src.part1.master = null
-		src.part2.master = null
 		src.part1 = null
+		src.part2.loc = T
+		src.part2.master = null
 		src.part2 = null
 
 		del(src)
@@ -168,7 +182,22 @@
 		src.part2.status = src.status
 		src.add_fingerprint(user)
 	if(( istype(W, /obj/item/clothing/suit/armor/vest) ) && src.status)
-		var/obj/item/assembly/a_i_a/R = new /obj/item/assembly/a_i_a( user )
+		var/obj/item/assembly/a_i_a/R = new
+		R.part1 = part1
+		R.part1.master = R
+		part1 = null
+
+		R.part2 = part2
+		R.part2.master = R
+		part2 = null
+
+		user.put_in_hand(R)
+		user.before_take_item(W)
+		R.part3 = W
+		R.part3.master = R
+		del(src)
+		
+/* WTF THIS SHIT? It is working? Shouldn't. --rastaf0
 		W.loc = R
 		R.part1 = W
 		R.part2 = W
@@ -192,26 +221,56 @@
 		R.layer = 20
 		R.loc = user
 		src.add_fingerprint(user)
+*/
 	return
+/*	else if ((istype(W, /obj/item/device/timer) && !( src.status )))
 
+		var/obj/item/assembly/time_ignite/R = new /obj/item/assembly/time_ignite( user )
+		W.loc = R
+		R.part1 = W
+		W.layer = initial(W.layer)
+		if (user.client)
+			user.client.screen -= W
+		if (user.r_hand == W)
+			user.u_equip(W)
+			user.r_hand = R
+		else
+			user.u_equip(W)
+			user.l_hand = R
+		W.master = R
+		src.master = R
+		src.layer = initial(src.layer)
+		user.u_equip(src)
+		if (user.client)
+			user.client.screen -= src
+		src.loc = R
+		R.part2 = src
+		R.layer = 20
+		R.loc = user
+		src.add_fingerprint(user)
+*/
 /obj/item/assembly/a_i_a/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
 			T = T.loc
 		src.part1.loc = T
-		src.part2.loc = T
-		src.part3.loc = T
 		src.part1.master = null
-		src.part2.master = null
-		src.part3.master = null
 		src.part1 = null
+		src.part2.loc = T
+		src.part2.master = null
 		src.part2 = null
+		src.part3.loc = T
+		src.part3.master = null
 		src.part3 = null
 
 		del(src)
 		return
 	if (( istype(W, /obj/item/weapon/screwdriver) ))
+		if (!src.status && (!part1||!part2||!part3))
+			user << "\red You cannot finish the assembly, not all components are in place!"
+			return
 		src.status = !( src.status )
 		if (src.status)
 			user.show_message("\blue The armor is now secured!", 1)
@@ -238,6 +297,7 @@
 	return
 
 /obj/item/assembly/rad_time/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
@@ -264,7 +324,6 @@
 	return
 
 /obj/item/assembly/rad_time/attack_self(mob/user as mob)
-
 	src.part1.attack_self(user, src.status)
 	src.part2.attack_self(user, src.status)
 	src.add_fingerprint(user)
@@ -295,7 +354,7 @@
 	return
 
 /obj/item/assembly/rad_prox/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
@@ -356,7 +415,7 @@
 	return
 
 /obj/item/assembly/rad_infra/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
@@ -382,7 +441,6 @@
 	return
 
 /obj/item/assembly/rad_infra/attack_self(mob/user as mob)
-
 	src.part1.attack_self(user, src.status)
 	src.part2.attack_self(user, src.status)
 	src.add_fingerprint(user)
@@ -394,7 +452,9 @@
 		src.part1.send_signal("ACTIVATE")
 	return
 
-/obj/item/assembly/rad_infra/verb/						()
+/obj/item/assembly/rad_infra/verb/rotate()
+	set name = "Rotate Assembly"
+	set category = "Object"
 	set src in usr
 
 	src.dir = turn(src.dir, 90)
@@ -444,6 +504,7 @@
 	return
 
 /obj/item/assembly/prox_ignite/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
@@ -470,7 +531,8 @@
 
 /obj/item/assembly/prox_ignite/attack_self(mob/user as mob)
 
-	src.part1.attack_self(user, src.status)
+	if (src.part1)
+		src.part1.attack_self(user, src.status)
 	src.add_fingerprint(user)
 	return
 
@@ -486,8 +548,25 @@
 	..()
 	return
 
-/obj/item/assembly/rad_ignite/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/weapon/directions/attack_hand(mob/user as mob)
+	if (istype(usr, /mob/living/carbon/human))
+		if (prob(50))
+			usr << "\blue You try to read the paper, but it breaks apart in your hand. Must have been pretty old.."
+			del(src)
+			return
+		else
+			if (user.knowledge < 1)
+				usr << "\red As you read over the paper, you slowly realize what you are reading. You quickly memorize the words on the paper before it breaks apart in your hand, and slips through your fingers."
+				user.knowledge++
+				del(src)
+				return
+			else
+				usr << "\blue You already have read this paper."
+				return
+		return
 
+/obj/item/assembly/rad_ignite/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
@@ -515,7 +594,8 @@
 
 /obj/item/assembly/rad_ignite/attack_self(mob/user as mob)
 
-	src.part1.attack_self(user, src.status)
+	if (src.part1)
+		src.part1.attack_self(user, src.status)
 	src.add_fingerprint(user)
 	return
 
@@ -568,13 +648,13 @@
 /obj/item/assembly/m_i_ptank/dropped()
 
 	spawn( 0 )
-		src.part1.sense()
+		part1.sense()
 		return
 	return
 
 /obj/item/assembly/m_i_ptank/examine()
 	..()
-	src.part3.examine()
+	part3.examine()
 
 /obj/item/assembly/m_i_ptank/Del()
 
@@ -588,38 +668,28 @@
 	return
 
 /obj/item/assembly/m_i_ptank/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if (istype(W, /obj/item/device/analyzer))
 		src.part3.attackby(W, user)
-
+		return
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
-		var/obj/item/assembly/prox_ignite/R = new /obj/item/assembly/prox_ignite(  )
+		var/obj/item/assembly/prox_ignite/R = new(get_turf(src.loc))
 		R.part1 = src.part1
+		R.part1.master = R
+		R.part1.loc = R
 		R.part2 = src.part2
-		R.loc = src.loc
-		if (user.r_hand == src)
-			user.r_hand = R
-			R.layer = 20
+		R.part2.master = R
+		R.part2.loc = R
+		if (user.get_inactive_hand()==src)
+			user.put_in_inactive_hand(part3)
 		else
-			if (user.l_hand == src)
-				user.l_hand = R
-				R.layer = 20
-		src.part1.loc = R
-		src.part2.loc = R
-		src.part1.master = R
-		src.part2.master = R
-		var/turf/T = src.loc
-		if (!( istype(T, /turf) ))
-			T = T.loc
-		if (!( istype(T, /turf) ))
-			T = T.loc
-		src.part3.loc = T
+			part3.loc = src.loc
 		src.part1 = null
 		src.part2 = null
 		src.part3 = null
-		//SN src = null
 		del(src)
 		return
-	if (!( istype(W, /obj/item/weapon/weldingtool) ))
+	if (!( istype(W, /obj/item/weapon/weldingtool)&&W:welding ))
 		return
 	if (!( src.status ))
 		src.status = 1
@@ -657,6 +727,12 @@
 
 	return
 
+/obj/item/assembly/m_i_ptank/emp_act(severity)
+
+	if(istype(part3,/obj/item/weapon/tank/plasma) && prob(100/severity))
+		part3.ignite()
+	..()
+
 //*****RM
 
 /obj/item/assembly/t_i_ptank/c_state(n)
@@ -680,39 +756,29 @@
 	return
 
 /obj/item/assembly/t_i_ptank/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 
 	if (istype(W, /obj/item/device/analyzer))
 		src.part3.attackby(W, user)
-
+		return
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
-		var/obj/item/assembly/time_ignite/R = new /obj/item/assembly/time_ignite(  )
+		var/obj/item/assembly/time_ignite/R = new(get_turf(src.loc))
 		R.part1 = src.part1
+		R.part1.master = R
+		R.part1.loc = R
 		R.part2 = src.part2
-		R.loc = src.loc
-		if (user.r_hand == src)
-			user.r_hand = R
-			R.layer = 20
+		R.part2.master = R
+		R.part2.loc = R
+		if (user.get_inactive_hand()==src)
+			user.put_in_inactive_hand(part3)
 		else
-			if (user.l_hand == src)
-				user.l_hand = R
-				R.layer = 20
-		src.part1.loc = R
-		src.part2.loc = R
-		src.part1.master = R
-		src.part2.master = R
-		var/turf/T = src.loc
-		if (!( istype(T, /turf) ))
-			T = T.loc
-		if (!( istype(T, /turf) ))
-			T = T.loc
-		src.part3.loc = T
+			part3.loc = src.loc
 		src.part1 = null
 		src.part2 = null
 		src.part3 = null
-		//SN src = null
 		del(src)
 		return
-	if (!( istype(W, /obj/item/weapon/weldingtool) ))
+	if (!( istype(W, /obj/item/weapon/weldingtool) && W:welding))
 		return
 	if (!( src.status ))
 		src.status = 1
@@ -720,19 +786,18 @@
 		message_admins("[key_name_admin(user)] welded a time bomb. Temp: [src.part3.air_contents.temperature-T0C]")
 		user.show_message("\blue A pressure hole has been bored to the plasma tank valve. The plasma tank can now be ignited.", 1)
 	else
-		src.status = 0
-		bombers += "[key_name(user)] unwelded a time bomb. Temp: [src.part3.air_contents.temperature-T0C]"
-		user << "\blue The hole has been closed."
+		if(src)
+			src.status = 0
+			bombers += "[key_name(user)] unwelded a time bomb. Temp: [src.part3.air_contents.temperature-T0C]"
+			user << "\blue The hole has been closed."
 	src.part2.status = src.status
-
 	src.add_fingerprint(user)
 	return
 
 /obj/item/assembly/t_i_ptank/attack_self(mob/user as mob)
 
-	if (src.part1)
-		src.part1.attack_self(user, 1)
-		playsound(src.loc, 'armbomb.ogg', 100, 1)
+	src.part1.attack_self(user, 1)
+	playsound(src.loc, 'armbomb.ogg', 100, 1)
 	src.add_fingerprint(user)
 	return
 
@@ -748,6 +813,11 @@
 		if(!src.status)
 			src.part3.release()
 	return
+
+/obj/item/assembly/t_i_ptank/emp_act(severity)
+	if(istype(part3,/obj/item/weapon/tank/plasma) && prob(100/severity))
+		part3.ignite()
+	..()
 
 /obj/item/assembly/r_i_ptank/examine()
 	..()
@@ -765,39 +835,29 @@
 	return
 
 /obj/item/assembly/r_i_ptank/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 
 	if (istype(W, /obj/item/device/analyzer))
 		src.part3.attackby(W, user)
-
+		return
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
-		var/obj/item/assembly/rad_ignite/R = new /obj/item/assembly/rad_ignite(  )
+		var/obj/item/assembly/rad_ignite/R = new(get_turf(src.loc))
 		R.part1 = src.part1
+		R.part1.master = R
+		R.part1.loc = R
 		R.part2 = src.part2
-		R.loc = src.loc
-		if (user.r_hand == src)
-			user.r_hand = R
-			R.layer = 20
+		R.part2.master = R
+		R.part2.loc = R
+		if (user.get_inactive_hand()==src)
+			user.put_in_inactive_hand(part3)
 		else
-			if (user.l_hand == src)
-				user.l_hand = R
-				R.layer = 20
-		src.part1.loc = R
-		src.part2.loc = R
-		src.part1.master = R
-		src.part2.master = R
-		var/turf/T = src.loc
-		if (!( istype(T, /turf) ))
-			T = T.loc
-		if (!( istype(T, /turf) ))
-			T = T.loc
-		src.part3.loc = T
+			part3.loc = src.loc
 		src.part1 = null
 		src.part2 = null
 		src.part3 = null
-		//SN src = null
 		del(src)
 		return
-	if (!( istype(W, /obj/item/weapon/weldingtool) ))
+	if (!( istype(W, /obj/item/weapon/weldingtool) && W:welding ))
 		return
 	if (!( src.status ))
 		src.status = 1
@@ -813,43 +873,40 @@
 	src.add_fingerprint(user)
 	return
 
+/obj/item/assembly/r_i_ptank/emp_act(severity)
+	if(istype(part3,/obj/item/weapon/tank/plasma) && prob(100/severity))
+		part3.ignite()
+	..()
+
+//*****RM
+
 /obj/item/clothing/suit/armor/a_i_a_ptank/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if (istype(W, /obj/item/device/analyzer))
 		src.part4.attackby(W, user)
-
+		return
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
-		var/obj/item/assembly/a_i_a/R = new /obj/item/assembly/a_i_a(  )
+		var/obj/item/assembly/a_i_a/R = new(get_turf(src.loc))
 		R.part1 = src.part1
+		R.part1.master = R
+		R.part1.loc = R
 		R.part2 = src.part2
+		R.part2.master = R
+		R.part2.loc = R
 		R.part3 = src.part3
-		R.loc = src.loc
-		if (user.r_hand == src)
-			user.r_hand = R
-			R.layer = 20
+		R.part3.master = R
+		R.part3.loc = R
+		if (user.get_inactive_hand()==src)
+			user.put_in_inactive_hand(part4)
 		else
-			if (user.l_hand == src)
-				user.l_hand = R
-				R.layer = 20
-		src.part1.loc = R
-		src.part2.loc = R
-		src.part3.loc = R
-		src.part1.master = R
-		src.part2.master = R
-		src.part3.master = R
-		var/turf/T = src.loc
-		if (!( istype(T, /turf) ))
-			T = T.loc
-		if (!( istype(T, /turf) ))
-			T = T.loc
-		src.part4.loc = T
+			part4.loc = src.loc
 		src.part1 = null
 		src.part2 = null
 		src.part3 = null
 		src.part4 = null
-		//SN src = null
 		del(src)
 		return
-	if (( istype(W, /obj/item/weapon/weldingtool) ))
+	if (( istype(W, /obj/item/weapon/weldingtool) && W:welding))
 		return
 	if (!( src.status ))
 		src.status = 1
@@ -865,10 +922,8 @@
 	return
 
 /obj/item/assembly/r_i_ptank/attack_self(mob/user as mob)
-
-	if (src.part1)
-		playsound(src.loc, 'armbomb.ogg', 100, 1)
-		src.part1.attack_self(user, 1)
+	playsound(src.loc, 'armbomb.ogg', 100, 1)
+	src.part1.attack_self(user, 1)
 	src.add_fingerprint(user)
 	return
 
@@ -888,10 +943,10 @@
 /obj/bullet/Bump(atom/A as mob|obj|turf|area)
 	spawn(0)
 		if(A)
-			A.bullet_act(PROJECTILE_BULLET, src)
+			A.bullet_act(PROJECTILE_BULLET, src, def_zone)
 			if(istype(A,/turf))
 				for(var/obj/O in A)
-					O.bullet_act(PROJECTILE_BULLET, src)
+					O.bullet_act(PROJECTILE_BULLET, src, def_zone)
 
 		del(src)
 	return
@@ -910,7 +965,7 @@
 			A.bullet_act(PROJECTILE_WEAKBULLET, src)
 			if(istype(A,/turf))
 				for(var/obj/O in A)
-					O.bullet_act(PROJECTILE_WEAKBULLET, src)
+					O.bullet_act(PROJECTILE_WEAKBULLET, src, def_zone)
 
 		del(src)
 	return
@@ -918,13 +973,10 @@
 /obj/bullet/electrode/Bump(atom/A as mob|obj|turf|area)
 	spawn(0)
 		if(A)
-			if(istype(A,/turf))
-				A.bullet_act(PROJECTILE_TASER,src.dir)
-				for(var/obj/O in A)
-					O.bullet_act(PROJECTILE_TASER, src)
-				del(src)
-				return
 			A.bullet_act(PROJECTILE_TASER)
+			if(istype(A,/turf))
+				for(var/obj/O in A)
+					O.bullet_act(PROJECTILE_TASER, src, def_zone)
 		del(src)
 	return
 
@@ -934,7 +986,17 @@
 			A.bullet_act(PROJECTILE_BOLT)
 			if(istype(A,/turf))
 				for(var/obj/O in A)
-					O.bullet_act(PROJECTILE_BOLT, src)
+					O.bullet_act(PROJECTILE_BOLT, src, def_zone)
+		del(src)
+	return
+
+/obj/bullet/neurodart/Bump(atom/A as mob|obj|turf|area)
+	spawn(0)
+		if(A)
+			A.bullet_act(PROJECTILE_DART)
+			if(istype(A,/turf))
+				for(var/obj/O in A)
+					O.bullet_act(PROJECTILE_DART, src, def_zone)
 		del(src)
 	return
 
@@ -959,62 +1021,59 @@
 				if (M.anchored)
 					continue
 				if (istype(M, /atom/movable))
-					var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+					var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 					s.set_up(5, 1, M)
 					s.start()
 					if(prob(src.failchance)) //oh dear a problem, put em in deep space
-						do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy -5), getZLevel(Z_SPACE)), 0)
+						do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy -5), 3), 0)
 					else
 						do_teleport(M, src.target, 2)
 		del(src)
 	return
 
 /obj/bullet/proc/process()
-	if ((!( src.current ) || src.loc == src.current))
-		src.current = locate(min(max(src.x + src.xo, 1), world.maxx), min(max(src.y + src.yo, 1), world.maxy), src.z)
-	if ((src.x == 1 || src.x == world.maxx || src.y == 1 || src.y == world.maxy))
-		//SN src = null
-		del(src)
-		return
-	step_towards_3d(src, src.current)
-	spawn( 1 )
-		process()
-		return
+	spawn while(src)
+		if ((!( src.current ) || src.loc == src.current))
+			src.current = locate(min(max(src.x + src.xo, 1), world.maxx), min(max(src.y + src.yo, 1), world.maxy), src.z)
+		if ((src.x == 1 || src.x == world.maxx || src.y == 1 || src.y == world.maxy))
+			//SN src = null
+			del(src)
+			return
+		step_towards(src, src.current)
+		sleep( 1 )
 	return
 
-/obj/beam/a_laser/Bump(atom/A as mob|obj|turf|area)
+/obj/beam/a_laser/Bump(atom/A as mob|obj|turf)
 	spawn(0)
 		if(A)
-			A.bullet_act(PROJECTILE_LASER, src)
+			A.bullet_act(PROJECTILE_LASER, src, def_zone)
 		del(src)
 
 /obj/beam/a_laser/proc/process()
-	//world << text("laser at [] []:[], target is [] []:[]", src.loc, src.x, src.y, src:current, src.current:x, src.current:y)
-	if ((!( src.current ) || src.loc == src.current))
-		src.current = locate(min(max(src.x + src.xo, 1), world.maxx), min(max(src.y + src.yo, 1), world.maxy), src.z)
-		//world << text("current changed: target is now []. location was [],[], added [],[]", src.current, src.x, src.y, src.xo, src.yo)
-	if ((src.x == 1 || src.x == world.maxx || src.y == 1 || src.y == world.maxy))
-		//world << text("off-world, deleting")
-		//SN src = null
-		del(src)
-		return
-	step_towards_3d(src, src.current)
-	// make it able to hit lying-down folk
-	var/list/dudes = list()
-	for(var/mob/M in src.loc)
-		dudes += M
-	if(dudes.len)
-		src.Bump(pick(dudes))
-	//world << text("laser stepped, now [] []:[], target is [] []:[]", src.loc, src.x, src.y, src.current, src.current:x, src.current:y)
-	src.life--
-	if (src.life <= 0)
-		//SN src = null
-		del(src)
-		return
-
-	spawn(1)
-		src.process()
-		return
+	spawn while(src)
+		//world << text("laser at [] []:[], target is [] []:[]", src.loc, src.x, src.y, src:current, src.current:x, src.current:y)
+		if ((!( src.current ) || src.loc == src.current))
+			src.current = locate(min(max(src.x + src.xo, 1), world.maxx), min(max(src.y + src.yo, 1), world.maxy), src.z)
+			//world << text("current changed: target is now []. location was [],[], added [],[]", src.current, src.x, src.y, src.xo, src.yo)
+		if ((src.x == 1 || src.x == world.maxx || src.y == 1 || src.y == world.maxy))
+			//world << text("off-world, deleting")
+			//SN src = null
+			del(src)
+			return
+		step_towards(src, src.current)
+		// make it able to hit lying-down folk
+		var/list/dudes = list()
+		for(var/mob/living/M in src.loc)
+			dudes += M
+		if(dudes.len)
+			src.Bump(pick(dudes))
+		//world << text("laser stepped, now [] []:[], target is [] []:[]", src.loc, src.x, src.y, src.current, src.current:x, src.current:y)
+		src.life--
+		if (src.life <= 0)
+			//SN src = null
+			del(src)
+			return
+		sleep(1)
 	return
 
 /obj/beam/i_beam/proc/hit()
@@ -1184,7 +1243,7 @@
 		user << "\blue You arm the mousetrap."
 	else
 		icon_state = "mousetrap"
-		if((user.brainloss >= 60 || user.mutations & CLUMSY) && prob(50))
+		if((user.brainloss >= 60 || user.mutations & 16) && prob(50))
 			var/which_hand = "l_hand"
 			if(!user.hand)
 				which_hand = "r_hand"
@@ -1201,7 +1260,7 @@
 
 /obj/item/weapon/mousetrap/attack_hand(mob/user as mob)
 	if(armed)
-		if((user.brainloss >= 60 || user.mutations & CLUMSY) && prob(50))
+		if((user.brainloss >= 60 || user.mutations & 16) && prob(50))
 			var/which_hand = "l_hand"
 			if(!user.hand)
 				which_hand = "r_hand"

@@ -24,7 +24,16 @@
 				for(var/mob/living/silicon/S in orange(2,affected_mob))
 					if(istype(S, /mob/living/silicon/ai)) continue
 					step_towards(S,affected_mob)
-
+						/*
+						if(M.x > affected_mob.x)
+							M.x--
+						else if(M.x < affected_mob.x)
+							M.x++
+						if(M.y > affected_mob.y)
+							M.y--
+						else if(M.y < affected_mob.y)
+							M.y++
+						*/
 		if(3)
 			if(prob(2))
 				affected_mob << "\red You feel a strong shock course through your body."
@@ -43,7 +52,16 @@
 					var/iter = rand(1,2)
 					for(i=0,i<iter,i++)
 						step_towards(S,affected_mob)
-
+						/*
+						if(M.x > affected_mob.x)
+							M.x-=rand(1,min(3,M.x-affected_mob.x))
+						else if(M.x < affected_mob.x)
+							M.x+=rand(1,min(3,affected_mob.x-M.x))
+						if(M.y > affected_mob.y)
+							M.y-=rand(1,min(3,M.y-affected_mob.y))
+						else if(M.y < affected_mob.y)
+							M.y+=rand(1,min(3,affected_mob.y-M.y))
+						*/
 		if(4)
 			if(prob(2))
 				affected_mob << "\red You feel a powerful shock course through your body."
@@ -62,5 +80,14 @@
 					var/iter = rand(1,3)
 					for(i=0,i<iter,i++)
 						step_towards(S,affected_mob)
-
+						/*
+						if(M.x > affected_mob.x)
+							M.x-=rand(1,min(5,M.x-affected_mob.x))
+						else if(M.x < affected_mob.x)
+							M.x+=rand(1,min(5,affected_mob.x-M.x))
+						if(M.y > affected_mob.y)
+							M.y-=rand(1,min(5,M.y-affected_mob.y))
+						else if(M.y < affected_mob.y)
+							M.y+=rand(1,min(5,affected_mob.y-M.y))
+						*/
 	return

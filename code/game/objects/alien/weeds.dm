@@ -1,206 +1,51 @@
-/obj/alien/proc/process()
-	return
-
-/obj/item/alien/weeds/
-	layer = 2
-	health = 15
-	icon = 'alien.dmi'
-	name = "weeds"
-	anchored = 1
-	var/dead = 0
-	var/list/allowed = list(/obj/structure/closet,/obj/structure/table,/obj/machinery/computer,/obj/machinery/disposal)
-	var/spreadlimit = 10
-
-/obj/item/alien/weeds/New()
-	//del(src)
-	//return
+/obj/alien/weeds/New()
+	..()
 	if(istype(src.loc, /turf/space))
 		del(src)
 		return
-	processing_items.Add(src)
-/obj/item/alien/weeds/process()
-	if(dead) return
-/*	var/turf/T = src.loc
-	var/obj/item/alien/weeds/north = locate() in T.north
-	var/obj/item/alien/weeds/west = locate() in T.west
-	var/obj/item/alien/weeds/east = locate() in T.east
-	var/obj/item/alien/weeds/south = locate() in T.south
-
-	if(north && west && east && south)
-		dead = 1
-		return
-	if(!north||!west||!east||!south)
-		Life()
-*/
-	dead = 1	//No real reason for a weed to spread more than once.
-	Life()
-	update_icon(0)
-
-/obj/item/alien/weeds/proc/update_icon(var/spread = 1)
-	var/turf/T = src.loc
-	var/obj/item/alien/weeds/north = locate() in T.north
-	var/obj/item/alien/weeds/west = locate() in T.west
-	var/obj/item/alien/weeds/east = locate() in T.east
-	var/obj/item/alien/weeds/south = locate() in T.south
-	src.overlays = null
-	var/dir
-
-	if(!north)
-		dir += "north"
-	else if(spread)
-		north.update_icon(0)
-
-	if(!south)
-		dir += "south"
-	else if(spread)
-		south.update_icon(0)
-
-	if(!west)
-		dir += "west"
-	else if(spread)
-		west.update_icon(0)
-
-	if(!east)
-		dir += "east"
-	else if(spread)
-		east.update_icon(0)
-
-	if(!dir)
-		icon_state = "creep_center"
-	else
-		icon_state = "creep_[dir]"
-
+	src.icon_state = pick("weeds", "weeds1", "weeds2")
+	spawn(rand(150,300))
+		if(src)
+			src.Life()
 	return
 
-/obj/item/alien/weeds/proc/Life()
-	if (spreadlimit <= 0)
+/obj/alien/weeds/proc/Life()
+	var/turf/U = get_turf(src)
+/*
+	if (locate(/obj/movable, U))
+		U = locate(/obj/movable, U)
+		if(U.density == 1)
+			del(src)
+			return
+
+Alien plants should do something if theres a lot of poison
+	if(U.poison> 200000)
+		src.health -= round(U.poison/200000)
+		src.update()
 		return
-	src.update_icon(0)
-	var/turf/U = src.loc
+*/
 	if (istype(U, /turf/space))
 		del(src)
 		return
 
-	var/obj/machinery/light/L = locate() in src.loc
-	if(L)
-		L.broken()
+	direction_loop:
+		for(var/dirn in cardinal)
+			var/turf/T = get_step(src, dirn)
 
-	var/obj/machinery/power/apc/A = locate() in src.loc
-	if(A)
-		A.set_broken()
-	if(prob(1))
-		src.loc.ex_act(2)
-	for(var/dirn in cardinal)
-	//	sleep(100)
-	//	if(prob(50))
-	//		continue
-		//sleep(10)
-		var/turf/T = get_step(src,dirn)
-		if (istype(T.loc, /area/shuttle/arrival))
-			continue
-
-		if(T.density)
-			continue
-		if(locate(/obj/machinery/door/airlock) in T)
-			if(locate(/obj/machinery/door/airlock/external) in T)
+			if (!istype(T) || T.density || locate(/obj/alien/weeds) in T || istype(T.loc, /area/arrival) || istype(T, /turf/space))
 				continue
-			if(!locate(/obj/item/alien/weeds) in T)
-			//	src.dead = 0
-				var/obj/machinery/door/airlock/D = locate() in T
-				if(D.density)
-					D.forceopen()
-				//sleep(10)
-				var/obj/item/alien/weeds/B = new(src.loc)
-				B.icon_state = ""
-				B.spreadlimit = src.spreadlimit - 1
-				if(T.Enter(B) && !(locate(/obj/alien/weeds) in T))
-					B.loc = T
-					//B.Life()
-					B.update_icon(1)
-					continue
-				else
-					del(B)
-		if(locate(/obj/structure/closet) in T || locate(/obj/structure/table) in T || locate(/obj/machinery/computer) in T || locate(/obj/machinery/disposal) in T)
-			var/obj/item/alien/weeds/B = new(T)
-			B.spreadlimit = src.spreadlimit - 1
-			//B.Life()
-			B.update_icon(1)
-			continue
-		if(!locate(/obj/item/alien/weeds) in T)
-			var/obj/item/alien/weeds/B = new(src.loc)
-			B.spreadlimit = src.spreadlimit - 1
-			B.icon_state = ""
-			if(T.Enter(B))
-				B.loc = T
-				//B.Life()
-				B.update_icon(1)
-				continue
-			else
-				del(B)
 
-	/*
-	for(var/mob/living/carbon/human/h in src.loc)
-		h.hallucination += 10
+	//		if (locate(/obj/movable, T)) // don't propogate into movables
+	//			continue
 
-	for(var/dirn in cardinal)
-		var/turf/T = get_step(src, dirn)
+			for(var/obj/O in T)
+				if(O.density)
+					continue direction_loop
 
-		if (istype(T.loc, /area/shuttle/arrival))
-			continue
+			new /obj/alien/weeds(T)
 
-		if(T.density)
-			continue
 
-		if(locate(/obj/machinery/door) in T)
-			var/obj/machinery/door/D = locate() in T
-			if(D.density)
-				D.forceopen()
-			sleep(10)
-			var/obj/alien/weeds/B = new /obj/alien/weeds(U)
-			B.icon_state = pick("")
-			if(T.Enter(B,src) && !(locate(/obj/alien/weeds) in T))
-				B.loc = T
-				B.Life()
-				B.update_icon()
-				sleep(100)
-				continue
-			else
-				del(B)
-
-		else if(locate(/obj/structure/grille) in T || /obj/structure/window/ in T)
-			var/obj/alien/weeds/B = new /obj/alien/weeds(U)
-			B.icon_state = pick("")
-			if(T.Enter(B,src) && !(locate(/obj/alien/weeds) in T))
-				B.loc = T
-				spawn(80)
-					if(B)
-						B.Life()
-						B.update_icon()
-						continue
-			else
-				del(B)
-
-		else if(!(locate(/obj/alien/weeds) in T))
-			var/obj/alien/weeds/B = new /obj/alien/weeds(U)
-			B.icon_state = pick("")
-			B.loc = T
-			spawn(80)
-			if(B)
-				B.Life()
-				B.update_icon()
-				continue
-			else
-				del(B)
-						/*		if(T.Enter(B,src) && !(locate(/obj/alien/weeds) in T))
-			B.loc = T
-			update_icon()
-			spawn(80)
-				if(B)
-					B.Life()
-			// open cell, so expand
-			*/*/
-
-/obj/item/alien/weeds/ex_act(severity)
+/obj/alien/weeds/ex_act(severity)
 	switch(severity)
 		if(1.0)
 			del(src)
@@ -216,17 +61,36 @@
 		else
 	return
 
-/obj/item/alien/weeds/attack_hand(mob/user as mob)
-	return
+/obj/alien/weeds/attackby(var/obj/item/weapon/W, var/mob/user)
+	src.visible_message("\red <B>\The [src] have been attacked with \the [W][(user ? " by [user]." : ".")]")
 
-/obj/item/alien/weeds/attack_paw(mob/user as mob)
-	return
+	var/damage = W.force / 4.0
 
-/obj/item/alien/weeds/attackby(obj/item/weapon/weldingtool/P as obj, mob/user as mob)
-	if (istype(P, /obj/item/weapon/weldingtool))
-		if ((P:welding && P:welding))
-			for(var/mob/O in viewers(user, null))
-				O.show_message(text("\red [] burns [] with the welding tool!", user, src), 1, "\red You hear a small burning noise", 2)
-			src.health -= rand(3,5)
-			if(src.health <= 0)
-				del(src)
+	if(istype(W, /obj/item/weapon/weldingtool))
+		var/obj/item/weapon/weldingtool/WT = W
+
+		if(WT.welding)
+			damage = 15
+			playsound(src.loc, 'Welder.ogg', 100, 1)
+
+	src.health -= damage
+	src.healthcheck()
+
+/obj/alien/weeds/proc/healthcheck()
+	if(health <= 0)
+		del(src)
+
+
+/obj/alien/weeds/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
+	if(exposed_temperature > 300)
+		health -= 5
+		healthcheck()
+
+/*/obj/alien/weeds/burn(fi_amount)
+	if (fi_amount > 18000)
+		spawn( 0 )
+			del(src)
+			return
+		return 0
+	return 1
+*/

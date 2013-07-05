@@ -11,16 +11,18 @@
 	layer = 5.0
 	density = 1
 	anchored = 0
+	health = 20
+	maxhealth = 20
 	req_access =list(access_medical)
-	var/health = 20
 	var/stunned = 0 //It can be stunned by tasers. Delicate circuits.
 	var/locked = 1
 	var/emagged = 0
 	var/obj/machinery/camera/cam = null
 	var/list/botcard_access = list(access_medical, access_morgue, access_medlab, access_robotics)
 	var/obj/item/weapon/reagent_containers/glass/reagent_glass = null //Can be set to draw from this for reagents.
-	var/skin = null //Set to "tox" or "ointment" for the other two firstaid kits.
+	var/skin = null //Set to "tox", "ointment" or "o2" for the other two firstaid kits.
 	var/frustration = 0
+	var/path[] = new()
 	var/mob/living/carbon/patient = null
 	var/mob/living/carbon/oldpatient = null
 	var/oldloc = null
@@ -43,7 +45,7 @@
 	skin = "bezerk"
 	treatment_oxy = "dexalinp"
 
-/obj/item/weapon/robot_assembly/firstaid_arm
+/obj/item/weapon/firstaid_arm_assembly
 	name = "first aid/robot arm assembly"
 	desc = "A first aid kit with a robot arm permanently grafted to it."
 	icon = 'aibots.dmi'
@@ -56,16 +58,17 @@
 	New()
 		..()
 		spawn(5)
-			if(skin) src.overlays += image('aibots.dmi', "kit_skin_[skin]")
+			if(src.skin)
+				src.overlays += image('aibots.dmi', "kit_skin_[src.skin]")
 
 
 /obj/machinery/bot/medbot/New()
 	..()
-	src.icon_state = "medibot[on]"
+	src.icon_state = "medibot[src.on]"
 
 	spawn(4)
 		if(src.skin)
-			src.overlays += image('aibots.dmi', "medskin_[skin]")
+			src.overlays += image('aibots.dmi', "medskin_[src.skin]")
 
 		src.botcard = new /obj/item/weapon/card/id(src)
 		if(isnull(src.botcard_access) || (src.botcard_access.len < 1))
@@ -74,26 +77,31 @@
 			src.botcard.access = src.botcard_access
 		src.cam = new /obj/machinery/camera(src)
 		src.cam.c_tag = src.name
-		src.cam.network = "Luna"
+		src.cam.network = "SS13"
 
-/obj/machinery/bot/medbot/examine()
-	set src in view()
+/obj/machinery/bot/medbot/turn_on()
+	. = ..()
+	src.icon_state = "medibot[src.on]"
+	src.updateUsrDialog()
+
+/obj/machinery/bot/medbot/turn_off()
 	..()
-
-	if (src.health < 20)
-		if (src.health > 15)
-			usr << text("\red [src]'s parts look loose.")
-		else
-			usr << text("\red <B>[src]'s parts look very loose!</B>")
-	return
-
-/obj/machinery/bot/medbot/attack_ai(mob/user as mob)
-	return toggle_power()
+	src.patient = null
+	src.oldpatient = null
+	src.oldloc = null
+	src.path = new()
+	src.currently_healing = 0
+	src.last_found = world.time
+	src.icon_state = "medibot[src.on]"
+	src.updateUsrDialog()
 
 /obj/machinery/bot/medbot/attack_paw(mob/user as mob)
 	return attack_hand(user)
 
 /obj/machinery/bot/medbot/attack_hand(mob/user as mob)
+	. = ..()
+	if (.)
+		return
 	var/dat
 	dat += "<TT><B>Automatic Medical Unit v1.0</B></TT><BR><BR>"
 	dat += "Status: <A href='?src=\ref[src];power=1'>[src.on ? "On" : "Off"]</A><BR>"
@@ -131,7 +139,10 @@
 	usr.machine = src
 	src.add_fingerprint(usr)
 	if ((href_list["power"]) && (src.allowed(usr)))
-		src.toggle_power()
+		if (src.on)
+			turn_off()
+		else
+			turn_on()
 
 	else if((href_list["adj_threshold"]) && (!src.locked))
 		var/adjust_num = text2num(href_list["adj_threshold"])
@@ -161,8 +172,7 @@
 
 	src.updateUsrDialog()
 	return
-/obj/machinery/bot/medbot/shutdowns()
-	src.toggle_power()
+
 /obj/machinery/bot/medbot/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if ((istype(W, /obj/item/weapon/card/emag)) && (!src.emagged))
 
@@ -178,21 +188,15 @@
 		src.anchored = 0
 		src.emagged = 1
 		src.on = 1
-		src.icon_state = "medibot[on]"
+		src.icon_state = "medibot[src.on]"
 
-	else if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
+	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
 		if (src.allowed(user))
 			src.locked = !src.locked
 			user << "Controls are now [src.locked ? "locked." : "unlocked."]"
 			src.updateUsrDialog()
 		else
 			user << "\red Access denied."
-
-	else if (istype(W, /obj/item/weapon/screwdriver))
-		if (src.health < initial(src.health))
-			src.health = initial(src.health)
-			for(var/mob/O in viewers(src, null))
-				O << "\red [user] repairs [src]!"
 
 	else if (istype(W, /obj/item/weapon/reagent_containers/glass))
 		if(src.locked)
@@ -210,21 +214,16 @@
 		return
 
 	else
-		switch(W.damtype)
-			if("fire")
-				src.health -= W.force * 0.75
-			if("brute")
-				src.health -= W.force * 0.5
-			else
-		if (src.health <= 0)
-			src.explode()
-		else if (W.force)
-			step_to(src, (get_step_away(src,user)))
 		..()
+		if (health < maxhealth && !istype(W, /obj/item/weapon/screwdriver) && W.force)
+			step_to(src, (get_step_away(src,user)))
 
 
 /obj/machinery/bot/medbot/process()
-	if (!src.on)
+	set background = 1
+
+	if(!src.on)
+		src.stunned = 0
 		return
 
 	if(src.stunned)
@@ -236,7 +235,7 @@
 		src.currently_healing = 0
 
 		if(src.stunned <= 0)
-			src.icon_state = "medibot[on]"
+			src.icon_state = "medibot[src.on]"
 			src.stunned = 0
 		return
 
@@ -288,40 +287,26 @@
 
 	if(src.patient && src.path.len == 0 && (get_dist(src,src.patient) > 1))
 		spawn(0)
-			if (istype(src.loc, /turf/))
-				src.path = AStar(src.loc, get_turf(src.patient), /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 30,id=botcard, exclude=list(/obj/landmark/alterations/nopath))
-				src.path = reverselist(src.path)
-				if(src.path.len == 0)
-					src.oldpatient = src.patient
-					src.patient = null
-					src.currently_healing = 0
-					src.last_found = world.time
+			src.path = AStar(src.loc, get_turf(src.patient), /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 30,id=botcard)
+			src.path = reverselist(src.path)
+			if(src.path.len == 0)
+				src.oldpatient = src.patient
+				src.patient = null
+				src.currently_healing = 0
+				src.last_found = world.time
 		return
 
 	if(src.path.len > 0 && src.patient)
-		step_towards_3d(src, src.path[1])
+		step_to(src, src.path[1])
 		src.path -= src.path[1]
 		spawn(3)
 			if(src.path.len)
-				step_towards_3d(src, src.path[1])
+				step_to(src, src.path[1])
 				src.path -= src.path[1]
 
 	if(src.path.len > 8 && src.patient)
 		src.frustration++
 
-	return
-
-
-/obj/machinery/bot/medbot/proc/toggle_power()
-	src.on = !src.on
-	src.patient = null
-	src.oldpatient = null
-	src.oldloc = null
-	src.path = new()
-	src.currently_healing = 0
-	src.last_found = world.time
-	src.icon_state = "medibot[src.on]"
-	src.updateUsrDialog()
 	return
 
 /obj/machinery/bot/medbot/proc/assess_patient(mob/living/carbon/C as mob)
@@ -355,7 +340,7 @@
 	if((C.toxloss >= heal_threshold) && (!C.reagents.has_reagent(src.treatment_tox)))
 		return 1
 
-	if(C.virus && ((C.virus.stage > 1) || (C.virus.spread == "Airborne")))
+	if(C.virus && ((C.virus.stage > 1) || (C.virus.spread_type == AIRBORNE)))
 		if (!C.reagents.has_reagent(src.treatment_virus))
 			return 1 //STOP DISEASE FOREVER
 
@@ -449,43 +434,16 @@
 	return
 
 /obj/machinery/bot/medbot/bullet_act(flag, A as obj)
-	if (flag == PROJECTILE_BULLET)
-		src.health -= 18
+	if (flag == PROJECTILE_TASER)
+		src.stunned = min(stunned+10,20)
+	..()
 
-	else if (flag == PROJECTILE_TASER)
-		src.stunned += 10
-		if(src.stunned > 20)
-			src.stunned = 20
+/obj/machinery/bot/medbot/emp_act(severity)
+	if (cam)
+		cam.emp_act(severity)
+	..()
 
-	else if (flag == PROJECTILE_LASER)
-		src.health -= 8
-
-
-	if (src.health <= 0)
-		src.explode()
-
-/obj/machinery/bot/medbot/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			src.explode()
-			return
-		if(2.0)
-			src.health -= 15
-			if (src.health <= 0)
-				src.explode()
-			return
-	return
-
-/obj/machinery/bot/medbot/meteorhit()
-	src.explode()
-	return
-
-/obj/machinery/bot/medbot/blob_act()
-	if(prob(25))
-		src.explode()
-	return
-
-/obj/machinery/bot/medbot/proc/explode()
+/obj/machinery/bot/medbot/explode()
 	src.on = 0
 	for(var/mob/O in hearers(src, null))
 		O.show_message("\red <B>[src] blows apart!</B>", 1)
@@ -504,7 +462,7 @@
 	if (prob(50))
 		new /obj/item/robot_parts/l_arm(Tsec)
 
-	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	del(src)
@@ -514,7 +472,7 @@
 	spawn(0)
 		if ((istype(M, /obj/machinery/door)) && (!isnull(src.botcard)))
 			var/obj/machinery/door/D = M
-			if (D.check_access(src.botcard))
+			if (!istype(D, /obj/machinery/door/firedoor) && D.check_access(src.botcard))
 				D.open()
 				src.frustration = 0
 		else if ((istype(M, /mob/living/)) && (!src.anchored))
@@ -524,11 +482,11 @@
 		return
 	return
 
-/obj/machinery/bot/medbot/Bumped(M as mob|obj)
+/obj/machinery/bot/medbot/Bumped(atom/movable/M as mob|obj)
 	spawn(0)
-		var/turf/T = get_turf(src)
-		M:loc = T
-
+		if (M)
+			var/turf/T = get_turf(src)
+			M:loc = T
 
 /*
  *	Pathfinding procs, allow the medibot to path through doors it has access to.
@@ -548,7 +506,7 @@
 //It isn't blocked if we can open it, man.
 /proc/TurfBlockedNonWindowNonDoor(turf/loc, var/list/access)
 	for(var/obj/O in loc)
-		if(O.density && !istype(O, /obj/structure/window) && !istype(O, /obj/machinery/door))
+		if(O.density && !istype(O, /obj/window) && !istype(O, /obj/machinery/door))
 			return 1
 
 		if (O.density && (istype(O, /obj/machinery/door)) && (access.len))
@@ -564,7 +522,46 @@
  *	Medbot Assembly -- Can be made out of all three medkits.
  */
 
-/obj/item/weapon/robot_assembly/firstaid_arm/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/weapon/storage/firstaid/attackby(var/obj/item/robot_parts/S, mob/user as mob)
+	//..()
+	if ((!istype(S, /obj/item/robot_parts/l_arm)) && (!istype(S, /obj/item/robot_parts/r_arm)))
+		if (src.contents.len >= 7)
+			return
+		if ((S.w_class >= 2 || istype(S, /obj/item/weapon/storage)))
+			return
+		..()
+		return
+
+	//Syringekit doesn't count EVER.
+	if(src.type == /obj/item/weapon/storage/firstaid/syringes)
+		return
+
+	if(src.contents.len >= 1)
+		user << "\red You need to empty [src] out first!"
+		return
+	else
+		var/obj/item/weapon/firstaid_arm_assembly/A = new /obj/item/weapon/firstaid_arm_assembly
+		if(istype(src,/obj/item/weapon/storage/firstaid/fire))
+			A.skin = "ointment"
+		else if(istype(src,/obj/item/weapon/storage/firstaid/toxin))
+			A.skin = "tox"
+		else if(istype(src,/obj/item/weapon/storage/firstaid/o2))
+			A.skin = "o2"
+
+		A.loc = user
+		if (user.r_hand == S)
+			user.u_equip(S)
+			user.r_hand = A
+		else
+			user.u_equip(S)
+			user.l_hand = A
+		A.layer = 20
+		user << "You add the robot arm to the first aid kit"
+		del(S)
+		del(src)
+
+/obj/item/weapon/firstaid_arm_assembly/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if ((istype(W, /obj/item/device/healthanalyzer)) && (!src.build_step))
 		src.build_step++
 		user << "You add the health sensor to [src]!"

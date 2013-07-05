@@ -65,7 +65,7 @@
 		stat |= BROKEN
 		return
 	rpm = 0.9* rpm + 0.1 * rpmtarget
-	var/datum/gas_mixture/environment = inturf.return_air(1)
+	var/datum/gas_mixture/environment = inturf.return_air()
 	var/transfer_moles = environment.total_moles()/10
 	//var/transfer_moles = rpm/10000*capacity
 	var/datum/gas_mixture/removed = inturf.remove_air(transfer_moles)
@@ -121,7 +121,7 @@
 		return
 	lastgen = ((compressor.rpm / TURBGENQ)**TURBGENG) *TURBGENQ
 
-	AddPower(lastgen)
+	add_avail(lastgen)
 	var/newrpm = ((compressor.gas_contained.temperature) * compressor.gas_contained.total_moles())/4
 	newrpm = max(0, newrpm)
 
@@ -243,9 +243,9 @@
 		if(do_after(user, 20))
 			if (src.stat & BROKEN)
 				user << "\blue The broken glass falls out."
-				var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
+				var/obj/computerframe/A = new /obj/computerframe( src.loc )
 				new /obj/item/weapon/shard( src.loc )
-				var/obj/item/weapon/circuitboard/computer/turbine_control/M = new /obj/item/weapon/circuitboard/computer/turbine_control( A )
+				var/obj/item/weapon/circuitboard/turbine_control/M = new /obj/item/weapon/circuitboard/turbine_control( A )
 				for (var/obj/C in src)
 					C.loc = src.loc
 				M.id = src.id
@@ -256,8 +256,8 @@
 				del(src)
 			else
 				user << "\blue You disconnect the monitor."
-				var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
-				var/obj/item/weapon/circuitboard/computer/turbine_control/M = new /obj/item/weapon/circuitboard/computer/turbine_control( A )
+				var/obj/computerframe/A = new /obj/computerframe( src.loc )
+				var/obj/item/weapon/circuitboard/turbine_control/M = new /obj/item/weapon/circuitboard/turbine_control( A )
 				for (var/obj/C in src)
 					C.loc = src.loc
 				M.id = src.id

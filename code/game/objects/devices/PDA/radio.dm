@@ -1,6 +1,6 @@
 /obj/item/radio/integrated
 	name = "PDA radio module"
-	desc = "An electronic radio system of NanoTrasen origin."
+	desc = "An electronic radio system of nanotrasen origin."
 	icon = 'module.dmi'
 	icon_state = "power_mod"
 	var/obj/item/device/pda/hostpda = null
@@ -115,7 +115,7 @@
 	var/list/botstatus			// the status signal sent by the bot
 	var/list/beacons
 
-	var/beacon_freq = 1400
+	var/beacon_freq = 1445
 	var/control_freq = 1447
 
 	// create a new QM cartridge, and register to receive bot control & beacon message
@@ -257,129 +257,3 @@
 		radio_connection.post_signal(src, signal)
 
 		return
-
-/obj/item/device/radio/proc/autosay(var/from, message, channel) // Baystation stuff used to yell "CORE OVERLOAD"
-	var/datum/radio_frequency/connection = null // Code shared by Mport2004 for Security Headsets -- TLE
-	if(channel && channels && channels.len > 0)
-		if (channel == "department")
-			//world << "DEBUG: channel=\"[channel]\" switching to \"[channels[1]]\""
-			channel = channels[1]
-		connection = secure_radio_connections[channel]
-	else
-		connection = radio_connection
-		channel = null
-	if (!istype(connection))
-		return
-	var/display_freq = connection.frequency
-
-	if (!(wires & WIRE_TRANSMIT))
-		return
-
-	var/list/receive = list()
-
-	//for (var/obj/item/device/radio/R in radio_connection.devices)
-	for (var/obj/item/device/radio/R in connection.devices["[RADIO_CHAT]"]) // Modified for security headset code -- TLE
-		//if(R.accept_rad(src, message))
-		receive |= R.send_hear(display_freq)
-
-	//world << "DEBUG: receive.len=[receive.len]"
-	var/list/heard_normal = list() // normal message
-	var/list/heard_garbled = list() // garbled message
-
-	for (var/mob/R in receive)
-		/*if (R.say_understands(M))
-			if (!ishuman(M) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
-				heard_masked += R
-			else
-				heard_normal += R
-		else
-			if (M.voice_message)
-				heard_voice += R
-			else
-				heard_garbled += R*/
-		heard_normal += R
-
-	if (length(heard_normal) || length(heard_garbled))
-		var/part_a = "<span class='radio'><span class='name'>"
-		//var/part_b = "</span><b> \icon[src]\[[format_frequency(frequency)]\]</b> <span class='message'>"
-		var/freq_text
-		switch(display_freq)
-			if(SYND_FREQ)
-				freq_text = "#unkn"
-			if(COMM_FREQ)
-				freq_text = "Command"
-			if(1351)
-				freq_text = "Science"
-			if(1355)
-				freq_text = "Medical"
-			if(1357)
-				freq_text = "Engineering"
-			if(1359)
-				freq_text = "Security"
-			if(1349)
-				freq_text = "Mining"
-			if(1347)
-				freq_text = "Cargo"
-		//There's probably a way to use the list var of channels in code\game\communications.dm to make the dept channels non-hardcoded, but I wasn't in an experimentive mood. --NEO
-
-		if(!freq_text)
-			freq_text = format_frequency(display_freq)
-
-		var/part_b = "</span><b> \icon[src]\[[freq_text]\]</b> <span class='message'>" // Tweaked for security headsets -- TLE
-		var/part_c = "&quot;</span>[message]</span>&quot;"
-
-		if (display_freq==SYND_FREQ)
-			part_a = "<span class='syndradio'><span class='name'>"
-		else if (display_freq==COMM_FREQ)
-			part_a = "<span class='comradio'><span class='name'>"
-		else if (display_freq in DEPT_FREQS)
-			part_a = "<span class='deptradio'><span class='name'>"
-
-		var/quotedmsg = "declares: " /*M.say_quote(message)*/
-
-
-		//This following recording is intended for research and feedback in the use of department radio channels. It was added on 30.3.2011 by errorage.
-
-		var/part_blackbox_b = "</span><b> \[[freq_text]\]</b> <span class='message'>" // Tweaked for security headsets -- TLE
-		var/blackbox_msg = "[part_a][from][part_blackbox_b][quotedmsg][part_c]"
-		//var/blackbox_admin_msg = "[part_a][M.name] (Real name: [M.real_name])[part_blackbox_b][quotedmsg][part_c]"
-		for (var/obj/machinery/blackbox_recorder/BR in world)
-			//BR.messages_admin += blackbox_admin_msg
-			switch(display_freq)
-				if(1459)
-					BR.msg_common += blackbox_msg
-				if(1351)
-					BR.msg_science += blackbox_msg
-				if(1353)
-					BR.msg_command += blackbox_msg
-				if(1355)
-					BR.msg_medical += blackbox_msg
-				if(1357)
-					BR.msg_engineering += blackbox_msg
-				if(1359)
-					BR.msg_security += blackbox_msg
-				if(1441)
-					BR.msg_deathsquad += blackbox_msg
-				if(1213)
-					BR.msg_syndicate += blackbox_msg
-				if(1349)
-					BR.msg_mining += blackbox_msg
-				if(1347)
-					BR.msg_cargo += blackbox_msg
-				else
-					BR.messages += blackbox_msg
-
-		//End of research and feedback code.
-
-		if (length(heard_normal))
-			var/rendered = "[part_a][from][part_b][quotedmsg][part_c]"
-
-			for (var/mob/R in heard_normal)
-				R.show_message(rendered, 2)
-
-		if (length(heard_garbled))
-			quotedmsg = "" /*M.say_quote(stars(message))*/
-			var/rendered = "[part_a][from][part_b][quotedmsg][part_c]"
-
-			for (var/mob/R in heard_garbled)
-				R.show_message(rendered, 2)

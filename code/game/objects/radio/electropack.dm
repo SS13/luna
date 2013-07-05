@@ -22,6 +22,7 @@
 	return
 
 /obj/item/device/radio/electropack/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 
 	if (istype(W, /obj/item/weapon/screwdriver))
 		src.e_pads = !( src.e_pads )
@@ -96,8 +97,8 @@
 		usr << browse(null, "window=radio")
 		return
 	return
-
-/*/obj/item/device/radio/electropack/accept_rad(obj/item/device/radio/signaler/R as obj, message)
+/*
+/obj/item/device/radio/electropack/accept_rad(obj/item/device/radio/signaler/R as obj, message)
 
 	if ((istype(R, /obj/item/device/radio/signaler) && R.frequency == src.frequency && R.code == src.code))
 		return 1

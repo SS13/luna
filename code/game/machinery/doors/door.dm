@@ -1,26 +1,52 @@
 /obj/machinery/door/Bumped(atom/AM)
-	if(p_open || operating || !density || !autoopen) return
+	if(p_open || operating) return
 	if(ismob(AM))
 		var/mob/M = AM
-		if(world.timeofday - AM.last_bumped <= 5) return
-		if(M.client && !M:handcuffed) attack_hand(M)
+		if(world.time - AM.last_bumped <= 60) return //NOTE do we really need that?
+		if(M.client && !M:handcuffed)
+			bumpopen(M)
 	else if(istype(AM, /obj/machinery/bot))
 		var/obj/machinery/bot/bot = AM
 		if(src.check_access(bot.botcard))
+			if(density)
+				open()
+	else if(istype(AM, /obj/livestock))
+		var/obj/livestock/ani =AM
+		if(src.check_access(ani.anicard))
 			if(density)
 				open()
 	else if(istype(AM, /obj/alien/facehugger))
 		if(src.check_access(null))
 			if(density)
 				open()
-	if(istype(AM, /obj/mecha))
+	else if(istype(AM, /obj/mecha))
 		var/obj/mecha/mecha = AM
 		if(density)
 			if(mecha.occupant && src.allowed(mecha.occupant))
 				open()
-		return
+			else
+				flick("door_deny", src)
 
-// beepDERP
+
+/obj/machinery/door/proc/bumpopen(mob/user as mob)
+	if (src.operating)
+		return
+	//if(world.timeofday-last_used <= 10)
+	//	return
+	src.add_fingerprint(user)
+	if (!src.requiresID())
+		//don't care who they are or what they have, act as if they're NOTHING
+		user = null
+
+	if (src.allowed(user))
+		if (src.density)
+			//last_used = world.timeofday
+			open()
+	else if (src.density)
+		flick("door_deny", src)
+	return
+
+
 /obj/machinery/door/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group) return 0
 	if(istype(mover, /obj/beam))
@@ -35,8 +61,6 @@
 	var/turf/simulated/south = get_step(source,SOUTH)
 	var/turf/simulated/east = get_step(source,EAST)
 	var/turf/simulated/west = get_step(source,WEST)
-	var/turf/simulated/up = get_step_3d(source,UP)
-	var/turf/simulated/down = get_step_3d(source,DOWN)
 
 	if(need_rebuild)
 		if(istype(source)) //Rebuild/update nearby group geometry
@@ -64,29 +88,16 @@
 				air_master.groups_to_rebuild += west.parent
 			else
 				air_master.tiles_to_update += west
-		if(istype(up))
-			if(up.parent)
-				air_master.groups_to_rebuild += up.parent
-			else
-				air_master.tiles_to_update += up
-		if(istype(down))
-			if(down.parent)
-				air_master.groups_to_rebuild += down.parent
-			else
-				air_master.tiles_to_update += down
 	else
 		if(istype(source)) air_master.tiles_to_update += source
 		if(istype(north)) air_master.tiles_to_update += north
 		if(istype(south)) air_master.tiles_to_update += south
 		if(istype(east)) air_master.tiles_to_update += east
 		if(istype(west)) air_master.tiles_to_update += west
-		if(istype(up)) air_master.tiles_to_update += up
-		if(istype(down)) air_master.tiles_to_update += down
 
 	return 1
 
 /obj/machinery/door
-	var/Zombiedamage
 	New()
 		..()
 
@@ -118,27 +129,43 @@
 	if (src.operating)
 		return
 	src.add_fingerprint(user)
-
-	if (istype(user, /mob/living/carbon/human) && user:zombie)
-		user << "\blue You claw the airlock"
-		Zombiedamage += rand(4,8)
-		if(Zombiedamage > 80 || (locked && Zombiedamage > 200))
-			src.locked = 0
-			user << "\blue You break the circuitry"
-			src.operating = -1
-			flick("door_spark", src)
-			sleep(6)
-			forceopen()
-			return 1
-		operating = 1
-		spawn(6) operating = 0
-		return 1
-
 	if (!src.requiresID())
 		//don't care who they are or what they have, act as if they're NOTHING
 		user = null
-	if (src.density && istype(I, /obj/item/weapon/card/emag))
+	if (src.density && (istype(I, /obj/item/weapon/card/emag)||istype(I, /obj/item/weapon/blade)))
 		src.operating = -1
+		if(istype(I, /obj/item/weapon/blade))
+			if(istype(src, /obj/machinery/door/airlock))
+				var/datum/effects/system/spark_spread/spark_system = new /datum/effects/system/spark_spread()
+				spark_system.set_up(5, 0, src.loc)
+				spark_system.start()
+				playsound(src.loc, 'blade1.ogg', 50, 1)
+				playsound(src.loc, "sparks", 50, 1)
+				for(var/mob/O in viewers(user, 3))
+					O.show_message(text("\blue The door has been sliced open by [] with an energy blade!", user), 1, text("\red You hear metal being sliced and sparks flying."), 2)
+				if((!src:arePowerSystemsOn()) || (stat & NOPOWER) || src:isWireCut(AIRLOCK_WIRE_DOOR_BOLTS))
+					var/obj/door_assembly/temp
+					var/failsafe=0
+					switch(src:doortype)
+						if(0) temp=new/obj/door_assembly/door_assembly_0(src.loc)
+						if(1) temp=new/obj/door_assembly/door_assembly_com(src.loc)
+						if(2) temp=new/obj/door_assembly/door_assembly_sec(src.loc)
+						if(3) temp=new/obj/door_assembly/door_assembly_eng(src.loc)
+						if(4) temp=new/obj/door_assembly/door_assembly_med(src.loc)
+						if(5) temp=new/obj/door_assembly/door_assembly_mai(src.loc)
+						if(6) temp=new/obj/door_assembly/door_assembly_ext(src.loc)
+						if(7) temp=new/obj/door_assembly/door_assembly_g(src.loc)
+						else	failsafe=1
+					if(!failsafe)
+						temp.anchored=0
+						step_away(temp,usr,15)
+					else	del(temp)
+					del(src)
+					return
+				else
+					src:welded = 0
+					src:locked = 0
+					update_icon()
 		flick("door_spark", src)
 		sleep(6)
 		open()
@@ -151,9 +178,47 @@
 	else if (src.density)
 		flick("door_deny", src)
 	return
+
+/obj/machinery/door/airlock/proc/ion_act()
+	if(src.z == 1 && src.density)
+		if(length(req_access) > 0 && !(12 in req_access))
+			if(prob(4))
+				world << "\red Airlock emagged in [src.loc.loc]"
+				src.operating = -1
+				flick("door_spark", src)
+				sleep(6)
+				open()
+		else
+			if(prob(8))
+				world << "\red non vital Airlock emagged in [src.loc.loc]"
+				src.operating = -1
+				flick("door_spark", src)
+				sleep(6)
+				open()
+	return
+
+/obj/machinery/door/firedoor/proc/ion_act()
+	if(src.z == 1)
+		if(prob(15))
+			if(density)
+				open()
+			else
+				close()
+	return
+
 /obj/machinery/door/blob_act()
-	if(prob(20))
+	if(prob(40))
 		del(src)
+
+/obj/machinery/door/emp_act(severity)
+	if(prob(20/severity) && (istype(src,/obj/machinery/door/airlock) || istype(src,/obj/machinery/door/window)) )
+		open()
+	if(prob(40/severity))
+		if(secondsElectrified == 0)
+			secondsElectrified = -1
+			spawn(300)
+				secondsElectrified = 0
+	..()
 
 /obj/machinery/door/ex_act(severity)
 	switch(severity)
@@ -162,24 +227,13 @@
 		if(2.0)
 			if(prob(25))
 				del(src)
-			else
-				src.forceopen()
-				src.operating = -1
-				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
-				s.set_up(2, 1, src)
-				s.start()
-				flick("door_spark", src)
-
 		if(3.0)
-			if(prob(50))
-				src.forceopen()
-				src.operating = -1
-				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+			if(prob(80))
+				var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 				s.set_up(2, 1, src)
 				s.start()
-				flick("door_spark", src)
 
-/obj/machinery/door/proc/update_icon()
+/obj/machinery/door/update_icon()
 	if(density)
 		icon_state = "door1"
 	else
@@ -213,11 +267,11 @@
 		src.operating = 1
 
 	animate("opening")
-	sleep(6)
+	sleep(10)
 	src.density = 0
 	update_icon()
 
-	src.ul_SetOpacity(0)
+	src.sd_SetOpacity(0)
 	update_nearby_tiles()
 
 	if(operating == 1) //emag again
@@ -228,9 +282,6 @@
 			autoclose()
 	return 1
 
-/obj/machinery/door/proc/forceopen()
-	return
-
 /obj/machinery/door/proc/close()
 	if(density)
 		return 1
@@ -240,48 +291,11 @@
 
 	animate("closing")
 	src.density = 1
-	spawn(4)
-		if(!istype(src, /obj/machinery/door/window))
-			for(var/mob/living/L in src.loc) // Crush mobs and move them out of the way
-
-				if(src.forcecrush) // Save an AI, crush a limb
-					var/limbname = pick("l arm", "r arm", "l hand","r hand", "l foot", "r foot")
-					var/limbdisplay
-
-					for(var/organ in L:organs)
-						var/datum/organ/external/temp = L:organs["[organ]"]
-						if (istype(temp, /datum/organ/external) && temp.name == limbname)
-							limbdisplay = temp.display_name // Take the name for down below
-							temp.take_damage(60, 0) //OH GOD IT HURTS
-							break
-
-					L << "\red The airlock crushes your [limbdisplay]!"
-					for(var/mob/O in viewers(L, null))
-						O.show_message("\red The airlock crushes [L.name]'s [limbdisplay]!", 1)
-
-
-				else
-					L << "\red The airlock forces you out of the way!" //Lucky you
-					for(var/mob/O in viewers(L, null))
-						O.show_message("\red The airlock pushes [L.name] out of the way!", 1)
-
-				var/list/lst = list(NORTH,SOUTH,EAST,WEST)
-				var/turf/T = get_random_turf(L, lst)
-				if(T)
-					L.loc = T
-
-			for(var/obj/item/I in src.loc) // Move items out of the way
-				if(!I.anchored)
-					var/list/lst = list(NORTH,SOUTH,EAST,WEST)
-					var/turf/T = get_random_turf(I, lst)
-					if(T)
-						I.loc = T
-
-	sleep(6)
+	sleep(10)
 	update_icon()
 
 	if (src.visible && (!istype(src, /obj/machinery/door/airlock/glass)))
-		src.ul_SetOpacity(1)
+		src.sd_SetOpacity(1)
 	if(operating == 1)
 		operating = 0
 	update_nearby_tiles()
@@ -294,10 +308,33 @@
 
 /////////////////////////////////////////////////// Unpowered doors
 
+/obj/machinery/door/unpowered/Bumped(atom/AM)
+	if(p_open || operating) return
+	if (src.locked)
+		return
+	if(ismob(AM))
+		var/mob/M = AM
+		if(world.time - AM.last_bumped <= 60) return
+		if(M.client && !M:handcuffed)
+			bumpopen(M)
+	else if(istype(AM, /obj/machinery/bot))
+		var/obj/machinery/bot/bot = AM
+		if(src.check_access(bot.botcard))
+			if(density)
+				open()
+	else if(istype(AM, /obj/livestock))
+		var/obj/livestock/ani =AM
+		if(src.check_access(ani.anicard))
+			if(density)
+				open()
+	else if(istype(AM, /obj/alien/facehugger))
+		if(src.check_access(null))
+			if(density)
+				open()
+
 /obj/machinery/door/unpowered
-	explosionstrength = 1
 	autoclose = 0
-	//var/locked = 0
+	var/locked = 0
 
 /obj/machinery/door/unpowered/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -309,9 +346,13 @@
 	return src.attackby(null, user)
 
 /obj/machinery/door/unpowered/attackby(obj/item/I as obj, mob/user as mob)
+	if (src.operating)
+		return
+	if (src.locked)
+		return
 	src.add_fingerprint(user)
 	if (src.allowed(user))
-		if (src.density && !locked)
+		if (src.density)
 			open()
 		else
 			close()
@@ -323,57 +364,3 @@
 	icon_state = "door1"
 	opacity = 1
 	density = 1
-	autoopen = 0
-
-/obj/machinery/door/unpowered/shuttle/attackby(obj/item/I as obj, mob/user as mob)
-	if (src.operating)
-		return
-	if(src.loc.loc.name == "Arrival Shuttle" || src.loc.loc.name == "supply shuttle" || src.loc.loc.name == "Docking Bay D" || src.loc.loc.name == "NanoTrasen shuttle" || src.loc.loc.name == "Prison Shuttle")
-		..()
-		return
-	if(!LaunchControl.online)
-		if(src.density)
-			var/area/A = user.loc.loc
-			if(A.name == "Escape Pod A" || A.name == "Escape Pod B" || A.name == "Space")
-				user.show_viewers(text("\blue [] opens the shuttle door.", user))
-				src.add_fingerprint(user)
-				open()
-				spawn(100)
-					if(!LaunchControl.online && !src.density)
-						close()
-		else
-			src.add_fingerprint(user)
-			close()
-		return
-	if(LaunchControl.online)
-		src.add_fingerprint(user)
-		if(src.density)
-			open()
-		else
-			close()
-
-// ***************************************
-// Networking Support
-// ***************************************
-/*
-/obj/machinery/door/NetworkIdentInfo()
-	return "DOOR [!src.density ? "OPEN" : "CLOSED"]"
-
-/obj/machinery/door/ReceiveNetworkPacket(message, sender)
-	if(..())
-		return 1
-	var/list/PacketParts = GetPacketContentUppercased(message)
-	if(PacketParts.len < 2)
-		return 0
-	if(check_password(PacketParts[1]))
-		if(PacketHasStringAtIndex(PacketParts, 2, "OPEN"))
-			spawn(0)
-				open()
-			return 1
-		else if(PacketHasStringAtIndex(PacketParts, 2, "CLOSE"))
-			spawn(0)
-				close()
-				return 1
-	return 0
-
-*/

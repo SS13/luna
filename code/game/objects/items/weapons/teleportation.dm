@@ -121,7 +121,7 @@ Frequency:
 	if ((user.equipped() != src || user.stat || user.restrained()))
 		return
 	var/count = 0	//num of portals from this teleport in world
-	for(var/obj/effect/portal/PO in world)
+	for(var/obj/portal/PO in world)
 		if(PO.creator == src)	count++
 	if(count >= 3)
 		user.show_message("\red The hand teleporter is recharging!")
@@ -129,7 +129,7 @@ Frequency:
 	var/T = L[t1]
 	for(var/mob/O in hearers(user, null))
 		O.show_message("\blue Locked In", 2)
-	var/obj/effect/portal/P = new /obj/effect/portal( get_turf(src) )
+	var/obj/portal/P = new /obj/portal( get_turf(src) )
 	P.target = T
 	P.creator = src
 	src.add_fingerprint(user)

@@ -14,11 +14,11 @@
 			name = "light switch ([area.name])"
 
 		src.on = src.area.lightswitch
-		update_icon()
+		updateicon()
 
 
 
-/obj/machinery/light_switch/proc/update_icon()
+/obj/machinery/light_switch/proc/updateicon()
 	if(stat & NOPOWER)
 		icon_state = "light-p"
 	else
@@ -42,11 +42,11 @@
 
 	for(var/area/A in area.master.related)
 		A.lightswitch = on
-		A.update_icon()
+		A.updateicon()
 
 		for(var/obj/machinery/light_switch/L in A)
 			L.on = on
-			L.update_icon()
+			L.updateicon()
 
 	area.master.power_change()
 
@@ -58,5 +58,5 @@
 		else
 			stat |= NOPOWER
 
-		update_icon()
+		updateicon()
 

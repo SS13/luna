@@ -30,7 +30,7 @@
 
 		spawn(5)	// must wait for map loading to finish
 			if(radio_controller)
-				radio_controller.add_object(src, "[freq]")
+				radio_controller.add_object(src, freq, RADIO_NAVBEACONS)
 
 	// set the transponder codes assoc list from codes_txt
 	proc/set_codes()
@@ -39,7 +39,7 @@
 
 		codes = new()
 
-		var/list/entries = dd_text2list(codes_txt, ";")	// entries are separated by semicolons
+		var/list/entries = dd_text2List(codes_txt, ";")	// entries are separated by semicolons
 
 		for(var/e in entries)
 			var/index = findtext(e, "=")		// format is "key=value"
@@ -55,10 +55,10 @@
 	// hide the object if turf is intact
 	hide(var/intact)
 		invisibility = intact ? 101 : 0
-		update_icon()
+		updateicon()
 
 	// update the icon_state
-	proc/update_icon()
+	proc/updateicon()
 		var/state="navbeacon[open]"
 
 		if(invisibility)
@@ -84,7 +84,7 @@
 
 	proc/post_signal()
 
-		var/datum/radio_frequency/frequency = radio_controller.return_frequency("[freq]")
+		var/datum/radio_frequency/frequency = radio_controller.return_frequency(freq)
 
 		if(!frequency) return
 
@@ -96,7 +96,7 @@
 		for(var/key in codes)
 			signal.data[key] = codes[key]
 
-		frequency.post_signal(src, signal)
+		frequency.post_signal(src, signal, filter = RADIO_NAVBEACONS)
 
 
 	attackby(var/obj/item/I, var/mob/user)
@@ -109,9 +109,9 @@
 
 			user.visible_message("[user] [open ? "opens" : "closes"] the beacon's cover.", "You [open ? "open" : "close"] the beacon's cover.")
 
-			update_icon()
+			updateicon()
 
-		else if (istype(I, /obj/item/weapon/card/id))
+		else if (istype(I, /obj/item/weapon/card/id)||istype(I, /obj/item/device/pda))
 			if(open)
 				if (src.allowed(user))
 					src.locked = !src.locked

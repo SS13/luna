@@ -15,13 +15,16 @@
 	var/allow_vote_restart = 0 			// allow votes to restart
 	var/allow_vote_mode = 0				// allow votes to change mode
 	var/allow_admin_jump = 1			// allows admin jumping
-	var/allow_admin_spawning = 0		// allows admin item spawning
+	var/allow_admin_spawning = 1		// allows admin item spawning
 	var/allow_admin_rev = 1				// allows admin revives
 	var/vote_delay = 600				// minimum time between voting sessions (seconds, 10 minute default)
 	var/vote_period = 60				// length of voting period (seconds, default 1 minute)
 	var/vote_no_default = 0				// vote does not default to nochange/norestart (tbi)
 	var/vote_no_dead = 0				// dead people can't vote (tbi)
-	var/visibility = 0
+	var/del_new_on_log = 1				// del's new players if they log before they spawn in
+	var/feature_object_spell_system = 0 //spawns a spellbook which gives object-type spells instead of verb-type spells for the wizard
+	var/traitor_scaling = 0 //if amount of traitors scales based on amount of players
+
 	var/list/mode_names = list()
 	var/list/modes = list()				// allowed modes
 	var/list/votable_modes = list()		// votable modes
@@ -29,15 +32,21 @@
 	var/allow_ai = 1					// allow ai job
 	var/hostedby = null
 	var/respawn = 1
-	var/mode_hidden = 0
+	var/guest_jobban = 1
+	var/kick_inactive = 0				//force disconnect for inactive players
+
+	var/server
+	var/banappeals
+
 /datum/configuration/New()
 	var/list/L = typesof(/datum/game_mode) - /datum/game_mode
 	for (var/T in L)
+		// I wish I didn't have to instance the game modes in order to look up
+		// their information, but it is the only way (at least that I know of).
 		var/datum/game_mode/M = new T()
 
-		if (M.config_tag && M.enabled)
+		if (M.config_tag)
 			if(!(M.config_tag in modes))		// ensure each mode is added only once
-				check_diary()
 				diary << "Adding game mode [M.name] ([M.config_tag]) to configuration."
 				src.modes += M.config_tag
 				src.mode_names[M.config_tag] = M.name
@@ -45,17 +54,16 @@
 				if (M.votable)
 					src.votable_modes += M.config_tag
 		del(M)
+	src.votable_modes += "secret"
 
 /datum/configuration/proc/load(filename)
 	var/text = file2text(filename)
 
 	if (!text)
-		check_diary()
 		diary << "No config.txt file found, setting defaults"
 		src = new /datum/configuration()
 		return
 
-	check_diary()
 	diary << "Reading configuration file [filename]"
 
 	var/list/CL = dd_text2list(text, "\n")
@@ -86,8 +94,6 @@
 		switch (name)
 			if ("log_ooc")
 				config.log_ooc = 1
-			if ("mode_hidden")
-				config.mode_hidden = 1
 
 			if ("log_access")
 				config.log_access = 1
@@ -155,8 +161,25 @@
 			if ("hostedby")
 				config.hostedby = value
 
+			if ("server")
+				config.server = value
+
+			if ("banappeals")
+				config.banappeals = value
+
+			if ("guest_jobban")
+				config.guest_jobban = text2num(value)
+
+			if ("dont_del_newmob")
+				config.del_new_on_log = 0
+
+			if ("feature_object_spell_system")
+				config.feature_object_spell_system = 1
+
+			if ("traitor_scaling")
+				config.traitor_scaling = 1
+
 			if ("probability")
-				check_diary()
 				var/prob_pos = findtext(value, " ")
 				var/prob_name = null
 				var/prob_value = null
@@ -170,14 +193,21 @@
 						diary << "Unknown game mode probability configuration definition: [prob_name]."
 				else
 					diary << "Incorrect probability configuration definition: [prob_name]  [prob_value]."
+			if ("kick_inactive")
+				config.kick_inactive = text2num(value)
 			else
-				check_diary()
 				diary << "Unknown setting in configuration: '[name]'"
 
-	load_mysql()
+/datum/configuration/proc/loadsql(filename)  // -- TLE
+	var/text = file2text(filename)
 
-/datum/configuration/proc/load_mysql()
-	var/text = file2text("config/db_config.txt")
+	if (!text)
+		diary << "No dbconfig.txt file found, retaining defaults"
+		world << "No dbconfig.txt file found, retaining defaults"
+		return
+
+	diary << "Reading database configuration file [filename]"
+
 	var/list/CL = dd_text2list(text, "\n")
 
 	for (var/t in CL)
@@ -204,18 +234,22 @@
 			continue
 
 		switch (name)
-			if("db_server")
-				DB_SERVER = value
-			if("db_port")
-				DB_PORT = text2num(value)
-			if("db_user")
-				DB_USER = value
-			if("db_password")
-				DB_PASSWORD = value
-			if("db_dbname")
-				DB_DBNAME = value
+			if ("address")
+				sqladdress = value
+			if ("port")
+				sqlport = value
+			if ("database")
+				sqldb = value
+			if ("login")
+				sqllogin = value
+			if ("password")
+				sqlpass = value
+			else
+				diary << "Unknown setting in configuration: '[name]'"
 
 /datum/configuration/proc/pick_mode(mode_name)
+	// I wish I didn't have to instance the game modes in order to look up
+	// their information, but it is the only way (at least that I know of).
 	for (var/T in (typesof(/datum/game_mode) - /datum/game_mode))
 		var/datum/game_mode/M = new T()
 		if (M.config_tag && M.config_tag == mode_name)
@@ -243,6 +277,8 @@
 	if (!mode_name)
 		world << "Failed to pick a random game mode."
 		return null
+
+	//world << "Returning mode [mode_name]"
 
 	return src.pick_mode(mode_name)
 

@@ -35,7 +35,7 @@
 		if(istype(bot))
 			if(density && src.check_access(bot.botcard))
 				open()
-				sleep(50 * tick_multiplier)
+				sleep(50)
 				close()
 		return
 	if (!( ticker ))
@@ -45,9 +45,9 @@
 	if (src.density && src.allowed(AM))
 		open()
 		if(src.check_access(null))
-			sleep(50 * tick_multiplier)
+			sleep(50)
 		else //secure doors close faster
-			sleep(20 * tick_multiplier)
+			sleep(20)
 		close()
 	return
 
@@ -71,7 +71,7 @@
 /obj/machinery/door/window/open()
 	if (src.operating == 1) //doors can still open when emag-disabled
 		return 0
-	if (!ticker || src.locked)
+	if (!ticker)
 		return 0
 	if(!src.operating) //in case of emag
 		src.operating = 1
@@ -81,15 +81,12 @@
 	sleep(10)
 
 	src.density = 0
-	src.ul_SetOpacity(0)
+	src.sd_SetOpacity(0)
 	update_nearby_tiles()
 
 	if(operating == 1) //emag again
 		src.operating = 0
 	return 1
-
-/obj/machinery/door/window/forceopen()
-	return src.open()
 
 /obj/machinery/door/window/close()
 	if (src.operating)
@@ -101,7 +98,7 @@
 
 	src.density = 1
 	if (src.visible)
-		src.ul_SetOpacity(1)
+		src.sd_SetOpacity(1)
 	update_nearby_tiles()
 
 	sleep(10)
@@ -116,8 +113,16 @@
 	if (!src.requiresID())
 		//don't care who they are or what they have, act as if they're NOTHING
 		user = null
-	if (src.density && istype(I, /obj/item/weapon/card/emag))
+	if (src.density && (istype(I, /obj/item/weapon/card/emag)||istype(I, /obj/item/weapon/blade)))
 		src.operating = -1
+		if(istype(I, /obj/item/weapon/blade))
+			var/datum/effects/system/spark_spread/spark_system = new /datum/effects/system/spark_spread()
+			spark_system.set_up(5, 0, src.loc)
+			spark_system.start()
+			playsound(src.loc, "sparks", 50, 1)
+			playsound(src.loc, 'blade1.ogg', 50, 1)
+			for(var/mob/O in viewers(user, 5))
+				O.show_message(text("\blue The glass door was sliced open by []!", user), 1, text("\red You hear glass being sliced and sparks flying."), 2)
 		flick(text("[]spark", src.base_state), src)
 		sleep(6)
 		open()

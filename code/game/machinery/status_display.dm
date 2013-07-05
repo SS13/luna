@@ -4,74 +4,15 @@
 // Use to show shuttle ETA/ETD times
 // Alert status
 // And arbitrary messages set by comms computer
-/obj/machinery/status_display/examine()
-	..()
-	var/msg
-	switch(mode)
-		if(1)
-			var/time = get_shuttle_timer()
-			if(time)
-				msg = "The time reads: "+num2text(round(gametime / 100,0.001))
-		if(2)
-			if(message1 && message2)
-				msg = "The screen states the two following message. [message1] , [message2]"
-			else if(message1)
-				msg = "The screen states the following message. [message1]"
-			else if(message2)
-				msg = "The screen states the following message. [message1]"
-		if(3)
-			msg = src
 
-		if(4)
-			var/time = get_supply_shuttle_timer()
-			if(time)
-				msg = "The screen states the time until the supply shuttle arrive. \n Time remaining:[time]"
-	usr << msg
-	return
-/obj/machinery/status_display/call_function(var/datum/function/F)
-	if(uppertext(F.arg1) != net_pass)
-		var/datum/function/R = new()
-		R.name = "response"
-		R.source_id = address
-		R.destination_id = F.source_id
-		R.arg1 += "Incorrect Access token"
-		send_packet(src,F.source_id,R)
-		return 0 // send a wrong password really.
-	if(F.name == "location")
-		var/datum/function/R = new()
-		R.name = "response"
-		R.arg1 = "[src] at [src.loc:loc:name]\n"
-		R.source_id = address
-		R.destination_id = F.source_id
-		send_packet(src,F.source_id,R)
-		update()
-	else if(F.arg2)
-		if(F.name == "mode")
-			var/value = mode
-			switch(F.arg1)
-				if("blank")
-					value = 0
-				if("shuttle")
-					value = 1
-				if("msg")
-					value = 2
-				if("alert")
-					value = 3
-				if("supply")
-					value = 4
-			mode = value
-		else if(F.name == "msg")
-			message1 = F.arg2
-			message2 = F.arg3
-			set_message(message1,message2)
 /obj/machinery/status_display
 	icon = 'status_display.dmi'
 	icon_state = "frame"
 	name = "status display"
 	anchored = 1
-	density = 0
-	networking = 2
-	security = 1
+	density = 1
+	use_power = 1
+	idle_power_usage = 10
 	var/mode = 1	// 0 = Blank
 					// 1 = Shuttle timer
 					// 2 = Arbitrary message(s)
@@ -91,6 +32,8 @@
 	var/supply_display = 0		// true if a supply shuttle display
 	var/repeat_update = 0		// true if we are going to update again this ptick
 
+	var/friendc = 0      // track if Friend Computer mode
+
 	// new display
 	// register for radio system
 	New()
@@ -107,14 +50,16 @@
 			overlays = null
 			return
 
-		use_power(200)
-
 		update()
 
 
 	// set what is displayed
 
 	proc/update()
+
+		if(friendc && mode!=4) //Makes all status displays except supply shuttle timer display the eye -- Urist
+			set_picture("ai_friend")
+			return
 
 		if(mode==0)
 			overlays = null
@@ -124,11 +69,12 @@
 			return
 
 		if(mode==1)	// shuttle timer
-			if(LaunchControl.online)
-				icon = 'status_display.dmi'
-				icon_state = "frame"
+			if(emergency_shuttle.online)
 				var/displayloc
-				displayloc = "ETL "
+				if(emergency_shuttle.location == 1)
+					displayloc = "ETD "
+				else
+					displayloc = "ETA "
 
 				var/displaytime = get_shuttle_timer()
 				if(lentext(displaytime) > 5)
@@ -137,16 +83,10 @@
 				update_display(displayloc, displaytime)
 				return
 			else
-				icon = 'clock.dmi'
-				icon_state = ""
-				var/dis = num2text(round(gametime / 100))
-				if(dis) icon_state = dis
 				overlays = null
 				return
 
 		if(mode==4)		// supply shuttle timer
-			icon = 'status_display.dmi'
-			icon_state = "frame"
 			var/disp1
 			var/disp2
 			if(supply_shuttle_moving)
@@ -168,8 +108,6 @@
 
 
 		if(mode==2)
-			icon = 'status_display.dmi'
-			icon_state = "frame"
 			var/line1
 			var/line2
 
@@ -193,11 +131,10 @@
 			if((index1 || index2) && repeat_update)	// if either line is scrolling
 													// and we haven't forced an update yet
 
-				spawn(5*tick_multiplier)
+				spawn(5)
 					repeat_update = 0
 					update()		// set to update again in 5 ticks
 					repeat_update = 1
-
 
 	proc/set_message(var/m1, var/m2)
 		if(m1)
@@ -241,7 +178,7 @@
 	// return shuttle timer as text
 
 	proc/get_shuttle_timer()
-		var/timeleft = LaunchControl.timeleft()
+		var/timeleft = emergency_shuttle.timeleft()
 		if(timeleft)
 			return "[add_zero(num2text((timeleft / 60) % 60),2)]~[add_zero(num2text(timeleft % 60), 2)]"
 			// note ~ translates into a blinking :
@@ -316,7 +253,7 @@
 	icon_state = "frame"
 	name = "AI display"
 	anchored = 1
-	density = 1
+	density = 0
 
 	var/mode = 0	// 0 = Blank
 					// 1 = AI emoticon
@@ -331,8 +268,6 @@
 		if(stat & NOPOWER)
 			overlays = null
 			return
-
-		use_power(200)
 
 		update()
 
@@ -360,6 +295,16 @@
 					set_picture("ai_bsod")
 				if("Blank")
 					set_picture("ai_off")
+				if("Problems?")
+					set_picture("ai_trollface")
+				if("Awesome")
+					set_picture("ai_awesome")
+				if("Dorfy")
+					set_picture("ai_urist")
+				if("Facepalm")
+					set_picture("ai_facepalm")
+				if("Friend Computer")
+					set_picture("ai_friend")
 
 			return
 

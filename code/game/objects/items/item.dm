@@ -9,8 +9,6 @@
 /obj/item/proc/talk_into(mob/M as mob, text)
 	return
 
-/obj/item/proc/security_talk_into(mob/M as mob, text)
-
 /obj/item/proc/moved(mob/user as mob, old_loc as turf)
 	return
 
@@ -61,6 +59,8 @@
 	return
 
 /obj/item/verb/move_to_top()
+	set name = "Move To Top"
+	set category = "Object"
 	set src in oview(1)
 
 	if(!istype(src.loc, /turf) || usr.stat || usr.restrained() )
@@ -88,12 +88,13 @@
 		if(5.0)
 			t = "huge"
 		else
-	if ((usr.mutations & CLUMSY) && prob(50)) t = "funny-looking"
+	if ((usr.mutations & 16) && prob(50)) t = "funny-looking"
 	usr << text("This is a []\icon[][]. It is a [] item.", !src.blood_DNA ? "" : "bloody ",src, src.name, t)
 	usr << src.desc
 	return
 
 /obj/item/attack_hand(mob/user as mob)
+	if (!user) return
 	if (istype(src.loc, /obj/item/weapon/storage))
 		for(var/mob/M in range(1, src.loc))
 			if (M.s_active == src.loc)
@@ -101,38 +102,31 @@
 					M.client.screen -= src
 	src.throwing = 0
 	if (src.loc == user)
-		user.u_equip(src)
+		//canremove==0 means that object may not be removed. You can still wear it. This only applies to clothing. /N
+		if(istype(src, /obj/item/clothing) && !src:canremove)
+			return
+		else
+			user.u_equip(src)
 	else
-		if(ishuman(user) && !user:zombie)
-			src.pickup(user)
+		src.pickup(user)
 
 	if (user.hand)
-		if(ishuman(user))
-			var/datum/organ/external/temp = organs["l_hand"]
-			if(!temp.destroyed)
-				user.l_hand = src
-			else
-				user << "\blue You pick \the [src] up with your ha- wait a minute."
-				return
-		else
-			user.l_hand = src
+		user.l_hand = src
 	else
-		if(ishuman(user))
-			var/datum/organ/external/temp = organs["l_hand"]
-			if(!temp.destroyed)
-				user.l_hand = src
-			else
-				user << "\blue You pick \the [src] up with your ha- wait a minute."
-				return
-		else
-			user.r_hand = src
+		user.r_hand = src
 	src.loc = user
 	src.layer = 20
 	add_fingerprint(user)
 	user.update_clothing()
 	return
 
+
 /obj/item/attack_paw(mob/user as mob)
+
+	if(isalien(user)) // -- TLE
+		if(!user:has_fine_manipulation) // -- defaults to 0, only changes due to badminnery -- Urist
+			user << "Your claws aren't capable of such fine manipulation."
+			return
 
 	if (istype(src.loc, /obj/item/weapon/storage))
 		for(var/mob/M in range(1, src.loc))
@@ -141,7 +135,11 @@
 					M.client.screen -= src
 	src.throwing = 0
 	if (src.loc == user)
-		user.u_equip(src)
+		//canremove==0 means that object may not be removed. You can still wear it. This only applies to clothing. /N
+		if(istype(src, /obj/item/clothing) && !src:canremove)
+			return
+		else
+			user.u_equip(src)
 	if (user.hand)
 		user.l_hand = src
 	else
@@ -151,10 +149,25 @@
 	user.update_clothing()
 	return
 
-/obj/item/proc/attack(mob/M as mob, mob/user as mob, def_zone)
-	if (!M) // not sure if this is the right thing...
-		return
+/obj/item/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if (istype(W, /obj/item/weapon/packageWrap))
+		var/obj/item/weapon/packageWrap/O = W
+		if (O.amount > 1)
+			var/obj/item/smallDelivery/P = new /obj/item/smallDelivery(get_turf(src.loc))
+			P.wrapped = src
 
+			src.loc = P
+			O.amount -= 1
+
+
+/obj/item/proc/attack(mob/living/M as mob, mob/living/user as mob, def_zone)
+
+	if (!istype(M)) // not sure if this is the right thing...
+		return
+	var/messagesource = M
+
+	if (istype(M,/mob/living/carbon/brain))
+		messagesource = M:container
 	if (src.hitsound)
 		playsound(src.loc, hitsound, 50, 1, -1)
 	/////////////////////////
@@ -163,17 +176,13 @@
 	//spawn(1800)            // this wont work right
 	//	M.lastattacker = null
 	/////////////////////////
-	if(M.client)
-		log_attack("[M.name] attacked by [user.name]([user.key]) with [src]")
-	user.log_m("Attacked [M.name]([M.real_name]) with [src]")
-	M.log_m("Attacked by [user.name]([user.real_name])([user.key]) with [src]")
 	if(!istype(M, /mob/living/carbon/human))
-		for(var/mob/O in viewers(M, null))
+		for(var/mob/O in viewers(messagesource, null))
 			O.show_message(text("\red <B>[] has been attacked with [][] </B>", M, src, (user ? text(" by [].", user) : ".")), 1)
 	var/power = src.force
 	if (istype(M, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = M
-		if (istype(user, /mob/living/carbon/human) || istype(user, /mob/living/silicon/robot))
+		if (ishuman(user) || isrobot(user) || ishivebot(user) || ismonkey(user) || isalien(user))
 			if (!( def_zone ))
 				var/mob/user2 = user
 				var/t = user2:zone_sel.selecting
@@ -192,7 +201,7 @@
 			if (M.mutations & 2)
 				f_dam = 0
 			if (def_zone == "head")
-				if (b_dam && (istype(H.head, /obj/item/clothing/head/helmet/) && H.head.body_parts_covered & HEAD) && prob(80 - src.force))
+				if (b_dam && H.isarmored(affecting) && prob(80 - src.force))
 					if (prob(20))
 						affecting.take_damage(power, 0)
 					else
@@ -210,11 +219,11 @@
 					for(var/mob/O in viewers(M, null))
 						O.show_message(text("\red <B>[] has been knocked unconscious!</B>", H), 1, "\red You hear someone fall.", 2)
 					if (prob(50))
-						if (ticker.mode.name == "revolution")
+						if (ticker.mode.name == "revolution" && M != user)
 							ticker.mode:remove_revolutionary(H.mind)
-				if (b_dam && prob(25 + (b_dam * 2)) && b.)
+				if (b_dam && prob(25 + (b_dam * 2)))
 					src.add_blood(H)
-					if (prob(65))
+					if (prob(33))
 						var/turf/location = H.loc
 						if (istype(location, /turf/simulated))
 							location.add_blood(H)
@@ -228,63 +237,23 @@
 						var/mob/living/carbon/human/user2 = user
 						if (user2.gloves)
 							user2.gloves.add_blood(H)
-							user2.gloves.transfer_blood = 2
-							user2.gloves.bloody_hands_mob = H
 						else
 							user2.add_blood(H)
-							user2.bloody_hands = 2
-							user2.bloody_hands_mob = H
 						if (prob(15))
 							if (user2.wear_suit)
 								user2.wear_suit.add_blood(H)
 							else if (user2.w_uniform)
 								user2.w_uniform.add_blood(H)
 				affecting.take_damage(b_dam, f_dam)
-			else if (def_zone == "chest")
-				if (b_dam && ((istype(H.wear_suit, /obj/item/clothing/suit/armor/)) && H.wear_suit.body_parts_covered & CHEST) && prob(90 - src.force))
-					H.show_message("\red You have been protected from a hit to the chest.")
+			else if (def_zone == "chest" || def_zone == "groin")
+				if (b_dam && H.isarmored(affecting) && prob(90 - src.force))
+					H.show_message("\red You have been protected from a hit to the [affecting.name].")
 					return
-				if ((b_dam && prob(src.force + affecting.brute_dam + affecting.burn_dam)))
-					if (prob(50))
-						if (H.weakened < 5)
-							H.weakened = 5
-						for(var/mob/O in viewers(H, null))
-							O.show_message(text("\red <B>[] has been knocked down!</B>", H), 1, "\red You hear someone fall.", 2)
-					else
-						if (H.stunned < 2)
-							H.stunned = 2
-						for(var/mob/O in viewers(H, null))
-							O.show_message(text("\red <B>[] has been stunned!</B>", H), 1)
-					if(H.stat != 2)	H.stat = 1
-				if (b_dam && prob(25 + (b_dam * 2)))
-					src.add_blood(H)
-					if (prob(65))
-						var/turf/location = H.loc
-						if (istype(location, /turf/simulated))
-							location.add_blood(H)
-					if (H.wear_suit)
-						H.wear_suit.add_blood(H)
-					if (H.w_uniform)
-						H.w_uniform.add_blood(H)
-					if (istype(user, /mob/living/carbon/human))
-						var/mob/living/carbon/human/user2 = user
-						if (user2.gloves)
-							user2.gloves.add_blood(H)
-							user2.gloves.transfer_blood = 2
-							user2.gloves.bloody_hands_mob = H
-						else
-							user2.add_blood(H)
-							user2.bloody_hands = 2
-							user2.bloody_hands_mob = H
-						if (prob(15))
-							if (user2.wear_suit)
-								user2.wear_suit.add_blood(H)
-							else if (user2.w_uniform)
-								user2.w_uniform.add_blood(H)
-				affecting.take_damage(b_dam, f_dam)
-			else if (def_zone == "groin")
-				if (b_dam && (istype(H.wear_suit, /obj/item/clothing/suit/armor/) && H.wear_suit.body_parts_covered & GROIN) && prob(90 - src.force))
-					H.show_message("\red You have been protected from a hit to the groin (phew).")
+				if (b_dam && ((istype(H.r_hand, /obj/item/weapon/shield/riot))) && prob(90 - src.force))
+					H.show_message("\red You have been protected from a hit to the [affecting.name].")
+					return
+				if (b_dam && ((istype(H.l_hand, /obj/item/weapon/shield/riot))) && prob(90 - src.force))
+					H.show_message("\red You have been protected from a hit to the [affecting.name].")
 					return
 				if ((b_dam && prob(src.force + affecting.brute_dam + affecting.burn_dam)))
 					if (prob(50))
@@ -300,7 +269,7 @@
 						if(H.stat != 2)	H.stat = 1
 					if (b_dam && prob(25 + (b_dam * 2)))
 						src.add_blood(H)
-						if (prob(65))
+						if (prob(33))
 							var/turf/location = H.loc
 							if (istype(location, /turf/simulated))
 								location.add_blood(H)
@@ -312,12 +281,8 @@
 							var/mob/living/carbon/human/user2 = user
 							if (user2.gloves)
 								user2.gloves.add_blood(H)
-								user2.gloves.transfer_blood = 2
-								user2.gloves.bloody_hands_mob = H
 							else
 								user2.add_blood(H)
-								user2.bloody_hands = 2
-								user2.bloody_hands_mob = H
 							if (prob(15))
 								if (user2.wear_suit)
 									user2.wear_suit.add_blood(H)
@@ -325,9 +290,12 @@
 									user2.w_uniform.add_blood(H)
 					affecting.take_damage(b_dam, f_dam)
 			else
+				if (b_dam && H.isarmored(affecting) && prob(80 - src.force))
+					H.show_message("\red You have been protected from a hit to the [affecting.name].")
+					return
 				if (b_dam && prob(25 + (b_dam * 2)))
 					src.add_blood(H)
-					if (prob(65))
+					if (prob(33))
 						var/turf/location = H.loc
 						if (istype(location, /turf/simulated))
 							location.add_blood(H)
@@ -339,30 +307,99 @@
 						var/mob/living/carbon/human/user2 = user
 						if (user2.gloves)
 							user2.gloves.add_blood(H)
-							user2.gloves.transfer_blood = 2
-							user2.gloves.bloody_hands_mob = H
 						else
 							user2.add_blood(H)
-							user2.bloody_hands = 2
-							user2.bloody_hands_mob = H
 						if (prob(15))
 							if (user2.wear_suit)
 								user2.wear_suit.add_blood(H)
 							else if (user2.w_uniform)
 								user2.w_uniform.add_blood(H)
 				affecting.take_damage(b_dam, f_dam)
-		H.UpdateDamageIcon()
+		H.UpdateDamageIcon()                     ///Only reference I can find on the attack() proc actually changing mob icon -Agouri
 	else
 		switch(src.damtype)
 			if("brute")
-				M.bruteloss += power
+				M.take_organ_damage(power)
+				if (prob(33)) // Added blood for whacking non-humans too
+					var/turf/location = M.loc
+					if (istype(location, /turf/simulated))
+						location.add_blood_floor(M)
 			if("fire")
 				if (!(M.mutations & 2))
-					M.fireloss += power
-			//		M << "heres ur burn notice"
+					M.take_organ_damage(0, power)
+					M << "Aargh it burns!"
 		M.updatehealth()
 	src.add_fingerprint(user)
-	return
+	return 1
 
+
+/obj/item/proc/eyestab(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
+
+	var/mob/living/carbon/human/H = M
+	if(istype(H) && ( \
+			(H.head && H.head.flags & HEADCOVERSEYES) || \
+			(H.wear_mask && H.wear_mask.flags & MASKCOVERSEYES) || \
+			(H.glasses && H.glasses.flags & GLASSESCOVERSEYES) \
+		))
+		// you can't stab someone in the eyes wearing a mask!
+		user << "\red You're going to need to remove that mask/helmet/glasses first."
+		return
+
+	var/mob/living/carbon/monkey/Mo = M
+	if(istype(Mo) && ( \
+			(Mo.wear_mask && Mo.wear_mask.flags & MASKCOVERSEYES) \
+		))
+		// you can't stab someone in the eyes wearing a mask!
+		user << "\red You're going to need to remove that mask/helmet/glasses first."
+		return
+
+	if(istype(M, /mob/living/carbon/alien))//Aliens don't have eyes./N
+		user << "\red You cannot locate any eyes on this creature!"
+		return
+
+	src.add_fingerprint(user)
+	//if((user.mutations & 16) && prob(50))
+	//	M = user
+		/*
+		M << "\red You stab yourself in the eye."
+		M.sdisabilities |= 1
+		M.weakened += 4
+		M.bruteloss += 10
+		*/
+
+	if(M != user)
+		for(var/mob/O in (viewers(M) - user - M))
+			O.show_message("\red [M] has been stabbed in the eye with [src] by [user].", 1)
+		M << "\red [user] stabs you in the eye with [src]!"
+		user << "\red You stab [M] in the eye with [src]!"
+	else
+		user.visible_message( \
+			"\red [user] has stabbed themself with [src]!", \
+			"\red You stab yourself in the eyes with [src]!" \
+		)
+	if(istype(M, /mob/living/carbon/human))
+		var/datum/organ/external/affecting = M:organs["head"]
+		affecting.take_damage(7)
+	else
+		M.take_organ_damage(7)
+	M.eye_blurry += rand(3,4)
+	M.eye_stat += rand(2,4)
+	if (M.eye_stat >= 10)
+		M.eye_blurry += 15+(0.1*M.eye_blurry)
+		M.disabilities |= 1
+		if(M.stat != 2)
+			M << "\red Your eyes start to bleed profusely!"
+		if(prob(50))
+			if(M.stat != 2)
+				M << "\red You drop what you're holding and clutch at your eyes!"
+				M.drop_item()
+			M.eye_blurry += 10
+			M.paralysis += 1
+			M.weakened += 4
+		if (prob(M.eye_stat - 10 + 1))
+			if(M.stat != 2)
+				M << "\red You go blind!"
+			M.sdisabilities |= 1
+	return
 
 

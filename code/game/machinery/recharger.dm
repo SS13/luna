@@ -3,6 +3,9 @@ obj/machinery/recharger
 	icon = 'stationobjs.dmi'
 	icon_state = "recharger0"
 	name = "recharger"
+	use_power = 1
+	idle_power_usage = 4
+	active_power_usage = 250
 
 	var
 		obj/item/weapon/gun/energy/charging = null
@@ -12,13 +15,18 @@ obj/machinery/recharger
 	if (src.charging || src.charging2)
 		return
 	if (istype(G, /obj/item/weapon/gun/energy))
+		if (istype(G, /obj/item/weapon/gun/energy/general/nuclear))
+			user << "Your gun's recharge port was removed to make room for a miniaturized reactor."
+			return
 		user.drop_item()
 		G.loc = src
 		src.charging = G
+		use_power = 2
 	if (istype(G, /obj/item/weapon/baton))
 		user.drop_item()
 		G.loc = src
 		src.charging2 = G
+		use_power = 2
 
 /obj/machinery/recharger/attack_hand(mob/user as mob)
 	src.add_fingerprint(user)
@@ -26,10 +34,12 @@ obj/machinery/recharger
 		src.charging.update_icon()
 		src.charging.loc = src.loc
 		src.charging = null
+		use_power = 1
 	if(src.charging2)
-	//	src.charging2.update_icon()
+		src.charging2.update_icon()
 		src.charging2.loc = src.loc
 		src.charging2 = null
+		use_power = 1
 
 
 /obj/machinery/recharger/attack_paw(mob/user as mob)

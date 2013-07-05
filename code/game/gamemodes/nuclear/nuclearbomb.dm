@@ -41,7 +41,8 @@
 	return
 
 /obj/machinery/nuclearbomb/verb/make_deployable()
-	set name = "make deployable"
+	set category = "Object"
+	set name = "Make Deployable"
 	set src in oview(1)
 
 	if (src.deployable)
@@ -96,8 +97,11 @@
 					src.timing = !( src.timing )
 					if (src.timing)
 						src.icon_state = "nuclearbomb2"
+						if(!src.safety)
+							bomb_set = 1//There can still be issues with this reseting when there are multiple bombs. Not a big deal tho for Nuke/N
 					else
 						src.icon_state = "nuclearbomb1"
+						bomb_set = 0
 				if (href_list["safety"])
 					src.safety = !( src.safety )
 				if (href_list["anchor"])
@@ -129,27 +133,78 @@
 		return
 	src.timing = -1.0
 	src.yes_code = 0
+	src.safety = 1
 	src.icon_state = "nuclearbomb3"
-	sleep(20*tick_multiplier)
+	playsound(src,'Alarm.ogg',100,0,5)
+	sleep(100)
 
 /*
 	var/turf/ground_zero = get_turf(loc)
-	explosion(ground_zero, 50, 250, 500, 750, 1)
+	explosion(ground_zero, 50, 250, 500, 750)
 
 */
 	enter_allowed = 0
-	for(var/client/C)
-		spawn(0)
-			C.station_explosion_cinematic()
+	var/derp = 0
+	var/herp = 0
+	var/area/A = src.loc.loc
+	if (istype( A, /area))
+		if (A.name == "Space")
+			derp = 1
+		if (istype(A, /area/syndicate_station))
+			derp = 1
+		if (A.name == "Wizard's Den")
+			derp = 1
+	if (!derp)
+		for(var/direction in cardinal)
+			for(var/area/target in get_step(src,direction))
+				if (target.name == "Space")
+					derp = 1
+				if (istype(target, /area/syndicate_station))
+					derp = 1
+				if (target.name == "Wizard's Den")
+					derp = 1
+	if (syndicate_station_at_station)
+		herp = 1
+	for(var/mob/M in world)
+		if(M.client)
+			spawn(0)
+				M.client.station_explosion_cinematic(derp)
 
 	if(ticker.mode.name == "nuclear emergency")
 		ticker.mode:nuke_detonated = 1
+		if (derp) ticker.mode:derp = 1
 		ticker.mode.check_win()
-	else
-		sleep(10*tick_multiplier)
-		world << "<B>Everyone was killed by the nuclear blast! Resetting in 30 seconds!</B>"
+		ticker.mode.declare_completion()
 
-		sleep(300*tick_multiplier)
+	sleep(110)
+	if (ticker.mode.name != "nuclear emergency" || !derp || !herp)
+		world << "<B>The station was destoyed by the nuclear blast! Resetting in 30 seconds!</B>"
+
+		sleep(300)
 		log_game("Rebooting due to nuclear destruction of station")
 		world.Reboot()
-	return
+		return
+
+	else if (ticker.mode.name == "nuclear emergency" && herp)
+		world << "<B>Everyone died in the blast, including the Syndicate Agents. Resetting in 30 seconds!</B>"
+
+		sleep(300)
+		log_game("Rebooting due to nuclear detonation")
+		world.Reboot()
+		return
+
+	else if (ticker.mode.name == "nuclear emergency" && derp)
+		world << "<B>Resetting in 30 seconds!</B>"
+
+		sleep(300)
+		log_game("Rebooting due to nuclear detonation")
+		world.Reboot()
+		return
+
+/obj/item/weapon/disk/nuclear/Del()
+	if (ticker.mode && ticker.mode.name == "nuclear emergency")
+		if(blobstart.len > 0)
+			var/obj/D = new /obj/item/weapon/disk/nuclear(pick(blobstart))
+			message_admins("[src] has been destroyed. Spawning [D] at ([D.x], [D.y], [D.z]).")
+			log_game("[src] has been destroyed. Spawning [D] at ([D.x], [D.y], [D.z]).")
+	..()

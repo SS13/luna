@@ -1,15 +1,14 @@
 /obj/machinery/computer/shuttle/attackby(var/obj/item/weapon/card/W as obj, var/mob/user as mob)
 	if(stat & (BROKEN|NOPOWER))
 		return
-	if ((!( istype(W, /obj/item/weapon/card) ) || !( ticker ) || main_shuttle.location != 1 || !( user )))
+	if ((!( istype(W, /obj/item/weapon/card) ) || !( ticker ) || emergency_shuttle.location != 1 || !( user )))
 		return
 
 
 	if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
-		if(istype(W, /obj/item/device/pda))
+		if (istype(W, /obj/item/device/pda))
 			var/obj/item/device/pda/pda = W
 			W = pda.id
-
 		if (!W:access) //no access
 			user << "The access level of [W:registered]\'s card is not high enough. "
 			return
@@ -32,7 +31,7 @@
 					world << text("\blue <B>Alert: [] authorizations needed until shuttle is launched early</B>", src.auth_need - src.authorized.len)
 				else
 					world << "\blue <B>Alert: Shuttle launch time shortened to 10 seconds!</B>"
-					//main_shuttle.settimeleft(10)
+					emergency_shuttle.settimeleft(10)
 					//src.authorized = null
 					del(src.authorized)
 					src.authorized = list(  )
@@ -51,7 +50,7 @@
 		switch(choice)
 			if("Launch")
 				world << "\blue <B>Alert: Shuttle launch time shortened to 10 seconds!</B>"
-				LaunchControl.settimeleft( 10 )
+				emergency_shuttle.settimeleft( 10 )
 			if("Cancel")
 				return
 
@@ -134,25 +133,51 @@
 */
 
 /obj/machinery/computer/prison_shuttle/verb/take_off()
+	set category = "Object"
+	set name = "Launch Prison Shuttle"
 	set src in oview(1)
 
 	if (usr.stat || usr.restrained())
 		return
 
 	src.add_fingerprint(usr)
+	if(!src.allowedtocall)
+		usr << "\red The console seems irreparably damaged!"
+		return
+	if(src.z == 3)
+		usr << "\red Already in transit! Please wait!"
+		return
 
-	if(prison_shuttle.location == "transit" && (prison_shuttle.destination == "ship" || prison_shuttle.destination == "prison"))
-		usr << "\red The prison shuttle is already in transit!"
-	else if(prison_shuttle.location == "prison")
-		usr << "The prison shuttle will arrive in a few minutes"
-		prison_shuttle.travel("ship")
-	else if(prison_shuttle.location == "ship")
-		usr << "The prison shuttle has departed."
-		prison_shuttle.travel("prison")
+	var/A = locate(/area/shuttle/prison/)
+	for(var/mob/M in A)
+		M.show_message("\red Launch sequence initiated!")
+		spawn(0)	shake_camera(M, 10, 1)
+	sleep(10)
+
+	if(src.z == 2)	//This is the laziest proc ever
+		for(var/atom/movable/AM as mob|obj in A)
+			AM.z = 3
+			AM.Move()
+		sleep(rand(600,1800))
+		for(var/atom/movable/AM as mob|obj in A)
+			AM.z = 1
+			AM.Move()
 	else
-		usr << "\red The prison shuttle is currently busy. Please try again later"
+		for(var/atom/movable/AM as mob|obj in A)
+			AM.z = 3
+			AM.Move()
+		sleep(rand(600,1800))
+		for(var/atom/movable/AM as mob|obj in A)
+			AM.z = 2
+			AM.Move()
+	for(var/mob/M in A)
+		M.show_message("\red Prison shuttle has arrived at destination!")
+		spawn(0)	shake_camera(M, 2, 1)
+	return
 
 /obj/machinery/computer/prison_shuttle/verb/restabalize()
+	set category = "Object"
+	set name = "Restabilize Prison Shuttle"
 	set src in oview(1)
 
 	src.add_fingerprint(usr)

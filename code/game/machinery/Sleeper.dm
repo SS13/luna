@@ -10,13 +10,6 @@
 	anchored = 1 //About time someone fixed this.
 	density = 1
 
-/obj/machinery/sleep_console/New()
-	..()
-	spawn( 10 )
-		src.connected = locate(/obj/machinery/sleeper, get_step(src, WEST))
-		return
-	return
-
 /obj/machinery/sleep_console/ex_act(severity)
 	switch(severity)
 		if(1.0)
@@ -29,6 +22,13 @@
 				del(src)
 				return
 		else
+	return
+
+/obj/machinery/sleep_console/New()
+	..()
+	spawn( 5 )
+		src.connected = locate(/obj/machinery/sleeper, get_step(src, WEST))
+		return
 	return
 
 /obj/machinery/sleep_console/attack_ai(mob/user as mob)
@@ -49,17 +49,19 @@
 				if(0)
 					t1 = "Conscious"
 				if(1)
-					t1 = "Unconscious"
+					t1 = "<font color='blue'>Unconscious</font>"
 				if(2)
-					t1 = "*dead*"
-
+					t1 = "<font color='red'>*dead*</font>"
+				else
 			dat += text("[]\tHealth %: [] ([])</FONT><BR>", (occupant.health > 50 ? "<font color='blue'>" : "<font color='red'>"), occupant.health, t1)
 			dat += text("[]\t-Brute Damage %: []</FONT><BR>", (occupant.bruteloss < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.bruteloss)
 			dat += text("[]\t-Respiratory Damage %: []</FONT><BR>", (occupant.oxyloss < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.oxyloss)
 			dat += text("[]\t-Toxin Content %: []</FONT><BR>", (occupant.toxloss < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.toxloss)
 			dat += text("[]\t-Burn Severity %: []</FONT><BR>", (occupant.fireloss < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.fireloss)
-			dat += text("<BR>Paralysis Summary %: [] ([] seconds left!)</FONT><BR>", occupant.paralysis, round(occupant.paralysis / 4))
-			dat += text("<HR><A href='?src=\ref[];refresh=1'>Refresh</A><BR><A href='?src=\ref[];rejuv=1'>Inject Rejuvenators</A>", src, src)
+			dat += text("<HR>Paralysis Summary %: [] ([] seconds left!)<BR>", occupant.paralysis, round(occupant.paralysis / 4))
+			dat += text("Rejuvenation chemicals: [] units<BR>", occupant.reagents.get_reagent_amount("inaprovaline"))
+			dat += text("Soporific: [] units<BR>", occupant.reagents.get_reagent_amount("stoxin"))
+			dat += text("<HR><A href='?src=\ref[];refresh=1'>Refresh meter readings each second</A><BR><A href='?src=\ref[];rejuv=1'>Inject Rejuvenators</A><BR><A href='?src=\ref[];stox=1'>Inject Soporific</A>", src, src, src)
 		else
 			dat += "The sleeper is empty."
 		dat += text("<BR><BR><A href='?src=\ref[];mach_close=sleeper'>Close</A>", user)
@@ -70,16 +72,16 @@
 /obj/machinery/sleep_console/Topic(href, href_list)
 	if(..())
 		return
-
 	if ((usr.contents.Find(src) || ((get_dist(src, usr) <= 1) && istype(src.loc, /turf))) || (istype(usr, /mob/living/silicon/ai)))
 		usr.machine = src
-		if (href_list["rejuv"])
-			if (src.connected)
+		if (src.connected)
+			if (href_list["rejuv"])
 				src.connected.inject(usr)
+			if (href_list["stox"])
+				src.connected.inject_stox(usr)
 		if (href_list["refresh"])
 			src.updateUsrDialog()
 		src.add_fingerprint(usr)
-
 	return
 
 /obj/machinery/sleep_console/process()
@@ -107,11 +109,12 @@
 	icon = 'Cryogenic2.dmi'
 	icon_state = "sleeper_0"
 	density = 1
+	var/occupied = 0 // So there won't be multiple persons trying to get into one sleeper
 	var/mob/occupant = null
 	anchored = 1
 
-/*/obj/machinery/sleeper/allow_drop()
-	return 0*/
+/obj/machinery/sleeper/allow_drop()
+	return 0
 
 /obj/machinery/sleeper/process()
 	src.updateDialog()
@@ -148,20 +151,26 @@
 	if (src.occupant)
 		user << "\blue <B>The sleeper is already occupied!</B>"
 		return
-	if (G.affecting.abiotic())
+																// Removing the requirement for subjects to be naked -- TLE
+/*	if (G.affecting.abiotic())
 		user << "Subject may not have abiotic items on."
+		return */
+	for (var/mob/V in viewers(user))
+		V.show_message("[user] starts putting [G.affecting.name] into the sleeper.", 3)
+	if(do_after(user, 20))
+		if(!G || !G.affecting) return
+		var/mob/M = G.affecting
+		if (M.client)
+			M.client.perspective = EYE_PERSPECTIVE
+			M.client.eye = src
+		M.loc = src
+		src.occupant = M
+		src.icon_state = "sleeper_1"
+		for(var/obj/O in src)
+			O.loc = src.loc
+		src.add_fingerprint(user)
+		del(G)
 		return
-	var/mob/M = G.affecting
-	if (M.client)
-		M.client.perspective = EYE_PERSPECTIVE
-		M.client.eye = src
-	M.loc = src
-	src.occupant = M
-	src.icon_state = "sleeper_1"
-	for(var/obj/O in src)
-		O.loc = src.loc
-	src.add_fingerprint(user)
-	del(G)
 	return
 
 /obj/machinery/sleeper/ex_act(severity)
@@ -189,7 +198,7 @@
 		else
 	return
 
-/obj/machinery/sleeper/alter_health(mob/M as mob)
+/obj/machinery/sleeper/alter_health(mob/living/M as mob)
 	if (M.health > 0)
 		if (M.oxyloss >= 10)
 			var/amount = max(0.15, 1)
@@ -219,18 +228,29 @@
 		src.occupant.client.eye = src.occupant.client.mob
 		src.occupant.client.perspective = MOB_PERSPECTIVE
 	src.occupant.loc = src.loc
+	src.occupant.metabslow = 0
 	src.occupant = null
 	src.icon_state = "sleeper_0"
 	return
 
 /obj/machinery/sleeper/proc/inject(mob/user as mob)
 	if (src.occupant)
-		if (src.occupant.reagents.get_reagent_amount("inaprovaline") < 60)
+		if (src.occupant.reagents.get_reagent_amount("inaprovaline") + 30 < 60)
 			src.occupant.reagents.add_reagent("inaprovaline", 30)
 		user << text("Occupant now has [] units of rejuvenation in his/her bloodstream.", src.occupant.reagents.get_reagent_amount("inaprovaline"))
 	else
 		user << "No occupant!"
 	return
+
+/obj/machinery/sleeper/proc/inject_stox(mob/user as mob)
+	if (src.occupant)
+		if (src.occupant.reagents.get_reagent_amount("stoxin") + 20 < 40)
+			src.occupant.reagents.add_reagent("stoxin", 20)
+		user << text("Occupant now has [] units of soporific in his/her bloodstream.", src.occupant.reagents.get_reagent_amount("stoxin"))
+	else
+		user << "No occupant!"
+	return
+
 
 /obj/machinery/sleeper/proc/check(mob/user as mob)
 	if (src.occupant)
@@ -250,39 +270,53 @@
 		user << text("[]\t -Respiratory Damage %: []", (src.occupant.oxyloss < 60 ? "\blue " : "\red "), src.occupant.oxyloss)
 		user << text("[]\t -Toxin Content %: []", (src.occupant.toxloss < 60 ? "\blue " : "\red "), src.occupant.toxloss)
 		user << text("[]\t -Burn Severity %: []", (src.occupant.fireloss < 60 ? "\blue " : "\red "), src.occupant.fireloss)
-		user << "\blue Expected time until the occupant can safely awake: (note: If health is below 20% these times are inaccurate)"
+		user << "\blue Expected time till occupant can safely awake: (note: If health is below 20% these times are inaccurate)"
 		user << text("\blue \t [] second\s (if around 1 or 2 the sleeper is keeping them asleep.)", src.occupant.paralysis / 5)
 	else
 		user << "\blue There is no one inside!"
 	return
 
 /obj/machinery/sleeper/verb/eject()
+	set name = "Eject Sleeper"
+	set category = "Object"
 	set src in oview(1)
 
 	if (usr.stat != 0)
 		return
 	src.go_out()
 	add_fingerprint(usr)
+
+	occupied = 0
 	return
 
 /obj/machinery/sleeper/verb/move_inside()
+	set name = "Enter Sleeper"
+	set category = "Object"
 	set src in oview(1)
 
 	if (usr.stat != 0)
 		return
-	if (src.occupant)
+	if (occupied)
 		usr << "\blue <B>The sleeper is already occupied!</B>"
 		return
-	if (usr.abiotic())
+/*	if (usr.abiotic())									// Removing the requirement for user to be naked -- TLE
 		usr << "Subject may not have abiotic items on."
+		return*/
+	for (var/mob/V in viewers(usr))
+		occupied = 1
+		V.show_message("[usr] starts climbing into the sleeper.", 3)
+	if(do_after(usr, 20))
+		usr.pulling = null
+		usr.client.perspective = EYE_PERSPECTIVE
+		usr.client.eye = src
+		usr.loc = src
+		usr.metabslow = 1
+		src.occupant = usr
+		src.icon_state = "sleeper_1"
+		for(var/obj/O in src)
+			del(O)
+		src.add_fingerprint(usr)
 		return
-	usr.pulling = null
-	usr.client.perspective = EYE_PERSPECTIVE
-	usr.client.eye = src
-	usr.loc = src
-	src.occupant = usr
-	src.icon_state = "sleeper_1"
-	for(var/obj/O in src)
-		del(O)
-	src.add_fingerprint(usr)
+	else
+		occupied = 0
 	return

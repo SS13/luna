@@ -1,22 +1,21 @@
 /datum/disease/dnaspread
-	name = "Space Rhinovirus"
+	name = "Space Retrovirus"
 	max_stages = 4
-	spread = "Airborne"
-	cure = "Spaceacillin"
+	spread = "On contact"
+	spread_type = CONTACT_GENERAL
+	cure = "Ryetalin"
+	cure = "ryetalyn"
 	curable = 0
+	agent = "S4E1 retrovirus"
 	affected_species = list("Human")
 	var/list/original_dna = list()
 	var/transformed = 0
+	desc = "This disease transplants the genetic code of the intial vector into new hosts."
+	severity = "Medium"
 
 
 /datum/disease/dnaspread/stage_act()
 	..()
-	if (!affected_mob.stat != 2)
-		return
-	if(!strain_data["name"])
-		strain_data["name"] = affected_mob.real_name
-		strain_data["UI"] = affected_mob.dna.uni_identity
-		strain_data["SE"] = affected_mob.dna.struc_enzymes
 	switch(stage)
 		if(2 || 3) //Pretend to be a cold and give time to spread.
 			if(prob(8))
@@ -26,8 +25,7 @@
 			if(prob(1))
 				affected_mob << "\red Your muscles ache."
 				if(prob(20))
-					affected_mob.bruteloss += 1
-					affected_mob.updatehealth()
+					affected_mob.take_organ_damage(1)
 			if(prob(1))
 				affected_mob << "\red Your stomach hurts."
 				if(prob(20))
@@ -36,7 +34,7 @@
 		if(4)
 			if(!src.transformed)
 				if ((!strain_data["name"]) || (!strain_data["UI"]) || (!strain_data["SE"]))
-					affected_mob.virus = null
+					del(affected_mob.virus)
 					return
 
 				//Save original dna for when the disease is cured.

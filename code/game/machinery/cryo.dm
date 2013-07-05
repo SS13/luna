@@ -9,7 +9,7 @@
 	var/on = 0
 	var/temperature_archived
 	var/obj/overlay/O1 = null
-	var/mob/occupant = null
+	var/mob/living/carbon/occupant = null
 	var/beaker = null
 	var/next_trans = 0
 
@@ -18,7 +18,6 @@
 
 
 	New()
-
 		..()
 		build_icon()
 		initialize_directions = SOUTH
@@ -55,8 +54,8 @@
 		return 1
 
 
-	/*allow_drop()
-		return 0*/
+	allow_drop()
+		return 0
 
 
 	relaymove(mob/user as mob)
@@ -74,9 +73,9 @@
 			if(src.occupant.health <= -100)
 				health_text = "<FONT color=red>Dead</FONT>"
 			else if(src.occupant.health < 0)
-				health_text = "<FONT color=red>[src.occupant.health]</FONT>"
+				health_text = "<FONT color=red>[round(src.occupant.health,0.1)]</FONT>"
 			else
-				health_text = "[src.occupant.health]"
+				health_text = "[round(src.occupant.health,0.1)]"
 		if(air_contents.temperature > T0C)
 			temp_text = "<FONT color=red>[air_contents.temperature]</FONT>"
 		else if(air_contents.temperature > 225)
@@ -91,15 +90,15 @@
 			<B>Current cell temperature:</B> [temp_text]K<BR>
 			<B>Cryo status:</B> [ src.on ? "<A href='?src=\ref[src];start=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];start=1'>On</A>"]<BR>
 			[beaker_text]<BR><BR>
-			<B>Current occupant:</B> [src.occupant ? "<BR>Name: [src.occupant]<BR>Health: [health_text]<BR>Oxygen deprivation: [src.occupant.oxyloss]<BR>Brute damage: [src.occupant.bruteloss]<BR>Fire damage: [src.occupant.fireloss]<BR>Toxin damage: [src.occupant.toxloss]<BR>Body temperature: [src.occupant.bodytemperature]" : "<FONT color=red>None</FONT>"]<BR>
+			<B>Current occupant:</B> [src.occupant ? "<BR>Name: [src.occupant]<BR>Health: [health_text]<BR>Oxygen deprivation: [round(src.occupant.oxyloss,0.1)]<BR>Brute damage: [round(src.occupant.bruteloss,0.1)]<BR>Fire damage: [round(src.occupant.fireloss,0.1)]<BR>Toxin damage: [round(src.occupant.toxloss,0.1)]<BR>Body temperature: [src.occupant.bodytemperature]" : "<FONT color=red>None</FONT>"]<BR>
 
 		"}
-
+		user.machine = src
 		user << browse(dat, "window=cryo")
 		onclose(user, "cryo")
 
 	Topic(href, href_list)
-		if (( usr.machine==src && ((get_dist(src, usr) <= 1) && istype(src.loc, /turf))) || (istype(usr, /mob/living/silicon/ai)))
+		if ((get_dist(src, usr) <= 1) || istype(usr, /mob/living/silicon/ai))
 			if(href_list["start"])
 				src.on = !src.on
 				build_icon()
@@ -114,37 +113,25 @@
 	attackby(var/obj/item/weapon/G as obj, var/mob/user as mob)
 		if(istype(G, /obj/item/weapon/reagent_containers/glass))
 			if(src.beaker)
-				user << "A beaker is already loaded into the machine."
+				user << "\red A beaker is already loaded into the machine."
 				return
 
 			src.beaker =  G
 			user.drop_item()
 			G.loc = src
-			user.visible_message("[user] adds a beaker to \the [src]!", "You add a beaker to the [src]!")
+			user.visible_message("[user] adds \a [G] to \the [src]!", "You add \a [G] to \the [src]!")
 		else if(istype(G, /obj/item/weapon/grab))
 			if(!ismob(G:affecting))
 				return
-			if (src.occupant)
-				user << "\blue <B>The cryo cell is already occupied!</B>"
-				return
-			if (G:affecting.abiotic())
-				user << "Subject may not have abiotic items on."
-				return
 			var/mob/M = G:affecting
-			if (M.client)
-				M.client.perspective = EYE_PERSPECTIVE
-				M.client.eye = src
-			M.loc = src
-			src.occupant = M
-			src.add_fingerprint(user)
-			build_icon()
-			del(G)
+			if(put_mob(M))
+				del(G)
 		src.updateUsrDialog()
 		return
 
 	proc
 		add_overlays()
-			src.addalloverlays(list(O1))
+			src.overlays = list(O1)
 
 		build_icon()
 			if(on)
@@ -175,22 +162,18 @@
 				occupant.stat = 1
 				if(occupant.bodytemperature < T0C)
 					occupant.sleeping = max(5, (1/occupant.bodytemperature)*2000)
-					occupant.paralysis += 0.5
+					occupant.paralysis = max(5, (1/occupant.bodytemperature)*3000)
 					if(air_contents.oxygen > 2)
 						if(occupant.oxyloss) occupant.oxyloss = max(0, occupant.oxyloss - 1)
 					else
 						occupant.oxyloss -= 1
+					//severe damage should heal waaay slower without proper chemicals
 					if(occupant.bodytemperature < 225)
-						if(ishuman(occupant))
-							for(var/datum/organ/external/O in occupant:organs2)
-								if(!O.destroyed)//FIND BACK
-									if(occupant.bruteloss) O.heal_damage(1,0,0)
-									if(occupant.fireloss) O.heal_damage(0,1,0)
-							if(occupant.toxloss) occupant.toxloss = max(0, occupant.toxloss - 1)
-						else
-							if(occupant.bruteloss) occupant.bruteloss = max(0, occupant.bruteloss - 1)
-							if(occupant.fireloss) occupant.fireloss = max(0, occupant.fireloss - 1)
-							if(occupant.toxloss) occupant.toxloss = max(0, occupant.toxloss - 1)
+						if (occupant.toxloss)
+							occupant.toxloss = max(0, occupant.toxloss - min(1, 20/occupant.toxloss))
+						var/heal_brute = occupant.bruteloss ? min(1, 20/occupant.bruteloss) : 0
+						var/heal_fire = occupant.fireloss ? min(1, 20/occupant.fireloss) : 0
+						occupant.heal_organ_damage(heal_brute,heal_fire)
 				if(beaker && (next_trans == 0))
 					beaker:reagents.trans_to(occupant, 1, 10)
 					beaker:reagents.reaction(occupant)
@@ -225,12 +208,37 @@
 				src.occupant.client.eye = src.occupant.client.mob
 				src.occupant.client.perspective = MOB_PERSPECTIVE
 			src.occupant.loc = src.loc
+//			src.occupant.metabslow = 0
 			src.occupant = null
 			build_icon()
 			return
+		put_mob(mob/living/carbon/M as mob)
+			if (!istype(M))
+				usr << "\red <B>The cryo cell cannot handle such liveform!</B>"
+				return
+			if (src.occupant)
+				usr << "\red <B>The cryo cell is already occupied!</B>"
+				return
+			if (M.abiotic())
+				usr << "\red Subject may not have abiotic items on."
+				return
+			if(!src.node)
+				usr << "\red The cell is not corrrectly connected to its pipe network!"
+				return
+			if (M.client)
+				M.client.perspective = EYE_PERSPECTIVE
+				M.client.eye = src
+			M.pulling = null
+			M.loc = src
+			src.occupant = M
+//			M.metabslow = 1
+			src.add_fingerprint(usr)
+			build_icon()
+			return 1
 
 	verb
 		move_eject()
+			set name = "Eject occupant"
 			set src in oview(1)
 			if (usr.stat != 0)
 				return
@@ -239,27 +247,11 @@
 			return
 
 		move_inside()
+			set name = "Move Inside"
 			set src in oview(1)
 			if (usr.stat != 0 || stat & (NOPOWER|BROKEN))
 				return
-			if (src.occupant)
-				usr << "\blue <B>The cell is already occupied!</B>"
-				return
-			if (usr.abiotic())
-				usr << "Subject may not have abiotic items on."
-				return
-			if(!src.node)
-				usr << "The cell is not corrrectly connected to its pipe network!"
-				return
-			usr.pulling = null
-			usr.client.perspective = EYE_PERSPECTIVE
-			usr.client.eye = src
-			usr.loc = src
-			src.occupant = usr
-			/*for(var/obj/O in src)
-				O.loc = src.loc*/
-			src.add_fingerprint(usr)
-			build_icon()
+			put_mob(usr)
 			return
 
 
@@ -267,14 +259,14 @@
 
 
 /mob/living/carbon/human/abiotic()
-	if ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || (src.back || src.wear_mask || src.head || src.shoes || src.w_uniform || src.wear_suit || src.glasses || src.ears || src.gloves || src.handcuffed))
+	if ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || (src.back || src.wear_mask || src.head || src.shoes || src.w_uniform || src.wear_suit || src.glasses || src.ears || src.gloves))
 		return 1
 	else
 		return 0
 	return
 
 /mob/proc/abiotic()
-	if ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || src.back || src.wear_mask || src.handcuffed)
+	if ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || src.back || src.wear_mask)
 		return 1
 	else
 		return 0

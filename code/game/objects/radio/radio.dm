@@ -4,12 +4,12 @@
 		initialize()
 
 /obj/item/device/radio/initialize()
-	if(freerange)
-		if(frequency < 1200 || frequency > 1600)
-			frequency = sanitize_frequency(frequency)
-	else if (frequency < 1441 || frequency > 1489)
-		world.log << "[src] ([type]) has a frequency of [frequency], sanitizing."
-		frequency = sanitize_frequency(frequency)
+	if(src.freerange)
+		if(src.frequency < 1200 || src.frequency > 1600)
+			src.frequency = sanitize_frequency(src.frequency)
+	else if (src.frequency < 1441 || src.frequency > 1489)
+		world.log << "[src] ([src.type]) has a frequency of [src.frequency], sanitizing."
+		src.frequency = sanitize_frequency(src.frequency)
 
 	set_frequency(frequency)
 
@@ -32,16 +32,15 @@
 
 /obj/item/device/radio/proc/interact(mob/user as mob)
 	var/dat = {"
-				<html><head><title>[src]</title></head><body><TT>
-				Microphone: [broadcasting ? "<A href='byond://?src=\ref[src];talk=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];talk=1'>Disengaged</A>"]<BR>
-				Speaker: [listening ? "<A href='byond://?src=\ref[src];listen=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];listen=1'>Disengaged</A>"]<BR>
-				Frequency:
-				<A href='byond://?src=\ref[src];freq=-10'>-</A>
-				<A href='byond://?src=\ref[src];freq=-2'>-</A>
-				[format_frequency(frequency)]
-				<A href='byond://?src=\ref[src];freq=2'>+</A>
-				<A href='byond://?src=\ref[src];freq=10'>+</A><BR>
-				"}
+<html><head><title>[src]</title></head><body><TT>
+Microphone: [src.broadcasting ? "<A href='byond://?src=\ref[src];talk=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];talk=1'>Disengaged</A>"]<BR>
+Speaker: [src.listening ? "<A href='byond://?src=\ref[src];listen=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];listen=1'>Disengaged</A>"]<BR>
+Frequency:
+<A href='byond://?src=\ref[src];freq=-10'>-</A>
+<A href='byond://?src=\ref[src];freq=-2'>-</A>
+[format_frequency(src.frequency)]
+<A href='byond://?src=\ref[src];freq=2'>+</A>
+<A href='byond://?src=\ref[src];freq=10'>+</A><BR>"}
 
 	for (var/ch_name in channels)
 		dat+=text_sec_channel(ch_name, channels[ch_name])
@@ -51,14 +50,13 @@
 	return
 
 /obj/item/device/radio/proc/text_wires()
-	if (!b_stat)
+	if (!src.b_stat)
 		return ""
 	return {"
-			<hr>
-			Green Wire: <A href='byond://?src=\ref[src];wires=4'>[(wires & 4) ? "Cut" : "Mend"] Wire</A><BR>
-			Red Wire:   <A href='byond://?src=\ref[src];wires=2'>[(wires & 2) ? "Cut" : "Mend"] Wire</A><BR>
-			Blue Wire:  <A href='byond://?src=\ref[src];wires=1'>[(wires & 1) ? "Cut" : "Mend"] Wire</A><BR>
-			"}
+<hr>
+Green Wire: <A href='byond://?src=\ref[src];wires=4'>[(src.wires & 4) ? "Cut" : "Mend"] Wire</A><BR>
+Red Wire:   <A href='byond://?src=\ref[src];wires=2'>[(src.wires & 2) ? "Cut" : "Mend"] Wire</A><BR>
+Blue Wire:  <A href='byond://?src=\ref[src];wires=1'>[(src.wires & 1) ? "Cut" : "Mend"] Wire</A><BR>"}
 
 
 /obj/item/device/radio/proc/text_sec_channel(var/chan_name, var/chan_stat)
@@ -68,9 +66,8 @@
 Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> [broad ? "Engaged" : "Disengaged"]</A>"
 */
 	return {"
-			<B>[chan_name]</B><br>
-			Speaker: <A href='byond://?src=\ref[src];ch_name=[chan_name];listen=[!list]'>[list ? "Engaged" : "Disengaged"]</A><BR>
-			"}
+<B>[chan_name]</B><br>
+Speaker: <A href='byond://?src=\ref[src];ch_name=[chan_name];listen=[!list]'>[list ? "Engaged" : "Disengaged"]</A><BR>"}
 
 /obj/item/device/radio/Topic(href, href_list)
 	//..()
@@ -78,10 +75,10 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 		return
 	if (\
 			!(\
-				issilicon(usr) || \
+				istype(usr, /mob/living/silicon) || \
 				(\
 					usr.contents.Find(src) || \
-						( in_range(src, usr) && istype(loc, /turf) )\
+						( in_range(src, usr) && istype(src.loc, /turf) )\
 				)\
 			)\
 		)
@@ -91,20 +88,19 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 	if (href_list["track"])
 		var/mob/target = locate(href_list["track"])
 		var/mob/living/silicon/ai/A = locate(href_list["track2"])
-		if(A && target)
-			A.ai_actual_track(target)
+		A.ai_actual_track(target)
 		return
 	else if (href_list["freq"])
 		var/new_frequency = (frequency + text2num(href_list["freq"]))
-		if (!freerange || (frequency < 1200 || frequency > 1600))
+		if (!src.freerange || (src.frequency < 1200 || src.frequency > 1600))
 			new_frequency = sanitize_frequency(new_frequency)
 		set_frequency(new_frequency)
 
-		if (traitor_frequency && frequency == traitor_frequency)
+		if (src.traitor_frequency && src.frequency == src.traitor_frequency)
 			usr.machine = null
 			usr << browse(null, "window=radio")
 			// now transform the regular radio, into a (disguised)syndicate uplink!
-			var/obj/item/device/uplink/radio/T = traitorradio
+			var/obj/item/weapon/syndicate_uplink/T = src.traitorradio
 			var/obj/item/device/radio/R = src
 			R.loc = T
 			T.loc = usr
@@ -122,11 +118,11 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 			T.attack_self(usr)
 			return
 	else if (href_list["talk"])
-		broadcasting = text2num(href_list["talk"])
+		src.broadcasting = text2num(href_list["talk"])
 	else if (href_list["listen"])
 		var/chan_name = href_list["ch_name"]
 		if (!chan_name)
-			listening = text2num(href_list["listen"])
+			src.listening = text2num(href_list["listen"])
 		else
 			if (channels[chan_name] & FREQ_LISTENING)
 				channels[chan_name] &= ~FREQ_LISTENING
@@ -136,31 +132,31 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 		var/t1 = text2num(href_list["wires"])
 		if (!( istype(usr.equipped(), /obj/item/weapon/wirecutters) ))
 			return
-		if (wires & t1)
-			wires &= ~t1
+		if (src.wires & t1)
+			src.wires &= ~t1
 		else
-			wires |= t1
-	if (!( master ))
-		if (istype(loc, /mob))
-			interact(loc)
+			src.wires |= t1
+	if (!( src.master ))
+		if (istype(src.loc, /mob))
+			interact(src.loc)
 		else
-			updateDialog()
+			src.updateDialog()
 	else
-		if (istype(master.loc, /mob))
-			interact(master.loc)
+		if (istype(src.master.loc, /mob))
+			interact(src.master.loc)
 		else
-			updateDialog()
-	add_fingerprint(usr)
+			src.updateDialog()
+	src.add_fingerprint(usr)
 
 /obj/item/device/radio/talk_into(mob/M as mob, message, channel)
 	var/datum/radio_frequency/connection = null // Code shared by Mport2004 for Security Headsets -- TLE
-	if(channel && channels && channels.len > 0)
+	if(channel && src.channels && src.channels.len > 0)
 		if (channel == "department")
-			//world << "DEBUG: channel=\"[channel]\" switching to \"[channels[1]]\""
-			channel = channels[1]
+			//world << "DEBUG: channel=\"[channel]\" switching to \"[src.channels[1]]\""
+			channel = src.channels[1]
 		connection = secure_radio_connections[channel]
 	else
-		connection = radio_connection
+		connection = src.radio_connection
 		channel = null
 	if (!istype(connection))
 		return
@@ -170,20 +166,19 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 
 	var/eqjobname
 
-	if (ishuman(M))
-		eqjobname = M:get_assignment()
-	else if (iscarbon(M))
+	if (istype(M, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = M
+		eqjobname = H.get_assignment()
+	else if (istype(M, /mob/living/carbon))
 		eqjobname = "No id" //only humans can wear ID
-	else if (isAI(M))
+	else if (istype(M,/mob/living/silicon/ai))
 		eqjobname = "AI"
-	else if (isrobot(M))
-		eqjobname = "Cyborg"//Androids don't really describe these too well, in my opinion.
-	/*else if (istype(M, /mob/living/silicon/pai))
-		eqjobname = "Personal AI"*/ // Maybe one day you will be added
+	else if (istype(M,/mob/living/silicon/robot))
+		eqjobname = "Android"
 	else
 		eqjobname = "Unknown"
 
-	if (!(wires & WIRE_TRANSMIT))
+	if (!(src.wires & WIRE_TRANSMIT))
 		return
 
 	var/list/receive = list()
@@ -201,7 +196,7 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 
 	for (var/mob/R in receive)
 		if (R.say_understands(M))
-			if (!ishuman(M) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
+			if (!istype(M, /mob/living/carbon/human) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
 				heard_masked += R
 			else
 				heard_normal += R
@@ -213,30 +208,8 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 
 	if (length(heard_masked) || length(heard_normal) || length(heard_voice) || length(heard_garbled))
 		var/part_a = "<span class='radio'><span class='name'>"
-		//var/part_b = "</span><b> \icon[src]\[[format_frequency(frequency)]\]</b> <span class='message'>"
-		var/freq_text
-		switch(display_freq)
-			if(SYND_FREQ)
-				freq_text = "#unkn"
-			if(COMM_FREQ)
-				freq_text = "Command"
-			if(1351)
-				freq_text = "Science"
-			if(1355)
-				freq_text = "Medical"
-			if(1357)
-				freq_text = "Engineering"
-			if(1359)
-				freq_text = "Security"
-			if(1349)
-				freq_text = "Mining"
-			if(1347)
-				freq_text = "Cargo"
-		//There's probably a way to use the list var of channels in code\game\communications.dm to make the dept channels non-hardcoded, but I wasn't in an experimentive mood. --NEO
-
-		if(!freq_text)
-			freq_text = format_frequency(display_freq)
-
+		//var/part_b = "</span><b> \icon[src]\[[format_frequency(src.frequency)]\]</b> <span class='message'>"
+		var/freq_text = (display_freq!=SYND_FREQ) ? format_frequency(display_freq) : "#unkn"
 		var/part_b = "</span><b> \icon[src]\[[freq_text]\]</b> <span class='message'>" // Tweaked for security headsets -- TLE
 		var/part_c = "</span></span>"
 
@@ -326,36 +299,30 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 					R.show_message(rendered, 2)
 
 /obj/item/device/radio/hear_talk(mob/M as mob, msg)
-	if (broadcasting)
+	if (src.broadcasting)
 		talk_into(M, msg)
+/*
+/obj/item/device/radio/proc/accept_rad(obj/item/device/radio/R as obj, message)
 
-/obj/item/device/radio/proc/accept_rad(obj/item/device/radio/R as obj, message, channel)
-	if(channel && channels && channels.len > 0 && message)
-		if (channel == "department")
-			return 1
+	if ((R.frequency == src.frequency && message))
+		return 1
+	else if
+
 	else
 		return null
 	return
-
-/obj/item/device/radio/proc/say_test(var/text)
-	var/ending = copytext(text, length(text))
-	if (ending == "?")
-		return "1"
-	else if (ending == "!")
-		return "2"
-	return "0"
-
+*/
 /obj/item/device/radio/proc/send_hear(freq)
 	if(last_transmission && world.time < (last_transmission + TRANSMISSION_DELAY))
 		return
 	last_transmission = world.time
-	if (!(wires & WIRE_RECEIVE))
+	if (!(src.wires & WIRE_RECEIVE))
 		return
 	if (!freq) //recieved on main frequency
-		if (!listening)
+		if (!src.listening)
 			return
 	else
-		var/accept = (freq==frequency && listening)
+		var/accept = (freq==frequency && src.listening)
 		if (!accept)
 			for (var/ch_name in channels)
 				var/datum/radio_frequency/RF = secure_radio_connections[ch_name]
@@ -368,7 +335,7 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 	var/turf/T = get_turf(src)
 	var/list/hear = hearers(1, T)
 	var/list/V
-	//find mobs in lockers, cryo and intellicards, brains, MMIs, and so on.
+	//find mobs in lockers, cryo and intellycards
 	for (var/mob/M in world)
 		if (isturf(M.loc))
 			continue //if M can hear us it is already was found by hearers()
@@ -384,8 +351,8 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 	set src in view()
 
 	..()
-	if ((in_range(src, usr) || loc == usr))
-		if (b_stat)
+	if ((in_range(src, usr) || src.loc == usr))
+		if (src.b_stat)
 			usr.show_message("\blue \the [src] can be attached and modified!")
 		else
 			usr.show_message("\blue \the [src] can not be modified or attached!")
@@ -396,22 +363,22 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 	user.machine = src
 	if (!( istype(W, /obj/item/weapon/screwdriver) ))
 		return
-	b_stat = !( b_stat )
-	if (b_stat)
+	src.b_stat = !( src.b_stat )
+	if (src.b_stat)
 		user.show_message("\blue The radio can now be attached and modified!")
 	else
 		user.show_message("\blue The radio can no longer be modified or attached!")
-	updateDialog()
+	src.updateDialog()
 		//Foreach goto(83)
-	add_fingerprint(user)
+	src.add_fingerprint(user)
 	return
 
-/*/obj/item/device/radio/emp_act(severity)
+/obj/item/device/radio/emp_act(severity)
 	broadcasting = 0
 	listening = 0
 	for (var/ch_name in channels)
 		channels[ch_name] = 0
-	..()*/
+	..()
 
 /obj/item/device/radio/banana //Why is this even needed? So that it shows up as a banana in the chat log.
 	name = "Banana Phone"

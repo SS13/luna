@@ -16,11 +16,9 @@
 				L.Add(T)
 	return L
 
-
-
 /obj/alien/facehugger
 	name = "alien"
-	desc = "A small alien. Looks pretty scary!"
+	desc = "An alien, looks pretty scary!"
 	icon_state = "facehugger"
 	layer = 5.0
 	density = 1
@@ -38,9 +36,9 @@
 	var/list/path_idle = new/list()
 
 	var/alive = 1 //1 alive, 0 dead
-	var/health = 25
-	var/maxhealth = 25
-
+	var/health = 10
+	var/maxhealth = 10
+	var/lamarr = 0
 	flags = 258.0
 
 
@@ -60,10 +58,12 @@
 		..()
 		if(!alive)
 			usr << text("\red <B>The alien is not moving.</B>")
-		else if (src.health > 15)
+		else if (src.health > 5)
 			usr << text("\red <B>The alien looks fresh, just out of the egg.</B>")
 		else
-			usr << text("\red <B>The alien looks pretty beat up.</B>")
+			usr << text("\red <B>The alien looks injured.</B>")
+		if (lamarr)
+			usr << text("\red <B>It looks like the proboscis has been removed.</B>")
 		return
 
 
@@ -86,12 +86,15 @@
 		..()
 
 	bullet_act(flag, A as obj)
-		if (flag == PROJECTILE_BULLET)
-			src.health -= 20
-		else if (flag == PROJECTILE_WEAKBULLET)
-			src.health -= 4
-		else if (flag == PROJECTILE_LASER)
-			src.health -= 10
+		switch(flag)
+			if (PROJECTILE_BULLET)
+				src.health -= 20
+			if (PROJECTILE_WEAKBULLET)
+				src.health -= 4
+			if (PROJECTILE_LASER)
+				src.health -= 10
+			if (PROJECTILE_PULSE)
+				src.health -= 35
 		healthcheck()
 
 	ex_act(severity)
@@ -108,7 +111,7 @@
 		return
 
 	blob_act()
-		if(prob(25))
+		if(prob(50))
 			src.death()
 		return
 
@@ -128,13 +131,18 @@
 		else if(ismob(A))
 			src.loc = A:loc
 
+	temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
+		if(exposed_temperature > 300)
+			health -= 5
+			healthcheck()
 
 
 
 
 	verb/follow()
-		set src in view()
-		set name = "Follow me"
+		set src in view() //set src in get_aliens(view()) - does not work, damn shitty byond :( -- rastaf0
+		set name = "Follow Me"
+		set category = "Object" //"Alien" does not work perfect - humans get "Alien" tab too, that's annoying
 		if(!alive) return
 		if(!isalien(usr))
 			usr << text("\red <B>The alien ignores you.</B>")
@@ -142,20 +150,21 @@
 		if(state != 2 || health < maxhealth)
 			usr << text("\red <B>The alien is too busy to follow you.</B>")
 			return
-		usr << text("\green <B>The alien will try to follow you.</B>")
+		usr << text("\green <B>The alien will now try to follow you.</B>")
 		trg_idle = usr
 		path_idle = new/list()
 		return
 
 	verb/stop()
 		set src in view()
-		set name = "Stop following"
+		set name = "Stop Following"
+		set category = "Object"
 		if(!alive) return
 		if(!isalien(usr))
 			usr << text("\red <B>The alien ignores you.</B>")
 			return
 		if(state != 2)
-			usr << text("\red <B>The alien is too busy to listen to you.</B>")
+			usr << text("\red <B>The alien is too busy to follow you.</B>")
 			return
 		usr << text("\green <B>The alien stops following you.</B>")
 		set_null()
@@ -189,7 +198,7 @@
 		trg_idle = null
 		frustration = 0
 
-	process()
+	proc/process()
 		set background = 1
 		var/quick_move = 0
 
@@ -200,47 +209,61 @@
 			if (path_target.len) path_target = new/list()
 
 			var/last_health = INFINITY
-
-			for (var/mob/living/carbon/C in range(viewrange-2,src.loc))
+			var/view
+			if (lamarr)
+				view = 1
+			else
+				view = viewrange-2
+			for (var/mob/living/carbon/C in range(view,src.loc))
 				if (C.stat == 2 || isalien(C) || C.alien_egg_flag || !can_see(src,C,viewrange))
 					continue
 				if(C:stunned || C:paralysis || C:weakened)
 					target = C
+
 					break
 				if(C:health < last_health)
 					last_health = C:health
 					target = C
 
 			if(target)
-				set_attack()
+				if (!lamarr || prob(10))
+					set_attack()
 			else if(state != 2)
 				set_idle()
 				idle()
 
 		else if(target)
 			var/turf/distance = get_dist(src, target)
-			set_attack()
+			if (!lamarr || prob(10))
+				set_attack()
 
 			if(can_see(src,target,viewrange))
-				if(distance <= 1)
+				if(distance <= 1 && (!lamarr || prob(20)))
 					for(var/mob/O in viewers(world.view,src))
-						O.show_message("\red <B>[src.target] has been leapt on by the alien!</B>", 1, "\red You hear someone fall.", 2)
-					target:bruteloss += 10
-					target:paralysis = max(target:paralysis, 10)
+						O.show_message("\red <B>[src.target] has been leapt on by [lamarr ? src.name : "the alien"]!</B>", 1, "\red You hear someone fall", 2)
+					if (!lamarr)
+						target:take_overall_damage(5)
+						if(prob(70))
+							target:paralysis = max(target:paralysis, 5)
 					src.loc = target.loc
 
 					if(!target.alien_egg_flag && ( ishuman(target) || ismonkey(target) ) )
-						target.alien_egg_flag = 1
-						var/mob/trg = target
-						src.death()
-						trg.contract_disease(new /datum/disease/alien_embryo, 1)
-						return
+						if (!lamarr)
+							target.alien_egg_flag = 1
+							var/mob/trg = target
+							src.death()
+							if(trg.virus)
+								trg.virus.cure(0)
+							trg.contract_disease(new /datum/disease/alien_embryo(0))
+							return
+						else
+							sleep(50)
 					else
 						set_null()
 						spawn(cycle_pause) src.process()
 						return
 
-				step_towards_3d(src,get_step_towards_3d2(src , target))
+				step_towards(src,get_step_towards2(src , target))
 			else
 				if( !path_target.len )
 
@@ -260,12 +283,12 @@
 					else
 						next = path_target[1]
 						path_target -= next
-						step_towards_3d(src,next)
+						step_towards(src,next)
 						quick_move = 1
 
 			if (get_dist(src, src.target) >= distance) src.frustration++
 			else src.frustration--
-			if(frustration >= 35) set_null()
+			if(frustration >= 35 || lamarr) set_null()
 
 		if(quick_move)
 			spawn(cycle_pause/2)
@@ -289,7 +312,7 @@
 
 			if(isalien(trg_idle))
 				if(can_see(src,trg_idle,viewrange))
-					step_towards_3d(src,get_step_towards_3d2(src , trg_idle))
+					step_towards(src,get_step_towards2(src , trg_idle))
 				else
 					path_idle(trg_idle)
 					if(!path_idle.len)
@@ -308,7 +331,8 @@
 							for(var/atom/A in get_turf(weed))
 								if(A.density) continue find_weeds
 							the_weeds += weed
-					W = pick(the_weeds)
+					if(the_weeds.len)
+						W = pick(the_weeds)
 
 				if(W)
 					path_idle(W)
@@ -328,13 +352,13 @@
 				switch(get_dist(src, trg_idle))
 					if(1)
 						if(istype(trg_idle,/obj/alien/weeds))
-							step_towards_3d(src,get_step_towards_3d2(src , trg_idle))
+							step_towards(src,get_step_towards2(src , trg_idle))
 					if(2 to INFINITY)
-						step_towards_3d(src,get_step_towards_3d2(src , trg_idle))
+						step_towards(src,get_step_towards2(src , trg_idle))
 						if(path_idle.len) path_idle = new/list()
 					/*
 					if(viewrange+1 to INFINITY)
-						step_towards_3d(src,get_step_towards_3d2(src , trg_idle))
+						step_towards(src,get_step_towards2(src , trg_idle))
 						if(path_idle.len) path_idle = new/list()
 						quick_move = 1
 					*/
@@ -349,7 +373,7 @@
 				else
 					next = path_idle[1]
 					path_idle -= next
-					step_towards_3d(src,next)
+					step_towards(src,next)
 					quick_move = 1
 
 		if(quick_move)

@@ -2,10 +2,6 @@
 	..()
 	spawn( 10 )
 		src.projector = locate(/obj/machinery/hologram_proj, get_step(src.loc, NORTH))
-		for(var/obj/machinery/hologram_proj/H in world)
-			if(H.id == src.id)
-				src.projector = H
-				break //Only do ONE, do not make more than one on the map with the same ID, please.
 		return
 	return
 
@@ -51,14 +47,14 @@
 		flick("holo_console1", src)
 		if (href_list["power"])
 			if (src.projector.projection)
-				src.projector.icon_state = "holopad0"
+				src.projector.icon_state = "hologram0"
 				//src.projector.projection = null
 				del(src.projector.projection)
 			else
 				src.projector.projection = new /obj/projection(src.projector.loc)
 				src.projector.projection.icon = 'human.dmi'
 				src.projector.projection.icon_state = "body_m_s"
-				src.projector.icon_state = "holopad1"
+				src.projector.icon_state = "hologram1"
 				src.render()
 		else
 			if (href_list["h_r"])

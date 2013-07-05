@@ -1,20 +1,21 @@
 /obj/machinery/atmospherics/unary/cold_sink/freezer
 	name = "Freezer"
-	icon = 'icons/obj/Cryogenic2.dmi'
+	icon = 'Cryogenic2.dmi'
 	icon_state = "freezer_0"
 	density = 1
-	anchored = 1
+
+	anchored = 1.0
 
 	current_heat_capacity = 1000
 
 	New()
 		..()
-		initialize_directions = dir
+		initialize_directions = NORTH
 
 	initialize()
 		if(node) return
 
-		var/node_connect = dir
+		var/node_connect = NORTH
 
 		for(var/obj/machinery/atmospherics/target in get_step(src,node_connect))
 			if(target.initialize_directions & get_dir(target,src))
@@ -44,17 +45,17 @@
 		user.machine = src
 		var/temp_text = ""
 		if(air_contents.temperature > (T0C - 20))
-			temp_text = "<span class='bad'>[air_contents.temperature]</span>"
+			temp_text = "<FONT color=red>[air_contents.temperature]</FONT>"
 		else if(air_contents.temperature < (T0C - 20) && air_contents.temperature > (T0C - 100))
-			temp_text = "<span class='average'>[air_contents.temperature]</span>"
+			temp_text = "<FONT color=black>[air_contents.temperature]</FONT>"
 		else
-			temp_text = "<span class='good'>[air_contents.temperature]</span>"
+			temp_text = "<FONT color=blue>[air_contents.temperature]</FONT>"
 
-		var/dat = {"
-		Current Status: [ on ? "<A href='?src=\ref[src];start=1'>Off</A> <span class='linkOn'>On</span>" : "<span class='linkOn'>Off</span> <A href='?src=\ref[src];start=1'>On</A>"]<BR>
-		Current Gas Temperature: [temp_text]<BR>
-		Current Air Pressure: [air_contents.return_pressure()]<BR>
-		Target Gas Temperature: <A href='?src=\ref[src];temp=-100'>-</A> <A href='?src=\ref[src];temp=-10'>-</A> <A href='?src=\ref[src];temp=-1'>-</A> [current_temperature] <A href='?src=\ref[src];temp=1'>+</A> <A href='?src=\ref[src];temp=10'>+</A> <A href='?src=\ref[src];temp=100'>+</A><BR>
+		var/dat = {"<B>Cryo gas cooling system</B><BR>
+		Current status: [ on ? "<A href='?src=\ref[src];start=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];start=1'>On</A>"]<BR>
+		Current gas temperature: [temp_text]<BR>
+		Current air pressure: [air_contents.return_pressure()]<BR>
+		Target gas temperature: <A href='?src=\ref[src];temp=-100'>-</A> <A href='?src=\ref[src];temp=-10'>-</A> <A href='?src=\ref[src];temp=-1'>-</A> [current_temperature] <A href='?src=\ref[src];temp=1'>+</A> <A href='?src=\ref[src];temp=10'>+</A> <A href='?src=\ref[src];temp=100'>+</A><BR>
 		"}
 
 		user << browse(dat, "window=freezer;size=400x500")

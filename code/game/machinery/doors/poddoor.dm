@@ -1,3 +1,9 @@
+/obj/machinery/door/poddoor/Bumped(atom/AM)
+	if(!density)
+		return ..()
+	else
+		return 0
+
 /obj/machinery/door/poddoor/attackby(obj/item/weapon/C as obj, mob/user as mob)
 	src.add_fingerprint(user)
 	if (!( istype(C, /obj/item/weapon/crowbar) ))
@@ -9,8 +15,7 @@
 			src.icon_state = "pdoor0"
 			sleep(15)
 			src.density = 0
-			src.ul_SetOpacity(0)
-			update_nearby_tiles()
+			src.sd_SetOpacity(0)
 			src.operating = 0
 			return
 	return
@@ -24,9 +29,9 @@
 		src.operating = 1
 	flick("pdoorc0", src)
 	src.icon_state = "pdoor0"
-	spawn(10)
+	sleep(10)
 	src.density = 0
-	src.ul_SetOpacity(0)
+	src.sd_SetOpacity(0)
 	update_nearby_tiles()
 
 	if(operating == 1) //emag again
@@ -44,12 +49,9 @@
 	src.icon_state = "pdoor1"
 	src.density = 1
 	if (src.visible)
-		src.ul_SetOpacity(1)
+		src.sd_SetOpacity(1)
 	update_nearby_tiles()
 
-	spawn(10)
+	sleep(10)
 	src.operating = 0
 	return
-
-/obj/machinery/door/poddoor/roofdoor
-	name = "Retractable roof"

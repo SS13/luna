@@ -8,9 +8,6 @@
 	var/blood_DNA = null
 	var/blood_type = null
 	var/last_bumped = 0
-	var/list/logs = list()
-	var/list/overlayslist = list()
-	var/labels[0] //for labels
 
 	///Chemistry.
 	var/datum/reagents/reagents = null
@@ -26,11 +23,6 @@
 	proc/remove_air(amount)
 		return null
 
-	// make some additional functions that are more accurate
-	// but take more CPU
-	proc/assume_air_individual(datum/air_group_giver)
-	proc/remove_air_individual(amount)
-
 	proc/return_air()
 		return null
 
@@ -41,6 +33,14 @@
 	proc/is_open_container()
 		return flags & OPENCONTAINER
 
+/*//Convenience proc to see whether a container can be accessed in a certain way.
+
+	proc/can_subract_container()
+		return flags & EXTRACT_CONTAINER
+
+	proc/can_add_container()
+		return flags & INSERT_CONTAINER
+*/
 
 obj
 	assume_air(datum/air_group/giver)
@@ -64,11 +64,8 @@ obj
 /atom/proc/meteorhit(obj/meteor as obj)
 	return
 
-/atom/proc/emp_act(var/severity)
-	return
-
-/*/atom/proc/allow_drop()
-	return 1*/
+/atom/proc/allow_drop()
+	return 1
 
 /atom/proc/CheckExit()
 	return 1
@@ -77,6 +74,17 @@ obj
 	return
 
 /atom/proc/HasProximity(atom/movable/AM as mob|obj)
+	return
+
+/atom/proc/emp_act(var/severity)
+	return
+
+/atom/proc/in_contents_of(container)//can take class or object instance as argument
+	if(ispath(container))
+		if(istype(src.loc, container))
+			return 1
+	else if(src in container)
+		return 1
 	return
 
 /atom/movable/overlay/attackby(a, b)
@@ -127,6 +135,6 @@ obj
 		src.last_move = get_dir(A, src.loc)
 		src.moved_recently = 1
 	return
-////////////
 
+////////////
 

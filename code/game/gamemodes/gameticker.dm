@@ -1,5 +1,5 @@
 var/global/datum/controller/gameticker/ticker
-var/datum/roundinfo/roundinfo = new()
+
 #define GAME_STATE_PREGAME		1
 #define GAME_STATE_SETTING_UP	2
 #define GAME_STATE_PLAYING		3
@@ -20,26 +20,23 @@ var/datum/roundinfo/roundinfo = new()
 /datum/controller/gameticker/proc/pregame()
 	set background = 1
 
-	pregame_timeleft = 180
+	pregame_timeleft = 60
 	world << "<B><FONT color='blue'>Welcome to the pre-game lobby!</FONT></B>"
 	world << "Please, setup your character and select ready. Game will start in [pregame_timeleft] seconds"
 
 	while(current_state == GAME_STATE_PREGAME)
-		sleep(10)
-		if(delay_start == 0)
+		if(!going)
+			sleep(10)
+		else
+			sleep(10)
 			pregame_timeleft--
-
+ 
 		if(pregame_timeleft <= 0)
 			current_state = GAME_STATE_SETTING_UP
-	roundinfo.starttime = time2text(world.realtime)
+
 	spawn setup()
 
-
-
-var/list/postsetuphooks = list()
-
 /datum/controller/gameticker/proc/setup()
-
 	//Create and announce mode
 	if(master_mode=="secret")
 		src.hide_mode = 1
@@ -56,7 +53,7 @@ var/list/postsetuphooks = list()
 		world << "<B>Possibilities:</B> [english_list(modes)]"
 	else
 		src.mode.announce()
-	roundinfo.mode = master_mode
+
 	//Configure mode and assign player to special mode stuff
 	var/can_continue = src.mode.pre_setup()
 
@@ -70,20 +67,13 @@ var/list/postsetuphooks = list()
 
 		return 0
 
-
-
-	//start supply ticker
-	spawn(SUPPLY_POINTDELAY) supply_ticker()
-
 	//Distribute jobs
 	distribute_jobs()
-	// Set the titles for jobs
-	SetTitles()
+
 	//Create player characters and transfer them
 	create_characters()
 
 	add_minds()
-
 
 
 	//Equip characters
@@ -91,8 +81,6 @@ var/list/postsetuphooks = list()
 
 	data_core.manifest()
 
-	for(var/a in postsetuphooks)
-		a:post_setup()
 
 	current_state = GAME_STATE_PLAYING
 	spawn(0)
@@ -106,11 +94,15 @@ var/list/postsetuphooks = list()
 
 		//Start master_controller.process()
 		world << "<FONT color='blue'><B>Enjoy the game!</B></FONT>"
+		spawn(-1)
+			world << sound('welcome.ogg') // Skie
 
-	spawn(0)
-		while(1)
-			sleep(10000)
-			SpawnEvent()
+
+	spawn (3000)
+		start_events()
+	spawn ((18000+rand(3000)))
+		event()
+	spawn() supply_ticker() // Added to kick-off the supply shuttle regenerating points -- TLE
 
 	spawn master_controller.process()
 
@@ -137,36 +129,32 @@ var/list/postsetuphooks = list()
 			if(player.mind && player.mind.assigned_role)
 				if(player.mind.assigned_role != "MODE")
 					player.Equip_Rank(player.mind.assigned_role)
-	proc/settitles_characters()
-		return
+
 	proc/process()
 		if(current_state != GAME_STATE_PLAYING)
 			return 0
 
-
 		mode.process()
 
-
-	//	main_shuttle.process()
-
-		LaunchControl.process()
-		PrisonControl.process()
-		for(var/datum/shuttle/s in shuttles)
-			s.process()
-		for(var/datum/shuttle/s in prisonshuttles)
-			s.process()
+		emergency_shuttle.process()
 
 		if(mode.check_finished())
 			current_state = GAME_STATE_FINISHED
-			roundinfo.endtime = time2text(world.realtime)
+
 			spawn
 				declare_completion()
+			var/noboom = 0
+			if(ticker.mode.name == "nuclear emergency")
+				var/datum/game_mode/nuclear/bam = ticker.mode
+				if (bam.nuke_detonated == 0)
+					noboom = 1
 
-			spawn(50*tick_multiplier)
-				world << "\blue <B>Restarting in 60 seconds</B>"
-				sleep(600*tick_multiplier)
-				world.Reboot()
+			if(ticker.mode.name != "nuclear emergency" || noboom)
+				spawn(50)
+					world << "\blue <B>Restarting in 25 seconds</B>"
 
+					sleep(250)
+					world.Reboot()
 
 		return 1
 
@@ -193,15 +181,30 @@ var/list/postsetuphooks = list()
 		check_win()
 	return
 */
+
 /datum/controller/gameticker/proc/declare_completion()
 
 	for (var/mob/living/silicon/ai/aiPlayer in world)
-		if (aiPlayer.stat != 2)
-			world << "<b>The AI's laws at the end of the game were:</b>"
-		else
-			world << "<b>The AI's laws when it was deactivated were:</b>"
+		if (aiPlayer.name != "Inactive AI")
+			if (aiPlayer.stat != 2)
+				world << "<b>[aiPlayer.name]'s laws at the end of the game were:</b>"
+			else
+				world << "<b>[aiPlayer.name]'s laws when it was deactivated were:</b>"
+			aiPlayer.show_laws(1)
 
-		aiPlayer.show_laws(1)
+			var/robolist = "<b>The AI's loyal minions were:</b> "
+			for(var/mob/living/silicon/robot/robo in world)
+				if (robo.connected_ai == aiPlayer)
+					robolist += "[robo.name][robo.stat?" (Deactivated), ":", "]"
+			world << "[robolist]"
+
+	for (var/mob/living/silicon/robot/robo in world)
+		if (!robo.connected_ai)
+			if (robo.stat != 2)
+				world << "<b>[robo.name] survived as an AI-less borg! Its laws were:</b>"
+			else
+				world << "<b>[robo.name] was unable to survive the rigors of being a cyborg without an AI. Its laws were:</b>"
+			robo.laws.show_laws(world)
 
 	mode.declare_completion()
 
@@ -234,7 +237,7 @@ var/list/postsetuphooks = list()
 					spawn_meteors()
 				if (src.timeleft <= 0 && src.timing)
 					src.timeup()
-				sleep(10 * tick_multiplier)
+				sleep(10)
 			while(src.processing)
 			return
 //Standard extended process (incorporates most game modes).
@@ -243,7 +246,7 @@ var/list/postsetuphooks = list()
 			do
 				check_win()
 				ticker.AItime += 10
-				sleep(10 * tick_multiplier)
+				sleep(10)
 				if (ticker.AItime == 6000)
 					world << "<FONT size = 3><B>Cent. Com. Update</B> AI Malfunction Detected</FONT>"
 					world << "\red It seems we have provided you with a malfunctioning AI. We're very sorry."
@@ -265,7 +268,7 @@ var/list/postsetuphooks = list()
 					spawn_meteors()
 				if (src.timeleft <= 0 && src.timing)
 					src.timeup()
-				sleep(10 * tick_multiplier)
+				sleep(10)
 			while(src.processing)
 			return
 //meteor mode!!! MORE METEORS!!!
@@ -273,4 +276,3 @@ var/list/postsetuphooks = list()
 			return
 //Anything else, like sandbox, return.
 */
-

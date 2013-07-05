@@ -1,3 +1,4 @@
+
 // Double clicking turfs to move to nearest camera
 
 /turf/proc/move_camera_by_click()
@@ -27,7 +28,7 @@
 	usr:lastDblClick = world.time
 	usr:switchCamera(best_cam)
 
-/mob/living/silicon/ai/verb/ai_camera_list()
+/mob/living/silicon/ai/proc/ai_camera_list()
 	set category = "AI Commands"
 	set name = "Show Camera List"
 
@@ -37,47 +38,59 @@
 
 	attack_ai(src)
 
-/mob/living/silicon/ai/verb/ai_camera_track()
+/mob/living/silicon/ai/proc/ai_camera_track()
 	set category = "AI Commands"
 	set name = "Track With Camera"
 	if(usr.stat == 2)
 		usr << "You can't track with camera because you are dead!"
 		return
+
+	var/list/names = list()
+	var/list/namecounts = list()
 	var/list/creatures = list()
-	var/list/monkeys = list()
 	for (var/mob/M in world)
 		if (istype(M, /mob/new_player))
 			continue //cameras can't follow people who haven't started yet DUH OR DIDN'T YOU KNOW THAT
-		if (istype(M, /mob/living/carbon/human) && istype(M:wear_id, /obj/item/weapon/card/id/syndicate))
-			continue
+		//Cameras can't track people wearing an agent card or a ninja hood.
+		if (istype(M, /mob/living/carbon/human))
+			if(istype(M:wear_id, /obj/item/weapon/card/id/syndicate))
+				continue
+		 	if(istype(M:head, /obj/item/clothing/head/helmet/space/space_ninja)&&!M:head:canremove)
+		 		continue
 		if(!istype(M.loc, /turf)) //in a closet or something, AI can't see him anyways
 			continue
-		if(istype(M,/mob/living/carbon/monkey))
-			monkeys += M
+		var/area/wizard_station/A = locate()//So that wizards are not tracked by the AI until they leave their sanctuary. Unless they talk on radio/N
+		if(M in A.contents)
 			continue
-		if(M.invisibility) //cloaked
+		if(M.invisibility)//cloaked
 			continue
 		if(istype(M.loc,/obj/dummy))
 			continue
 		else if (M == usr)
 			continue
-		creatures += M
-	creatures += monkeys
-	var/mob/target = input(usr, "Which creature should you track?") as mob in creatures
-	if (!target)
+
+		var/name = M.name
+		if (name in names)
+			namecounts[name]++
+			name = text("[] ([])", name, namecounts[name])
+		else
+			names.Add(name)
+			namecounts[name] = 1
+
+		creatures[name] = M
+
+	var/target_name = input(usr, "Which creature should you track?") as null|anything in creatures
+
+	if (!target_name)
 		usr:cameraFollow = null
 		return
+
+	var/mob/target = creatures[target_name]
+
 	ai_actual_track(target)
 
 /mob/living/silicon/ai/proc/ai_actual_track(mob/target as mob)
-	if(src.eyeobj == src.client.eye)
-		if(checkcameravis(target.loc))
-			eyeobj.loc = target.loc
-			cameranet.visibility(eyeobj)
-			usr << "Now tracking [target] on camera."
-		else
-			usr << "Target is not on or near any active cameras on the station."
-		return
+
 	usr:cameraFollow = target
 	usr << text("Now tracking [] on camera.", target.name)
 	if (usr.machine == null)
@@ -87,10 +100,15 @@
 		while (usr:cameraFollow == target)
 			if (usr:cameraFollow == null)
 				return
-			else if (istype(target, /mob/living/carbon/human) && istype(target:wear_id, /obj/item/weapon/card/id/syndicate))
-				usr << "Follow camera mode ended."
-				usr:cameraFollow = null
-				return
+			else if (istype(target, /mob/living/carbon/human))
+				if(istype(target:wear_id, /obj/item/weapon/card/id/syndicate))
+					usr << "Follow camera mode terminated."
+					usr:cameraFollow = null
+					return
+		 		if(istype(target:head, /obj/item/clothing/head/helmet/space/space_ninja)&&!target:head:canremove)
+		 			usr << "Follow camera mode terminated."
+					usr:cameraFollow = null
+					return
 			else if(istype(target.loc,/obj/dummy))
 				usr << "Follow camera mode ended."
 				usr:cameraFollow = null
@@ -109,7 +127,7 @@
 						closestDist = get_dist(C, target)
 				//usr << text("Dist = [] for camera []", closestDist, C.name)
 				var/zmatched = 0
-				if (closestDist > 7 || closestDist == -1 || C.z != usr.z)
+				if (closestDist > 7 || closestDist == -1)
 					//check other cameras
 					var/obj/machinery/camera/closest = C
 					for(var/obj/machinery/camera/C2 in world)
@@ -182,14 +200,15 @@
 		user.machine = null
 		return 0
 
-	if ((get_dist(user, src) > 1 || user.machine != src || user.blinded || !( user.canmove ) || !( C.status )) && (!istype(user, /mob/living/silicon/ai)))
-		return 0
-	else
-		src.current = C
-		use_power(50)
+	if (C)
+		if ((get_dist(user, src) > 1 || user.machine != src || user.blinded || !( user.canmove ) || !( C.status )) && (!istype(user, /mob/living/silicon/ai)))
+			return 0
+		else
+			src.current = C
+			use_power(50)
 
-		spawn( 5 )
-			attack_hand(user)
+			spawn( 5 )
+				attack_hand(user)
 
 /mob/living/silicon/ai/attack_ai(var/mob/user as mob)
 	if (user != src)
@@ -224,6 +243,27 @@
 
 	return
 
+/obj/machinery/camera/emp_act(severity)
+	if(prob(100/(hardened + severity)))
+		icon_state = "cameraemp"
+		network = null                   //Not the best way but it will do. I think.
+		spawn(900)
+			network = initial(network)
+			icon_state = initial(icon_state)
+		for(var/mob/living/silicon/ai/O in world)
+			if (O.current == src)
+				O.cancel_camera()
+				O << "Your connection to the camera has been lost."
+		for(var/mob/O in world)
+			if (istype(O.machine, /obj/machinery/computer/security))
+				var/obj/machinery/computer/security/S = O.machine
+				if (S.current == src)
+					O.machine = null
+					S.current = null
+					O.reset_view(null)
+					O << "The screen bursts into static."
+		..()
+
 /obj/machinery/camera/ex_act(severity)
 	if(src.invuln)
 		return
@@ -235,12 +275,15 @@
 	return
 
 /obj/machinery/camera/attack_ai(var/mob/living/silicon/ai/user as mob)
+	if (!istype(user))
+		return
 	if (src.network != user.network || !(src.status))
 		return
 	user.current = src
 	user.reset_view(src)
 
 /obj/machinery/camera/attackby(W as obj, user as mob)
+	..()
 	if (istype(W, /obj/item/weapon/wirecutters))
 		src.status = !( src.status )
 		if (!( src.status ))
@@ -279,6 +322,21 @@
 				if (S.current == src)
 					O << "[user] holds a paper up to one of the cameras ..."
 					O << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", X.name, X.info), text("window=[]", X.name))
+	else if (istype(W, /obj/item/weapon/wrench)) //Adding dismantlable cameras to go with the constructable ones. --NEO
+		if(src.status)
+			user << "\red You can't dismantle a camera while it is active."
+		else
+			user << "\blue Dismantling camera..."
+			if(do_after(user, 20))
+				var/obj/item/weapon/chem_grenade/case = new /obj/item/weapon/chem_grenade(src.loc)
+				case.name = "Camera Assembly"
+				case.path = 2
+				case.state = 5
+				case.anchored = 1
+				case.circuit = new /obj/item/device/multitool
+				if (istype(src, /obj/machinery/camera/motion))
+					case.motion = 1
+			del(src)
 	else if (istype(W, /obj/item/weapon/camera_bug))
 		if (!src.status)
 			user << "\blue Camera non-functional"
@@ -302,4 +360,3 @@
 			break
 
 	return null
-

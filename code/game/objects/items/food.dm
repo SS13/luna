@@ -12,7 +12,7 @@ YOUR MUMS BOX
 /obj/item/kitchen/donut_box
 	var/amount = 6
 	icon = 'food.dmi'
-	icon_state = "donutbox6"
+	icon_state = "donutbox"
 	name = "donut box"
 /obj/item/kitchen/egg_box
 	var/amount = 12
@@ -24,16 +24,15 @@ YOUR MUMS BOX
 	src.icon_state = text("donutbox[]", src.amount)
 	return
 
+/*
 /obj/item/kitchen/donut_box/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/reagent_containers/food/snacks/donut))
-		if(amount < 6)
-			user.drop_item()
-			W.loc = src
-			usr << "You place a donut back into the [src]."
-		else
-			usr << "The [src] is full"
+	if (istype(W, /obj/item/weapon/reagent_containers/food/snacks/donut) && (amount < 6))
+		user.drop_item()
+		W.loc = src
+		usr << "You place a donut back into the box."
 	src.update()
 	return
+*/
 
 /obj/item/kitchen/donut_box/MouseDrop(mob/user as mob)
 	if ((user == usr && (!( usr.restrained() ) && (!( usr.stat ) && (usr.contents.Find(src) || in_range(src, usr))))))
@@ -63,20 +62,20 @@ YOUR MUMS BOX
 				P.layer = 20
 				usr.l_hand = P
 				usr.update_clothing()
-				usr << "You take a donut out of the [src]."
+				usr << "You take a donut out of the box."
 				break
 			else if (!usr.r_hand)
 				P.loc = usr
 				P.layer = 20
 				usr.r_hand = P
 				usr.update_clothing()
-				usr << "You take a donut out of the [src]."
+				usr << "You take a donut out of the box."
 				break
 	else
 		if (src.amount >= 1)
 			src.amount--
 			new /obj/item/weapon/reagent_containers/food/snacks/donut( src.loc )
-			usr << "You take a donut out of the [src]."
+			usr << "You take a donut out of the box."
 	src.update()
 	return
 
@@ -89,12 +88,12 @@ YOUR MUMS BOX
 		n++
 	if (n <= 0)
 		n = 0
-		usr << "There are no donuts left in the [src]."
+		usr << "There are no donuts left in the box."
 	else
 		if (n == 1)
-			usr << "There is one donut left in the [src]."
+			usr << "There is one donut left in the box."
 		else
-			usr << text("There are [] donuts in the [src].", n)
+			usr << text("There are [] donuts in the box.", n)
 	return
 
 /obj/item/kitchen/egg_box/proc/update()

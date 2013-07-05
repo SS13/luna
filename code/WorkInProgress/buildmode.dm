@@ -1,12 +1,16 @@
 /proc/togglebuildmode(mob/M as mob in world)
+	set name = "Toggle Build Mode"
+	set category = "Special Verbs"
 	if(M.client)
 		if(M.client.buildmode)
+			log_admin("[key_name(usr)] has left build mode.")
 			M.client.buildmode = 0
 			M.client.show_popup_menus = 1
 			for(var/obj/buildholder/H)
 				if(H.cl == M.client)
 					del(H)
 		else
+			log_admin("[key_name(usr)] has entered build mode.")
 			M.client.buildmode = 1
 			M.client.show_popup_menus = 0
 
@@ -58,8 +62,8 @@
 	screen_loc = "NORTH,WEST+2"
 	var/obj/buildholder/master = null
 	var/varholder = "name"
-	var/valueholder = "dongs"
-	var/objholder = "/obj/structure/closet"
+	var/valueholder = "derp"
+	var/objholder = "/obj/closet"
 /obj/buildquit
 	density = 1
 	anchored = 1
@@ -81,8 +85,6 @@
 	var/obj/buildhelp/buildhelp = null
 	var/obj/buildmode/buildmode = null
 	var/obj/buildquit/buildquit = null
-	var/list/argL = null
-	var/procname = null
 
 /obj/builddir/Click()
 	switch(dir)
@@ -137,33 +139,25 @@
 				master.cl.buildmode = 3
 				src.icon_state = "buildmode3"
 			if(3)
-				if(master.cl.holder && master.cl.holder.rank in list("Host", "Coder"))
-					master.cl.buildmode = 4
-					src.icon_state = "procgun"
-				else
-					master.cl.buildmode = 1
-					src.icon_state = "buildmode1"
-			if(4)
 				master.cl.buildmode = 1
 				src.icon_state = "buildmode1"
-
 	else if(pa.Find("right"))
 		switch(master.cl.buildmode)
 			if(1)
 				return
 			if(2)
-				objholder = input(usr,"Enter typepath:" ,"Typepath","/obj/structure/closet")
+				objholder = input(usr,"Enter typepath:" ,"Typepath","/obj/closet")
 				var/list/removed_paths = list("/obj/bhole")
 				if(objholder in removed_paths)
 					alert("That path is not allowed.")
-					objholder = "/obj/structure/closet"
-				else if (dd_hasprefix(objholder, "/mob") && !(usr.client.holder.rank in list("Host", "Coder", "Super Administrator")))
-					objholder = "/obj/structure/closet"
+					objholder = "/obj/closet"
+				else if (dd_hasprefix(objholder, "/mob") && !(usr.client.holder.rank in list("Game Master", "Game Admin", "Badmin")))
+					objholder = "/obj/closet"
 			if(3)
 				var/list/locked = list("vars", "key", "ckey", "client", "firemut", "ishulk", "telekinesis", "xray", "virus", "cuffed", "ka", "last_eaten", "urine")
 
 				master.buildmode.varholder = input(usr,"Enter variable name:" ,"Name", "name")
-				if(master.buildmode.varholder in locked && !(usr.client.holder.rank in list("Host", "Coder")))
+				if(master.buildmode.varholder in locked && !(usr.client.holder.rank in list("Game Master", "Game Admin")))
 					return
 				var/thetype = input(usr,"Select variable type:" ,"Type") in list("text","number","mob-reference","obj-reference","turf-reference")
 				if(!thetype) return
@@ -178,36 +172,6 @@
 						master.buildmode.valueholder = input(usr,"Enter variable value:" ,"Value") as obj in world
 					if("turf-reference")
 						master.buildmode.valueholder = input(usr,"Enter variable value:" ,"Value") as turf in world
-
-			if(4)
-				master.procname = input(usr, "Enter full proc path:", "ProcPath")
-				var/argNum = input("Number of arguments:","Number",null) as num
-				master.argL = new/list()
-				var/class
-				var/i
-				for(i=0; i<argNum; i++)
-					class = input("Type of Argument #[i]","Variable Type", "text") in list("text","num","type","reference","icon","file","cancel")
-					switch(class)
-						if("cancel")
-							return
-
-						if("text")
-							master.argL.Add( input("Enter new text:","Text",null) as text )
-
-						if("num")
-							master.argL.Add( input("Enter new number:","Num",null) as num )
-
-						if("type")
-							master.argL.Add( input("Enter type:","Type",null) in typesof(/obj,/mob,/area,/turf) )
-
-						if("reference")
-							master.argL.Add( input("Select reference:","Reference",null) as mob|obj|turf|area in world )
-
-						if("icon")
-							master.argL.Add( input("Pick icon:","Icon",null) as icon )
-
-						if("file")
-							master.argL.Add( input("Pick file:","File",null) as file )
 
 
 /proc/build_click(var/mob/user, buildmode, location, control, params, var/obj/object)
@@ -247,7 +211,7 @@
 					return
 				else if(istype(object,/turf/simulated/floor))
 					var/turf/T = object
-					T.ReplaceWithOpen()
+					T.ReplaceWithSpace()
 					return
 				else if(istype(object,/turf/simulated/wall/r_wall))
 					var/turf/T = object
@@ -263,15 +227,20 @@
 			else if(istype(object,/turf) && pa.Find("ctrl") && pa.Find("left"))
 				switch(holder.builddir.dir)
 					if(NORTH)
-						new/obj/structure/window/reinforced/north(get_turf(object))
-					if(EAST)
-						new/obj/structure/window/reinforced/east(get_turf(object))
+						var/obj/window/reinforced/WIN = new/obj/window/reinforced(get_turf(object))
+						WIN.dir = NORTH
 					if(SOUTH)
-						new/obj/structure/window/reinforced/south(get_turf(object))
+						var/obj/window/reinforced/WIN = new/obj/window/reinforced(get_turf(object))
+						WIN.dir = SOUTH
+					if(EAST)
+						var/obj/window/reinforced/WIN = new/obj/window/reinforced(get_turf(object))
+						WIN.dir = EAST
 					if(WEST)
-						new/obj/structure/window/reinforced/west(get_turf(object))
+						var/obj/window/reinforced/WIN = new/obj/window/reinforced(get_turf(object))
+						WIN.dir = WEST
 					if(NORTHWEST)
-						new/obj/structure/window/reinforced/northwest(get_turf(object))
+						var/obj/window/reinforced/WIN = new/obj/window/reinforced(get_turf(object))
+						WIN.dir = NORTHWEST
 		if(2)
 			if(pa.Find("left"))
 				var/obj/A = new holder.buildmode.objholder (get_turf(object))
@@ -297,11 +266,6 @@
 					blink(object)
 				else
 					usr << "\red [initial(object.name)] does not have a var called '[holder.buildmode.varholder]'"
-		if(4)
-			blink(object)
-			var/returnval = call(object, holder.procname)(arglist(holder.argL))
-			usr << "\blue Proc \"[holder.procname]\" returned: [returnval ? returnval : "null"]"
-
 
 /proc/blink(atom/A)
 	A.icon += rgb(0,75,75)

@@ -36,7 +36,7 @@
 				affected_mob.take_organ_damage(5)
 			if (prob(4))
 				affected_mob << "\red You feel a stabbing pain in your head."
-				affected_mob.Paralyse(2)
+				affected_mob.paralysis += 2
 			if (prob(4))
 				affected_mob << "\red You can feel something move...inside."
 		if(4)
@@ -49,10 +49,10 @@
 				affected_mob << "\red You can feel... something...inside you."
 		if(5)
 			affected_mob <<"\red Your skin feels impossibly calloused..."
-			affected_mob.adjustToxLoss(10)
+			affected_mob.toxloss += 10
 			affected_mob.updatehealth()
 			if(prob(40))
-				if(gibbed != 0) return 0
+				ASSERT(gibbed == 0)
 				var/turf/T = find_loc(affected_mob)
 				gibs(T)
 				src.cure(0)

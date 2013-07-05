@@ -111,6 +111,7 @@
 	return
 
 /obj/item/device/infra/attackby(obj/item/device/radio/signaler/S as obj, mob/user as mob)
+	..()
 	if ((!( istype(S, /obj/item/device/radio/signaler) ) || !( S.b_stat )))
 		return
 	var/obj/item/assembly/rad_infra/R = new /obj/item/assembly/rad_infra( user )
@@ -205,6 +206,8 @@
 	return
 
 /obj/item/device/infra/verb/rotate()
+	set name = "Rotate Infrared Laser"
+	set category = "Object"
 	set src in usr
 
 	src.dir = turn(src.dir, 90)

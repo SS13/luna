@@ -1,38 +1,24 @@
-/obj/effect/portal
-	name = "portal"
-	icon = 'stationobjs.dmi'
-	icon_state = "portal"
-	density = 1
-	var/failchance = 4
-	var/obj/item/target = null
-	var/creator = null
-	anchored = 1.0
 
-/obj/effect/portal/New()
-	spawn(300)
-		del(src)
-		return
-	return
 
-/obj/effect/portal/attack_hand(mob/M as mob)
+/obj/portal/Bumped(mob/M as mob|obj)
 	spawn(0)
 		src.teleport(M)
 		return
 	return
 
-/obj/effect/portal/Bumped(mob/M as mob|obj)
-	spawn(0)
-		src.teleport(M)
-		return
-	return
-
-/obj/effect/portal/HasEntered(AM as mob|obj)
+/obj/portal/HasEntered(AM as mob|obj)
 	spawn(0)
 		src.teleport(AM)
 		return
 	return
 
-/obj/effect/portal/proc/teleport(atom/movable/M as mob|obj)
+/obj/portal/New()
+	spawn(300)
+		del(src)
+		return
+	return
+
+/obj/portal/proc/teleport(atom/movable/M as mob|obj)
 	if(istype(M, /obj/effects)) //sparks don't teleport
 		return
 	if (M.anchored)
@@ -45,7 +31,7 @@
 	if (istype(M, /atom/movable))
 		if(prob(failchance)) //oh dear a problem, put em in deep space
 			src.icon_state = "portal1"
-			do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy -5), getZLevel(Z_SPACE)), 0)
+			do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy -5), 3), 0)
 		else
 			do_teleport(M, src.target, 1) ///You will appear adjacent to the beacon
 

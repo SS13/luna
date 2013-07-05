@@ -1,3 +1,54 @@
+/obj/item/weapon/storage/utilitybelt
+	name = "utility belt"
+	desc = "Can hold various tools."
+	icon = 'belts.dmi'
+	icon_state = "utilitybelt"
+	item_state = "utility"
+	can_hold = list(
+		"/obj/item/weapon/crowbar",
+		"/obj/item/weapon/screwdriver",
+		"/obj/item/weapon/weldingtool",
+		"/obj/item/weapon/wirecutters",
+		"/obj/item/weapon/wrench",
+		"/obj/item/device/multitool",
+		"/obj/item/device/flashlight",
+		"/obj/item/weapon/cable_coil",
+		"/obj/item/device/t_scanner",
+		"/obj/item/device/analyzer")
+	flags = FPRINT | TABLEPASS | ONBELT
+
+/obj/item/weapon/storage/utilitybelt/full/New()
+	..()
+	new /obj/item/weapon/screwdriver(src)
+	new /obj/item/weapon/wrench(src)
+	new /obj/item/weapon/weldingtool(src)
+	new /obj/item/weapon/crowbar(src)
+	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/cable_coil(src)
+
+
+/obj/item/weapon/storage/utilitybelt/medical
+   name = "medical belt"
+   desc = "Can hold various medical equipment."
+   icon_state = "medicalbelt"
+   item_state = "medical"
+   can_hold = list(
+		"/obj/item/device/healthanalyzer",
+		"/obj/item/weapon/dnainjector",
+		"/obj/item/weapon/reagent_containers/dropper",
+		"/obj/item/weapon/reagent_containers/glass/beaker",
+		"/obj/item/weapon/reagent_containers/glass/bottle",
+		"/obj/item/weapon/reagent_containers/pill",
+		"/obj/item/weapon/reagent_containers/syringe",
+		"/obj/item/weapon/reagent_containers/glass/dispenser",
+		"/obj/item/weapon/zippo",
+		"/obj/item/weapon/cigpacket",
+		"/obj/item/weapon/storage/pill_bottle",
+		"/obj/item/stack/medical",
+		"/obj/item/device/flashlight/pen"
+	)
+   flags = FPRINT | TABLEPASS | ONBELT
+
 /obj/item/weapon/storage
 	icon = 'storage.dmi'
 	name = "storage"
@@ -5,65 +56,55 @@
 	var/obj/screen/storage/boxes = null
 	var/obj/screen/close/closer = null
 	w_class = 3.0
-	flags = FPRINT|TABLEPASS
 
 /obj/item/weapon/storage/backpack
 	name = "backpack"
-	desc = "You wear this on your back and put items into it."
 	icon_state = "backpack"
 	w_class = 4.0
 	flags = 259.0
 
-/obj/item/weapon/storage/backpack/clown
-	name = "Giggles Von Honkerton"
-	desc = "It's a backpack made by Honk! Co."
-	icon_state = "clownpack"
-	item_state = "clownpack"
+/obj/item/weapon/storage/pill_bottle
+	name = "pill bottle"
+	icon_state = "pill_canister"
+	icon = 'chemical.dmi'
+	item_state = "contsolid"
+	w_class = 2.0
+	can_hold = list("/obj/item/weapon/reagent_containers/pill")
 
-/obj/item/weapon/storage/backpack/medic
-	name = "Medical backpack"
-	desc = "It's a backpack especially designed for use in a sterile environment."
-	icon_state = "medicalpack"
-	item_state = "medicalpack"
-
-/obj/item/weapon/storage/backpack/security
-	name = "Security backpack"
-	desc = "It's a very robust backpack."
-	icon_state = "securitypack"
-	item_state = "securitypack"
-
-/obj/item/weapon/storage/backpack/industrial
-	name = "Industrial backpack"
-	desc = "It's a tough backpack for the daily grind of station life."
-	icon_state = "engiepack"
-	item_state = "engiepack"
-
-/obj/item/weapon/storage/backpack/captain
-	name = "Captain's backpack"
-	desc = "It's a special backpack made exclusively for Nanotrasen officers."
-	icon_state = "captainpack"
-	item_state = "captainpack"
+/obj/item/weapon/storage/dice
+	name = "dice pack"
+	icon_state = "pill_canister"
+	icon = 'chemical.dmi'
+	item_state = "contsolid"
+	w_class = 2.0
+	can_hold = list("/obj/item/weapon/dice")
 
 /obj/item/weapon/storage/box
-	name = "Box"
+	name = "box"
 	icon_state = "box"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/glass
-	name = "Glassware Box"
-	icon_state = "beakerbox"
+/obj/item/weapon/storage/pillbottlebox
+	name = "pill bottles"
+	icon_state = "box"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/glass/New()
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	..()
-	return
+/obj/item/weapon/storage/blankbox
+	name = "blank shells"
+	icon_state = "box"
+	item_state = "syringe_kit"
+
+/obj/item/weapon/storage/backpack/clown
+	name = "Giggles Von Honkerton"
+	icon_state = "clownpack"
+
+/obj/item/weapon/storage/backpack/medic
+	name = "medic's backpack"
+	icon_state = "medicalpack"
+
+/obj/item/weapon/storage/backpack/security
+	name = "security backpack"
+	icon_state = "securitypack"
 
 /obj/item/weapon/storage/briefcase
 	name = "briefcase"
@@ -74,235 +115,129 @@
 	throw_range = 4
 	w_class = 4.0
 
-/obj/item/weapon/storage/box/disk
-	name = "Data Disks"
+/obj/item/weapon/storage/disk_kit
+	name = "data disks"
 	icon_state = "id"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/disk/disks
+/obj/item/weapon/storage/disk_kit/disks
 
-/obj/item/weapon/storage/box/disk/disks2
+/obj/item/weapon/storage/disk_kit/disks2
 
-/obj/item/weapon/storage/box/fcard
+/obj/item/weapon/storage/fcard_kit
 	name = "Fingerprint Cards"
 	icon_state = "id"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/fcard/New()
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	..()
-	return
+/obj/item/weapon/storage/firstaid
+	name = "First-Aid"
+	icon_state = "firstaid"
+	throw_speed = 2
+	throw_range = 8
+	var/empty = 0
 
-/obj/item/weapon/storage/box/flashbang
-	desc = "<FONT color=red><B>WARNING: Do not use without reading these preautions!</B></FONT>\n<B>These devices are extremely dangerous and can cause blindness or deafness if used incorrectly.</B>\nThe chemicals contained in these devices have been tuned for maximal effectiveness and due to\nextreme safety precuaiotn shave been incased in a tamper-proof pack. DO NOT ATTEMPT TO OPEN\nFLASH WARNING: Do not use continually. Excercise extreme care when detonating in closed spaces.\n\tMake attemtps not to detonate withing range of 2 meters of the intended target. It is imperative\n\tthat the targets visit a medical professional after usage. Damage to eyes increases extremely per\n\tuse and according to range. Glasses with flash resistant filters DO NOT always work on high powered\n\tflash devices such as this. <B>EXERCISE CAUTION REGARDLESS OF CIRCUMSTANCES</B>\nSOUND WARNING: Do not use continually. Visit a medical professional if hearing is lost.\n\tThere is a slight chance per use of complete deafness. Exercise caution and restraint.\nSTUN WARNING: If the intended or unintended target is too close to detonation the resulting sound\n\tand flash have been known to cause extreme sensory overload resulting in temporary\n\tincapacitation.\n<B>DO NOT USE CONTINUALLY</B>\nOperating Directions:\n\t1. Pull detonnation pin. <B>ONCE THE PIN IS PULLED THE GRENADE CAN NOT BE DISARMED!</B>\n\t2. Throw grenade. <B>NEVER HOLD A LIVE FLASHBANG</B>\n\t3. The grenade will detonste 10 seconds hafter being primed. <B>EXCERCISE CAUTION</B>\n\t-<B>Never prime another grenade until after the first is detonated</B>\nNote: Usage of this pyrotechnic device without authorization is an extreme offense and can\nresult in severe punishment upwards of <B>10 years in prison per use</B>.\n\nDefault 3 second wait till from prime to detonation. This can be switched with a screwdriver\nto 10 seconds.\n\nCopyright of NanoTrasen Industries- Military Armnaments Division\nThis device was created by NanoTrasen Labs a member of the Expert Advisor Corporation"
+/obj/item/weapon/storage/firstaid/fire
+	name = "Fire First Aid"
+	icon_state = "ointment"
+	item_state = "firstaid-ointment"
+
+/obj/item/weapon/storage/firstaid/regular
+	icon_state = "firstaid"
+
+/obj/item/weapon/storage/firstaid/syringes
+	name = "Syringes"
+	desc = "A biohazard alert warning is printed on the box"
+	icon_state = "syringe"
+
+/obj/item/weapon/storage/firstaid/toxin
+	name = "Toxin First Aid"
+	icon_state = "antitoxin"
+	item_state = "firstaid-toxin"
+
+/obj/item/weapon/storage/firstaid/o2
+	name = "Oxygen Deprivation First Aid"
+	icon_state = "o2"
+	item_state = "firstaid-o2"
+
+/obj/item/weapon/storage/flashbang_kit
+	desc = "<FONT color=red><B>WARNING: Do not use without reading these preautions!</B></FONT>\n<B>These devices are extremely dangerous and can cause blindness or deafness if used incorrectly.</B>\nThe chemicals contained in these devices have been tuned for maximal effectiveness and due to\nextreme safety precuaiotn shave been incased in a tamper-proof pack. DO NOT ATTEMPT TO OPEN\nFLASH WARNING: Do not use continually. Excercise extreme care when detonating in closed spaces.\n\tMake attemtps not to detonate withing range of 2 meters of the intended target. It is imperative\n\tthat the targets visit a medical professional after usage. Damage to eyes increases extremely per\n\tuse and according to range. Glasses with flash resistant filters DO NOT always work on high powered\n\tflash devices such as this. <B>EXERCISE CAUTION REGARDLESS OF CIRCUMSTANCES</B>\nSOUND WARNING: Do not use continually. Visit a medical professional if hearing is lost.\n\tThere is a slight chance per use of complete deafness. Exercise caution and restraint.\nSTUN WARNING: If the intended or unintended target is too close to detonation the resulting sound\n\tand flash have been known to cause extreme sensory overload resulting in temporary\n\tincapacitation.\n<B>DO NOT USE CONTINUALLY</B>\nOperating Directions:\n\t1. Pull detonnation pin. <B>ONCE THE PIN IS PULLED THE GRENADE CAN NOT BE DISARMED!</B>\n\t2. Throw grenade. <B>NEVER HOLD A LIVE FLASHBANG</B>\n\t3. The grenade will detonste 10 seconds hafter being primed. <B>EXCERCISE CAUTION</B>\n\t-<B>Never prime another grenade until after the first is detonated</B>\nNote: Usage of this pyrotechnic device without authorization is an extreme offense and can\nresult in severe punishment upwards of <B>10 years in prison per use</B>.\n\nDefault 3 second wait till from prime to detonation. This can be switched with a screwdriver\nto 10 seconds.\n\nCopyright of Nanotrasen Industries- Military Armnaments Division\nThis device was created by Nanotrasen Labs a member of the Expert Advisor Corporation"
 	name = "Flashbangs (WARNING)"
 	icon_state = "flashbang"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/flashbang/New()
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/emp
+/obj/item/weapon/storage/emp_kit
 	desc = "A box with 5 emp grenades."
 	name = "Emp grenades"
 	icon_state = "flashbang"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/emp/New()
-	new /obj/item/weapon/grenade/emp( src )
-	new /obj/item/weapon/grenade/emp( src )
-	new /obj/item/weapon/grenade/emp( src )
-	new /obj/item/weapon/grenade/emp( src )
-	new /obj/item/weapon/grenade/emp( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/cleaner
-	desc = "A box with 5 cleaner grenades."
-	name = "Cleaner grenades"
-	icon_state = "flashbang"
-	item_state = "syringe_kit"
-
-/obj/item/weapon/storage/box/cleaner/New()
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/gl
+/obj/item/weapon/storage/gl_kit
 	name = "Prescription Glasses"
 	icon_state = "id"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/gl/New()
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/handcuff
+/obj/item/weapon/storage/handcuff_kit
 	name = "Spare Handcuffs"
 	icon_state = "handcuff"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/handcuff/New()
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/id
+/obj/item/weapon/storage/id_kit
 	name = "Spare IDs"
 	icon_state = "id"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/id/New()
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/lglo
+/obj/item/weapon/storage/lglo_kit
 	name = "Latex Gloves"
 	icon_state = "latex"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/lglo/New()
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/dna_inject
+/obj/item/weapon/storage/injectbox
 	name = "DNA-Injectors"
 	icon_state = "box"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/dna_inject/New()
-	new /obj/item/weapon/dnainjector/h2m( src )
-	new /obj/item/weapon/dnainjector/h2m( src )
-	new /obj/item/weapon/dnainjector/h2m( src )
-	new /obj/item/weapon/dnainjector/m2h( src )
-	new /obj/item/weapon/dnainjector/m2h( src )
-	new /obj/item/weapon/dnainjector/m2h( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/stma
+/obj/item/weapon/storage/stma_kit
 	name = "Sterile Masks"
-	icon_state = "sterile"
+	icon_state = "latex"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/stma/New()
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/trackimp
+/obj/item/weapon/storage/trackimp_kit
 	name = "Tracking Implant Kit"
 	icon_state = "implant"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/trackimp/New()
-	new /obj/item/weapon/implantcase/tracking( src )
-	new /obj/item/weapon/implantcase/tracking( src )
-	new /obj/item/weapon/implantcase/tracking( src )
-	new /obj/item/weapon/implantcase/tracking( src )
-	new /obj/item/weapon/implanter( src )
-	new /obj/item/weapon/implantpad( src )
-	new /obj/item/weapon/locator( src )
-	..()
-	return
-
-/obj/item/weapon/storage/box/daimp
-	name = "Death Alarm Implant Kit"
+/obj/item/weapon/storage/chemimp_kit
+	name = "Chemical Implant Kit"
 	icon_state = "implant"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/box/daimp/New()
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implanter( src )
-	new /obj/item/weapon/implantpad( src )
-	..()
-	return
+/obj/item/weapon/storage/toolbox
+	name = "toolbox"
+	icon = 'storage.dmi'
+	icon_state = "red"
+	item_state = "toolbox_red"
+	flags = FPRINT | TABLEPASS| CONDUCT
+	force = 25.0
+	throwforce = 10.0
+	throw_speed = 1
+	throw_range = 7
+	w_class = 4.0
+	origin_tech = "combat=1"
 
-/obj/item/weapon/storage/box/mousetraps
-	name = "Pest-B-Gon Mousetraps"
-	desc = "WARNING: Keep out of reach of children."
-	icon_state = "mousetraps"
-	item_state = "syringe_kit"
+/obj/item/weapon/storage/toolbox/emergency
+	name = "emergency toolbox"
+	icon_state = "red"
+	item_state = "toolbox_red"
 
-/obj/item/weapon/storage/box/mousetraps/New()
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	..()
-	return
+/obj/item/weapon/storage/toolbox/mechanical
+	name = "mechanical toolbox"
+	icon_state = "blue"
+	item_state = "toolbox_blue"
 
-/obj/item/weapon/storage/box/donkpocket
-	name = "Donk-Pockets"
-	desc = "Remember to fully heat prior to serving.  Product will cool if not eaten within seven minutes."
-	icon_state = "donk_kit"
-	item_state = "syringe_kit"
-
-/obj/item/weapon/storage/box/donkpocket/New()
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	..()
-	return
+/obj/item/weapon/storage/toolbox/electrical
+	name = "electrical toolbox"
+	icon_state = "yellow"
+	item_state = "toolbox_yellow"
 
 /obj/item/weapon/storage/bible
 	name = "bible"
@@ -312,3 +247,26 @@
 	w_class = 3.0
 	flags = FPRINT | TABLEPASS
 	var/mob/affecting = null
+	var/deity_name = "Christ"
+
+/obj/item/weapon/storage/bible/booze
+	name = "bible"
+	icon_state ="bible"
+
+/obj/item/weapon/storage/mousetraps
+	name = "Pest-B-Gon Mousetraps"
+	desc = "WARNING: Keep out of reach of children."
+	icon_state = "mousetraps"
+	item_state = "syringe_kit"
+
+/obj/item/weapon/storage/donkpocket_kit
+	name = "Donk-Pockets"
+	desc = "Remember to fully heat prior to serving.  Product will cool if not eaten within seven minutes."
+	icon_state = "donk_kit"
+	item_state = "syringe_kit"
+
+/obj/item/weapon/storage/condimentbottles
+	name = "Condiment Bottles"
+	desc = "A box of empty condiment bottles."
+	icon_state = "box"
+	item_state = "syringe_kit"

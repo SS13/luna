@@ -14,9 +14,9 @@
 
 /obj/item/weapon/vial
 	name = "glass vial"
-	icon = 'icons/obj/chemical.dmi'
+	icon = 'chemical.dmi'
 	desc = "a glass vial filled with a strange liquid"
-	icon_state = "vial"
+	icon_state = "vialgreen"
 	item_state = "vialgreen"
 	throwforce = 3.0
 	throw_speed = 1
@@ -25,13 +25,17 @@
 	w_class = 1.0
 
 /obj/item/weapon/vial/green
+	name = "glass vial"
+	icon = 'chemical.dmi'
 	desc = "a glass vial filled with a strange green liquid"
-	icon_state = "vial-green"
+	icon_state = "vialgreen"
 	item_state = "vialgreen"
 
 /obj/item/weapon/vial/blue
+	name = "glass vial"
+	icon = 'chemical.dmi'
 	desc = "a glass vial filled with a shimmering blue liquid"
-	icon_state = "vial-blue"
+	icon_state = "vialblue"
 	item_state = "vialblue"
 //////////////////////////////////////////////////////////
 
@@ -41,6 +45,7 @@
 	user << "\blue The vial shatters."
 	src.shatter()
 /obj/item/weapon/vial/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	user << "\blue The vial shatters."
 	src.shatter()
 /obj/item/weapon/vial/attack_self(mob/user as mob)
@@ -57,9 +62,16 @@
 	var/A = src
 	src = null
 	del(A)
-	if(prob(50)) user:weakened += 5
-	user:contract_disease(new /datum/disease/gbs)
-
+	switch(pick(1,2,3))
+		if(1)
+			spawn(300)
+				user:gib()
+		if(2)
+			user:weakened += 5
+			user:contract_disease(new /datum/disease/gbs,1)
+		if(3)
+			spawn(200)
+				user:contract_disease(new /datum/disease/gbs,1)
 /obj/item/weapon/vial/green/shatter()
 	var/A = src
 	var/atom/sourceloc = get_turf(src.loc)
@@ -78,11 +90,11 @@
 	O2.icon = 'objects.dmi'
 	O2.icon_state = "shards"
 	for(var/mob/living/carbon/human/H in view(5, sourceloc))
-		if(!H.virus) H.contract_disease(new /datum/disease/gbs)
+		if(!H.virus) H.contract_disease(new /datum/disease/gbs,1)
 	var/i
 	for(i=0, i<5, i++)
 		for(var/mob/living/carbon/human/H in view(5, sourceloc))
-			if(!H.virus) H.contract_disease(new /datum/disease/gbs)
+			if(!H.virus) H.contract_disease(new /datum/disease/gbs,1)
 		sleep(20)
 	flick("greenshatter2",O)
 	O.icon_state = "nothing"
@@ -100,7 +112,7 @@
 	var/obj/overlay/O = new /obj/overlay( sourceloc )
 	var/obj/overlay/O2 = new /obj/overlay( sourceloc )
 
-	O.name = "blue liquid"
+	O.name = "green liquid"
 	O.density = 0
 	O.anchored = 1
 	O.icon = 'effects.dmi'
@@ -129,7 +141,7 @@
 	var/obj/overlay/O = new /obj/overlay( sourceloc )
 	var/obj/overlay/O2 = new /obj/overlay( sourceloc )
 
-	O.name = "blue liquid"
+	O.name = "green liquid"
 	O.density = 0
 	O.anchored = 1
 	O.icon = 'effects.dmi'
@@ -175,7 +187,7 @@
 			for(i=0, i<10, i++)
 				spawn(0)
 					var/obj/effects/water/water1 = new /obj/effects/water( mobloc )
-					var/direction = pick(cardinal8)
+					var/direction = pick(alldirs)
 					water1.name = "water"
 					water1.density = 0
 					water1.icon = 'water.dmi'
@@ -194,7 +206,7 @@
 		for(b=0, b<10, b++)
 			spawn(0)
 				var/turf = mobloc
-				var/direction = pick(cardinal8)
+				var/direction = pick(alldirs)
 				var/c
 				for(c=0, c<pick(1,2,3), c++)
 					turf = get_step(turf,direction)
@@ -252,19 +264,31 @@
 ///atom/relaymove - change to obj to restore
 
 /obj/relaymove(var/mob/user, direction) //testing something
-	if(anchored) return
-	step(src, direction)
+	//if(anchored) return
+	//step(src, direction)
 
 /proc/possess(obj/O as obj in world)
+	set name = "Possess Obj"
+	set category = "Object"
 	usr.loc = O
 	usr.real_name = O.name
 	usr.name = O.name
 	usr.client.eye = O
+	usr.control_object = O
 
 /proc/release(obj/O as obj in world)
-	if(!isturf(usr.loc))
-		usr.loc = get_turf(usr)
-		usr.client.eye = usr
+	set name = "Release Obj"
+	set category = "Object"
+	//usr.loc = get_turf(usr)
+	usr.loc = O.loc // Appear where the object you were controlling is -- TLE
+	usr.client.eye = usr
+	usr.control_object = null
 
+/proc/givetestverbs(mob/M as mob in world)
+	set desc = "Give this guy possess/release verbs"
+	set category = "Debug"
+	set name = "Give Possessing Verbs"
+	M.verbs += /proc/possess
+	M.verbs += /proc/release
 
 /////////////////////////////////////////////////////blue

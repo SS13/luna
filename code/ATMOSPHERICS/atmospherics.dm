@@ -12,8 +12,16 @@ Pipelines + Other Objects -> Pipe network
 
 obj/machinery/atmospherics
 	anchored = 1
+	use_power = 0
+	idle_power_usage = 0
+	active_power_usage = 0
+	power_channel = ENVIRON
+	var/nodealert = 0
+
+
 
 	var/initialize_directions = 0
+	var/color
 
 	process()
 		build_network()
@@ -48,5 +56,5 @@ obj/machinery/atmospherics
 
 		disconnect(obj/machinery/atmospherics/reference)
 
-		update_icon()
-			return null
+	update_icon()
+		return null

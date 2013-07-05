@@ -67,21 +67,21 @@ Data storage vars:
 		return
 
 	proc/main()
-		state = 1
+		src.state = 1
 		while(src && control_switch)
 			last_exec = world.timeofday
 			if(check_for_null && has_null_args())
-				stop()
+				src.stop()
 				return 0
-			result = process(arglist(arg_list))
-			for(var/sleep_time=delay;sleep_time>0;sleep_time--) //uhh, this is ugly. But I see no other way to terminate sleeping proc. Such disgrace.
-				if(!control_switch)
+			result = src.process(arglist(arg_list))
+			for(var/sleep_time=src.delay;sleep_time>0;sleep_time--) //uhh, this is ugly. But I see no other way to terminate sleeping proc. Such disgrace.
+				if(!src.control_switch)
 					return 0
 				sleep(1)
 		return 0
 
 	proc/start(list/arguments=null)
-		if(active())
+		if(src.active())
 			return
 		if(arguments)
 			if(!set_process_args(arguments))
@@ -90,23 +90,24 @@ Data storage vars:
 			return
 		control_switch = 1
 		spawn()
-			state = main()
+			src.state = src.main()
 		return 1
 
 	proc/stop()
-		if(!active())
+		if(!src.active())
 			return
 		control_switch = 0
-		spawn(-1) //report termination error but don't wait for state_check().
-			state_check()
+		if(!state_check())
+			return
 		return 1
 
 	proc/state_check()
 		var/lag = 0
-		while(state)
+		while(src.state)
 			sleep(1)
 			if(++lag>10)
-				CRASH("The global_iterator loop \ref[src] failed to terminate in designated timeframe. This may be caused by server lagging.")
+				log_game("The global_iterator loop \ref[src] failed to terminate in designated timeframe. The supplied arguments were {[list2params(arg_list)]}")
+				return 0
 		return 1
 
 	proc/process()
@@ -123,7 +124,7 @@ Data storage vars:
 
 	proc/set_delay(new_delay)
 		if(isnum(new_delay))
-			delay = max(1, round(new_delay))
+			delay = new_delay>0?(new_delay):1
 			return 1
 		else
 			return 0
@@ -143,12 +144,12 @@ Data storage vars:
 			return 0
 
 	proc/toggle_null_checks()
-		check_for_null = !check_for_null
-		return check_for_null
+		src.check_for_null = !src.check_for_null
+		return src.check_for_null
 
 	proc/toggle()
-		if(!stop())
-			start()
-		return active()
+		if(!src.stop())
+			src.start()
+		return src.active()
 
 

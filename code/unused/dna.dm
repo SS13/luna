@@ -211,8 +211,8 @@
 		else
 	return
 
-/*/obj/machinery/dna_scanner/allow_drop()
-	return 0*/
+/obj/machinery/dna_scanner/allow_drop()
+	return 0
 
 /obj/machinery/dna_scanner/relaymove(mob/user as mob)
 	if (user.stat)
@@ -324,7 +324,7 @@
 
 
 /obj/machinery/dna_scanner/blob_act()
-	if(prob(50))
+	if(prob(75))
 		for(var/atom/movable/A as mob|obj in src)
 			A.loc = src.loc
 		del(src)
@@ -346,7 +346,7 @@
 
 /obj/machinery/scan_console/blob_act()
 
-	if(prob(50))
+	if(prob(75))
 		del(src)
 
 /obj/machinery/scan_console/power_change()
@@ -678,8 +678,8 @@
 		src.updateUsrDialog()
 	return
 
-/*/obj/machinery/restruct/allow_drop()
-	return 0*/
+/obj/machinery/restruct/allow_drop()
+	return 0
 
 /obj/machinery/restruct/verb/eject()
 	set src in oview(1)
@@ -946,7 +946,7 @@
 	return
 
 /obj/machinery/restruct/blob_act()
-	if(prob(50))
+	if(prob(75))
 		for(var/atom/movable/A as mob|obj in src)
 			A.loc = src.loc
 		del(src)

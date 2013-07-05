@@ -1,6 +1,6 @@
 /client/proc/cmd_admin_say(msg as text)
 	set category = "Special Verbs"
-	set name = "asay"
+	set name = "Asay" //Gave this shit a shorter name so you only have to time out "asay" rather than "admin say" to use it --NeoFite
 	set hidden = 1
 
 	//	All admins should be authenticated, but... what if?
@@ -19,10 +19,10 @@
 	if (!msg)
 		return
 
-	for (var/client/C)
-		if (C.holder)
-			if (src.holder.rank == "Goat Fart")
-				C.mob << "<span class=\"gfartadmin\"><span class=\"prefix\">ADMIN:</span> <span class=\"name\">[key_name(usr, C.mob)]:</span> <span class=\"message\">[msg]</span></span>"
+	for (var/mob/M in world)
+		if (M.client && M.client.holder)
+			if (src.holder.rank == "Admin Observer")
+				M << "<span class=\"gfartadmin\"><span class=\"prefix\">ADMIN:</span> <span class=\"name\">[key_name(usr, M)]:</span> <span class=\"message\">[msg]</span></span>"
 			else
-				C.mob << "<span class=\"admin\"><span class=\"prefix\">ADMIN:</span> <span class=\"name\">[key_name(usr, C.mob)]:</span> <span class=\"message\">[msg]</span></span>"
+				M << "<span class=\"admin\"><span class=\"prefix\">ADMIN:</span> <span class=\"name\">[key_name(usr, M)]:</span> <span class=\"message\">[msg]</span></span>"
 

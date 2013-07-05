@@ -16,9 +16,9 @@
 		if(!circ1 || !circ2)
 			stat |= BROKEN
 
-		update_icon()
+		updateicon()
 
-/obj/machinery/power/generator/proc/update_icon()
+/obj/machinery/power/generator/proc/updateicon()
 
 	if(stat & (NOPOWER|BROKEN))
 		overlays = null
@@ -60,9 +60,7 @@
 
 			world << "POWER: [lastgen] W generated at [efficiency*100]% efficiency and sinks sizes [cold_air_heat_capacity], [hot_air_heat_capacity]"
 
-
-
-			AddPower(lastgen)
+			add_avail(lastgen)
 	// update icon overlays only if displayed level has changed
 
 	if(hot_air)
@@ -74,7 +72,7 @@
 	var/genlev = max(0, min( round(11*lastgen / 100000), 11))
 	if(genlev != lastgenlev)
 		lastgenlev = genlev
-		update_icon()
+		updateicon()
 
 	src.updateDialog()
 
@@ -130,5 +128,5 @@
 
 /obj/machinery/power/generator/power_change()
 	..()
-	update_icon()
+	updateicon()
 

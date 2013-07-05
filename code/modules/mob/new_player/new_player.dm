@@ -1,12 +1,7 @@
-mob/new_player/proc/forcestart()
-	set name = "forcestart"
-	set hidden = 1
-	ready = 1
 mob/new_player
-	anchored = 1
-
 	var/datum/preferences/preferences
 	var/ready = 0
+	var/spawning = 0
 
 	invisibility = 101
 
@@ -15,12 +10,11 @@ mob/new_player
 	canmove = 0
 
 	anchored = 1	//  don't get pushed around
-	var/sound/startup = null
 
 	Login()
-		..()
-		src.verbs += /mob/new_player/proc/forcestart
-		unlock_medal("First Timer", 0, "Welcome!", "easy")
+		//Next line is commented out because seem it does nothing helpful and on the other hand it calls mob/new_player/Move() to EACH turf in the world. --rastaf0
+		//..()
+
 		if(!preferences)
 			preferences = new
 
@@ -28,14 +22,11 @@ mob/new_player
 			mind = new
 			mind.key = key
 			mind.current = src
-		if (join_motd)
-			src.client.showmotd()
-		spawn(25)
-			new_player_panel()
-		src << "<b>We now have <a href='http://whoopshop.com/index.php/topic,1632.0.html'>guidelines</a>. Read them before playing or fear the wrath of the banhammer!"
+
+		new_player_panel()
 		var/starting_loc = pick(newplayer_start)
-		loc = starting_loc
-		sight |= SEE_TURFS
+		src.loc = starting_loc
+		src.sight |= SEE_TURFS
 		var/list/watch_locations = list()
 		for(var/obj/landmark/landmark in world)
 			if(landmark.tag == "landmark*new_player")
@@ -44,48 +35,89 @@ mob/new_player
 		if(watch_locations.len>0)
 			loc = pick(watch_locations)
 
-		if(!preferences.savefile_load(src,0,1))
+		if(!preferences.savefile_load(src, 0))
 			preferences.ShowChoices(src)
+			if (src.client.changes)
+				src.changes()
+		else
+			var/lastchangelog = length('changelog.html')
+			if (!src.client.changes && preferences.lastchangelog!=lastchangelog)
+				src.changes()
+				preferences.lastchangelog = lastchangelog
+				preferences.savefile_save(src)
+		//PDA Resource Initialisation =======================================================>
 
-		startup = sound('intro.wma', volume = 50)
-		spawn(25)
-			src << startup
 
-	//	src << sound('main.ogg', 0, 0, 0, 35)
+		if (client) //load the PDA iconset into the client
+			src << browse_rsc('pda_atmos.png')
+			src << browse_rsc('pda_back.png')
+			src << browse_rsc('pda_bell.png')
+			src << browse_rsc('pda_blank.png')
+			src << browse_rsc('pda_boom.png')
+			src << browse_rsc('pda_bucket.png')
+			src << browse_rsc('pda_crate.png')
+			src << browse_rsc('pda_cuffs.png')
+			src << browse_rsc('pda_eject.png')
+			src << browse_rsc('pda_exit.png')
+			src << browse_rsc('pda_flashlight.png')
+			src << browse_rsc('pda_honk.png')
+			src << browse_rsc('pda_mail.png')
+			src << browse_rsc('pda_medical.png')
+			src << browse_rsc('pda_menu.png')
+			src << browse_rsc('pda_mule.png')
+			src << browse_rsc('pda_notes.png')
+			src << browse_rsc('pda_power.png')
+			src << browse_rsc('pda_rdoor.png')
+			src << browse_rsc('pda_reagent.png')
+			src << browse_rsc('pda_refresh.png')
+			src << browse_rsc('pda_scanner.png')
+			src << browse_rsc('pda_signaler.png')
+			src << browse_rsc('pda_status.png')
+			//Loads icons for SpiderOS into client
+			src << browse_rsc('sos_1.png')
+			src << browse_rsc('sos_2.png')
+			src << browse_rsc('sos_3.png')
+			src << browse_rsc('sos_4.png')
+			src << browse_rsc('sos_5.png')
+			src << browse_rsc('sos_6.png')
+			src << browse_rsc('sos_7.png')
+			src << browse_rsc('sos_8.png')
+			src << browse_rsc('sos_9.png')
+			src << browse_rsc('sos_10.png')
+			src << browse_rsc('sos_11.png')
+			src << browse_rsc('sos_12.png')
+
+		//End PDA Resource Initialisation =====================================================>
 
 
 	Logout()
 		ready = 0
 		..()
+		if(!config.del_new_on_log)
+			return
+		if(!spawning)
+			del(src)
 		return
 
 	verb
 		new_player_panel()
 			set src = usr
 
-			var/output = "<HR><B>New Player Options</B><BR><HR>"
-			var/readiness
-			if(ready) readiness = "<B>READY</B>"
-			else readiness = "<B>NOT READY</B>"
-			output += "STATUS: [readiness]<br>"
-			output += "<br><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A><BR><BR>"
-			//if(istester(key))
+			var/output = "<HR><B>New Player Options</B><BR>"
+			output += "<HR><br><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A><BR><BR>"
+			//if(istester(src.key))
 			if(!ticker || ticker.current_state <= GAME_STATE_PREGAME)
 				if(!ready)
 					output += "<a href='byond://?src=\ref[src];ready=1'>Declare Ready</A><BR>"
 				else
-					output += "<a href='byond://?src=\ref[src];ready=0'>Undeclare Ready</A><BR>"
+					output += "You are ready.<BR>"
 			else
-				output += "<a href='byond://?src=\ref[src];manifest=1'>View the Crew Manifest</A><BR><BR>"
 				output += "<a href='byond://?src=\ref[src];late_join=1'>Join Game!</A><BR>"
 
 			output += "<BR><a href='byond://?src=\ref[src];observe=1'>Observe</A><BR>"
 
-			if(!ticker || ticker.current_state <= GAME_STATE_PREGAME)
-				src << browse(output,"window=playersetup;size=250x233;can_close=0")
-			else
-				src << browse(output,"window=playersetup;size=250x233;can_close=0") // Adding the "View the Crew Manifest" option to the size of the window
-				// A nice interface makes for an appealing game :D
+			src << browse(output,"window=playersetup;size=250x210;can_close=0")
+
 	Stat()
 		..()
 
@@ -96,8 +128,10 @@ mob/new_player
 			else
 				stat("Game Mode:", "[master_mode]")
 
-			if(ticker.current_state == GAME_STATE_PREGAME)
+			if((ticker.current_state == GAME_STATE_PREGAME) && going)
 				stat("Time To Start:", ticker.pregame_timeleft)
+			if((ticker.current_state == GAME_STATE_PREGAME) && !going)
+				stat("Time To Start:", "DELAYED")
 
 		statpanel("Lobby")
 		if(client.statpanel=="Lobby" && ticker)
@@ -109,23 +143,19 @@ mob/new_player
 		if(href_list["show_preferences"])
 			preferences.ShowChoices(src)
 			return 1
-		if(href_list["closemotd"])
-			src << browse(null,"window=motd;")
+
 		if(href_list["ready"])
 			if(!ready)
-				if(alert(src,"Are you sure want to be ready? This will lock-in your preferences.","Player Setup","Yes","No") == "Yes")
+				if(alert(src,"Are you sure you are ready? This will lock-in your preferences.","Player Setup","Yes","No") == "Yes")
 					ready = 1
-			else if(ready)
-				if(alert(src,"Are you dont want to be ready? This will un-lock your preferences.","Player Setup","Yes","No") == "Yes")
-					ready = 0
 
 		if(href_list["observe"])
 			if(alert(src,"Are you sure you wish to observe? You will not be able to play this round!","Player Setup","Yes","No") == "Yes")
 				var/mob/dead/observer/observer = new()
 
+				src.spawning = 1
+
 				close_spawn_windows()
-				startup.status = SOUND_PAUSED
-				src << startup
 				var/obj/O = locate("landmark*Observer-Start")
 				src << "\blue Now teleporting."
 				observer.loc = O.loc
@@ -135,29 +165,16 @@ mob/new_player
 				observer.name = preferences.real_name
 				observer.real_name = observer.name
 
-
 				del(src)
 				return 1
 
 		if(href_list["late_join"])
-			//LateChoices()
+			LateChoices()
+
+		if(href_list["SelectedJob"])
 			if (!enter_allowed)
 				usr << "\blue There is an administrative lock on entering the game!"
 				return
-			startup.status = SOUND_PAUSED
-			src << startup
-			AttemptLateSpawn("Unassigned", -1)
-
-		if(href_list["manifest"])
-			ViewManifest()
-
-/*		if(href_list["SelectedJob"])
-			if (!enter_allowed)
-				usr << "\blue There is an administrative lock on entering the game!"
-				return
-
-			startup.status = SOUND_PAUSED
-			src << startup
 
 			switch(href_list["SelectedJob"])
 				if ("1")
@@ -167,7 +184,7 @@ mob/new_player
 				if ("3")
 					AttemptLateSpawn("Head of Personnel", hopMax)
 				if ("4")
-					AttemptLateSpawn("Engineer", engineerMax)
+					AttemptLateSpawn("Station Engineer", engineerMax)
 				if ("5")
 					AttemptLateSpawn("Barman", barmanMax)
 				if ("6")
@@ -185,7 +202,7 @@ mob/new_player
 				if ("12")
 					AttemptLateSpawn("Detective", detectiveMax)
 				if ("13")
-					AttemptLateSpawn("Counselor", CounselorMax)
+					AttemptLateSpawn("Chaplain", chaplainMax)
 				if ("14")
 					AttemptLateSpawn("Janitor", janitorMax)
 				if ("15")
@@ -195,155 +212,233 @@ mob/new_player
 				if ("17")
 					AttemptLateSpawn("Roboticist", roboticsMax)
 				if ("18")
-					AttemptLateSpawn("Unassigned", -1)
+					AttemptLateSpawn("Assistant", 10000)
 				if ("19")
 					AttemptLateSpawn("Quartermaster", cargoMax)
 				if ("20")
 					AttemptLateSpawn("Research Director", directorMax)
 				if ("21")
 					AttemptLateSpawn("Chief Engineer", chiefMax)
-//				if ("22")
-//					AttemptLateSpawn("Hydroponist", hydroponicsMax)
-*/
+				if ("22")
+					AttemptLateSpawn("Botanist", hydroponicsMax)
+				if ("23")
+					AttemptLateSpawn("Librarian", librarianMax)
+				if ("24")
+					AttemptLateSpawn("Virologist", viroMax)
+				if ("25")
+					AttemptLateSpawn("Lawyer", lawyerMax)
+				if ("26")
+					AttemptLateSpawn("Cargo Technician", cargotechMax)
+				if ("27")
+					AttemptLateSpawn("Chief Medical Officer", cmoMax)
+				if ("28")
+					AttemptLateSpawn("Warden", wardenMax)
+				if ("29")
+					AttemptLateSpawn("Shaft Miner", minerMax)
+				if ("30")
+					AttemptLateSpawn("Mime", mimeMax)
+				if ("31")
+					AttemptLateSpawn("Mail Sorter", sorterMax)
+				//if ("32") < Nope. Latejoining cyborgs can fuck a lot of shit up since it's sudden and nobody is near the robotics console etc. -- Urist
+					//AttemptLateSpawn("Cyborg", borgMax)
 
 		if(!ready && href_list["preferences"])
 			preferences.process_link(src, href_list)
 		else if(!href_list["late_join"])
 			new_player_panel()
 
-	proc/IsJobavailable(rank, maxAllowed)
-		if((countJob(rank) < maxAllowed || maxAllowed == -1) && !jobban_isbanned(src,rank))
+	proc/IsJobAvailable(rank, maxAllowed)
+		if(countJob(rank) < maxAllowed && !jobban_isbanned(src,rank))
 			return 1
 		else
 			return 0
 
 	proc/AttemptLateSpawn(rank, maxAllowed)
-		if(IsJobavailable(rank, maxAllowed))
+		if(IsJobAvailable(rank, maxAllowed))
 			var/mob/living/carbon/human/character = create_character()
+			if (character)
+				character.Equip_Rank(rank, joined_late=1)
 
-			character.Equip_Rank(rank, joined_late=1)
+			//add to manifest -- Commented out in favor of ManifestLateSpawn() -- TLE
+			//for(var/datum/data/record/t in data_core.general)
+			//	if((t.fields["name"] == character.real_name) && (t.fields["rank"] == "Unassigned"))
+			//		t.fields["rank"] = rank
+				if(character.mind.assigned_role != "Cyborg")
+					ManifestLateSpawn(character)
+				if(ticker)
+					if (ticker.current_state == GAME_STATE_PLAYING)
+						var/list/mob/living/silicon/ai/ailist = list()
+						for (var/mob/living/silicon/ai/A in world)
+							if (!A.stat && A.name != "Inactive AI")
+								ailist += A
+						if (ailist.len)
+							var/mob/living/silicon/ai/announcer = pick(ailist)
+							if(character.mind.assigned_role != "Cyborg")
+								announcer.say("[character.real_name] has signed up as [rank].")
 
-			//add to manifest
-			for(var/datum/data/record/t in data_core.general)
-				if((t.fields["name"] == character.real_name) && (t.fields["rank"] == "Unassigned"))
-					t.fields["rank"] = rank
-
-			if (ticker.current_state == GAME_STATE_PLAYING)
-				if(rank == "Unassigned")
-					radioalert("Arrivals Notice", "[character.real_name] has arrived on the ship.")	//unassigneds are not special
-				else
-					radioalert("Arrivals Notice", "[character.real_name], the [rank] has arrived on the ship..")	//oh no engineers
-
-				/*for (var/mob/living/silicon/ai/A in world) // Use this if we want to revert to the AI announcing new arrivals
-					if (!A.stat)
-						A.say("[character.real_name] has signed up as [rank].")*/
-
-			var/starting_loc = pick(latejoin)
-			character.loc = starting_loc
-			ticker.mode.latespawn(character)
-			del(src)
+					var/starting_loc = pick(latejoin)
+					character.loc = starting_loc
+					if(character.mind.assigned_role == "Cyborg")
+						character.Robotize()
+					del(src)
 
 		else
 			src << alert("[rank] is not available. Please try another.")
 
-// This fxn creates positions for unassigned people based on existing positions. This could be more elegant.
-/*	proc/LateChoices()
+
+	proc/ManifestLateSpawn(var/mob/living/carbon/human/H) // Attempted fix to add late joiners to various databases -- TLE
+		// This is basically ripped wholesale from the normal code for adding people to the databases during a fresh round
+		if (!isnull(H.mind) && (H.mind.assigned_role != "MODE"))
+			var/datum/data/record/G = new /datum/data/record(  )
+			var/datum/data/record/M = new /datum/data/record(  )
+			var/datum/data/record/S = new /datum/data/record(  )
+			var/obj/item/weapon/card/id/C = H.wear_id
+			if (C)
+				G.fields["rank"] = C.assignment
+			else
+				G.fields["rank"] = "Unassigned"
+			G.fields["name"] = H.real_name
+			G.fields["id"] = text("[]", add_zero(num2hex(rand(1, 1.6777215E7)), 6))
+			M.fields["name"] = G.fields["name"]
+			M.fields["id"] = G.fields["id"]
+			S.fields["name"] = G.fields["name"]
+			S.fields["id"] = G.fields["id"]
+			if (H.gender == FEMALE)
+				G.fields["sex"] = "Female"
+			else
+				G.fields["sex"] = "Male"
+			G.fields["age"] = text("[]", H.age)
+			G.fields["fingerprint"] = text("[]", md5(H.dna.uni_identity))
+			G.fields["p_stat"] = "Active"
+			G.fields["m_stat"] = "Stable"
+			M.fields["b_type"] = text("[]", H.b_type)
+			M.fields["b_dna"] = "" //H.dna.unique_enzymes //nope. Scan them yourself, detective.
+			M.fields["mi_dis"] = "None"
+			M.fields["mi_dis_d"] = "No minor disabilities have been declared."
+			M.fields["ma_dis"] = "None"
+			M.fields["ma_dis_d"] = "No major disabilities have been diagnosed."
+			M.fields["alg"] = "None"
+			M.fields["alg_d"] = "No allergies have been detected in this patient."
+			M.fields["cdi"] = "None"
+			M.fields["cdi_d"] = "No diseases have been diagnosed at the moment."
+			M.fields["notes"] = "No notes."
+			S.fields["criminal"] = "None"
+			S.fields["mi_crim"] = "None"
+			S.fields["mi_crim_d"] = "No minor crime convictions."
+			S.fields["ma_crim"] = "None"
+			S.fields["ma_crim_d"] = "No major crime convictions."
+			S.fields["notes"] = "No notes."
+			data_core.general += G
+			data_core.medical += M
+			data_core.security += S
+		return
+
+// This fxn creates positions for assistants based on existing positions. This could be more elegant.
+	proc/LateChoices()
 		var/dat = "<html><body>"
 		dat += "Choose from the following open positions:<br>"
-/*
-		if (IsJobavailable("Captain",captainMax))
+		if (IsJobAvailable("Captain",captainMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=1'>Captain</a><br>"
 
-		if (IsJobavailable("Head of Security",hosMax))
+		if (IsJobAvailable("Head of Security",hosMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=2'>Head of Security</a><br>"
 
-		if (IsJobavailable("Head of Personnel",hopMax))
+		if (IsJobAvailable("Head of Personnel",hopMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=3'>Head of Personnel</a><br>"
 
-		if (IsJobavailable("Research Director",directorMax))
+		if (IsJobAvailable("Research Director",directorMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=20'>Research Director</a><br>"
 
-		if (IsJobavailable("Chief Engineer",chiefMax))
+		if (IsJobAvailable("Chief Engineer",chiefMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=21'>Chief Engineer</a><br>"
 
-		if (IsJobavailable("Engineer",engineerMax))
-			dat += "<a href='byond://?src=\ref[src];SelectedJob=4'>Engineer</a><br>"
-*/
-		if (IsJobavailable("Barman",barmanMax))
+		if (IsJobAvailable("Station Engineer",engineerMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=4'>Station Engineer</a><br>"
+
+		if (IsJobAvailable("Barman",barmanMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=5'>Barman</a><br>"
-/*
-		if (IsJobavailable("Scientist",scientistMax))
+
+		if (IsJobAvailable("Scientist",scientistMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=6'>Scientist</a><br>"
 
-		if (IsJobavailable("Chemist",chemistMax))
+		if (IsJobAvailable("Chemist",chemistMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=7'>Chemist</a><br>"
 
-		if (IsJobavailable("Geneticist",geneticistMax))
+		if (IsJobAvailable("Geneticist",geneticistMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=8'>Geneticist</a><br>"
 
-		if (IsJobavailable("Security Officer",securityMax))
+		if (IsJobAvailable("Security Officer",securityMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=9'>Security Officer</a><br>"
 
-		if (IsJobavailable("Medical Doctor",doctorMax))
+		if (IsJobAvailable("Medical Doctor",doctorMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=10'>Medical Doctor</a><br>"
 
-		if (IsJobavailable("Atmospheric Technician",atmosMax))
+		if (IsJobAvailable("Atmospheric Technician",atmosMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=11'>Atmospheric Technician</a><br>"
 
-		if (IsJobavailable("Detective",detectiveMax))
+		if (IsJobAvailable("Detective",detectiveMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=12'>Detective</a><br>"
-*/
-		if (IsJobavailable("Counselor",CounselorMax))
-			dat += "<a href='byond://?src=\ref[src];SelectedJob=13'>Counselor</a><br>"
 
-		if (IsJobavailable("Janitor",janitorMax))
+		if (IsJobAvailable("Chaplain",chaplainMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=13'>Chaplain</a><br>"
+
+		if (IsJobAvailable("Janitor",janitorMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=14'>Janitor</a><br>"
-/*
-		if (IsJobavailable("Clown",clownMax))
+
+		if (IsJobAvailable("Clown",clownMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=15'>Clown</a><br>"
 
-		if (IsJobavailable("Chef",chefMax))
+		if (IsJobAvailable("Mime",mimeMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=30'>Mime</a><br>"
+
+		if (IsJobAvailable("Chef",chefMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=16'>Chef</a><br>"
 
-		if (IsJobavailable("Roboticist",roboticsMax))
+		if (IsJobAvailable("Roboticist",roboticsMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=17'>Roboticist</a><br>"
 
-		if (IsJobavailable("Quartermaster",cargoMax))
+		if (IsJobAvailable("Quartermaster",cargoMax))
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=19'>Quartermaster</a><br>"
 
-//		if (IsJobavailable("Hydroponist",hydroponicsMax))
-//			dat += "<a href='byond://?src=\ref[src];SelectedJob=22'>Hydroponist</a><br>"
-*/
-		if (!jobban_isbanned(src,"Unassigned"))
-			dat += "<a href='byond://?src=\ref[src];SelectedJob=18'>Unassigned</a><br>"
+		if (IsJobAvailable("Botanist",hydroponicsMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=22'>Botanist</a><br>"
+		if (IsJobAvailable("Librarian",librarianMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=23'>Librarian</a><br>"
+		if (IsJobAvailable("Virologist",viroMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=24'>Virologist</a><br>"
+		if (IsJobAvailable("Lawyer",lawyerMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=25'>Lawyer</a><br>"
+		if (IsJobAvailable("Cargo Technician",cargotechMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=26'>Cargo Technician</a><br>"
+		if (IsJobAvailable("Chief Medical Officer",cmoMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=27'>Chief Medical Officer</a><br>"
+		if (IsJobAvailable("Warden", wardenMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=28'>Warden</a><br>"
+		if (IsJobAvailable("Shaft Miner",minerMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=29'>Shaft Miner</a><br>"
+		if (IsJobAvailable("Mail Sorter",sorterMax))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=31'>Mail Sorter</a> (BETA)<br>"
+		//if (IsJobAvailable("Cyborg",borgMax))
+			//dat += "<a href='byond://?src=\ref[src];SelectedJob=32'>Cyborg</a><br>"
+		if (!jobban_isbanned(src,"Assistant"))
+			dat += "<a href='byond://?src=\ref[src];SelectedJob=18'>Assistant</a><br>"
 
 		src << browse(dat, "window=latechoices;size=300x640;can_close=0")
-*/
+
 	proc/create_character()
-		startup.status = SOUND_PAUSED
-		src << startup
-		var/mob/living/carbon/human/new_character = new(loc)
+		src.spawning = 1
+		var/mob/living/carbon/human/new_character = new(src.loc)
 
 		close_spawn_windows()
 
-		ticker.minds += mind	//Strumpet - Add new players' minds to the ticker list to be used for traitor objectives.
-
 		preferences.copy_to(new_character)
 		new_character.dna.ready_dna(new_character)
-
-		mind.transfer_to(new_character)
+		if(mind)
+			mind.transfer_to(new_character)
+			mind.original = new_character
 
 
 		return new_character
-
-	proc/ViewManifest()
-		var/dat = "<html><body>"
-		dat += "<h4>Crew Manifest</h4>"
-		for (var/datum/data/record/t in data_core.general)
-			dat += "[t.fields["name"]] - [t.fields["rank"]]<br>"
-		dat += "<br>"
-
-		src << browse(dat, "window=manifest;size=300x420;can_close=1")
 
 	Move()
 		return 0
@@ -352,7 +447,6 @@ mob/new_player
 	proc/close_spawn_windows()
 		src << browse(null, "window=latechoices") //closes late choices window
 		src << browse(null, "window=playersetup") //closes the player setup window
-		src << browse(null, "window=manifest") //closes the crew manifest window
 
 /*
 /obj/begin/verb/enter()
@@ -450,7 +544,7 @@ mob/new_player
 //DNA!
 		reg_dna[H.dna.unique_enzymes] = H.real_name
 //Other Stuff
-		if(ticker.mode.name == "Sandbox")
+		if(ticker.mode.name == "sandbox")
 			H.CanBuild()
 
 */
@@ -461,10 +555,10 @@ mob/new_player
 		if (!message)
 			return
 
-		log_say("[key] : [message]")
+		log_say("[src.key] : [message]")
 
-		if (muted)
+		if (src.muted)
 			return
 
-		. = say_dead(message)
+		. = src.say_dead(message)
 */

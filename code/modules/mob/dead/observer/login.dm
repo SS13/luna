@@ -1,7 +1,10 @@
 /mob/dead/observer/Login()
 	..()
-	client.screen = null
 
-	if (!isturf(loc))
-		client.eye = loc
-		client.perspective = EYE_PERSPECTIVE
+	src.client.screen = null
+
+	if (!isturf(src.loc))
+		src.client.eye = src.loc
+		src.client.perspective = EYE_PERSPECTIVE
+
+	return

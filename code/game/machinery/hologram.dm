@@ -1,19 +1,75 @@
-/obj/machinery/hologram_ai
-	name = "Hologram Projector Platform"
-	icon = 'stationobjs.dmi'
-	icon_state = "holopad0"
-	var/atom/projection = null
-	var/temp = null
-	var/lumens = 0.0
-	var/h_r = 245.0
-	var/h_g = 245.0
-	var/h_b = 245.0
-	anchored = 1.0
+/obj/machinery/holopad/attack_ai(user as mob)
+	//branches depending on four things - is the user currently a hologram? does it have power?
+	//is the holopad on? (moot if q2 = 0) is the user the one who is using this holopad? (moot if q3 = 0)
+	if(!istype(user,/mob/living/silicon/aihologram/)) //question number one
+		if(!(stat & NOPOWER)) //question number two
+			if(src.state == "off") //question number three
+				var/mob/living/silicon/aihologram/holo = new /mob/living/silicon/aihologram(src.loc)
+				holo.parent_ai = user
+				holo.ailaws = holo.parent_ai.laws_object
+				holo.client = usr.client //should move the client there
+				holo.name = holo.parent_ai.name
+				holo.real_name = holo.parent_ai.real_name
+				src.state = "on"
+				src.icon_state = "holopad1"
+				src.slave_holo = holo
+				return
+			else
+				if(user != src.slave_holo:parent_ai) //question number four //there is always a slave_holo if it's on
+					user << "\red You're not the one AI who is currently using this holopad!"
+					return
+				else
+					user << "\red \b Something is very wrong, you should be in a hologram by now"
+					return
+		else
+			user << "\red This holopad has no power."
+			return
+	else
+		if(!(stat & NOPOWER)) //question number two
+			if(src.state == "off") //question number three
+				user << "\red This holopad is off, you should find your original holopad."
+				return
+			else
+				if(user == src.slave_holo) //question number four
+					del(user) //code for returning the control back to the AI is in the mob's del() code
+					src.state = "off"
+					src.icon_state = "holopad0"
+					src.slave_holo = null
+					return
+				else
+					user << "\red You're not the one AI who is currently using this holopad!"
+					return
+		else
+			user << "\red This holopad is off, you should find your original holopad."
+			return
 
-/obj/machinery/hologram_ai/wall_projector
-	name = "Hologram Wall Projector"
-	icon_state = "wall_holopad0"
+/obj/machinery/holopad/process()
+	if((stat & NOPOWER) && src.state == "on")
+		src.state = "off"
+	if(src.state == "on")
+		if(!(src.slave_holo in view(src,5))) //if the hologram strayed too far, destroy it
+			if(src.slave_holo)
+				del(src.slave_holo) //code for returning the control back to the AI is in the mob's del() code
+			src.state = "off"
+			src.icon_state = "holopad0"
+			src.slave_holo = null
+	if(src.state == "off" && src.slave_holo) //usually happens if the power ran out
+		del(src.slave_holo) //code for returning the control back to the AI is in the mob's del() code
+		src.slave_holo = null
+	return 1
 
+/obj/machinery/holopad/power_change()
+	if (powered())
+		stat &= ~NOPOWER
+	else
+		stat |= ~NOPOWER
+
+/obj/machinery/holopad/Del()
+	if(src.slave_holo)
+		del(src.slave_holo) //code for returning the control back to the AI is in the mob's del() code
+	..()
+
+/* Old code which didn't work, I believe
 /obj/machinery/hologram_ai/New()
 	..()
 
@@ -37,8 +93,6 @@
 
 	I.Blend(U, ICON_OVERLAY)
 
-	I.Blend(new /icon('uniform.dmi', "aqua_s"), ICON_OVERLAY)
-
 	src.projection.icon = I
 
 /obj/machinery/hologram_ai/proc/show_console(var/mob/user as mob)
@@ -59,21 +113,14 @@
 
 	if (href_list["power"])
 		if (src.projection)
-			if(istype(src, /obj/machinery/hologram_ai/wall_projector))
-				src.icon_state = "wall_holopad0"
-			else
-				src.icon_state = "holopad0"
-
+			src.icon_state = "hologram0"
 			//src.projector.projection = null
 			del(src.projection)
 		else
 			src.projection = new /obj/projection( src.loc )
 			src.projection.icon = 'human.dmi'
 			src.projection.icon_state = "male"
-			if(istype(src, /obj/machinery/hologram_ai/wall_projector))
-				src.icon_state = "wall_holopad1"
-			else
-				src.icon_state = "holopad1"
+			src.icon_state = "hologram1"
 			src.render()
 	else if (href_list["h_r"])
 		if (src.projection)
@@ -102,3 +149,4 @@
 	else if (href_list["temp"])
 		src.temp = null
 	src.show_console(usr)
+*/

@@ -1,11 +1,57 @@
 /var/const/OPEN = 1
 /var/const/CLOSED = 2
 
+/obj/machinery/door/firedoor/Bumped(atom/AM)
+	if(p_open || operating)
+		return
+	if(!density)
+		return ..()
+	else
+		return 0
+
+
 /obj/machinery/door/firedoor/power_change()
 	if( powered(ENVIRON) )
 		stat &= ~NOPOWER
 	else
 		stat |= NOPOWER
+
+/obj/machinery/door/firedoor/attackby(obj/item/weapon/C as obj, mob/user as mob)
+	src.add_fingerprint(user)
+	if ((istype(C, /obj/item/weapon/weldingtool) && !( src.operating ) && src.density))
+		var/obj/item/weapon/weldingtool/W = C
+		if(W.remove_fuel(0, user))
+			src.blocked = !src.blocked
+			user << text("\red You [blocked?"welded":"unwelded"] the [src]")
+			update_icon()
+			return
+	if (istype(C, /obj/item/weapon/crowbar))
+		if (!src.blocked && !src.operating)
+			if(src.density)
+				spawn( 0 )
+					src.operating = 1
+
+					animate("opening")
+					sleep(15)
+					src.density = 0
+					update_icon()
+
+					src.sd_SetOpacity(0)
+					src.operating = 0
+					return
+			else //close it up again
+				spawn( 0 )
+					src.operating = 1
+
+					animate("closing")
+					src.density = 1
+					sleep(15)
+					update_icon()
+
+					src.sd_SetOpacity(1)
+					src.operating = 0
+					return
+	return
 
 /obj/machinery/door/firedoor/process()
 	if(src.operating)
@@ -18,52 +64,6 @@
 			spawn()
 				src.close()
 		src.nextstate = null
-
-/obj/machinery/door/firedoor/attackby(obj/item/weapon/C as obj, mob/user as mob)
-	src.add_fingerprint(user)
-	if ((istype(C, /obj/item/weapon/weldingtool) && !( src.operating ) && src.density))
-		var/obj/item/weapon/weldingtool/W = C
-		if(W.welding)
-			if (W.get_fuel() > 2)
-				W.use_fuel(2)
-			if (!( src.blocked ))
-				src.blocked = 1
-			else
-				src.blocked = 0
-			update_icon()
-
-			return
-	if (!( istype(C, /obj/item/weapon/crowbar) || (ishuman(user) && user:zombie) ))
-		return
-
-	if (!src.blocked && !src.operating)
-		if(src.density)
-			spawn( 0 )
-				src.operating = 1
-
-				animate("opening")
-				sleep(15)
-				src.density = 0
-				update_icon()
-
-				src.ul_SetOpacity(0)
-				update_nearby_tiles()
-				src.operating = 0
-				return
-		else //close it up again
-			spawn( 0 )
-				src.operating = 1
-
-				animate("closing")
-				src.density = 1
-				sleep(15)
-				update_icon()
-
-				src.ul_SetOpacity(1)
-				update_nearby_tiles()
-				src.operating = 0
-				return
-	return
 
 /obj/machinery/door/firedoor/border_only
 	CanPass(atom/movable/mover, turf/target, height=0, air_group=0)

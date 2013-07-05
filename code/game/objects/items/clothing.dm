@@ -4,11 +4,10 @@ ORANGE SHOES
 MUZZLE
 CAKEHAT
 SUNGLASSES
-CIGARETTE
 SWAT SUIT
 CHAMELEON JUMPSUIT
 DEATH COMMANDO GAS MASK
-
+THERMAL GLASSES
 */
 
 
@@ -33,18 +32,35 @@ DEATH COMMANDO GAS MASK
 	..()
 	return
 
+/obj/item/clothing/gloves/latex/attackby(obj/item/weapon/cable_coil/O as obj, loc)
+	if (istype(O) && O.amount==1)
+		var/obj/item/latexballon/LB = new
+		if (usr.get_inactive_hand()==src)
+			usr.before_take_item(src)
+			usr.put_in_inactive_hand(LB)
+		else
+			LB.loc = src.loc
+		del(O)
+		del(src)
+	else
+		return ..()
+
+
 /obj/item/clothing/shoes/orange/attack_self(mob/user as mob)
 	if (src.chained)
 		src.chained = null
+		src.slowdown = SHOES_SLOWDOWN
 		new /obj/item/weapon/handcuffs( user.loc )
 		src.icon_state = "orange"
 	return
 
 /obj/item/clothing/shoes/orange/attackby(H as obj, loc)
+	..()
 	if ((istype(H, /obj/item/weapon/handcuffs) && !( src.chained )))
 		//H = null
 		del(H)
 		src.chained = 1
+		src.slowdown = 15
 		src.icon_state = "orange1"
 	return
 
@@ -69,132 +85,24 @@ DEATH COMMANDO GAS MASK
 			location = M.loc
 
 	if (istype(location, /turf))
-		location.hotspot_expose(SPARK_TEMP, 1)
+		location.hotspot_expose(700, 1)
 
 
 /obj/item/clothing/head/cakehat/attack_self(mob/user as mob)
 	if(status > 1)	return
 	src.onfire = !( src.onfire )
 	if (src.onfire)
-		src.force = 15
+		src.force = 3
 		src.damtype = "fire"
 		src.icon_state = "cake1"
 
 		processing_items.Add(src)
 
 	else
-		src.force = 3
+		src.force = null
 		src.damtype = "brute"
 		src.icon_state = "cake0"
 	return
-
-
-/obj/item/clothing/mask/cigarette/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/weldingtool)  && W:welding)
-		if(src.lit == 0)
-			src.lit = 1
-			src.damtype = "fire"
-			src.icon_state = "cigon"
-			src.item_state = "cigon"
-			for(var/mob/O in viewers(user, null))
-				O.show_message(text("\red [] casually lights the cigarette with [], what a badass.", user, W), 1)
-			spawn() //start fires while it's lit
-				src.process()
-	else if(istype(W, /obj/item/weapon/zippo) && W:lit)
-		if(src.lit == 0)
-			var/cool = "Damn they're cool."
-			if(istype(W, /obj/item/weapon/zippo/lighter))
-				cool = "Now that's a bland lighter!"
-
-			src.lit = 1
-			src.icon_state = "cigon"
-			src.item_state = "cigon"
-
-			var/gendercheck = "its"
-			if(user.gender == MALE)
-				gendercheck = "his"
-			if(user.gender == FEMALE)
-				gendercheck = "her"
-
-			for(var/mob/O in viewers(user, null))
-				O.show_message("\red With a single flick of [gendercheck] wrist, [user] smoothly lights [gendercheck] cigarette with [gendercheck] [W]. [cool]", 1)
-			spawn() //start fires while it's lit
-				src.process()
-
-
-
-/obj/item/clothing/mask/cigarette/process()
-
-	var/atom/lastHolder = null
-
-	while(src.lit == 1)
-		var/turf/location = src.loc
-		var/atom/holder = loc
-		var/isHeld = 0
-		var/mob/M = null
-		src.smoketime--
-
-		if(istype(location, /mob/))
-			M = location
-			if(M.l_hand == src || M.r_hand == src || M.wear_mask == src)
-				location = M.loc
-		if(src.smoketime < 1)
-			var/obj/item/weapon/cigbutt/C = new /obj/item/weapon/cigbutt
-			if(M != null)
-				M << "\red Your cigarette goes out."
-			C.loc = location
-			del(src)
-			return
-		if (istype(location, /turf)) //start a fire if possible
-			location.hotspot_expose(SPARK_TEMP, 5)
-		if (ismob(holder))
-			isHeld = 1
-		else
-
-
-
-
-			// note remove luminosity processing until can understand how to make this compatible
-			// with the fire checks, etc.
-
-			isHeld = 0
-			if (lastHolder != null)
-				//lastHolder.ul_SetLuminosity(0)
-				lastHolder = null
-
-		if (isHeld == 1)
-			//if (holder != lastHolder && lastHolder != null)
-				//lastHolder.ul_SetLuminosity(0)
-			//holder.ul_SetLuminosity(1)
-			lastHolder = holder
-
-		//ul_SetLuminosity(1)
-		sleep(10)
-
-	if (lastHolder != null)
-		//lastHolder.ul_SetLuminosity(0)
-		lastHolder = null
-
-	//ul_SetLuminosity(0)
-
-
-/obj/item/clothing/mask/cigarette/dropped(mob/user as mob)
-	if(src.lit == 1)
-		for(var/mob/O in viewers(user, null))
-			O.show_message(text("\red [] calmly drops and treads on the lit cigarette, putting it out instantly.", user), 1)
-		src.lit = -1
-		src.damtype = "brute"
-		src.icon_state = "cigbutt"
-		src.item_state = "cigoff"
-		src.name = "Cigarette butt"
-		src.desc = "A cigarette butt."
-		return ..()
-	else
-		for(var/mob/O in viewers(user, null))
-			O.show_message(text("\red [] drops the []. Guess they've had enough for the day.", user, src), 1)
-		return ..()
-
-
 
 
 /obj/item/clothing/under/chameleon/New()
@@ -205,6 +113,10 @@ DEATH COMMANDO GAS MASK
 		var/obj/item/clothing/under/V = new U
 		src.clothing_choices += V
 
+	for(var/U in typesof(/obj/item/clothing/under/rank)-(/obj/item/clothing/under/rank))
+
+		var/obj/item/clothing/under/V = new U
+		src.clothing_choices += V
 
 	return
 
@@ -223,6 +135,7 @@ DEATH COMMANDO GAS MASK
 
 
 /obj/item/clothing/under/chameleon/attackby(obj/item/clothing/under/U as obj, mob/user as mob)
+	..()
 
 	if(istype(U, /obj/item/clothing/under/chameleon))
 		user << "\red Nothing happens."
@@ -239,7 +152,8 @@ DEATH COMMANDO GAS MASK
 		user << "\red Pattern absorbed by the suit."
 
 /obj/item/clothing/under/chameleon/verb/change()
-	set name = "Change"
+	set name = "Change Color"
+	set category = "Object"
 	set src in usr
 
 	if(icon_state == "psyche")
@@ -262,13 +176,133 @@ DEATH COMMANDO GAS MASK
 	item_state = A.item_state
 	color = A.color
 
+/obj/item/clothing/under/chameleon/emp_act(severity)
+	name = "psychedelic"
+	desc = "Groovy!"
+	icon_state = "psyche"
+	color = "psyche"
+	spawn(200)
+		name = "Black Jumpsuit"
+		icon_state = "bl_suit"
+		color = "black"
+		desc = null
+	..()
+
+/*
 /obj/item/clothing/suit/swat_suit/death_commando
 	name = "Death Commando Suit"
 	icon_state = "death_commando_suit"
 	item_state = "death_commando_suit"
-	flags = FPRINT | TABLEPASS | SUITSPACE
+	flags = FPRINT | TABLEPASS | SUITSPACE*/
 
 /obj/item/clothing/mask/gas/death_commando
 	name = "Death Commando Mask"
 	icon_state = "death_commando_mask"
 	item_state = "death_commando_mask"
+
+/obj/item/clothing/under/rank/New()
+	sensor_mode = pick(0,1,2,3)
+	..()
+
+/obj/item/clothing/under/verb/toggle()
+	set name = "Toggle Suit Sensors"
+	set category = "Object"
+	var/mob/M = usr
+	if (istype(M, /mob/dead/)) return
+	if (usr.stat) return
+	if(src.has_sensor >= 2)
+		usr << "The controls are locked."
+		return 0
+	if(src.has_sensor <= 0)
+		usr << "This suit does not have any sensors"
+		return 0
+	src.sensor_mode += 1
+	if(src.sensor_mode > 3)
+		src.sensor_mode = 0
+	switch(src.sensor_mode)
+		if(0)
+			usr << "You disable your suit's remote sensing equipment."
+		if(1)
+			usr << "Your suit will now report whether you are live or dead."
+		if(2)
+			usr << "Your suit will now report your vital lifesigns."
+		if(3)
+			usr << "Your suit will now report your vital lifesigns as well as your coordinate position."
+	..()
+
+/obj/item/clothing/under/examine()
+	set src in view()
+	..()
+	switch(src.sensor_mode)
+		if(0)
+			usr << "Its sensors appear to be disabled."
+		if(1)
+			usr << "Its binary life sensors appear to be enabled."
+		if(2)
+			usr << "Its vital tracker appears to be enabled."
+		if(3)
+			usr << "Its vital tracker and tracking beacon appear to be enabled."
+
+
+/obj/item/clothing/head/helmet/welding/verb/toggle()
+	set category = "Object"
+	set name = "Adjust welding mask"
+	if(src.up)
+		src.up = !src.up
+		src.see_face = !src.see_face
+		src.flags |= HEADCOVERSEYES
+		icon_state = "welding"
+		usr << "You flip the mask down to protect your eyes."
+	else
+		src.up = !src.up
+		src.see_face = !src.see_face
+		src.flags &= ~HEADCOVERSEYES
+		icon_state = "weldingup"
+		usr << "You push the mask up out of your face."
+
+/obj/item/clothing/shoes/magboots/verb/toggle()
+	set name = "Toggle Magboots"
+	set category = "Object"
+	if(src.magpulse)
+		src.flags &= ~NOSLIP
+		src.slowdown = SHOES_SLOWDOWN
+		src.magpulse = 0
+		icon_state = "magboots0"
+		usr << "You disable the mag-pulse traction system."
+	else
+		src.flags |= NOSLIP
+		src.slowdown = 2
+		src.magpulse = 1
+		icon_state = "magboots1"
+		usr << "You enable the mag-pulse traction system."
+
+/obj/item/clothing/shoes/magboots/examine()
+	set src in view()
+	..()
+	var/state = "disabled"
+	if(src.flags&NOSLIP)
+		state = "enabled"
+	usr << "Its mag-pulse traction system appears to be [state]."
+
+/obj/item/clothing/head/ushanka/attack_self(mob/user as mob)
+	if(src.icon_state == "ushankadown")
+		src.icon_state = "ushankaup"
+		src.item_state = "ushankaup"
+		user << "You raise the ear flaps on the ushanka."
+	else
+		src.icon_state = "ushankadown"
+		src.item_state = "ushankadown"
+		user << "You lower the ear flaps on the ushanka."
+
+
+/obj/item/clothing/glasses/thermal/emp_act(severity)
+	if(istype(src.loc, /mob/living/carbon/human))
+		var/mob/living/carbon/human/M = src.loc
+		M << "\red The Optical Thermal Scanner overloads and blinds you!"
+		if(M.glasses == src)
+			M.eye_blind = 3
+			M.eye_blurry = 5
+			M.disabilities |= 1
+			spawn(100)
+				M.disabilities &= ~1
+	..()

@@ -10,8 +10,8 @@
 
 	var/on = 0
 
-	var/current_temperature = T20C + 40 //60 Degrees C
-	var/current_heat_capacity = 50000
+	var/current_temperature = T20C
+	var/current_heat_capacity = 50000 //totally random
 
 	update_icon()
 		if(node)
@@ -25,11 +25,8 @@
 
 	process()
 		..()
-		update_icon()
-
 		if(!on)
 			return 0
-
 		var/air_heat_capacity = air_contents.heat_capacity()
 		var/combined_heat_capacity = current_heat_capacity + air_heat_capacity
 		var/old_temperature = air_contents.temperature
@@ -40,8 +37,6 @@
 
 		//todo: have current temperature affected. require power to bring up current temperature again
 
-		//world << "Changed by [(air_contents.temperature - old_temperature)] from [old_temperature]"
-		//world << "Now [air_contents.temperature] ([air_contents.temperature - T0C] C)"
-		if(old_temperature != air_contents.temperature)
+		if(abs(old_temperature-air_contents.temperature) > 1)
 			network.update = 1
 		return 1

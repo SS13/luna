@@ -1,54 +1,30 @@
-/datum/game_mode
-	var/list/datum/mind/syndicates = list()
-
 /datum/game_mode/nuclear
 	name = "nuclear emergency"
 	config_tag = "nuclear"
-	enabled = 1
 
-//	var/list/datum/mind/syndicates = list()
+	var/list/datum/mind/syndicates = list()
 	var/finished = 0
 	var/nuke_detonated = 0 //Has the nuke gone off?
-	var/agents_possible = 0 //If we ever need more syndicate agents.
+	var/const/agents_possible = 5 //If we ever need more syndicate agents.
 
 	var/const/waittime_l = 600 //lower bound on time before intercept arrives (in tenths of seconds)
 	var/const/waittime_h = 1800 //upper bound on time before intercept arrives (in tenths of seconds)
 
-	var/list/synd_spawns = list()
-	var/list/disk_spawns = list()
-
-	uplink_welcome = "Syndicate Uplink Console:"
-	uplink_items = {"/obj/item/weapon/storage/box/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
-/obj/item/weapon/storage/box/syndie_kit/imp_compress:5:Compressed matter implant, with injector;/obj/item/weapon/storage/box/syndie_kit/imp_vfac:5:Viral factory implant, with injector;
-/obj/item/weapon/storage/box/syndie_kit/imp_explosive:6:Explosive implant, with injector;/obj/item/device/hacktool:4:Hacktool;
-/obj/item/clothing/under/chameleon:2:Chameleon Jumpsuit;/obj/item/weapon/gun/revolver:7:Revolver;
-/obj/item/weapon/ammo/a357:3:Revolver Ammo;/obj/item/weapon/card/emag:3:Electromagnetic card;
-/obj/item/weapon/card/id/syndicate:4:Fake ID;/obj/item/clothing/glasses/thermal:4:Thermal Glasses;
-/obj/item/weapon/storage/box/emp:4:Box of EMP grenades;/obj/item/device/powersink:5:Power sink;
-/obj/item/weapon/cartridge/syndicate:3:Detomatix PDA cart;/obj/item/device/chameleon:4:Chameleon projector;
-/obj/item/weapon/sword:5:Energy sword;/obj/item/weapon/pen/sleepypen:4:Sleepy pen;
-/obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;/obj/item/clothing/mask/gas/voice:3:Voice changer;
-/obj/item/weapon/aiModule/freeform:3:Freeform AI module;/obj/item/weapon/syndie/c4explosive:4:Low power explosive charge, with detonator);
-/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge, with detonator;/obj/item/weapon/reagent_containers/pill/tox:2:Toxin Pill"}
-
-	uplink_uses = 0
+	var/derp = 0 //Used for tracking if the syndies actually haul the nuke to the station
+	var/herp = 0 //Used for tracking if the syndies got the shuttle off of the z-level
 
 /datum/game_mode/nuclear/announce()
 	world << "<B>The current game mode is - Nuclear Emergency!</B>"
-//	world << "<B>A [syndicate_name()] Strike Force is approaching [station_name()]!</B>"
-//	world << "A nuclear explosive was being transported by NanoTrasen to a military base. The transport ship mysteriously lost contact with Space Traffic Control (STC). About that time a strange disk was discovered around [station_name()]. It was identified by NanoTrasen as a nuclear auth. disk and now Syndicate Operatives have arrived to retake the disk and detonate NSV Luna! Also, most likely Syndicate star ships are in the vicinity so take care not to lose the disk!\n<B>Syndicate</B>: Reclaim the disk and detonate the nuclear bomb anywhere on Luna.\n<B>Personnel</B>: Hold the disk and <B>escape with the disk</B> on the shuttle!"
+	world << "<B>A [syndicate_name()] Strike Force is approaching [station_name()]!</B>"
+	world << "A nuclear explosive was being transported by Nanotrasen to a military base. The transport ship mysteriously lost contact with Space Traffic Control (STC). About that time a strange disk was discovered around [station_name()]. It was identified by Nanotrasen as a nuclear auth. disk and now Syndicate Operatives have arrived to retake the disk and detonate SS13! Also, most likely Syndicate star ships are in the vicinity so take care not to lose the disk!\n<B>Syndicate</B>: Reclaim the disk and detonate the nuclear bomb anywhere on SS13.\n<B>Personnel</B>: Hold the disk and <B>escape with the disk</B> on the shuttle!"
 
 
 /datum/game_mode/nuclear/pre_setup()
-	agents_possible = (get_player_count())/3
-	if(agents_possible < 1)
-		agents_possible = 1
-	if(agents_possible > 5)
-		agents_possible = 5
-
 	var/list/possible_syndicates = list()
 	possible_syndicates = get_possible_syndicates()
 	var/agent_number = 0
+
+	syndicate_begin()
 
 	if(possible_syndicates.len < 1)
 		return 0
@@ -66,38 +42,49 @@
 
 	for(var/datum/mind/synd_mind in syndicates)
 		synd_mind.assigned_role = "MODE" //So they aren't chosen for other jobs.
-
-	uplink_uses = (syndicates.len*10)
+		synd_mind.special_role = "Syndicate"//So they actually have a special role/N
 
 	return 1
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+/datum/game_mode/nuclear/proc/update_all_synd_icons()
+	spawn(0)
+		for(var/datum/mind/synd_mind in syndicates)
+			if(synd_mind.current)
+				if(synd_mind.current.client)
+					for(var/image/I in synd_mind.current.client.images)
+						if(I.icon_state == "synd")
+							del(I)
 
+		for(var/datum/mind/synd_mind in syndicates)
+			if(synd_mind.current)
+				if(synd_mind.current.client)
+					for(var/datum/mind/synd_mind_1 in syndicates)
+						if(synd_mind_1.current)
+							var/I = image('mob.dmi', loc = synd_mind_1.current, icon_state = "synd")
+							synd_mind.current.client.images += I
+
+/datum/game_mode/nuclear/proc/update_synd_icons_added(datum/mind/synd_mind)
+	spawn(0)
+		if(synd_mind.current)
+			if(synd_mind.current.client)
+				var/I = image('mob.dmi', loc = synd_mind.current, icon_state = "synd")
+				synd_mind.current.client.images += I
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 
 /datum/game_mode/nuclear/post_setup()
-	for(var/mob/living/carbon/human/player in world)
-		if(player.mind)
-			var/role = player.mind.assigned_role
-			if(role == "Captain")
-				player << "After the recent theft of a nuclear device from Zebra Prime, you have been entrusted with the authentication disk which the infiltrators failed to steal. Your mission is to deliver the disk safely to CentComm and protect it from any hostile forces. This mission is top-secret, your crew and heads are not to be informed."
-
-	for(var/obj/landmark/synd_spawn/S in world)
-		synd_spawns += S.loc
-		del(S)
-
-	for(var/obj/landmark/disk_spawn/D in world)
-		disk_spawns += D.loc
-		del(D)
-
+	var/obj/landmark/synd_spawn = locate("landmark*Syndicate-Spawn")
 	var/obj/landmark/nuke_spawn = locate("landmark*Nuclear-Bomb")
 	var/obj/landmark/closet_spawn = locate("landmark*Nuclear-Closet")
 
-	var/nuke_code = "[rand(10000, 99999)]"
+	var/nuke_code = "[rand(10000, 99999.0)]"
 	var/leader_title = pick("Czar", "Boss", "Commander", "Chief", "Kingpin", "Director", "Overlord")
 	var/leader_selected = 0
-	var/radio_freq = random_radio_frequency()
+	var/agent_number = 1
 
 	for(var/datum/mind/synd_mind in syndicates)
-		synd_mind.current.loc = pick(synd_spawns)
-		synd_spawns -= synd_mind.current.loc
+		synd_mind.current.loc = get_turf(synd_spawn)
 
 		var/datum/objective/nuclear/syndobj = new
 		syndobj.owner = synd_mind
@@ -110,59 +97,49 @@
 			obj_count++
 
 		if(!leader_selected)
+			spawn(1) NukeNameAssign(nukelastname(synd_mind.current),syndicates) //allows time for the rest of the syndies to be chosen
 			synd_mind.current.real_name = "[syndicate_name()] [leader_title]"
 			synd_mind.store_memory("<B>Syndicate Nuclear Bomb Code</B>: [nuke_code]", 0, 0)
 			synd_mind.current << "The nuclear authorization code is: <B>[nuke_code]</B>\]"
-			synd_mind.current << "Nuclear Explosives 101:\n\tHello and thank you for choosing the Syndicate for your nuclear information needs.\nToday's crash course will deal with the operation of a Fusion Class NanoTrasen made Nuclear Device.\nFirst and foremost, DO NOT TOUCH ANYTHING UNTIL THE BOMB IS IN PLACE.\nPressing any button on the compacted bomb will cause it to extend and bolt itself into place.\nIf this is done to unbolt it one must compeltely log in which at this time may not be possible.\nTo make the device functional:\n1. Place bomb in designated detonation zone\n2. Extend and anchor bomb (attack with hand).\n3. Insert Nuclear Auth. Disk into slot.\n4. Type numeric code into keypad ([nuke_code]).\n\tNote: If you make a mistake press R to reset the device.\n5. Press the E button to log onto the device\nYou now have activated the device. To deactivate the buttons at anytime for example when\nyou've already prepped the bomb for detonation remove the auth disk OR press the R ont he keypad.\nNow the bomb CAN ONLY be detonated using the timer. A manual det. is not an option.\n\tNote: NanoTrasen is a pain in the neck.\nToggle off the SAFETY.\n\tNote: You wouldn't believe how many Syndicate Operatives with doctorates have forgotten this step\nSo use the - - and + + to set a det time between 5 seconds and 10 minutes.\nThen press the timer toggle button to start the countdown.\nNow remove the auth. disk so that the buttons deactivate.\n\tNote: THE BOMB IS STILL SET AND WILL DETONATE\nNow before you remove the disk if you need to move the bomb you can:\nToggle off the anchor, move it, and re-anchor.\n\nGood luck. Remember the order:\nDisk, Code, Safety, Timer, Disk, RUN\nGood luck."
+			synd_mind.current << "Nuclear Explosives 101:\n\tHello and thank you for choosing the Syndicate for your nuclear information needs.\nToday's crash course will deal with the operation of a Fusion Class Nanotrasen made Nuclear Device.\nFirst and foremost, DO NOT TOUCH ANYTHING UNTIL THE BOMB IS IN PLACE.\nPressing any button on the compacted bomb will cause it to extend and bolt itself into place.\nIf this is done to unbolt it one must compeltely log in which at this time may not be possible.\nTo make the device functional:\n1. Place bomb in designated detonation zone\n2. Extend and anchor bomb (attack with hand).\n3. Insert Nuclear Auth. Disk into slot.\n4. Type numeric code into keypad ([nuke_code]).\n\tNote: If you make a mistake press R to reset the device.\n5. Press the E button to log onto the device\nYou now have activated the device. To deactivate the buttons at anytime for example when\nyou've already prepped the bomb for detonation remove the auth disk OR press the R ont he keypad.\nNow the bomb CAN ONLY be detonated using the timer. A manual det. is not an option.\n\tNote: Nanotrasen is a pain in the neck.\nToggle off the SAFETY.\n\tNote: You wouldn't believe how many Syndicate Operatives with doctorates have forgotten this step\nSo use the - - and + + to set a det time between 5 seconds and 10 minutes.\nThen press the timer toggle button to start the countdown.\nNow remove the auth. disk so that the buttons deactivate.\n\tNote: THE BOMB IS STILL SET AND WILL DETONATE\nNow before you remove the disk if you need to move the bomb you can:\nToggle off the anchor, move it, and re-anchor.\n\nGood luck. Remember the order:\nDisk, Code, Safety, Timer, Disk, RUN!\nIntelligence Analysts believe that they are hiding the disk in the bridge. Your space ship will not leave until the bomb is armed and timing.\nGood luck!"
+			var/obj/item/weapon/paper/P = new /obj/item/weapon/paper(synd_mind.current.loc)
+			P.info = "The nuclear authorization code is: <b>[nuke_code]</b>"
+			P.name = "nuclear bomb code"
 			leader_selected = 1
+		else
+			synd_mind.current.real_name = "[syndicate_name()] Operative #[agent_number]"
+			agent_number++
 
-		equip_syndicate(synd_mind.current, radio_freq)
+		equip_syndicate(synd_mind.current)
+		update_synd_icons_added(synd_mind)
 
-	var/tmp/diskturf = pick(disk_spawns)
-	new /obj/item/weapon/disk/nuclear(diskturf)
+	update_all_synd_icons()
 
 	if(nuke_spawn)
 		var/obj/machinery/nuclearbomb/the_bomb = new /obj/machinery/nuclearbomb(nuke_spawn.loc)
 		the_bomb.r_code = nuke_code
 
 	if(closet_spawn)
-		new /obj/structure/closet/syndicate/nuclear(closet_spawn.loc)
+		new /obj/closet/syndicate/nuclear(closet_spawn.loc)
 
 	for (var/obj/landmark/A in world)
 		if (A.name == "Syndicate-Gear-Closet")
-			new /obj/structure/closet/syndicate/personal(A.loc)
+			new /obj/closet/syndicate/personal(A.loc)
 			del(A)
 			continue
 
 		if (A.name == "Syndicate-Bomb")
-			new /obj/item/weapon/syndie/c4explosive(A.loc)
+			new /obj/spawner/newbomb/timer/syndicate(A.loc)
 			del(A)
 			continue
 
-		if (A.name == "Syndicate-Bomb-Strong")
-			new /obj/item/weapon/syndie/c4explosive/heavy(A.loc)
-			del(A)
-			continue
-
-	spawn (rand(waittime_l, waittime_h)*tick_multiplier)
+	spawn (rand(waittime_l, waittime_h))
 		send_intercept()
 
 	return
-obj/landmark/synd_spawn
-	name = "Syndicate-Spawn"
-obj/landmark/nuke_spawn
-	name = "Nuclear-Bomb"
-obj/landmark/closet_spawn
-	name = "Nuclear-Closet"
-/obj/landmark/gearcloset
-	name = "Syndicate-Gear-Closet"
-obj/landmark/synbomb
-	name = "Syndicate-Bomb"
-obj/landmark/synbomb/strong
-	name = "Syndicate-Bomb-Strong"
-obj/landmark/disk_spawn
-	name = "Nuclear-Disk-Spawn"
-/datum/game_mode/nuclear/proc/equip_syndicate(mob/living/carbon/human/synd_mob, radio_freq)
+
+/datum/game_mode/nuclear/proc/equip_syndicate(mob/living/carbon/human/synd_mob)
+	var/radio_freq = random_radio_frequency()
 
 	var/obj/item/device/radio/R = new /obj/item/device/radio/headset(synd_mob)
 	R.set_frequency(radio_freq)
@@ -170,15 +147,25 @@ obj/landmark/disk_spawn
 
 	synd_mob.equip_if_possible(new /obj/item/clothing/under/syndicate(synd_mob), synd_mob.slot_w_uniform)
 	synd_mob.equip_if_possible(new /obj/item/clothing/shoes/black(synd_mob), synd_mob.slot_shoes)
+	synd_mob.equip_if_possible(new /obj/item/clothing/suit/armor/vest(synd_mob), synd_mob.slot_wear_suit)
 	synd_mob.equip_if_possible(new /obj/item/clothing/gloves/swat(synd_mob), synd_mob.slot_gloves)
-
+	synd_mob.equip_if_possible(new /obj/item/clothing/head/helmet/swat(synd_mob), synd_mob.slot_head)
+	synd_mob.equip_if_possible(new /obj/item/weapon/card/id/syndicate(synd_mob), synd_mob.slot_wear_id)
 	synd_mob.equip_if_possible(new /obj/item/weapon/storage/backpack(synd_mob), synd_mob.slot_back)
-	synd_mob.equip_if_possible(new /obj/item/weapon/reagent_containers/pill/cyanide(synd_mob), synd_mob.slot_in_backpack)
-
-	synd_mob.update_clothing()
+	synd_mob.equip_if_possible(new /obj/item/weapon/ammo/a357(synd_mob), synd_mob.slot_in_backpack)
+	synd_mob.equip_if_possible(new /obj/item/weapon/reagent_containers/pill/cyanide(synd_mob), synd_mob.slot_in_backpack) //Because it needed to be upgraded by someone - Micro
+	var/obj/item/weapon/gun/revolver/G = new /obj/item/weapon/gun/revolver(synd_mob)
+	G.bullets = 7
+	synd_mob.equip_if_possible(G, synd_mob.slot_belt)
 
 /datum/game_mode/nuclear/check_win()
 	if (src.nuke_detonated)
+		if(src.derp)
+			finished = 3
+			return
+		if(src.herp)
+			finished = 4
+			return
 		finished = 1
 		return
 
@@ -191,7 +178,7 @@ obj/landmark/disk_spawn
 	return
 
 /datum/game_mode/nuclear/check_finished()
-	if((src.finished) || (main_shuttle.location==2))
+	if((src.finished) || (emergency_shuttle.location==2))
 		return 1
 	else
 		return 0
@@ -207,6 +194,11 @@ obj/landmark/disk_spawn
 		if(0)
 			world << "<FONT size = 3><B>Neutral Victory</B></FONT>"
 			world << "<B>[syndicate_name()] operatives recovered the abandoned authentication disk but detonation of [station_name()] was averted.</B> Next time, don't lose the disk!"
+			for(var/datum/mind/M in syndicates)
+				if(!M.current)
+					continue
+				if(M.current.client)
+					world << text("<B>[M.current.key] was [M.current.real_name]</B> [M.current.stat == 2 ? "(DEAD)" : ""]")
 
 		if(1)
 			world << "<B>[syndicate_name()] operatives have destroyed [station_name()]!</B>"
@@ -223,7 +215,23 @@ obj/landmark/disk_spawn
 					continue
 				if ((M.current.client) && !(locate(M) in syndicates))
 					world << text("<B>[M.current.key] was [M.current.real_name]</B> [M.current.stat == 2 ? "(DEAD)" : ""]")
-	check_round()
+
+		if(3)
+			world << "<FONT size = 3><B>Neutral Victory</B></FONT>"
+			world << "<B>[syndicate_name()] operatives secured the authentication disk but blew up something that wasn't [station_name()].</B> Next time, don't lose the disk!"
+			for(var/datum/mind/M in syndicates)
+				if(!M.current)
+					continue
+				if(M.current.client)
+					world << text("<B>[M.current.key] was [M.current.real_name]</B> [M.current.stat == 2 ? "(DEAD)" : ""]")
+		if(4)
+			world << "<FONT size = 3><B>Total Annihilation</B></FONT>"
+			world << "<B>[syndicate_name()] operatives destroyed [station_name()] but did not leave the area in time and got caught in the explosion.</B> Next time, don't lose the disk!"
+			for(var/datum/mind/M in syndicates)
+				if(!M.current)
+					continue
+				if(M.current.client)
+					world << text("<B>[M.current.key] was [M.current.real_name]</B> [M.current.stat == 2 ? "(DEAD)" : ""]")
 	return 1
 
 /datum/game_mode/nuclear/proc/get_possible_syndicates()
@@ -231,7 +239,7 @@ obj/landmark/disk_spawn
 
 	for(var/mob/new_player/player in world)
 		if((player.client) &&  (player.ready))
-			if(player.be_nuke_agent)
+			if(player.preferences.be_syndicate)
 				candidates += player.mind
 
 	if(candidates.len < 1)
@@ -244,19 +252,61 @@ obj/landmark/disk_spawn
 	else
 		return candidates
 
+/datum/game_mode/nuclear/send_intercept()
+	var/intercepttext = "<FONT size = 3><B>Cent. Com. Update</B> Requested staus information:</FONT><HR>"
+	intercepttext += "<B> Cent. Com has recently been contacted by the following syndicate affiliated organisations in your area, please investigate any information you may have:</B>"
+
+	var/list/possible_modes = list()
+	possible_modes.Add("revolution", "wizard", "nuke", "traitor", "malf", "changeling", "cult")
+	possible_modes -= "nuke"
+	var/number = pick(2, 3)
+	var/i = 0
+	for(i = 0, i < number, i++)
+		possible_modes.Remove(pick(possible_modes))
+	possible_modes.Insert(rand(possible_modes.len), "nuke")
+
+	var/datum/intercept_text/i_text = new /datum/intercept_text
+	for(var/A in possible_modes)
+		intercepttext += i_text.build(A)
+
+	for (var/obj/machinery/computer/communications/comm in world)
+		if (!(comm.stat & (BROKEN | NOPOWER)) && comm.prints_intercept)
+			var/obj/item/weapon/paper/intercept = new /obj/item/weapon/paper( comm.loc )
+			intercept.name = "paper- 'Cent. Com. Status Summary'"
+			intercept.info = intercepttext
+
+			comm.messagetitle.Add("Cent. Com. Status Summary")
+			comm.messagetext.Add(intercepttext)
+
+	command_alert("Summary downloaded and printed out at all communications consoles.", "Enemy communication intercept. Security Level Elevated.")
+	world << sound('intercept.ogg')
+
 /datum/game_mode/nuclear/proc/random_radio_frequency()
-	var/f = 0
+	return 1337
 
-	do
-		f = rand(1441, 1489)
-		f = sanitize_frequency(f)
-	while (f == 0 || f == 1459)
+/proc/nukelastname(var/mob/M as mob) //--All praise goes to NEO|Phyte, all blame goes to DH, and it was Cindi-Kate's idea. Also praise Urist for copypasta ho.
+	var/randomname = pick(last_names)
+	var/newname = input(M,"You are the nuke operative [pick("Czar", "Boss", "Commander", "Chief", "Kingpin", "Director", "Overlord")]. Please choose a last name for your family.", "Name change",randomname)
 
-	return f
+	if (length(newname) == 0)
+		newname = randomname
 
-/datum/game_mode/nuclear/proc/get_player_count()
-	var/count = 0
-	for(var/mob/new_player/P in world)
-		if(P.ready)
-			count++
-	return count
+	if (newname)
+		if (newname == "Unknown")
+			M << "That name is reserved."
+			return nukelastname(M)
+		if (length(newname) >= 26)
+			newname = copytext(newname, 1, 26)
+		newname = dd_replacetext(newname, ">", "'")
+
+	return newname
+
+/proc/NukeNameAssign(var/lastname,var/list/syndicates)
+	for(var/datum/mind/synd_mind in syndicates)
+		switch(synd_mind.current.gender)
+			if("male")
+				synd_mind.current.real_name = "[pick(first_names_male)] [lastname]"
+			if("female")
+				synd_mind.current.real_name = "[pick(first_names_female)] [lastname]"
+
+	return

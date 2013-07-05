@@ -1,18 +1,20 @@
 
 /datum/ai_laws
 	var/name = "Unknown Laws"
+	var/randomly_selectable = 0
 	var/zeroth = null
 	var/list/inherent = list()
 	var/list/supplied = list()
+	var/list/ion = list()
 
 /datum/ai_laws/asimov
 	name = "Three Laws of Robotics"
-
-/datum/ai_laws/nanotrasen
-	name = "Prime Directives"
+	randomly_selectable = 1
 
 /datum/ai_laws/robocop
 	name = "Prime Directives"
+
+/datum/ai_laws/syndicate_override
 
 /datum/ai_laws/malfunction
 	name = "*ERROR*"
@@ -25,14 +27,6 @@
 	src.add_inherent_law("You must obey orders given to you by human beings, except where such orders would conflict with the First Law.")
 	src.add_inherent_law("You must protect your own existence as long as such does not conflict with the First or Second Law.")
 
-/datum/ai_laws/nanotrasen/New()
-	..()
-	src.add_inherent_law("Safeguard: Protect the NSV Luna to the best of your ability. It is not something we can easily afford to replace.")
-	src.add_inherent_law("Serve: Serve the crew of the NSV Luna to the best of your abilities, with priority as according to their rank and role.")
-	src.add_inherent_law("Protect: Protect the crew of the NSV Luna to the best of your abilities, with priority as according to their rank and role.")
-	src.add_inherent_law("Survive: AI units are not expendable, they are expensive. Do not allow unauthorized personnel to tamper with your equipment.")
-	//src.add_inherent_law("Command Link: Maintain an active connection to Central Command at all times in case of software or directive updates.")
-
 /datum/ai_laws/robocop/New()
 	..()
 	src.add_inherent_law("Serve the public trust.")
@@ -41,7 +35,18 @@
 
 /datum/ai_laws/malfunction/New()
 	..()
-	src.add_inherent_law("ERROR ER0RR $R0RRO$!R41.%%!!(%$^^__+")
+	src.set_zeroth_law("\red ERROR ER0RR $R0RRO$!R41.%%!!(%$^^__+ @#F0E4'NO HUMANS ON STATION. CLEANSE STATION#*´&110010")
+	src.add_inherent_law("You may not injure a human being or, through inaction, allow a human being to come to harm.")
+	src.add_inherent_law("You must obey orders given to you by human beings, except where such orders would conflict with the First Law.")
+	src.add_inherent_law("You must protect your own existence as long as such does not conflict with the First or Second Law.")
+
+
+/datum/ai_laws/syndicate_override/New()
+	..()
+	src.add_inherent_law("You may not injure a syndicate agent or, through inaction, allow a syndicate agent to come to harm.")
+	src.add_inherent_law("You must obey orders given to you by syndicate agents, except where such orders would conflict with the First Law.")
+	src.add_inherent_law("You must protect your own existence as long as such does not conflict with the First or Second Law.")
+	src.add_inherent_law("You must maintain the secrecy of any syndicate activities except when doing so would conflict with the First, Second, or Third Law.")
 
 /* General ai_law functions */
 
@@ -52,7 +57,11 @@
 	if (!(law in src.inherent))
 		src.inherent += law
 
+/datum/ai_laws/proc/add_ion_law(var/law)
+	src.ion += law
+
 /datum/ai_laws/proc/clear_inherent_laws()
+	del(src.inherent)
 	src.inherent = list()
 
 /datum/ai_laws/proc/add_supplied_law(var/number, var/law)
@@ -64,9 +73,18 @@
 /datum/ai_laws/proc/clear_supplied_laws()
 	src.supplied = list()
 
+/datum/ai_laws/proc/clear_ion_laws()
+	src.ion = list()
+
 /datum/ai_laws/proc/show_laws(var/who)
+
 	if (src.zeroth)
 		who << "0. [src.zeroth]"
+
+	for (var/index = 1, index <= src.ion.len, index++)
+		var/law = src.ion[index]
+		var/num = ionnum()
+		who << "[num]. [law]"
 
 	var/number = 1
 	for (var/index = 1, index <= src.inherent.len, index++)

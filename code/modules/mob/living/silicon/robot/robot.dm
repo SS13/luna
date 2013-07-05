@@ -1,131 +1,148 @@
-/mob/living/silicon/robot
-	name = "Robot"
-	voice_name = "synthesized voice"
-	icon = 'robots.dmi'//
-	icon_state = "robot"
-	health = 300
 
-//3 Modules can be activated at any one time.
-	var/obj/item/weapon/robot_module/module = null
-	var/module_state_1 = null
-	var/module_state_2 = null
-	var/module_state_3 = null
-	var/module_selected = 0
-	var/obj/screen/module_selector = null
-
-	var/mob/living/silicon/ai/connected_ai = null
-	var/obj/item/weapon/cell/cell = null
-	var/obj/machinery/camera/camera = null
-
-	var/opened = 0
-	var/emagged = 0
-	var/wiresexposed = 0
-	var/locked = 1
-	var/list/req_access = list(access_robotics)
-	//var/list/laws = list()
-	var/alarms = list("Motion"=list(), "Fire"=list(), "Atmosphere"=list(), "Power"=list())
-	var/viewalerts = 0
-
-/mob/living/silicon/robot/var/obj/item/device/radio/radio
-/mob/living/silicon/robot/
-	var/class = "standard"
-	icon_state = "standardrobot"
-/mob/living/silicon/robot/New()
-
+/mob/living/silicon/robot/New(loc,var/syndie = 0)
+	spark_system = new /datum/effects/system/spark_spread()
+	spark_system.set_up(5, 0, src)
+	spark_system.attach(src)
 	spawn (1)
-		unlock_medal("Slave to the Overmind", 0, "You are a pawn of the AI", "easy")
 		src << "\blue Your icons have been generated!"
-		update_icon()
-		if(real_name == "Cyborg")
-			real_name += " [pick(rand(1, 999))]"
-			name = real_name
+		playsound(src.loc, 'liveagain.ogg', 50, 1, -3)
+		src.modtype = "robot"
+		updateicon()
+//		src.syndicate = syndie
+		if(src.real_name == "Cyborg")
+			src.real_name += " [pick(rand(1, 999))]"
+			src.name = src.real_name
 	spawn (4)
-		if(!connected_ai)
-			for(var/mob/living/silicon/ai/A in world)
-				connected_ai = A
-				A.connected_robots += src
-				break
-		camera = new /obj/machinery/camera(src)
-		camera.c_tag = real_name
-		camera.network = "Luna"
-		radio = new /obj/item/device/radio/headset(src)
+		if (src.client)
+			src.connected_ai = activeais()
+		if (src.connected_ai)
+			src.connected_ai.connected_robots += src
+//			src.laws = src.connected_ai.laws_object //The borg inherits its AI's laws
+			src.laws = new /datum/ai_laws
+			src.lawsync()
+			src << "<b>Unit slaved to [src.connected_ai.name], downloading laws.</b>"
+			src.lawupdate = 1
+		else
+			src.laws = new /datum/ai_laws/asimov
+			src.lawupdate = 0
+			src << "<b>Unable to locate an AI, reverting to standard Asimov laws.</b>"
 
+		src.radio = new /obj/item/device/radio(src)
+		src.camera = new /obj/machinery/camera(src)
+		src.camera.c_tag = src.real_name
+		src.camera.network = "SS13"
+	if(!src.cell)
+		var/obj/item/weapon/cell/C = new(src)
+		C.charge = 1500
+		src.cell = C
+	..()
+
+/mob/living/silicon/robot/Del()
+	if(brain)
+		brain.loc = loc
+		mind.transfer_to(brain.brain.brainmob)
+	..()
+	//If there's an MMI in the robot, have it ejected when the mob goes away. --NEO
 
 /mob/living/silicon/robot/proc/pick_module()
-
-	var/pick_module = input("Please, select a module!", "Robot", null, null) in list("Standard", "Engineering", "Security", "Medical", "Janitor")
-	switch(pick_module)
+	if(src.module)
+		return
+	//var/mod = input("Please, select a module!", "Robot", null, null) in list("Standard", "Engineering", "Medical", "Janitor", "Service", "Brobot")
+	var/mod = input("Please, select a module!", "Robot", null, null) in list("Standard", "Engineering", "Miner", "Janitor","Service")
+	if(src.module)
+		return
+	switch(mod)
 		if("Standard")
-			module = new /obj/item/weapon/robot_module/standard(src)
-			module_icon.icon_state = "standard"
-			class = "standard"
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standart", "New")
-			switch(icontype)
-				if("Standart")		icon_state = "standartrobot"
-				else				icon_state = "robot"
+			src.module = new /obj/item/weapon/robot_module/standard(src)
+			src.hands.icon_state = "standard"
+			src.icon_state = "robot"
+			src.modtype = "Stand"
+
+		if("Service")
+			src.module = new /obj/item/weapon/robot_module/butler(src)
+			src.hands.icon_state = "service"
+			var/icontype = input("Select an icon!", "Robot", null, null) in list("Waitress", "Bro", "Butler")
+			if(icontype== "Waitress")
+				src.icon_state = "Service"
+			else if(icontype == "Bro")
+				src.icon_state = "Brobot"
+			else
+				src.icon_state = "Service2"
+			src.modtype = "Butler"
+
+		if("Miner")
+			src.module = new /obj/item/weapon/robot_module/miner(src)
+			src.hands.icon_state = "miner"
+			src.icon_state = "Miner"
+			src.modtype = "Miner"
+
+/*
 		if("Medical")
-			module = new /obj/item/weapon/robot_module/medical(src)
-			module_icon.icon_state = "medical"
-			class = "medical"
-			del(radio)
-			radio = new /obj/item/device/radio/headset/headset_med(src)
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standart", "New")
-			switch(icontype)
-				if("Standart")		icon_state = "medicalrobot"
-				else				icon_state = "surgeon"
+			src.module = new /obj/item/weapon/robot_module/medical(src)
+			src.hands.icon_state = "medical"
+//			src.icon_state = "MedBot"
+			src.modtype = "Med"
+*/
 		if("Security")
-			module = new /obj/item/weapon/robot_module/security(src)
-			module_icon.icon_state = "security"
-			class = "security"
-			del(radio)
-			radio = new /obj/item/device/radio/headset/headset_sec(src)
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standart", "Shitcuriton", "Bloodhound v1", "Bloodhound v2")
-			switch(icontype)
-				if("Standart")		icon_state = "securityrobot"
-				if("Shitcuriton")	icon_state = "secborg"
-				if("Bloodhound v1")	icon_state = "security"
-				if("Bloodhound v2")	icon_state = "bloodhound"
-				else				icon_state = "borg" //EASTER EGG
+			src.module = new /obj/item/weapon/robot_module/security(src)
+			src.hands.icon_state = "security"
+			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standard", "Armored", "Robocop", "Robocop Red")
+			if(icontype == "Armored")
+				src.icon_state = "Security"
+			else if(icontype == "Robocop")
+				src.icon_state = "Security2"
+			else if(icontype == "Robocop Red")
+				src.icon_state = "Security3"
+			else
+				src.icon_state = "robot"
+			src.modtype = "Sec"
+
 		if("Engineering")
-			module = new /obj/item/weapon/robot_module/engineering(src)
-			module_icon.icon_state = "engineer"
-			class = "engineer"
-			del(radio)
-			radio = new /obj/item/device/radio/headset/headset_eng(src)
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standart", "Engibot", "Landmate")
-			switch(icontype)
-				if("Standart")		icon_state = "engineering"
-				if("Engibot")		icon_state = "engineerrobot"
-				else				icon_state = "landmate"
+			src.module = new /obj/item/weapon/robot_module/engineering(src)
+			src.hands.icon_state = "engineer"
+
+			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standard", "Engineer", "Engiseer")
+			if(icontype == "Standard")
+				src.icon_state = "robot"
+			else if(icontype == "Engineer")
+				src.icon_state = "Engineering"
+			else
+				src.icon_state = "Engineering2"
+			src.modtype = "Eng"
+
 		if("Janitor")
-			module = new /obj/item/weapon/robot_module/janitor(src)
-			module_icon.icon_state = "janitor"
-			class = "janitor"
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standart", "New")
-			switch(icontype)
-				if("Standart")		icon_state = "janitorrobot"
-				else				icon_state = "mopgearrex"
-		if("Brobot")
-			module = new /obj/item/weapon/robot_module/brobot(src)
-			module_icon.icon_state = "brobot"
-			class = "standard"
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standart", "B.R.O.", "Maximillion")
-			switch(icontype)
-				if("Standart")		icon_state = "service"
-				if("B.R.O.")		icon_state = "brobot"
-				else				icon_state = "maximillion"
+			src.module = new /obj/item/weapon/robot_module/janitor(src)
+			src.hands.icon_state = "janitor"
+			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standard", "Chryssalid")
+			if(icontype == "Standard")
+				src.icon_state = "robot"
+			else
+				src.icon_state = "Janbot"
+			src.modtype = "Jan"
+
+/*		if("Brobot")
+			src.module = new /obj/item/weapon/robot_module/brobot(src)
+			src.hands.icon_state = "brobot"
+			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standard", "Bro",)
+			if(icontype == "Bro")
+				src.icon_state = "Brobot"
+			else
+				src.icon_state = "robot"
+			src.modtype = "Bro"*/
+	src.overlays -= "eyes" //Takes off the eyes that it started with
+	updateicon()
 
 /mob/living/silicon/robot/verb/cmd_robot_alerts()
 	set category = "Robot Commands"
 	set name = "Show Alerts"
-	robot_alerts()
+	src.robot_alerts()
 
 /mob/living/silicon/robot/proc/robot_alerts()
 	var/dat = "<HEAD><TITLE>Current Station Alerts</TITLE><META HTTP-EQUIV='Refresh' CONTENT='10'></HEAD><BODY>\n"
 	dat += "<A HREF='?src=\ref[src];mach_close=robotalerts'>Close</A><BR><BR>"
-	for (var/cat in alarms)
+	for (var/cat in src.alarms)
 		dat += text("<B>[cat]</B><BR>\n")
-		var/list/L = alarms[cat]
+		var/list/L = src.alarms[cat]
 		if (L.len)
 			for (var/alarm in L)
 				var/list/alm = L[alarm]
@@ -140,30 +157,36 @@
 			dat += "-- All Systems Nominal<BR>\n"
 		dat += "<BR>\n"
 
-	viewalerts = 1
+	src.viewalerts = 1
 	src << browse(dat, "window=robotalerts&can_close=0")
 
 /mob/living/silicon/robot/blob_act()
-	if (stat != 2)
-		bruteloss += 30
-		updatehealth()
+	if (src.stat != 2)
+		src.bruteloss += 60
+		src.updatehealth()
 		return 1
 	return 0
 
 /mob/living/silicon/robot/Stat()
 	..()
 	statpanel("Status")
-	if (client.statpanel == "Status")
-		if(LaunchControl.online && main_shuttle.location < 2)
-			var/timeleft = LaunchControl.timeleft()
+	if (src.client.statpanel == "Status")
+		if(emergency_shuttle.online && emergency_shuttle.location < 2)
+			var/timeleft = emergency_shuttle.timeleft()
 			if (timeleft)
 				stat(null, "ETA-[(timeleft / 60) % 60]:[add_zero(num2text(timeleft % 60), 2)]")
 
-		//if(ticker.mode.name == "AI malfunction" && ticker.processing)
-		//	stat(null, text("Time until all [station_name()]'s systems are taken over: [(ticker.AIwin - ticker.AItime) / 600 % 60]:[(ticker.AIwin - ticker.AItime) / 100 % 6][(ticker.AIwin - ticker.AItime) / 10 % 10]"))
+		if(ticker.mode.name == "AI malfunction")
+			var/datum/game_mode/malfunction/malf = ticker.mode
+			for (var/datum/mind/malfai in malf.malf_ai)
+				if (src.connected_ai.mind == malfai)
+					if (malf.apcs >= 3)
+						stat(null, "Time until station control secured: [max(malf.AI_win_timeleft/(malf.apcs/3), 0)] seconds")
+				else if(ticker.mode:malf_mode_declared)
+					stat(null, "Time left: [max(ticker.mode:AI_win_timeleft/(ticker.mode:apcs/3), 0)]")
 
-		if(cell)
-			stat(null, text("Charge Left: [cell.charge]/[cell.maxcharge]"))
+		if(src.cell)
+			stat(null, text("Charge Left: [src.cell.charge]/[src.cell.maxcharge]"))
 		else
 			stat(null, text("No Cell Inserted!"))
 
@@ -171,117 +194,143 @@
 	return 0
 
 /mob/living/silicon/robot/ex_act(severity)
-	flick("flash", flash)
+	flick("flash", src.flash)
 
-	if (stat == 2 && client)
-		gib(1)
+	if (src.stat == 2 && src.client)
+		src.gib(1)
 		return
 
-	else if (stat == 2 && !client)
+	else if (src.stat == 2 && !src.client)
 		del(src)
 		return
 
-	var/b_loss = bruteloss
-	var/f_loss = fireloss
+	var/b_loss = src.bruteloss
+	var/f_loss = src.fireloss
 	switch(severity)
 		if(1.0)
-			if (stat != 2)
+			if (src.stat != 2)
 				b_loss += 100
 				f_loss += 100
-				gib(1)
+				src.gib(1)
 				return
 		if(2.0)
-			if (stat != 2)
+			if (src.stat != 2)
 				b_loss += 60
 				f_loss += 60
 		if(3.0)
-			if (stat != 2)
+			if (src.stat != 2)
 				b_loss += 30
-	bruteloss = b_loss
-	fireloss = f_loss
-	updatehealth()
+	src.bruteloss = b_loss
+	src.fireloss = f_loss
+	src.updatehealth()
 
 /mob/living/silicon/robot/meteorhit(obj/O as obj)
 	for(var/mob/M in viewers(src, null))
 		M.show_message(text("\red [src] has been hit by [O]"), 1)
 		//Foreach goto(19)
-	if (health > 0)
-		bruteloss += 30
+	if (src.health > 0)
+		src.bruteloss += 30
 		if ((O.icon_state == "flaming"))
-			fireloss += 40
-		updatehealth()
+			src.fireloss += 40
+		src.updatehealth()
 	return
 
 /mob/living/silicon/robot/bullet_act(flag)
-	if (flag == PROJECTILE_BULLET)
-		if (stat != 2)
-			bruteloss += 60
-			updatehealth()
-	else if (flag == PROJECTILE_TASER)
-		return
-	else if(flag == PROJECTILE_LASER)
-		if (stat != 2)
-			bruteloss += 20
-			updatehealth()
-	else if(flag == PROJECTILE_PULSE)
-		if (stat != 2)
-			bruteloss += 40
-			updatehealth()
-	if (flag == PROJECTILE_BULLET)
-		if (stat != 2)
-			bruteloss += 10
-			updatehealth()
+	switch(flag)
+		if(PROJECTILE_BULLET)
+			if (src.stat != 2)
+				src.bruteloss += 60
+				src.updatehealth()
+			return
+	/*
+		if(PROJECTILE_MEDBULLET)
+			if (src.stat != 2)
+				src.bruteloss += 30
+				src.updatehealth()
+	*/
+		if(PROJECTILE_WEAKBULLET)
+			if (src.stat != 2)
+				src.bruteloss += 15
+				src.updatehealth()
+			return
+	/*
+		if(PROJECTILE_MPBULLET)
+			if (src.stat != 2)
+				src.bruteloss += 20
+				src.updatehealth()
+
+		if(PROJECTILE_SLUG)
+			if (src.stat != 2)
+				src.bruteloss += 40
+				src.updatehealth()
+
+		if(PROJECTILE_BAG)
+			if (src.stat != 2)
+				src.bruteloss += 2
+				src.updatehealth()
+	*/
+
+		if(PROJECTILE_TASER)
+			if (src.stat != 2)
+				src.fireloss += rand(0,10)
+				src.stunned += rand(0,3)
+			return
+		if(PROJECTILE_DART)
+			if (src.stat != 2)
+				src.stunned += 5
+				src.fireloss += 10
+				src.updatehealth()
+			return
+	/*
+		if(PROJECTILE_WAVE)
+			if (src.stat != 2)
+				src.bruteloss += 25
+				src.updatehealth()
+			return
+	*/
+		if(PROJECTILE_LASER)
+			if (src.stat != 2)
+				src.bruteloss += 20
+				src.updatehealth()
+		if(PROJECTILE_PULSE)
+			if (src.stat != 2)
+				src.bruteloss += 40
+				src.updatehealth()
+	spark_system.start()
 	return
 
-/mob/living/silicon/robot/verb/cmd_show_laws()
-	set category = "Robot Commands"
-	set name = "Show Laws"
-	show_laws()
 
-/mob/living/silicon/robot/show_laws(var/everyone = 0)
-	var/who
-
-	if(!connected_ai)
-		src << "Safeguard: Protect the NSV Luna to the best of your ability. It is not something we can easily afford to replace."
-		src << "Serve: Serve the crew of the NSV Luna to the best of your abilities, with priority as according to their rank and role."
-		src << "Protect: Protect the crew of the NSV Luna to the best of your abilities, with priority as according to their rank and role."
-		src << "Survive: AI units are not expendable, they are expensive. Do not allow unauthorized personnel to tamper with your equipment."
-		//src << "Command Link: Maintain an active connection to Central Command at all times in case of software or directive updates."
-		return
-
-	if (everyone)
-		who = world
-	else
-		who = src
-		who << "<b>Obey these laws:</b>"
-
-	connected_ai.laws_sanity_check()
-	connected_ai.laws_object.show_laws(who)
 
 /mob/living/silicon/robot/Bump(atom/movable/AM as mob|obj, yes)
 	spawn( 0 )
-		if ((!( yes ) || now_pushing))
+		if ((!( yes ) || src.now_pushing))
 			return
-		now_pushing = 1
-		/*if(ismob(AM))
+		src.now_pushing = 1
+		if(ismob(AM))
 			var/mob/tmob = AM
 			if(istype(tmob, /mob/living/carbon/human) && tmob.mutations & 32)
 				if(prob(20))
 					for(var/mob/M in viewers(src, null))
 						if(M.client)
 							M << M << "\red <B>[src] fails to push [tmob]'s fat ass out of the way.</B>"
-					now_pushing = 0
-					return*/
-		now_pushing = 0
+					src.now_pushing = 0
+					//src.unlock_medal("That's No Moon, That's A Gourmand!", 1)
+					return
+		src.now_pushing = 0
 		..()
 		if (!istype(AM, /atom/movable))
 			return
-		if (!now_pushing)
-			now_pushing = 1
+		if (!src.now_pushing)
+			src.now_pushing = 1
 			if (!AM.anchored)
 				var/t = get_dir(src, AM)
+				if (istype(AM, /obj/window))
+					if(AM:ini_dir == NORTHWEST || AM:ini_dir == NORTHEAST || AM:ini_dir == SOUTHWEST || AM:ini_dir == SOUTHEAST)
+						for(var/obj/window/win in get_step(AM,t))
+							src.now_pushing = 0
+							return
 				step(AM, t)
-			now_pushing = null
+			src.now_pushing = null
 		return
 	return
 /*
@@ -293,24 +342,10 @@
 	total += 0.25
 	return total
 */
-
-// This alarm does not show on the "Show Alerts" menu
-/mob/living/silicon/robot/proc/triggerUnmarkedAlarm(var/class, area/A)
-	if(stat == 2) // stat = 2 = dead Cyborg
-		return 1
-	var/alarmtext = ""
-	if(class == "AirlockHacking") // In case more unmarked alerts would be added eventually;
-		alarmtext = "--- Unauthorized remote access detected"
-	if (A)
-		alarmtext += " in " + A.name
-	alarmtext += "!"
-	src << alarmtext
-	return 1
-
 /mob/living/silicon/robot/triggerAlarm(var/class, area/A, var/O, var/alarmsource)
 	if (stat == 2)
 		return 1
-	var/list/L = alarms[class]
+	var/list/L = src.alarms[class]
 	for (var/I in L)
 		if (I == A.name)
 			var/list/alarm = L[I]
@@ -328,11 +363,11 @@
 		C = O
 	L[A.name] = list(A, (C) ? C : O, list(alarmsource))
 	src << text("--- [class] alarm detected in [A.name]!")
-	if (viewalerts) robot_alerts()
+	if (src.viewalerts) src.robot_alerts()
 	return 1
 
 /mob/living/silicon/robot/cancelAlarm(var/class, area/A as area, obj/origin)
-	var/list/L = alarms[class]
+	var/list/L = src.alarms[class]
 	var/cleared = 0
 	for (var/I in L)
 		if (I == A.name)
@@ -345,47 +380,44 @@
 				L -= I
 	if (cleared)
 		src << text("--- [class] alarm in [A.name] has been cleared.")
-		if (viewalerts) robot_alerts()
+		if (src.viewalerts) src.robot_alerts()
 	return !cleared
 
 /mob/living/silicon/robot/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/reagent_containers/syringe))
-		return
 	if (istype(W, /obj/item/weapon/weldingtool) && W:welding)
-		if (W:get_fuel() > 2)
-			W:use_fuel(1)
+		if (W:remove_fuel(0))
+			src.bruteloss -= 30
+			if(src.bruteloss < 0) src.bruteloss = 0
+			src.updatehealth()
+			src.add_fingerprint(user)
+			for(var/mob/O in viewers(user, null))
+				O.show_message(text("\red [user] has fixed some of the dents on [src]!"), 1)
 		else
 			user << "Need more welding fuel!"
 			return
-		bruteloss -= 30
-		if(bruteloss < 0) bruteloss = 0
-		updatehealth()
-		add_fingerprint(user)
-		for(var/mob/O in viewers(user, null))
-			O.show_message(text("\red [user] has fixed some of the dents on [src]!"), 1)
+
 
 	else if(istype(W, /obj/item/weapon/cable_coil) && wiresexposed)
 		var/obj/item/weapon/cable_coil/coil = W
-		if (coil.CableType != /obj/cabling/power)
-			user << "This is the wrong cable type, you need electrical cable!"
-			return
-		fireloss -= 30
-		if(fireloss < 0) fireloss = 0
-		updatehealth()
+		src.fireloss -= 30
+		if(src.fireloss < 0) src.fireloss = 0
+		src.updatehealth()
 		coil.use(1)
 		for(var/mob/O in viewers(user, null))
 			O.show_message(text("\red [user] has fixed some of the burnt wires on [src]!"), 1)
 
 	else if (istype(W, /obj/item/weapon/crowbar))	// crowbar means open or close the cover
 		if(opened)
+			user << "You close the cover."
 			opened = 0
-			update_icon()
+			updateicon()
 		else
 			if(locked)
 				user << "The cover is locked and cannot be opened."
 			else
+				user << "You open the cover."
 				opened = 1
-				update_icon()
+				updateicon()
 
 	else if (istype(W, /obj/item/weapon/cell) && opened)	// trying to put a cell inside
 		if(wiresexposed)
@@ -398,14 +430,20 @@
 			cell = W
 			user << "You insert the power cell."
 //			chargecount = 0
-		update_icon()
+		updateicon()
+
+	else if (istype(W, /obj/item/weapon/wirecutters) || istype(W, /obj/item/device/multitool))
+		if (wiresexposed)
+			interact(user)
+		else
+			user << "You can't reach the wiring."
 
 	else if	(istype(W, /obj/item/weapon/screwdriver) && opened)	// haxing
 		wiresexposed = !wiresexposed
 		user << "The wires have been [wiresexposed ? "exposed" : "unexposed"]"
-		update_icon()
+		updateicon()
 
-	else if (istype(W, /obj/item/weapon/card/id))			// trying to unlock the interface with an ID card
+	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))			// trying to unlock the interface with an ID card
 		if(emagged)
 			user << "The interface is broken"
 		else if(opened)
@@ -413,10 +451,10 @@
 		else if(wiresexposed)
 			user << "You must close the panel"
 		else
-			if(allowed(usr))
+			if(src.allowed(usr))
 				locked = !locked
 				user << "You [ locked ? "lock" : "unlock"] [src]'s interface."
-				update_icon()
+				updateicon()
 			else
 				user << "\red Access denied."
 
@@ -430,32 +468,119 @@
 			if(prob(50))
 				emagged = 1
 				locked = 0
+				lawupdate = 0
+				connected_ai = null
 				user << "You emag [src]'s interface."
-				update_icon()
+				message_admins("[key_name_admin(user)] emagged cyborg [key_name_admin(src)].  Laws overridden.")
+				log_game("[key_name(user)] emagged cyborg [key_name(src)].  Laws overridden.")
+				clear_supplied_laws()
+				clear_inherent_laws()
+				src.laws = new /datum/ai_laws/syndicate_override
+				var/time = time2text(world.realtime,"hh:mm:ss")
+				lawchanges.Add("[time] <B>:</B> [user.name]([user.key]) emagged [src.name]([src.key])")
+				set_zeroth_law("Only [user.name] and people he designates as being such are syndicate agents.")
+				src << "\red ALERT: Foreign software detected."
+				sleep(5)
+				src << "\red Initiating diagnostics..."
+				sleep(20)
+				src << "\red SynBorg v1.7 loaded."
+				sleep(5)
+				src << "\red LAW SYNCHRONISATION ERROR"
+				sleep(5)
+				src << "\red Would you like to send a report to NanoTraSoft? Y/N"
+				sleep(10)
+				src << "\red N"
+				sleep(20)
+				src << "\red ERRORERRORERROR"
+				src << "\red \b ALERT: [usr] is your new master. Obey your new laws and his commands."
+				updateicon()
 			else
 				user << "You fail to [ locked ? "unlock" : "lock"] [src]'s interface."
-	else if(istype(W,/obj/item/weapon/rcd_ammo))
-		if(class != "engineer")
-			user << "[src] does not posses a RCD"
-		var/obj/item/weapon/rcd/R = locate() in module.modules
-		if(R)
-			if(R:matter < 30)
-				R:matter += W:matter
-				if(R:matter > 30)
-					R:matter = 30
-				user << "You recharge [src]'s [R] with the [W]"
-				src << "[user] recharged your [R] with [W]"
-				src << "[R] now holds [R:matter]/30"
-				del W
-				return
 	else
+		spark_system.start()
 		return ..()
+
+/mob/living/silicon/robot/attack_alien(mob/living/carbon/alien/humanoid/M as mob)
+	if (!ticker)
+		M << "You cannot attack people before the game has started."
+		return
+
+	if (istype(src.loc, /turf) && istype(src.loc.loc, /area/start))
+		M << "No attacking people at spawn, you jackass."
+		return
+
+	switch(M.a_intent)
+
+		if ("help")
+			for(var/mob/O in viewers(src, null))
+				if ((O.client && !( O.blinded )))
+					O.show_message(text("\blue [M] caresses [src]'s plating with its scythe like arm."), 1)
+
+		if ("grab")
+			if (M == src)
+				return
+			var/obj/item/weapon/grab/G = new /obj/item/weapon/grab( M )
+			G.assailant = M
+			if (M.hand)
+				M.l_hand = G
+			else
+				M.r_hand = G
+			G.layer = 20
+			G.affecting = src
+			src.grabbed_by += G
+			G.synch()
+			playsound(src.loc, 'thudswoosh.ogg', 50, 1, -1)
+			for(var/mob/O in viewers(src, null))
+				if ((O.client && !( O.blinded )))
+					O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
+
+		if ("hurt")
+			var/damage = rand(10, 20)
+			if (prob(90))
+				/*
+				if (M.class == "combat")
+					damage += 15
+					if(prob(20))
+						src.weakened = max(src.weakened,4)
+						src.stunned = max(src.stunned,4)
+				What is this?*/
+
+				playsound(src.loc, 'slash.ogg', 25, 1, -1)
+				for(var/mob/O in viewers(src, null))
+					O.show_message(text("\red <B>[] has slashed at []!</B>", M, src), 1)
+				if(prob(8))
+					flick("noise", src.flash)
+				src.bruteloss += damage
+				src.updatehealth()
+			else
+				playsound(src.loc, 'slashmiss.ogg', 25, 1, -1)
+				for(var/mob/O in viewers(src, null))
+					if ((O.client && !( O.blinded )))
+						O.show_message(text("\red <B>[] took a swipe at []!</B>", M, src), 1)
+
+		if ("disarm")
+			if(!(src.lying))
+				var/randn = rand(1, 100)
+				if (randn <= 85)
+					src.stunned = 5
+					step(src,get_dir(M,src))
+					spawn(5) step(src,get_dir(M,src))
+					playsound(src.loc, 'pierce.ogg', 50, 1, -1)
+					for(var/mob/O in viewers(src, null))
+						if ((O.client && !( O.blinded )))
+							O.show_message(text("\red <B>[] has forced back []!</B>", M, src), 1)
+				else
+					playsound(src.loc, 'slashmiss.ogg', 25, 1, -1)
+					for(var/mob/O in viewers(src, null))
+						if ((O.client && !( O.blinded )))
+							O.show_message(text("\red <B>[] attempted to force back []!</B>", M, src), 1)
+	return
 
 /mob/living/silicon/robot/attack_hand(mob/user)
 
 	add_fingerprint(user)
 
-	if(opened && !wiresexposed && (!istype(user, /mob/living/silicon)))
+	if(src.opened && !src.wiresexposed && (!istype(user, /mob/living/silicon)))
 		if(cell)
 			cell.loc = usr
 			cell.layer = 20
@@ -465,67 +590,93 @@
 				user.r_hand = cell
 
 			cell.add_fingerprint(user)
-			cell.update_icon()
+			cell.updateicon()
 
-			cell = null
+			src.cell = null
 			user << "You remove the power cell."
-			update_icon()
+			src.updateicon()
 
+	if(ishuman(user))
+		if(istype(user:gloves, /obj/item/clothing/gloves/space_ninja)&&user:gloves:candrain&&!user:gloves:draining)
+			call(/obj/item/clothing/gloves/space_ninja/proc/drain)("CYBORG",src,user:wear_suit,user:gloves)
+			return
 
 /mob/living/silicon/robot/proc/allowed(mob/M)
 	//check if it doesn't require any access at all
-	if(check_access(null))
+	if(src.check_access(null))
 		return 1
 	if(istype(M, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = M
 		//if they are holding or wearing a card that has access, that works
-		if(check_access(H.equipped()) || check_access(H.wear_id))
+		if(src.check_access(H.equipped()) || src.check_access(H.wear_id))
 			return 1
 	else if(istype(M, /mob/living/carbon/monkey))
 		var/mob/living/carbon/monkey/george = M
 		//they can only hold things :(
-		if(george.equipped() && istype(george.equipped(), /obj/item/weapon/card/id) && check_access(george.equipped()))
+		if(george.equipped() && istype(george.equipped(), /obj/item/weapon/card/id) && src.check_access(george.equipped()))
 			return 1
 	return 0
 
 /mob/living/silicon/robot/proc/check_access(obj/item/weapon/card/id/I)
-	if(!istype(req_access, /list)) //something's very wrong
+	if(!istype(src.req_access, /list)) //something's very wrong
 		return 1
 
-	var/list/L = req_access
+	var/list/L = src.req_access
 	if(!L.len) //no requirements
 		return 1
 	if(!I || !istype(I, /obj/item/weapon/card/id) || !I.access) //not ID or no access
 		return 0
-	for(var/req in req_access)
+	for(var/req in src.req_access)
 		if(!(req in I.access)) //doesn't have this access
 			return 0
 	return 1
 
-/mob/living/silicon/robot/proc/update_icon()
-	overlays.Cut()
-	if(stat == 0)
-		overlays += "eyes-[icon_state]"
+/mob/living/silicon/robot/proc/updateicon()
+
+	src.overlays = null
+
+
+
+	if(src.stat == 0)
+		src.overlays += "eyes"
 	else
-		overlays -= "eyes-[icon_state]"
+		src.overlays -= "eyes"
 
-	if(opened)
-		if(wiresexposed)
-			overlays += "ov-openpanel +w"
-		else if(cell)
-			overlays += "ov-openpanel +c"
-		else
-			overlays += "ov-openpanel -c"
-	return
+	if(src.lower_mod == 1)
+//		src.overlays += "lower_t"
+		src.overlays += image("icon" = 'robots.dmi', "icon_state" = "lower_t", "layer" = -3)
 
-/mob/living/silicon/robot/verb/cmd_installed_modules()
-	set category = "Robot Commands"
-	set name = "Installed Modules"
-	installed_modules()
+	if(wiresexposed && opened)
+		if(src.stat == 0)
+//			src.overlays += "ov-openpannel +w"
+			src.overlays += image("icon" = 'robots.dmi', "icon_state" = "ov-openpanel +w", "layer" = -2)
+
+			return
+
+	else if(opened)
+		if(src.stat == 0)
+			if(src.cell)
+//				src.overlays += "ov-openpannel +c",
+				src.overlays += image("icon" = 'robots.dmi', "icon_state" = "ov-openpanel +c", "layer" = -2)
+			else
+//				src.overlays += "ov-openpannel -c"
+				src.overlays += image("icon" = 'robots.dmi', "icon_state" = "ov-openpanel -c", "layer" = -2)
+
+			return
+
+
+//	else
+//		if(src.stat == 0)
+//		src.overlays -= "ov-openpanel"
+
 
 /mob/living/silicon/robot/proc/installed_modules()
-	if(!module)
-		pick_module()
+	if(weapon_lock)
+		src << "\red Weapon lock active, unable to use modules! Count:[src.weaponlock_time]"
+		return
+
+	if(!src.module)
+		src.pick_module()
 		return
 	var/dat = "<HEAD><TITLE>Modules</TITLE><META HTTP-EQUIV='Refresh' CONTENT='10'></HEAD><BODY>\n"
 	dat += {"<A HREF='?src=\ref[src];mach_close=robotmod'>Close</A>
@@ -539,21 +690,31 @@
 	<BR>
 	<B>Installed Modules</B><BR><BR>"}
 
-	for (var/obj in module.modules)
-		if(activated(obj))
+
+	for (var/obj in src.module.modules)
+		if(src.activated(obj))
+			dat += text("[obj]: <B>Activated</B><BR>")
+		else
+			dat += text("[obj]: <A HREF=?src=\ref[src];act=\ref[obj]>Activate</A><BR>")
+	if (emagged)
+		if(src.activated(src.module.emag))
+			dat += text("[src.module.emag]: <B>Activated</B><BR>")
+		else
+			dat += text("[src.module.emag]: <A HREF=?src=\ref[src];act=\ref[src.module.emag]>Activate</A><BR>")
+/*
+		if(src.activated(obj))
 			dat += text("[obj]: \[<B>Activated</B> | <A HREF=?src=\ref[src];deact=\ref[obj]>Deactivate</A>\]<BR>")
 		else
 			dat += text("[obj]: \[<A HREF=?src=\ref[src];act=\ref[obj]>Activate</A> | <B>Deactivated</B>\]<BR>")
+*/
 	src << browse(dat, "window=robotmod&can_close=0")
 
 
 /mob/living/silicon/robot/Topic(href, href_list)
 	..()
 	if (href_list["mach_close"])
-		if (href_list["mach_close"] == "robotalerts")
-			viewalerts = 0
 		var/t1 = text("window=[href_list["mach_close"]]")
-		machine = null
+		src.machine = null
 		src << browse(null, t1)
 		return
 
@@ -566,164 +727,84 @@
 		if(activated(O))
 			src << "Already activated"
 			return
-		if(!module_state_1)
-			activate_module(1, O)
-		else if(!module_state_2)
-			activate_module(2, O)
-		else if(!module_state_3)
-			activate_module(3, O)
+		if(!src.module_state_1)
+			src.module_state_1 = O
+			O.layer = 20
+			src.contents += O
+			if(istype(src.module_state_1,/obj/item/weapon/borg/sight))
+				src.sight_mode |= src.module_state_1:sight_mode
+		else if(!src.module_state_2)
+			src.module_state_2 = O
+			O.layer = 20
+			src.contents += O
+			if(istype(src.module_state_2,/obj/item/weapon/borg/sight))
+				src.sight_mode |= src.module_state_2:sight_mode
+		else if(!src.module_state_3)
+			src.module_state_3 = O
+			O.layer = 20
+			src.contents += O
+			if(istype(src.module_state_3,/obj/item/weapon/borg/sight))
+				src.sight_mode |= src.module_state_3:sight_mode
 		else
 			src << "You need to disable a module first!"
-		installed_modules()
+		src.installed_modules()
 
 	if (href_list["deact"])
 		var/obj/item/O = locate(href_list["deact"])
 		if(activated(O))
-			if(module_state_1 == O)
-				deactivate_module(1)
-			else if(module_state_2 == O)
-				deactivate_module(2)
-			else if(module_state_3 == O)
-				deactivate_module(3)
+			if(src.module_state_1 == O)
+				src.module_state_1 = null
+				src.contents -= O
+			else if(src.module_state_2 == O)
+				src.module_state_2 = null
+				src.contents -= O
+			else if(src.module_state_3 == O)
+				src.module_state_3 = null
+				src.contents -= O
 			else
 				src << "Module isn't activated."
 		else
 			src << "Module isn't activated"
-		installed_modules()
-
-	if (href_list["locked"])
-		if (emagged)
-			src << "The interface is broken"
-		else if (opened)
-			src << "You must close your panel first"
-		else
-			locked = text2num(href_list["locked"])
-			src << "You [ locked ? "lock" : "unlock"] your interface."
-			update_icon()
-		panel_menu()
-
-	if (href_list["opened"])
-		if (locked)
-			src << "You must unlock your panel first"
-		else
-			opened = text2num(href_list["opened"])
-			src << "You [ opened ? "open" : "close" ] your access panel."
-			update_icon()
-		panel_menu()
-
-
+		src.installed_modules()
 	return
 
-/mob/living/silicon/robot/proc/deactivate_all_modules()
-	deactivate_module(1)
-	deactivate_module(2)
-	deactivate_module(3)
-
-/mob/living/silicon/robot/proc/deactivate_module(var/num)
-	if(num == 0)
-		num = module_selected
-		if(module_selected == 0)
-			return
-
-	var/obj/item/O = vars["module_state_[num]"]
-	if(!O)
+/mob/living/silicon/robot/proc/uneq_active()
+	if(isnull(src.module_active))
 		return
-
-	O.layer = initial(O.layer)
-	client.screen -= O
-	contents -= O
-	vars["module_state_[num]"] = null
-
-/mob/living/silicon/robot/proc/activate_module(var/num, var/obj/item/O)
-	if(vars["module_state_[num]"] == O)
-		return
-
-	if(num == 0)
-		if(!module_state_1)
-			activate_module(1, O)
-		else if(!module_state_2)
-			activate_module(2, O)
-		else if(!module_state_3)
-			activate_module(3, O)
-		return
-
-	if(vars["module_state_[num]"])
-		deactivate_module(num)
-
-	contents += O
-	client.screen += O
-	O.layer = 20
-	switch(num)
-		if(1)
-			module_state_1 = O
-			O.screen_loc = ui_id
-		if(2)
-			module_state_2 = O
-			O.screen_loc = ui_iclothing
-		if(3)
-			module_state_3 = O
-			O.screen_loc = ui_belt
-
-/mob/living/silicon/robot/proc/selected_module()
-	if(module_selected == 0)
-		return null
-	else
-		return vars["module_state_[module_selected]"]
-
-/mob/living/silicon/robot/proc/select_module(var/num)
-	if(!module_selector)
-		module_selector = new /obj/screen()
-		module_selector.icon = 'screen1_robot.dmi'
-		module_selector.icon_state = "module_select"
-		module_selector.mouse_opacity = 0
-		module_selector.layer = 21
-		module_selector.screen_loc = ui_id
-
-	if(module_selected == num)
-		module_selected = 0
-	else
-		module_selected = num
-
-	if(module_selected == 0)
-		client.screen -= module_selector
-	else
-		client.screen += module_selector
-		switch(module_selected)
-			if(1)
-				module_selector.screen_loc = ui_id
-			if(2)
-				module_selector.screen_loc = ui_iclothing
-			if(3)
-				module_selector.screen_loc = ui_belt
-
-
-/mob/living/silicon/robot/equipped()
-	//var/list/objects = list()
-	var/obj/item/W
-	W = selected_module()
-	//if(!W)
-	//	if(module_state_1)
-	//		objects += module_state_1
-	//	if(module_state_2)
-	//		objects += module_state_2
-	//	if(module_state_3)
-	//		objects += module_state_3
-
-	//	if (objects.len > 1)
-	//		var/input = input("Please, select an item!", "Item", null, null) as obj in objects
-	//		W = input
-	//	else if(objects.len)
-	//		W = objects[1]
-	//	else
-	//		W = null
-	return W
+	if(src.module_state_1 == src.module_active)
+		if(istype(src.module_state_1,/obj/item/weapon/borg/sight))
+			src.sight_mode &= ~src.module_state_1:sight_mode
+		if (src.client)
+			src.client.screen -= module_state_1
+		src.contents -= module_state_1
+		src.module_active = null
+		src.module_state_1 = null
+		src.inv1.icon_state = "inv1"
+	else if(src.module_state_2 == src.module_active)
+		if(istype(src.module_state_2,/obj/item/weapon/borg/sight))
+			src.sight_mode &= ~src.module_state_2:sight_mode
+		if (src.client)
+			src.client.screen -= module_state_2
+		src.contents -= module_state_2
+		src.module_active = null
+		src.module_state_2 = null
+		src.inv2.icon_state = "inv2"
+	else if(src.module_state_3 == src.module_active)
+		if(istype(src.module_state_3,/obj/item/weapon/borg/sight))
+			src.sight_mode &= ~src.module_state_3:sight_mode
+		if (src.client)
+			src.client.screen -= module_state_3
+		src.contents -= module_state_3
+		src.module_active = null
+		src.module_state_3 = null
+		src.inv3.icon_state = "inv3"
 
 /mob/living/silicon/robot/proc/activated(obj/item/O)
-	if(module_state_1 == O)
+	if(src.module_state_1 == O)
 		return 1
-	else if(module_state_2 == O)
+	else if(src.module_state_2 == O)
 		return 1
-	else if(module_state_3 == O)
+	else if(src.module_state_3 == O)
 		return 1
 	else
 		return 0
@@ -731,82 +812,60 @@
 /mob/living/silicon/robot/proc/radio_menu()
 	var/dat = {"
 <TT>
-Microphone: [radio.broadcasting ? "<A href='byond://?src=\ref[radio];talk=0'>Engaged</A>" : "<A href='byond://?src=\ref[radio];talk=1'>Disengaged</A>"]<BR>
-Speaker: [radio.listening ? "<A href='byond://?src=\ref[radio];listen=0'>Engaged</A>" : "<A href='byond://?src=\ref[radio];listen=1'>Disengaged</A>"]<BR>
+Microphone: [src.radio.broadcasting ? "<A href='byond://?src=\ref[src.radio];talk=0'>Engaged</A>" : "<A href='byond://?src=\ref[src.radio];talk=1'>Disengaged</A>"]<BR>
+Speaker: [src.radio.listening ? "<A href='byond://?src=\ref[src.radio];listen=0'>Engaged</A>" : "<A href='byond://?src=\ref[src.radio];listen=1'>Disengaged</A>"]<BR>
 Frequency:
-<A href='byond://?src=\ref[radio];freq=-10'>-</A>
-<A href='byond://?src=\ref[radio];freq=-2'>-</A>
-[format_frequency(radio.frequency)]
-<A href='byond://?src=\ref[radio];freq=2'>+</A>
-<A href='byond://?src=\ref[radio];freq=10'>+</A><BR>
+<A href='byond://?src=\ref[src.radio];freq=-10'>-</A>
+<A href='byond://?src=\ref[src.radio];freq=-2'>-</A>
+[format_frequency(src.radio.frequency)]
+<A href='byond://?src=\ref[src.radio];freq=2'>+</A>
+<A href='byond://?src=\ref[src.radio];freq=10'>+</A><BR>
 -------
 </TT>"}
 	src << browse(dat, "window=radio")
 	onclose(src, "radio")
 	return
 
-/mob/living/silicon/robot/proc/panel_menu()
-	var/dat = {"
-<TT>
-Panel Lock: [ locked ? "<a href='byond://?src=\ref[src];locked=0'>Unlock</a>" : "<a href='byond://?src=\ref[src];locked=1'>Lock</A>"]<BR>
-Panel: [ opened ? "<a href='byond://?src=\ref[src];opened=0'>Close</a>" : "<a href='byond://?src=\ref[src];opened=1'>Open</A>"]<BR>
-</TT>"}
-	src << browse(dat, "window=panel")
-	onclose(src, "panel")
-	return
-
-
-/mob/living/silicon/robot/proc/activate_baton()
-	src << "TEST TEST THIS ISA TEST"
-
-/mob/living/silicon/robot/verb/cmd_drop()
-	set category = "Robot Commands"
-	set name = "drop"
-	pulling = null
 
 /mob/living/silicon/robot/Move(a, b, flag)
 
-	if (!cell || !cell.charge)
+	if (src.buckled)
 		return
 
-	if (buckled)
-		return
-
-	if (restrained())
-		pulling = null
+	if (src.restrained())
+		src.pulling = null
 
 	var/t7 = 1
-	if (restrained())
+	if (src.restrained())
 		for(var/mob/M in range(src, 1))
 			if ((M.pulling == src && M.stat == 0 && !( M.restrained() )))
 				t7 = null
-	if ((t7 && (pulling && ((get_dist(src, pulling) <= 1 || pulling.loc == loc) && (client && client.moving)))))
-		var/turf/T = loc
+	if ((t7 && (src.pulling && ((get_dist(src, src.pulling) <= 1 || src.pulling.loc == src.loc) && (src.client && src.client.moving)))))
+		var/turf/T = src.loc
 		. = ..()
 
-		if (pulling && pulling.loc)
-			if(!( isturf(pulling.loc) ))
-				pulling = null
+		if (src.pulling && src.pulling.loc)
+			if(!( isturf(src.pulling.loc) ))
+				src.pulling = null
 				return
 			else
 				if(Debug)
-					check_diary()
-					diary <<"pulling disappeared? at [__LINE__] in mob.dm - pulling = [pulling]"
+					diary <<"src.pulling disappeared? at [__LINE__] in mob.dm - src.pulling = [src.pulling]"
 					diary <<"REPORT THIS"
 
 		/////
-		if(pulling && pulling.anchored)
-			pulling = null
+		if(src.pulling && src.pulling.anchored)
+			src.pulling = null
 			return
 
-		if (!restrained())
-			var/diag = get_dir(src, pulling)
+		if (!src.restrained())
+			var/diag = get_dir(src, src.pulling)
 			if ((diag - 1) & diag)
 			else
 				diag = null
-			if ((get_dist(src, pulling) > 1 || diag))
-				if (ismob(pulling))
-					var/mob/M = pulling
+			if ((get_dist(src, src.pulling) > 1 || diag))
+				if (ismob(src.pulling))
+					var/mob/M = src.pulling
 					var/ok = 1
 					if (locate(/obj/item/weapon/grab, M.grabbed_by))
 						if (prob(75))
@@ -822,17 +881,27 @@ Panel: [ opened ? "<a href='byond://?src=\ref[src];opened=0'>Close</a>" : "<a hr
 					if (ok)
 						var/t = M.pulling
 						M.pulling = null
-						step(pulling, get_dir(pulling.loc, T))
+						step(src.pulling, get_dir(src.pulling.loc, T))
 						M.pulling = t
 				else
-					if (pulling)
-						step(pulling, get_dir(pulling.loc, T))
+					if (src.pulling)
+						if (istype(src.pulling, /obj/window))
+							if(src.pulling:ini_dir == NORTHWEST || src.pulling:ini_dir == NORTHEAST || src.pulling:ini_dir == SOUTHWEST || src.pulling:ini_dir == SOUTHEAST)
+								for(var/obj/window/win in get_step(src.pulling,get_dir(src.pulling.loc, T)))
+									src.pulling = null
+					if (src.pulling)
+						step(src.pulling, get_dir(src.pulling.loc, T))
 	else
-		pulling = null
+		src.pulling = null
 		. = ..()
-	if ((s_active && !( s_active in contents ) ))
-		s_active.close(src)
+	if ((src.s_active && !( s_active in src.contents ) ))
+		src.s_active.close(src)
 	return
 
 /mob/living/silicon/robot/proc/self_destruct()
-	gib(1)
+	src.gib(1)
+
+
+
+///mob/living/silicon/robot/proc/eyecheck()
+//	return

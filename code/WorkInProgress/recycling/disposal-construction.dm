@@ -1,6 +1,6 @@
 // Disposal pipe construction
 
-/obj/structure/disposalconstruct
+/obj/disposalconstruct
 
 	name = "disposal pipe segment"
 	desc = "A huge pipe segment used for constructing disposal systems."
@@ -58,6 +58,7 @@
 
 	// flip and rotate verbs
 	verb/rotate()
+		set name = "Rotate Pipe"
 		set src in view(1)
 
 		if(usr.stat)
@@ -68,6 +69,7 @@
 		update()
 
 	verb/flip()
+		set name = "Flip Pipe"
 		set src in view(1)
 		if(usr.stat)
 			return
@@ -86,11 +88,11 @@
 	proc/dpipetype()
 		switch(ptype)
 			if(0,1)
-				return /obj/structure/disposalpipe/segment
+				return /obj/disposalpipe/segment
 			if(2,3,4)
-				return /obj/structure/disposalpipe/junction
+				return /obj/disposalpipe/junction
 			if(5)
-				return /obj/structure/disposalpipe/trunk
+				return /obj/disposalpipe/trunk
 		return
 
 
@@ -105,11 +107,11 @@
 			user << "You can only attach the pipe if the floor plating is removed."
 			return
 
-		var/obj/structure/disposalpipe/CP = locate() in T
+		var/obj/disposalpipe/CP = locate() in T
 		if(CP)
 			update()
 			var/pdir = CP.dpdir
-			if(istype(CP, /obj/structure/disposalpipe/broken))
+			if(istype(CP, /obj/disposalpipe/broken))
 				pdir = CP.dir
 			if(pdir & dpdir)
 				user << "There is already a pipe at that location."
@@ -130,33 +132,21 @@
 
 		else if(istype(I, /obj/item/weapon/weldingtool))
 			var/obj/item/weapon/weldingtool/W = I
-			if(W.welding)
-				if(W.get_fuel() > 2)
-					W.use_fuel(2)
-					playsound(src.loc, 'Welder2.ogg', 100, 1)
-
-					// check if anything changed over 2 seconds
-					var/turf/uloc = user.loc
-					var/atom/wloc = W.loc
-					user << "Welding the pipe in place."
-					sleep(20)
-					if(user.loc == uloc && wloc == W.loc)
-
-						update()
-						var/pipetype = dpipetype()
-						var/obj/structure/disposalpipe/P = new pipetype(src.loc)
-						P.base_icon_state = base_state
-						P.dir = dir
-						P.dpdir = dpdir
-						P.update_icon()
-
-						del(src)
-					else
-						user << "You must stay still while welding."
-						return
-
-
-
-				else
-					user << "You need more welding fuel to complete this task."
+			if(W.remove_fuel(0,user))
+				playsound(src.loc, 'Welder2.ogg', 100, 1)
+				user << "Welding the pipe in place."
+				W:welding = 2
+				if(do_after(user, 20))
+					update()
+					var/pipetype = dpipetype()
+					var/obj/disposalpipe/P = new pipetype(src.loc)
+					P.base_icon_state = base_state
+					P.dir = dir
+					P.dpdir = dpdir
+					P.updateicon()
+					del(src)
 					return
+				W:welding = 1
+			else
+				user << "You need more welding fuel to complete this task."
+				return

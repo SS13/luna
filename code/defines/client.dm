@@ -10,8 +10,7 @@
 	var/changes = 0
 	var/canplaysound = 1
 	var/ambience_playing = null
-	var/play_ambiences = 1
-	var/play_adminsound = 1
+	var/no_ambi = 0
 	var/area = null
 	var/played = 0
 	var/team = null
@@ -19,5 +18,10 @@
 	var/stealth = 0
 	var/fakekey = null
 	var/warned = 0
-	var/admin_invis = 0
-	var/list/ctab_settings = list()
+	var/ooccolor = "#b82e00" //only used for admins of host level, default is equal to admin default
+	var/midis = 1 //Check if midis should be played for someone -- Urist
+	var/be_alien = 0 //Check if that guy wants to be an alien -- Urist
+
+	authenticate = 0
+	// comment out the line below when debugging locally to enable the options & messages menu
+	control_freak = 1

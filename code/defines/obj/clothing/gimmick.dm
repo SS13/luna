@@ -1,7 +1,28 @@
-/obj/item/clothing/shoes/red
-	name = "red shoes"
-	icon_state = "red"
+/obj/item/clothing/head/rabbitears
+	name = "Rabbit Ears"
+	desc = "Wearing these makes you looks useless, and only good for your sex appeal."
+	icon_state = "bunny"
+	flags = FPRINT | TABLEPASS | HEADSPACE
 
+/obj/item/clothing/head/kitty
+	name = "Kitty Ears"
+	desc = "Meow?"
+	icon_state = "kitty"
+	flags = FPRINT | TABLEPASS | HEADSPACE
+	var/icon/mob
+	var/icon/mob2
+
+	update_icon(var/mob/living/carbon/human/user)
+		if(!istype(user)) return
+		mob = new/icon("icon" = 'head.dmi', "icon_state" = "kitty")
+		mob2 = new/icon("icon" = 'head.dmi', "icon_state" = "kitty2")
+		mob.Blend(rgb(user.r_hair, user.g_hair, user.b_hair), ICON_ADD)
+		mob2.Blend(rgb(user.r_hair, user.g_hair, user.b_hair), ICON_ADD)
+
+		var/icon/earbit = new/icon("icon" = 'head.dmi', "icon_state" = "kittyinner")
+		var/icon/earbit2 = new/icon("icon" = 'head.dmi', "icon_state" = "kittyinner2")
+		mob.Blend(earbit, ICON_OVERLAY)
+		mob2.Blend(earbit2, ICON_OVERLAY)
 
 /obj/item/clothing/head/helmet/space/santahat
 	name = "Santa's hat"
@@ -12,9 +33,14 @@
 	desc = "Festive!"
 	icon_state = "santa"
 	item_state = "santa"
+	slowdown = 1
+	flags = FPRINT | TABLEPASS | ONESIZEFITSALL | SUITSPACE
 
+/obj/item/clothing/shoes/red
+	name = "red shoes"
+	icon_state = "red"
 
-/obj/item/clothing/mask/gas/owl
+/obj/item/clothing/mask/owl_mask
 	name = "Owl mask"
 	desc = "Twoooo!"
 	icon_state = "owl"
@@ -48,12 +74,11 @@
 	flags = FPRINT | TABLEPASS | CONDUCT
 	fire_resist = T0C+5200
 
-
-/obj/item/clothing/under/nazi1
+/*/obj/item/clothing/under/nazi1
 	name = "Nazi uniform"
 	desc = "SIEG HEIL!"
-	icon_state = "nazi1"
-	color = "nazi"
+	icon_state = "nazi"
+	color = "nazi1"*/ //no direction sprites
 
 /obj/item/clothing/suit/greatcoat
 	name = "great coat"
@@ -86,13 +111,13 @@
 	name = "cloud"
 	desc = "cloud"
 	icon_state = "cloud"
-	color = "aqua"
+	color = "cloud"
 
-/obj/item/clothing/under/yay
+/*/obj/item/clothing/under/yay
 	name = "yay"
 	desc = "Yay!"
 	icon_state = "yay"
-	color = "yellow"
+	color = "yay"*/ // no sprite --errorage
 
 // UNUSED COLORS
 
@@ -102,11 +127,12 @@
 	icon_state = "psyche"
 	color = "psyche"
 
+/*
 /obj/item/clothing/under/maroon
 	name = "maroon"
 	desc = "maroon"
 	icon_state = "maroon"
-	color = "maroon"
+	color = "maroon"*/ // no sprite -- errorage
 
 /obj/item/clothing/under/lightblue
 	name = "lightblue"
@@ -188,14 +214,14 @@
 	icon_state = "monocle"
 	item_state = "headset" // lol
 
-/obj/item/clothing/under/rank/captain/suit
+/obj/item/clothing/under/gimmick/rank/captain/suit
 	name = "Captain's Suit"
 	desc = "A green suit and yellow necktie. Exemplifies authority."
 	icon_state = "green_suit"
 	item_state = "dg_suit"
 	color = "green_suit"
 
-/obj/item/clothing/under/rank/head_of_personnel/suit
+/obj/item/clothing/under/gimmick/rank/head_of_personnel/suit
 	name = "Head of Personnel's Suit"
 	desc = "A teal suit and yellow necktie. An authoritative yet tacky ensemble."
 	icon_state = "teal_suit"
@@ -216,7 +242,20 @@
 	item_state = "r_suit"
 	color = "red_suit"
 
-/obj/item/clothing/under/rank/police
+/obj/item/clothing/under/blackskirt
+	name = "Black skirt"
+	desc = "A black skirt, very fancy!"
+	icon_state = "blackskirt"
+	color = "blackskirt"
+
+/obj/item/clothing/under/schoolgirl
+	name = "schoolgirl uniform"
+	desc = "It's just like one of my Japanese animes!"
+	icon_state = "schoolgirl"
+	item_state = "schoolgirl"
+	color = "schoolgirl"
+
+/obj/item/clothing/under/gimmick/rank/police
 	name = "Police Uniform"
 	desc = "Move along, nothing to see here."
 	icon_state = "police"
@@ -250,3 +289,65 @@
 	item_state = "classic_baton"
 	flags = FPRINT | ONBELT | TABLEPASS
 	force = 10
+
+/obj/item/clothing/under/pirate
+	name = "Pirate Outfit"
+	desc = "Yarr."
+	icon_state = "pirate"
+	item_state = "pirate"
+	color = "pirate"
+
+/obj/item/clothing/head/pirate
+	name = "pirate hat"
+	desc = "Yarr."
+	icon_state = "pirate"
+	item_state = "pirate"
+
+/obj/item/clothing/suit/pirate
+	name = "pirate coat"
+	desc = "Yarr."
+	icon_state = "pirate"
+	item_state = "pirate"
+	flags = FPRINT | TABLEPASS
+
+/obj/item/clothing/glasses/eyepatch
+	name = "eyepatch"
+	desc = "Yarr."
+	icon_state = "eyepatch"
+	item_state = "eyepatch"
+
+/obj/item/clothing/head/bandana
+	name = "pirate bandana"
+	desc = "Yarr."
+	icon_state = "bandana"
+	item_state = "bandana"
+
+/obj/item/clothing/under/soviet
+	name = "soviet uniform"
+	desc = "For the Motherland!"
+	icon_state = "soviet"
+	item_state = "soviet"
+	color = "soviet"
+
+/obj/item/clothing/head/ushanka
+	name = "ushanka"
+	desc = "Perfect for winter in Siberia, da?"
+	icon_state = "ushankadown"
+	item_state = "ushankadown"
+
+/* no left/right sprites
+/obj/item/clothing/under/mario
+	name = "Mario costume"
+	desc = "Worn by Italian plumbers everywhere.  Probably."
+	icon_state = "mario"
+	item_state = "mario"
+	color = "mario"
+
+/obj/item/clothing/under/luigi
+	name = "Mario costume"
+	desc = "Player two.  Couldn't you get the first controller?"
+	icon_state = "luigi"
+	item_state = "luigi"
+	color = "luigi"
+*/
+

@@ -1,7 +1,6 @@
-/mob/living/proc/binarycheck() // /tg/ stuff, let it be  -- Nikie
-	//if (istype(src, /mob/living/silicon/pai)) return
-	if (issilicon(src)) return 1
-	if (!ishuman(src)) return
+/mob/living/proc/binarycheck()
+	if (istype(src, /mob/living/silicon)) return 1
+	if (!istype(src, /mob/living/carbon/human)) return
 	var/mob/living/carbon/human/H = src
 	if (H.ears)
 		var/obj/item/device/radio/headset/dongle = H.ears
@@ -9,8 +8,8 @@
 		if(dongle.translate_binary) return 1
 
 /mob/living/proc/hivecheck()
-	if (isalien(src)) return 1
-	if (!ishuman(src)) return
+	if (istype(src, /mob/living/carbon/alien)) return 1
+	if (!istype(src, /mob/living/carbon/human)) return
 	var/mob/living/carbon/human/H = src
 	if (H.ears)
 		var/obj/item/device/radio/headset/dongle = H.ears
@@ -20,46 +19,43 @@
 /mob/living/say(var/message)
 	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
 
-	// sdisabilities & 2 is the mute disability
-	if (!message || muted || stat == 1 || istype(wear_mask, /obj/item/clothing/mask/muzzle) || sdisabilities & 2)
+	if (!message)
 		return
 
-	if (stat == 2)
-		return say_dead(message)
-
-	// emotes
-	if (copytext(message, 1, 2) == "*" && !stat)
-		return emote(copytext(message, 2))
-
-
-	// In case an object applies custom effects to the spoken message.
-	// This offers more flexibility (overwrite brainloss effects, headset stunned check etc.) here than if it were inserted further below.
-
-	// However, if you need to copy-paste a lot of the code below, consider whether it would be better to insert another hook underneath.
-	if(isobj(src.loc))
-		if(src.loc:overrideMobSay(message, src) != "not used") // if the obj has a custom effect
+	if (length(message) >= 1)
+		if (src.miming && copytext(message, 1, 2) != "*")
 			return
 
-	//custom modes
-	//if theres no space then theyre being a derpface
-	var/custommode = ""
-	var/firstspace = findtext(message, " ")
-	if(copytext(message,1,6) == "&amp;" && firstspace > 7) //one character verbs?
-		custommode = copytext(message,6,firstspace)
-		message = copytext(message, firstspace+1)
+	if (src.stat == 2)
+		return src.say_dead(message)
 
-	var/alt_name = "" // In case your face is burnt or you're wearing a mask
-	if (istype(src, /mob/living/carbon/human) && (name != real_name || face_dmg))
-		if (src:wear_id && src:wear_id:registered)
-			alt_name = " (as [src:wear_id:registered])"
-		else
-			alt_name = " (as Unknown)"
+	if (src.muted || src.silent)
+		return
 
+	// wtf?
+	if (src.stat)
+		return
+
+	// Mute disability
+	if (src.sdisabilities & 2)
+		return
+
+	if (istype(src.wear_mask, /obj/item/clothing/mask/muzzle))
+		return
+
+	// emotes
+	if (copytext(message, 1, 2) == "*" && !src.stat)
+		return src.emote(copytext(message, 2))
+
+	var/alt_name = ""
+	if (istype(src, /mob/living/carbon/human) && src.name != src.real_name)
+		var/mob/living/carbon/human/H = src
+		alt_name = " (as [H.get_visible_name()])"
 	var/italics = 0
 	var/message_range = null
 	var/message_mode = null
 
-	if (brainloss >= 60 && prob(50))
+	if (src.brainloss >= 60 && prob(50))
 		if (ishuman(src))
 			message_mode = "headset"
 	// Special message handling
@@ -114,125 +110,158 @@
 			if (!ishuman(src) && (message_mode=="department" || (message_mode in radiochannels)))
 				message_mode = null //only humans can use headsets
 
-	if(src.stunned > 0)
-		message_mode = "" //Stunned people shouldn't be able to physically turn on their radio/hold down the button to speak into it
-
-	message = trim(message)
-
 	if (!message)
 		return
 
-	message = addtext(uppertext(copytext(message,1,2)), copytext(message, 2)) //capitalize the first letter of what they actually say
-
-	if (stuttering)
-		message = NewStutter(message,stunned)
-	if (intoxicated)
-		message = Intoxicated(message)
-
 	// :downs:
-	if (brainloss >= 60)
+	if (src.brainloss >= 60)
 		message = dd_replacetext(message, " am ", " ")
 		message = dd_replacetext(message, " is ", " ")
 		message = dd_replacetext(message, " are ", " ")
 		message = dd_replacetext(message, "you", "u")
 		message = dd_replacetext(message, "help", "halp")
 		message = dd_replacetext(message, "grief", "grife")
+		message = dd_replacetext(message, "space", "spess")
+		message = dd_replacetext(message, "carp", "crap")
 		if(prob(50))
 			message = uppertext(message)
 			message += "[stutter(pick("!", "!!", "!!!"))]"
-		if(!stuttering && prob(15))
-			message = NewStutter(message)
+		if(!src.stuttering && prob(15))
+			message = stutter(message)
 
-	if (!istype(src, /mob/living/silicon))
-		var/list/obj/item/used_radios = new
-		switch (message_mode)
-			if ("headset")
-				if (src:ears)
-					src:ears.talk_into(src, message)
+	if (src.stuttering)
+		message = stutter(message)
 
-				message_range = 1
-				italics = 1
+/* //qw do not have beesease atm.
+	if(src.virus)
+		if(src.virus.name=="beesease" && src.virus.stage>=2)
+			if(prob(src.virus.stage*10))
+				var/bzz = length(message)
+				message = "B"
+				for(var/i=0,i<bzz,i++)
+					message += "Z"
+*/
+	var/list/obj/item/used_radios = new
+	switch (message_mode)
+		if ("headset")
+			if (src:ears)
+				src:ears.talk_into(src, message)
+				used_radios += src:ears
 
-			if ("security_headset")
-				if (src:ears)
-					src:ears.security_talk_into(src, message)
+			message_range = 1
+			italics = 1
 
-				message_range = 1
-				italics = 1
+		if ("secure headset")
+			if (src:ears)
+				src:ears.talk_into(src, message, 1)
+				used_radios += src:ears
 
-			if ("right hand")
-				if (r_hand)
-					r_hand.talk_into(src, message)
+			message_range = 1
+			italics = 1
 
-				message_range = 1
-				italics = 1
+		if ("right hand")
+			if (src.r_hand)
+				src.r_hand.talk_into(src, message)
+				used_radios += src:r_hand
 
-			if ("left hand")
-				if (l_hand)
-					l_hand.talk_into(src, message)
+			message_range = 1
+			italics = 1
 
-				message_range = 1
-				italics = 1
+		if ("left hand")
+			if (src.l_hand)
+				src.l_hand.talk_into(src, message)
+				used_radios += src:l_hand
 
-			if ("intercom")
-				for (var/obj/item/device/radio/intercom/I in view(1, null))
-					I.talk_into(src, message)
+			message_range = 1
+			italics = 1
 
-				message_range = 1
-				italics = 1
+		if ("intercom")
+			for (var/obj/item/device/radio/intercom/I in view(1, null))
+				I.talk_into(src, message)
+				used_radios += I
 
-			//I see no reason to restrict such way of whispering
-			if ("whisper")
-				whisper(message)
-				return
+			message_range = 1
+			italics = 1
 
-			if ("binary")
-				if(robot_talk_understand || binarycheck())
-				//message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN)) //seems redundant
-					robot_talk(message)
-				return
+		//I see no reason to restrict such way of whispering
+		if ("whisper")
+			src.whisper(message)
+			return
 
-			/*if ("alientalk")
-				if(alien_talk_understand || hivecheck())
-				//message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN)) //seems redundant
-					alien_talk(message)
-				return*/
+		if ("binary")
+			if(src.robot_talk_understand || src.binarycheck())
+			//message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN)) //seems redundant
+				src.robot_talk(message)
+			return
 
-			if ("department")
+		if ("alientalk")
+			if(src.alien_talk_understand || src.hivecheck())
+			//message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN)) //seems redundant
+				src.alien_talk(message)
+			return
+
+		if ("department")
+			if (src:ears)
+				src:ears.talk_into(src, message, message_mode)
+				used_radios += src:ears
+			message_range = 1
+			italics = 1
+/////SPECIAL HEADSETS START
+		else
+			//world << "SPECIAL HEADSETS"
+			if (message_mode in radiochannels)
 				if (src:ears)
 					src:ears.talk_into(src, message, message_mode)
 					used_radios += src:ears
 				message_range = 1
 				italics = 1
-
-			/*if ("pAI")
-				if (src:radio)
-					src:radio.talk_into(src, message)
-					used_radios += src:radio
-				message_range = 1
-				italics = 1*/
-
-			else // Special headsets
-				if (message_mode in radiochannels)
-					if (src:ears)
-						src:ears.talk_into(src, message, message_mode)
-						used_radios += src:ears
-					message_range = 1
-					italics = 1
-
-	for (var/obj/O in view(message_range, src))
-		spawn (0)
-			if (O)
-				O.hear_talk(src, message,italics,alt_name)
+/////SPECIAL HEADSETS END
 
 	var/list/listening
-	if(isturf(src.loc))
-		listening = hearers(message_range, src)
+/*
+	if(istype(src.loc, /obj/item/device/aicard)) // -- TLE
+		var/obj/O = src.loc
+		if(istype(O.loc, /mob))
+			var/mob/M = O.loc
+			listening = hearers(message_range, M)
+		else
+			listening = hearers(message_range, O)
 	else
-		var/atom/object = src.loc
-		listening = hearers(message_range, object)
-	listening -= src
-	listening += src
+		listening = hearers(message_range, src)
+
+	for (var/obj/O in view(message_range, src))
+		for (var/mob/M in O)
+			listening += M // maybe need to check if M can hear src
+		spawn (0)
+			if (O)
+				O.hear_talk(src, message)
+
+	if (!(src in listening))
+		listening += src
+
+*/
+	var/turf/T = get_turf(src)
+	listening = hearers(message_range, T)
+	var/list/V = view(message_range, T)
+	//find mobs in lockers, cryo and intellycards
+	for (var/mob/M in world)
+		if (!M.client)
+			continue //skip monkeys and leavers
+		if (istype(M, /mob/new_player))
+			continue
+		if (M.stat <2) //is alive
+			if (isturf(M.loc))
+				continue //if M can hear us it was already found by hearers()
+			if (get_turf(M) in V) //this is slow, but I don't think we'd have a lot of wardrobewhores every round --rastaf0
+				listening+=M
+		else
+			if (M.client && M.client.ghost_ears)
+				listening|=M
+
+	for (var/obj/O in ((V | src.contents)-used_radios)) //radio in pocket could work, radio in backpack wouldn't --rastaf0
+		spawn (0)
+			if (O)
+				O.hear_talk(src, message)
 
 	var/list/heard_a = list() // understood us
 	var/list/heard_b = list() // didn't understand us
@@ -243,110 +272,47 @@
 		else
 			heard_b += M
 
-	for(var/obj/O in view(3,src))
-		O.catchMessage(message,src)
-
 	var/rendered = null
-
 	if (length(heard_a))
-		var/message_a = say_quote(message, custommode)
-		var/test = say_test(message)
-		var/image/test2 = image('talk.dmi',src,"h[test]")
+		var/message_a = src.say_quote(message)
+
 		if (italics)
 			message_a = "<i>[message_a]</i>"
-
-		if (!istype(src, /mob/living/carbon/human) || istype(wear_mask, /obj/item/clothing/mask/gas/voice))
-			rendered = "<span class='game say'><span class='name'>[name]</span> <span class='message'>[message_a]</span></span>"
-		else if(face_dmg)
-			rendered = "<span class='game say'><span class='name'>Unknown</span>[alt_name] <span class='message'>[message_a]</span></span>"
+		if (!istype(src, /mob/living/carbon/human))
+			rendered = "<span class='game say'><span class='name'>[src.name]</span> <span class='message'>[message_a]</span></span>"
+		else if(istype(wear_mask, /obj/item/clothing/mask/gas/voice))
+			if(wear_mask:vchange)
+				rendered = "<span class='game say'><span class='name'>[src.wear_mask:voice]</span> <span class='message'>[message_a]</span></span>"
+			else
+				rendered = "<span class='game say'><span class='name'>[src.name]</span> <span class='message'>[message_a]</span></span>"
 		else
-			rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] <span class='message'>[message_a]</span></span>"
+			rendered = "<span class='game say'><span class='name'>[src.real_name]</span>[alt_name] <span class='message'>[message_a]</span></span>"
 
-		for (var/mob/M in heard_a) // Sending over the message to mobs who can understand
-			M.show_message(rendered, 6)
-			M << test2
-		spawn(30) del(test2)
-
-	var/renderedold = rendered // Used for the voice recorders below
-
+		for (var/mob/M in heard_a)
+			M.show_message(rendered, 2)
+/*
+			for(var/obj/O in M) // This is terribly costly for such a unique circumstance, should probably do this a different way in the future -- TLE
+				if(istype(O, /obj/item/device/aicard))
+					for(var/mob/M2 in O)
+						M2.show_message(rendered, 2)
+						break
+					break
+*/
 	if (length(heard_b))
 		var/message_b
 
-		if(say_unknown())
-			message_b = say_unknown()
-
-		else if (voice_message)
-			message_b = voice_message
+		if (src.voice_message)
+			message_b = src.voice_message
 		else
-			message_b = Ellipsis(message)
-			message_b = say_quote(message_b, custommode)
+			message_b = stars(message)
+			message_b = src.say_quote(message_b)
 
 		if (italics)
 			message_b = "<i>[message_b]</i>"
 
-		rendered = "<span class='game say'><span class='name'>[voice_name]</span> <span class='message'>[message_b]</span></span>"
+		rendered = "<span class='game say'><span class='name'>[src.voice_name]</span> <span class='message'>[message_b]</span></span>"
 
-		for (var/mob/M in heard_b) // Sending over the message to mobs who can't understand
-			M.show_message(rendered, 6)
-
-	message = say_quote(message, custommode)
-	if (italics)
-		message = "<i>[message]</i>"
-
-	if (!istype(src, /mob/living/carbon/human) || istype(wear_mask, /obj/item/clothing/mask/gas/voice))
-		rendered = "<span class='game say'><span class='name'>[name]</span> <span class='message'>[message]</span></span>"
-	else if (face_dmg)
-		rendered = "<span class='game say'><span class='name'>Unknown</span>[alt_name] <span class='message'>[message]</span></span>"
-	else
-		rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] <span class='message'>[message]</span></span>"
-	for (var/client/C)
-		if (C.mob)
-			if (istype(C.mob, /mob/new_player))
-				continue
-			if (C.mob.stat >= 2 && !(C.mob in heard_a))
-				C.mob.show_message(rendered, 2)
-
-	for(var/obj/item/weapon/recorder/R in oview(message_range,src))
-		if(R.recording)
-			over
-			var/id = rand(1,9999)
-			var/test = R.disk.mobtype["[id]"]
-			if(test)
-				id = rand(1,9999)
-				if(id == test)
-					goto over
-			if(istype(src, /mob/living/carbon/human))
-				R.disk.memory["[id]"] += renderedold
-				R.disk.mobtype["[id]"] += "human"
-
-	for(var/mob/M in viewers(message_range,src))
-		var/obj/item/weapon/implant/I = locate() in M.contents
-		if(I)
-			I.hear(message,src)
-		var/obj/item/weapon/recorder/R = locate() in M.contents
-		if(R)
-			if(R.recording)
-				over
-				var/id = rand(1,9999)
-				var/test = R.disk.mobtype["[id]"]
-				if(test)
-					id = rand(1,9999)
-					if(id == test)
-						goto over
-				if(istype(src, /mob/living/carbon/human))
-					R.disk.memory["[id]"] += renderedold
-					R.disk.mobtype["[id]"] += "human"
-				if(istype(src,/mob/living/carbon/monkey))
-					R.disk.memory["[id]"] += renderedold
-					R.disk.mobtype["[id]"] += "monkey"
-				if(istype(src,/mob/living/silicon))
-					R.disk.memory["[id]"] += renderedold
-					R.disk.mobtype["[id]"] += "bot"
-				if(istype(src,/mob/living/carbon/alien))
-					R.disk.memory["[id]"] += renderedold
-					R.disk.mobtype["[id]"] += "alien"
+		for (var/mob/M in heard_b)
+			M.show_message(rendered, 2)
 
 	log_say("[src.name]/[src.key] : [message]")
-
-//headfindback
-	log_m("Said [message]")

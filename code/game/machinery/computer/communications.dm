@@ -25,17 +25,23 @@
 			if (I && istype(I))
 				if(src.check_access(I))
 					authenticated = 1
+				if(20 in I.access)
+					authenticated = 2
 		if("logout")
 			authenticated = 0
 		if("nolockdown")
 			disablelockdown(usr)
 			post_status("alert", "default")
+		if("announce")
+			if(src.authenticated==2)
+				var/input = input(usr, "Please choose a message to announce to the station crew.", "What?", "")
+				if(!input)
+					return
+				captain_announce(input)
+				log_say("[key_name(usr)] has made a captain announcement: [input]")
+				message_admins("[key_name_admin(usr)] has made a captain announcement.", 1)
 		if("call-prison")
-			PrisonControl.start()
-			radioalert("Prison Notice", "Prisoner Shuttle launching in one minute.")
-		if("recall-prison")
-			PrisonControl.recall()
-			radioalert("Prison Notice", "Prisoner Shuttle returning in two minutes.")
+			call_prison_shuttle(usr)
 		if("callshuttle")
 			src.state = STATE_DEFAULT
 			if(src.authenticated)
@@ -44,7 +50,7 @@
 			if(src.authenticated)
 				call_shuttle_proc(usr)
 
-				if(LaunchControl.online)
+				if(emergency_shuttle.online)
 					post_status("shuttle")
 
 			src.state = STATE_DEFAULT
@@ -100,13 +106,6 @@
 		if("setmsg2")
 			stat_msg2 = input("Line 2", "Enter Message Text", stat_msg2) as text|null
 			src.updateDialog()
-		if("toggle-redalert")
-			var/area/CurArea = get_area(src)
-			CurArea.redalert = !CurArea.redalert
-			spawn(0)
-				for(var/area/ToggleAlert in world)
-					if (ToggleAlert.applyalertstatus && ToggleAlert.type != /area)
-						ToggleAlert.redalert = CurArea.redalert
 
 		// AI interface
 		if("ai-main")
@@ -157,6 +156,36 @@
 				AL.open()
 				AL.lockdownbyai = 0
 
+/obj/machinery/computer/communications/attackby(I as obj, user as mob)
+	if(istype(I, /obj/item/weapon/screwdriver))
+		playsound(src.loc, 'Screwdriver.ogg', 50, 1)
+		if(do_after(user, 20))
+			if (src.stat & BROKEN)
+				user << "\blue The broken glass falls out."
+				var/obj/computerframe/A = new /obj/computerframe( src.loc )
+				new /obj/item/weapon/shard( src.loc )
+				var/obj/item/weapon/circuitboard/communications/M = new /obj/item/weapon/circuitboard/communications( A )
+				for (var/obj/C in src)
+					C.loc = src.loc
+				A.circuit = M
+				A.state = 3
+				A.icon_state = "3"
+				A.anchored = 1
+				del(src)
+			else
+				user << "\blue You disconnect the monitor."
+				var/obj/computerframe/A = new /obj/computerframe( src.loc )
+				var/obj/item/weapon/circuitboard/communications/M = new /obj/item/weapon/circuitboard/communications( A )
+				for (var/obj/C in src)
+					C.loc = src.loc
+				A.circuit = M
+				A.state = 4
+				A.icon_state = "4"
+				A.anchored = 1
+				del(src)
+	else
+		src.attack_hand(user)
+	return
 
 /obj/machinery/computer/communications/attack_ai(var/mob/user as mob)
 	return src.attack_hand(user)
@@ -170,9 +199,9 @@
 
 	user.machine = src
 	var/dat = "<head><title>Communications Console</title></head><body>"
-	if (LaunchControl.online && main_shuttle.location==0)
-		var/timeleft = LaunchControl.timeleft()
-		dat += "<B>Escape Pod Launch Sequence</B>\n<BR>\nETA: [timeleft / 60 % 60]:[add_zero(num2text(timeleft % 60), 2)]<BR>"
+	if (emergency_shuttle.online && emergency_shuttle.location==0)
+		var/timeleft = emergency_shuttle.timeleft()
+		dat += "<B>Emergency shuttle</B>\n<BR>\nETA: [timeleft / 60 % 60]:[add_zero(num2text(timeleft % 60), 2)]<BR>"
 
 	if (istype(user, /mob/living/silicon))
 		var/dat2 = src.interact_ai(user) // give the AI a different interact proc to limit its access
@@ -186,34 +215,24 @@
 		if(STATE_DEFAULT)
 			if (src.authenticated)
 				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=logout'>Log Out</A> \]"
-				if(PrisonControl.departed)
-					dat += "<BR>Prison Shuttle in flight..."
-				else if(PrisonControl.location == 1)
-					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shutle</A> \]"
-				else
-					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=recall-prison'>Recall Prison Shutle</A> \]"
-
-				//dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shutle</A> \]"
+				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shutle</A> \]"
 				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=nolockdown'>Disable Lockdown</A> \]"
-				var/area/CurArea = get_area(src)
-				if (CurArea.redalert)
-					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=toggle-redalert'>Cancel Red Alert</A> \]"
-				else
-					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=toggle-redalert'>Declare Red Alert</A> \]"
-				if(main_shuttle.location == 1)
-					if (LaunchControl.online)
-						dat += "<BR>\[ <A HREF='?src=\ref[src];operation=cancelshuttle'>Cancel Escape Pod Launch</A> \]"
+				if (src.authenticated==2)
+					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=announce'>Make An Announcement</A> \]"
+				if(emergency_shuttle.location==0)
+					if (emergency_shuttle.online)
+						dat += "<BR>\[ <A HREF='?src=\ref[src];operation=cancelshuttle'>Cancel Shuttle Call</A> \]"
 					else
-						dat += "<BR>\[ <A HREF='?src=\ref[src];operation=callshuttle'>Start Escape Pod Launch</A> \]"
+						dat += "<BR>\[ <A HREF='?src=\ref[src];operation=callshuttle'>Call Emergency Shuttle</A> \]"
 
 				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=status'>Set Status Display</A> \]"
 			else
 				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=login'>Log In</A> \]"
 			dat += "<BR>\[ <A HREF='?src=\ref[src];operation=messagelist'>Message List</A> \]"
 		if(STATE_CALLSHUTTLE)
-			dat += "Are you sure you want to start the escape pod launch sequence? \[ <A HREF='?src=\ref[src];operation=callshuttle2'>OK</A> | <A HREF='?src=\ref[src];operation=main'>Cancel</A> \]"
+			dat += "Are you sure you want to call the shuttle? \[ <A HREF='?src=\ref[src];operation=callshuttle2'>OK</A> | <A HREF='?src=\ref[src];operation=main'>Cancel</A> \]"
 		if(STATE_CANCELSHUTTLE)
-			dat += "Are you sure you want to cancel the escape pod launch sequence? \[ <A HREF='?src=\ref[src];operation=cancelshuttle2'>OK</A> | <A HREF='?src=\ref[src];operation=main'>Cancel</A> \]"
+			dat += "Are you sure you want to cancel the shuttle? \[ <A HREF='?src=\ref[src];operation=cancelshuttle2'>OK</A> | <A HREF='?src=\ref[src];operation=main'>Cancel</A> \]"
 		if(STATE_MESSAGELIST)
 			dat += "Messages:"
 			for(var/i = 1; i<=src.messagetitle.len; i++)
@@ -255,19 +274,14 @@
 	var/dat = ""
 	switch(src.aistate)
 		if(STATE_DEFAULT)
-			if(main_shuttle.location == 1 && !LaunchControl.online)
-				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=ai-callshuttle'>Start Escape Pod Launch</A> \]"
+			if(emergency_shuttle.location==0 && !emergency_shuttle.online)
+				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=ai-callshuttle'>Call Emergency Shuttle</A> \]"
 			dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shutle</A> \]"
 			dat += "<BR>\[ <A HREF='?src=\ref[src];operation=ai-messagelist'>Message List</A> \]"
 			dat += "<BR>\[ <A HREF='?src=\ref[src];operation=nolockdown'>Disable Lockdown</A> \]"
-			var/area/CurArea = get_area(src)
-			if (CurArea.redalert)
-				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=toggle-redalert'>Cancel Red Alert</A> \]"
-			else
-				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=toggle-redalert'>Declare Red Alert</A> \]"
 			dat += "<BR>\[ <A HREF='?src=\ref[src];operation=ai-status'>Set Status Display</A> \]"
 		if(STATE_CALLSHUTTLE)
-			dat += "Are you sure you want to start the escape pod launch sequence? \[ <A HREF='?src=\ref[src];operation=ai-callshuttle2'>OK</A> | <A HREF='?src=\ref[src];operation=ai-main'>Cancel</A> \]"
+			dat += "Are you sure you want to call the shuttle? \[ <A HREF='?src=\ref[src];operation=ai-callshuttle2'>OK</A> | <A HREF='?src=\ref[src];operation=ai-main'>Cancel</A> \]"
 		if(STATE_MESSAGELIST)
 			dat += "Messages:"
 			for(var/i = 1; i<=src.messagetitle.len; i++)
@@ -304,75 +318,128 @@
 	dat += "<BR>\[ [(src.aistate != STATE_DEFAULT) ? "<A HREF='?src=\ref[src];operation=ai-main'>Main Menu</A> | " : ""]<A HREF='?src=\ref[user];mach_close=communications'>Close</A> \]"
 	return dat
 
-/mob/living/silicon/ai/verb/ai_call_shuttle()
+/mob/living/silicon/ai/proc/ai_call_shuttle()
 	set category = "AI Commands"
-	set name = "Launch Pods"
+	set name = "Call Emergency Shuttle"
 	if(usr.stat == 2)
-		usr << "You can't launch the pods because you are dead!"
+		usr << "You can't call the shuttle because you are dead!"
 		return
-
-	var/confirm = alert("Confirm launching pods?",,"Launch pods","Cancel")
-	if(confirm == "Cancel")
-		return
-
 	call_shuttle_proc(src)
 
 	// hack to display shuttle timer
-	if(LaunchControl.online)
+	if(emergency_shuttle.online)
 		var/obj/machinery/computer/communications/C = locate() in world
 		if(C)
 			C.post_status("shuttle")
 
 	return
 
+/proc/call_prison_shuttle(var/mob/usr)
+	if ((!( ticker ) || emergency_shuttle.location == 1))
+		return
+	if(ticker.mode.name == "blob" || ticker.mode.name == "Corporate Restructuring" || ticker.mode.name == "sandbox")
+		usr << "Under directive 7-10, [station_name()] is quarantined until further notice."
+		return
+	if(ticker.mode.name == "revolution")
+		usr << "Centcom will not allow the shuttle to be called, due to the possibility of sabotage by revolutionaries."
+		return
+	if(ticker.mode.name == "AI malfunction")
+		usr << "Centcom will not allow the shuttle to be called."
+		return
+	for(var/obj/machinery/computer/prison_shuttle/PS in world)
+		if(!PS.allowedtocall)
+			usr << "\red Centcom will not allow the shuttle to be called"
+			return
+		if(PS.z == 3)
+			usr << "\red Already in transit! Please wait!"
+			return
+		var/A = locate(/area/shuttle/prison/)
+		for(var/mob/M in A)
+			M.show_message("\red Launch sequence initiated!")
+			spawn(0)	shake_camera(M, 10, 1)
+		sleep(10)
+
+		if(PS.z == 2)	//This is the laziest proc ever
+			for(var/atom/movable/AM as mob|obj in A)
+				AM.z = 3
+				AM.Move()
+			sleep(rand(600,1800))
+			for(var/atom/movable/AM as mob|obj in A)
+				AM.z = 1
+				AM.Move()
+		else
+			for(var/atom/movable/AM as mob|obj in A)
+				AM.z = 3
+				AM.Move()
+			sleep(rand(600,1800))
+			for(var/atom/movable/AM as mob|obj in A)
+				AM.z = 2
+				AM.Move()
+		for(var/mob/M in A)
+			M.show_message("\red Prison shuttle has arrived at destination!")
+		return
+	return
+
+
 /proc/enable_prison_shuttle(var/mob/user)
 	for(var/obj/machinery/computer/prison_shuttle/PS in world)
 		PS.allowedtocall = !(PS.allowedtocall)
 
-
 /proc/call_shuttle_proc(var/mob/user)
-	if ((!( ticker ) || main_shuttle.location == 0))
+	if ((!( ticker ) || emergency_shuttle.location))
 		return
 
-	if (LaunchControl.online)
-		user << "\red Launch process already started!"
+	if(world.time < 6000) // Ten minute grace period to let the game get going without lolmetagaming. -- TLE
+		if(sent_strike_team == 1)
+			user << "Centcom will not allow the shuttle to be called. Consider all contracts terminated."
+			return
+		else
+			user << "The emergency shuttle is refueling. Please wait another [(6000-world.time)/10] seconds before trying again."
+			return
+
+	if(emergency_shuttle.direction == -1)
+		user << "Shuttle may not be called while returning to CentCom."
 		return
 
-	if(ticker.mode.name == "blob" || ticker.mode.name == "Corporate Restructuring" || ticker.mode.name == "Sandbox")
-		user << "Under directive 7-10, [station_name()] is quarantined until further notice."
-		return
-	if(ticker.mode.name == "revolution" || ticker.mode.name == "rp-revolution" || ticker.mode.name == "AI malfunction" || ticker.mode.name == "confliction")
-		user << "Centcom will not allow the shuttle to be called."
-		return
-	if(ticker.mode.name == "nuclear emergency" && world.time < 36000)
-		// on nuke, only allow evacuation after an hour
-		user << "The pods are not responding.. how odd."
-		return
-	if(ticker.mode.name == "zombie" && world.time < 36000)
-		// on nuke, only allow evacuation after an hour
-		user << "The pods are not responding.. how odd."
-		return
+	if(ticker.mode.name == "revolution" || ticker.mode.name == "AI malfunction" || ticker.mode.name == "confliction")
+		//user << "Centcom will not allow the shuttle to be called." //Old code
+		//if(sent_strike_team == 1)
+		//	user << "Consider all contracts terminated."
+		//return
 
-	LaunchControl.start()
+		if(sent_strike_team == 1)
+			user << "Centcom will not allow the shuttle to be called. Consider all contracts terminated."
+			return
+		//New version pretends to call the shuttle but cause the shuttle to return after a random duration.
+		emergency_shuttle.fake_recall = rand(300,500)
 
-//	main_shuttle.incall()
-	world << "\blue <B>Alert: Escape pods launching in [round(LaunchControl.timeleft()/60)] minutes.</B>"
-	playsound('sound/announcer/shuttlecalled.ogg')
+	if(sent_strike_team == 1)
+		if(ticker.mode.name != "revolution" || ticker.mode.name != "AI malfunction")
+			user << "Centcom will not allow the shuttle to be called. Consider all contracts terminated."
+			return
+
+//	if(ticker.mode.name == "blob" || ticker.mode.name == "Corporate Restructuring" || ticker.mode.name == "sandbox")
+//		user << "Under directive 7-10, [station_name()] is quarantined until further notice."
+//		return
+//	These modes are no longer used so I am commenting them out. N
+
+	emergency_shuttle.incall()
+	log_game("[key_name(user)] has called the shuttle.")
+	message_admins("[key_name_admin(user)] has called the shuttle.", 1)
+	world << "\blue <B>Alert: The emergency shuttle has been called. It will arrive in [round(emergency_shuttle.timeleft()/60)] minutes.</B>"
+	world << sound('shuttlecalled.ogg')
 
 	return
 
 /proc/cancel_call_proc(var/mob/user)
-	if ((!( ticker ) || main_shuttle.location != 1 || main_shuttle.direction == 0 || LaunchControl.timeleft() < 30))
+	if ((!( ticker ) || emergency_shuttle.location || emergency_shuttle.direction == 0 || emergency_shuttle.timeleft() < 300))
 		return
 	if( ticker.mode.name == "blob" )
 		return
 
-	world << "\blue <B>Alert: Escape pods launch sequence aborted</B>" //marker4
-	playsound('sound/announcer/shuttlerecalled.ogg')
-
-	LaunchControl.stop()
-
-	//main_shuttle.recall()
+	emergency_shuttle.recall()
+	log_game("[key_name(user)] has uncalled the shuttle.")
+	message_admins("[key_name_admin(user)] has uncalled the shuttle.", 1)
 
 	return
 
@@ -416,3 +483,53 @@
 			if("alert")
 				set_picture(signal.data["picture_state"])
 */
+
+/obj/machinery/computer/communications/Del()
+
+	for(var/obj/machinery/computer/communications/commconsole in world)
+		if(istype(commconsole.loc,/turf) && commconsole != src)
+			return ..()
+
+	for(var/obj/item/weapon/circuitboard/communications/commboard in world)
+		if(istype(commboard.loc,/turf) || istype(commboard.loc,/obj/item/weapon/storage))
+			return ..()
+
+	for(var/mob/living/silicon/ai/shuttlecaller in world)
+		if(!shuttlecaller.stat && shuttlecaller.client && istype(shuttlecaller.loc,/turf))
+			return ..()
+
+	if(ticker.mode.name == "revolution" || ticker.mode.name == "AI malfunction" || sent_strike_team)
+		return ..()
+
+	emergency_shuttle.incall(2)
+	log_game("All the AIs, comm consoles and boards are destroyed. Shuttle called.")
+	message_admins("All the AIs, comm consoles and boards are destroyed. Shuttle called.", 1)
+	world << "\blue <B>Alert: The emergency shuttle has been called. It will arrive in [round(emergency_shuttle.timeleft()/60)] minutes.</B>"
+	world << sound('shuttlecalled.ogg')
+
+	..()
+
+/obj/item/weapon/circuitboard/communications/Del()
+
+	for(var/obj/machinery/computer/communications/commconsole in world)
+		if(istype(commconsole.loc,/turf))
+			return ..()
+
+	for(var/obj/item/weapon/circuitboard/communications/commboard in world)
+		if((istype(commboard.loc,/turf) || istype(commboard.loc,/obj/item/weapon/storage)) && commboard != src)
+			return ..()
+
+	for(var/mob/living/silicon/ai/shuttlecaller in world)
+		if(!shuttlecaller.stat && shuttlecaller.client && istype(shuttlecaller.loc,/turf))
+			return ..()
+
+	if(ticker.mode.name == "revolution" || ticker.mode.name == "AI malfunction" || sent_strike_team)
+		return ..()
+
+	emergency_shuttle.incall(2)
+	log_game("All the AIs, comm consoles and boards are destroyed. Shuttle called.")
+	message_admins("All the AIs, comm consoles and boards are destroyed. Shuttle called.", 1)
+	world << "\blue <B>Alert: The emergency shuttle has been called. It will arrive in [round(emergency_shuttle.timeleft()/60)] minutes.</B>"
+	world << sound('shuttlecalled.ogg')
+
+	..()

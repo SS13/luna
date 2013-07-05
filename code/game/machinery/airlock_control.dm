@@ -4,7 +4,6 @@
 obj/machinery/door/airlock
 	var/id_tag
 	var/frequency
-	explosionstrength = 2
 
 	var/datum/radio_frequency/radio_connection
 
@@ -105,7 +104,7 @@ obj/machinery/airlock_sensor
 	var/on = 1
 	var/alert = 0
 
-	proc/update_icon()
+	update_icon()
 		if(on)
 			if(alert)
 				icon_state = "airlock_sensor_alert"
@@ -171,7 +170,7 @@ obj/machinery/access_button
 
 	var/on = 1
 
-	proc/update_icon()
+	update_icon()
 		if(on)
 			icon_state = "access_button_standby"
 		else
@@ -201,20 +200,3 @@ obj/machinery/access_button
 
 		if(radio_controller)
 			set_frequency(frequency)
-
-obj/machinery/shieldsbutton
-	name = "Toggle Shields"
-	icon = 'airlock_machines.dmi'
-	icon_state = "access_button_standby"
-	var/toggle = 0
-
-	attack_hand(mob/user)
-		if(!toggle)
-			ShieldNetwork.startshields()
-			icon_state = "access_button_standby"
-			toggle = 1
-		else
-			ShieldNetwork.stopshields()
-			toggle = 0
-			icon_state = "access_button_standby"
-		flick("access_button_cycle", src)

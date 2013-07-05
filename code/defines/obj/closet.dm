@@ -1,4 +1,4 @@
-/obj/structure/closet
+/obj/closet
 	desc = "It's a closet!"
 	name = "Closet"
 	icon = 'closet.dmi'
@@ -6,28 +6,9 @@
 	density = 1
 	var/icon_closed = "closed"
 	var/icon_opened = "open"
-	var/bang_time = 0
 	var/opened = 0
 	var/welded = 0
 	flags = FPRINT
-
-
-
-/obj/structure/closet/portal
-	desc = "It's a closet!"
-	name = "Closet"
-	icon = 'closet.dmi'
-	icon_state = "closed"
-	density = 1
-	anchored = 1
-	var/id
-	var/t_id
-	var/locked = 1
-	var/turf/target = null
-	var/obj/structure/closet/portal/link = null
-	req_access = list(access_captain)
-	flags = FPRINT
-
 
 /obj/spresent
 	desc = "It's a ... present?"
@@ -37,89 +18,125 @@
 	density = 1
 	anchored = 0
 
-/obj/structure/closet/gmcloset
+/obj/closet/gmcloset
 	desc = "A bulky (yet mobile) closet. Comes with formal clothes"
 	name = "Formal closet"
 
-/obj/structure/closet/emcloset
+/obj/closet/emcloset
 	desc = "A bulky (yet mobile) closet. Comes prestocked with a gasmask and o2 tank for emergencies."
 	name = "Emergency Closet"
 	icon_state = "emergency"
 	icon_closed = "emergency"
 	icon_opened = "emergencyopen"
 
-/obj/structure/closet/firecloset
-	desc = "A firecloset."
+/obj/closet/firecloset
+	desc = "A bulky (yet mobile) closet. Comes with supplies to fight fire."
 	name = "Fire Closet"
 	icon_state = "firecloset"
 	icon_closed = "firecloset"
 	icon_opened = "fireclosetopen"
 
-
-/obj/structure/closet/jcloset
+/obj/closet/jcloset
 	desc = "A bulky (yet mobile) closet. Comes with janitor's clothes and biohazard gear."
 	name = "Custodial Closet"
 
-/obj/structure/closet/lawcloset
+/obj/closet/lawcloset
 	desc = "A bulky (yet mobile) closet. Comes with lawyer apparel and items."
 	name = "Legal Closet"
 
-/obj/structure/closet/coffin
+/obj/closet/coffin
 	desc = "A burial receptacle for the dearly departed."
 	name = "coffin"
 	icon_state = "coffin"
 	icon_closed = "coffin"
 	icon_opened = "coffin_open"
 
-/obj/structure/closet/l3closet
+/obj/closet/bombcloset
+	desc = "A bulky (yet mobile) closet. Comes prestocked with a level 4 bombsuit."
+	name = "EOD closet"
+	icon_state = "bombsuit"
+	icon_closed = "bombsuit"
+	icon_opened = "bombsuitopen"
+
+/obj/closet/bombclosetsecurity
+	desc = "A bulky (yet mobile) closet. Comes prestocked with a level 4 bombsuit."
+	name = "EOD closet"
+	icon_state = "bombsuitsec"
+	icon_closed = "bombsuitsec"
+	icon_opened = "bombsuitsecopen"
+
+/obj/closet/l3closet
 	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
 	name = "Level 3 Biohazard Suit"
 	icon_state = "bio"
 	icon_closed = "bio"
 	icon_opened = "bioopen"
 
-/obj/structure/closet/l3seccloset
-	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
-	name = "Level 3 Security Biohazard Suit"
+/obj/closet/l3closet/general
+	icon_state = "bio_general"
+	icon_closed = "bio_general"
+	icon_opened = "bio_generalopen"
+
+/obj/closet/l3closet/virology
+	icon_state = "bio_virology"
+	icon_closed = "bio_virology"
+	icon_opened = "bio_virologyopen"
+
+/obj/closet/l3closet/security
 	icon_state = "bio_security"
 	icon_closed = "bio_security"
 	icon_opened = "bio_securityopen"
 
-/obj/structure/closet/l3jancloset
-	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
-	name = "Level 3 Janitor Biohazard Suit"
+/obj/closet/l3closet/janitor
 	icon_state = "bio_janitor"
 	icon_closed = "bio_janitor"
 	icon_opened = "bio_janitoropen"
 
-/obj/structure/closet/l3scicloset
-	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
-	name = "Level 3 Scientist Biohazard Suit"
+/obj/closet/l3closet/scientist
 	icon_state = "bio_scientist"
 	icon_closed = "bio_scientist"
 	icon_opened = "bio_scientistopen"
 
-/obj/structure/closet/syndicate
-	desc = "Syndicate preparations closet."
+/obj/closet/syndicate
+	desc = "Why is this here?"
 	name = "Weapons Closet"
 	icon_state = "syndicate"
 	icon_closed = "syndicate"
 	icon_opened = "syndicateopen"
 
-/obj/structure/closet/toolcloset
-	desc = "Tools closet."
-	name = "Tools Closet"
-	icon_state = "toolcloset"
-	icon_closed = "toolcloset"
-	icon_opened = "toolclosetopen"
+/obj/closet/syndicate/personal
+	desc = "Gear preperations closet."
 
-/obj/structure/closet/syndicate/personal
-	desc = "Gear preparations closet."
+/obj/closet/syndicate/nuclear
+	desc = "Nuclear preperations closet."
 
-/obj/structure/closet/syndicate/nuclear
-	desc = "Nuclear preparations closet."
+	// Inserting the gimmick clothing stuff here for generic items, IE Tacticool stuff
 
-/obj/structure/closet/thunderdome
+/obj/closet/gimmick
+	desc = "Administrative Supply Closet"
+	icon_state = "syndicate1"
+	icon_closed = "syndicate1"
+	icon_opened = "syndicate1open"
+	desc = "Closet of things that have no right being here."
+	anchored = 0
+
+/obj/closet/gimmick/russian
+	desc = "Russian Surplus"
+	icon_state = "syndicate1"
+	icon_closed = "syndicate1"
+	icon_opened = "syndicate1open"
+	desc = "Russian Surplus Closet"
+
+/obj/closet/gimmick/tacticool
+	desc = "Tacticool Gear"
+	icon_state = "syndicate1"
+	icon_closed = "syndicate1"
+	icon_opened = "syndicate1open"
+	desc = "Tacticool Gear Closet"
+
+	// Ending of my edit. ~Sillazi
+
+/obj/closet/thunderdome
 	desc = "Everything you need!"
 	icon_state = "syndicate"
 	icon_closed = "syndicate"
@@ -127,133 +144,109 @@
 	desc = "Thunderdome closet."
 	anchored = 1
 
-/obj/structure/closet/thunderdome/tdred
+/obj/closet/thunderdome/tdred
 	desc = "Everything you need!"
 	icon_state = "syndicate"
 	icon_closed = "syndicate"
 	icon_opened = "syndicateopen"
 	desc = "Thunderdome closet."
 
-/obj/structure/closet/thunderdome/tdgreen
+/obj/closet/thunderdome/tdgreen
 	desc = "Everything you need!"
 	icon_state = "syndicate1"
 	icon_closed = "syndicate1"
 	icon_opened = "syndicate1open"
 	desc = "Thunderdome closet."
 
-/obj/structure/closet/malf/suits
-	desc = "Gear preperations closet."
+/obj/closet/malf/suits
+	desc = "Gear preparations closet."
 	icon_state = "syndicate"
 	icon_closed = "syndicate"
 	icon_opened = "syndicateopen"
 
-/obj/structure/closet/wardrobe
+/obj/closet/wardrobe
 	desc = "A bulky (yet mobile) wardrobe closet. Comes prestocked with 6 changes of clothes."
 	name = "Wardrobe"
 	icon_state = "blue"
 	icon_closed = "blue"
 
-/obj/structure/closet/wardrobe/black
+/obj/closet/wardrobe/black
 	name = "Black Wardrobe"
 	icon_state = "black"
 	icon_closed = "black"
 
-/obj/structure/closet/wardrobe/Counselor_black
-	name = "Counselor Wardrobe"
+/obj/closet/wardrobe/chaplain_black
+	name = "Chaplain Wardrobe"
 	icon_state = "black"
 	icon_closed = "black"
 
-/obj/structure/closet/wardrobe/green
+/obj/closet/wardrobe/green
 	name = "Green Wardrobe"
 	icon_state = "green"
 	icon_closed = "green"
 
-/obj/structure/closet/wardrobe/mixed
+/obj/closet/wardrobe/mixed
 	name = "Mixed Wardrobe"
 	icon_state = "mixed"
 	icon_closed = "mixed"
 
-/obj/structure/closet/wardrobe/orange
+/obj/closet/wardrobe/orange
 	name = "Prisoners Wardrobe"
 	icon_state = "orange"
 	icon_closed = "orange"
 
-/obj/structure/closet/wardrobe/pink
+/obj/closet/wardrobe/pink
 	name = "Pink Wardrobe"
 	icon_state = "pink"
 	icon_closed = "pink"
 
-/obj/structure/closet/wardrobe/quartermasters
-	name = "Quartermasters Wardrobe"
-	icon_state = "yellow"
-	icon_closed = "yellow"
-
-/obj/structure/closet/wardrobe/red
+/obj/closet/wardrobe/red
 	name = "Red Wardrobe"
 	icon_state = "red"
 	icon_closed = "red"
 
-/obj/structure/closet/wardrobe/forensics_red
+/obj/closet/wardrobe/forensics_red
 	name = "Forensics Wardrobe"
 	icon_state = "red"
 	icon_closed = "red"
 
 
-/obj/structure/closet/wardrobe/white
-	name = "Medical Wardrobe"
+/obj/closet/wardrobe/white
+	name = "White Wardrobe"
 	icon_state = "white"
 	icon_closed = "white"
 
-/obj/structure/closet/wardrobe/chemistry_white
-	name = "Chemistry Wardrobe"
-	icon_state = "white"
-	icon_closed = "white"
-
-/obj/structure/closet/wardrobe/toxins_white
+/obj/closet/wardrobe/toxins_white
 	name = "Toxins Wardrobe"
 	icon_state = "white"
 	icon_closed = "white"
 
-/obj/structure/closet/wardrobe/robotics_white
-	name = "Robotics Wardrobe"
-	icon_state = "white"
-	icon_closed = "white"
-
-/obj/structure/closet/wardrobe/genetics_white
+/obj/closet/wardrobe/genetics_white
 	name = "Genetics Wardrobe"
 	icon_state = "white"
 	icon_closed = "white"
 
 
-/obj/structure/closet/wardrobe/yellow
+/obj/closet/wardrobe/yellow
 	name = "Yellow Wardrobe"
-	icon_state = "yellow"
-	icon_closed = "yellow"
+	icon_state = "wardrobe-y"
+	icon_closed = "wardrobe-y"
 
-/obj/structure/closet/wardrobe/engineering_yellow
+/obj/closet/wardrobe/engineering_yellow
 	name = "Engineering Wardrobe"
 	icon_state = "yellow"
 	icon_closed = "yellow"
 
-/obj/structure/closet/wardrobe/atmospherics_yellow
+/obj/closet/wardrobe/atmospherics_yellow
 	name = "Atmospherics Wardrobe"
 	icon_state = "yellow"
 	icon_closed = "yellow"
 
-/obj/structure/closet/wardrobe/hydroponics
-	name = "Hydroponics Wardrobe"
-	icon_state = "green"
-	icon_closed = "green"
 
-/obj/structure/closet/wardrobe/grey
+/obj/closet/wardrobe/grey
 	name = "Grey Wardrobe"
 	icon_state = "grey"
 	icon_closed = "grey"
-
-/obj/structure/closet/wardrobe/bar
-	name = "Bar Wardrobe"
-	icon_state = "black"
-	icon_closed = "black"
 
 
 /obj/secure_closet
@@ -264,7 +257,6 @@
 	density = 1
 	var/opened = 0
 	var/locked = 1
-	var/bang_time = 0
 	var/broken = 0
 	var/large = 1
 	var/icon_closed = "secure"
@@ -275,7 +267,7 @@
 
 /obj/secure_closet/courtroom
 	name = "Courtroom Locker"
-	req_access = list(access_heads)
+	req_access = list(access_court)
 
 /obj/secure_closet/animal
 	name = "Animal Control"
@@ -287,144 +279,16 @@
 	var/id = null
 
 /obj/secure_closet/highsec
-	name = "Head of Personnel's Closet"
-	icon_state = "hopsecure1"
-	icon_closed = "hopsecure"
-	icon_locked = "hopsecure1"
-	icon_opened = "hopsecureopen"
-	icon_broken = "hopsecurebroken"
-	icon_off = "hopsecureoff"
-	req_access = list(access_heads)
+	name = "Head of Personnel"
+	req_access = list(access_hop)
 
 /obj/secure_closet/hos
-	name = "Head Of Security's Closet"
-	icon_state = "hossecure1"
-	icon_closed = "hossecure"
-	icon_locked = "hossecure1"
-	icon_opened = "hossecureopen"
-	icon_broken = "hossecurebroken"
-	icon_off = "hossecureoff"
-	req_access = list(access_heads)
-
-/obj/secure_closet/warden
-	name = "Warden's Closet"
-	icon_state = "wardensecure1"
-	icon_closed = "wardensecure"
-	icon_locked = "wardensecure1"
-	icon_opened = "wardensecureopen"
-	icon_broken = "wardensecurebroken"
-	icon_off = "wardensecureoff"
-	req_access = list(access_armory)
-
-/obj/secure_closet/rd
-	name = "Research Director's Closet"
-	icon_state = "rdsecure1"
-	icon_closed = "rdsecure"
-	icon_locked = "rdsecure1"
-	icon_opened = "rdsecureopen"
-	icon_broken = "rdsecurebroken"
-	icon_off = "rdsecureoff"
-	req_access = list(access_heads)
+	name = "Head Of Security"
+	req_access = list(access_hos)
 
 /obj/secure_closet/captains
 	name = "Captain's Closet"
-	icon_state = "capsecure1"
-	icon_closed = "capsecure"
-	icon_locked = "capsecure1"
-	icon_opened = "capsecureopen"
-	icon_broken = "capsecurebroken"
-	icon_off = "capsecureoff"
 	req_access = list(access_captain)
-
-/obj/secure_closet/eng
-	name = "Engineering Closet"
-	icon_state = "secureeng1"
-	icon_closed = "secureeng"
-	icon_locked = "secureeng1"
-	icon_opened = "secureengopen"
-	icon_broken = "secureengbroken"
-	icon_off = "secureengoff"
-	req_access = list(access_engine)
-
-/obj/secure_closet/engelec
-	name = "Engineering Electrical Closet"
-	icon_state = "secureengelec1"
-	icon_closed = "secureengelec"
-	icon_locked = "secureengelec1"
-	icon_opened = "secureengelecopen"
-	icon_broken = "secureengelecbroken"
-	icon_off = "secureengelecoff"
-	req_access = list(access_engine_equip)
-
-/obj/secure_closet/engweld
-	name = "Engineering Welding Closet"
-	icon_state = "secureengweld1"
-	icon_closed = "secureengweld"
-	icon_locked = "secureengweld1"
-	icon_opened = "secureengweldopen"
-	icon_broken = "secureengweldbroken"
-	icon_off = "secureengweldoff"
-	req_access = list(access_engine_equip)
-
-/obj/secure_closet/ce
-	name = "Chief Engineer's Closet"
-	icon_state = "securece1"
-	icon_closed = "securece"
-	icon_locked = "securece1"
-	icon_opened = "secureceopen"
-	icon_broken = "securecebroken"
-	icon_off = "secureceoff"
-	req_access = list(access_heads)
-
-/obj/secure_closet/qm
-	name = "Quartermaster's Closet"
-	icon_state = "secureqm1"
-	icon_closed = "secureqm"
-	icon_locked = "secureqm1"
-	icon_opened = "secureqmopen"
-	icon_broken = "secureqmbroken"
-	icon_off = "secureqmoff"
-	req_access = list(access_cargo)
-
-/obj/secure_closet/cargo
-	name = "Cargo Closet"
-	icon_state = "securecargo1"
-	icon_closed = "securecargo"
-	icon_locked = "securecargo1"
-	icon_opened = "securecargoopen"
-	icon_broken = "securecargobroken"
-	icon_off = "securecargooff"
-	req_access = list(access_cargo)
-
-/obj/secure_closet/mining
-	name = "Miner Closet"
-	icon_state = "miningsec1"
-	icon_closed = "miningsec"
-	icon_locked = "miningsec1"
-	icon_opened = "miningsecopen"
-	icon_broken = "miningsecbroken"
-	icon_off = "miningsecoff"
-	req_access = list(access_mining)
-
-/obj/secure_closet/hydro
-	name = "Hydroponical Closet"
-	icon_state = "hydrosecure1"
-	icon_closed = "hydrosecure"
-	icon_locked = "hydrosecure1"
-	icon_opened = "hydrosecureopen"
-	icon_broken = "hydrosecurebroken"
-	icon_off = "hydrosecureoff"
-	req_access = list(access_hydroponics)
-
-/obj/secure_closet/medical	//Empty medical closet
-	name = "Medical Closet"
-	icon_state = "medical1"
-	icon_closed = "medical"
-	icon_locked = "medical1"
-	icon_opened = "medicalopen"
-	icon_broken = "medicalbroken"
-	icon_off = "medical1"
-	req_access = list(access_medical)
 
 /obj/secure_closet/medical1
 	name = "Medicine Closet"
@@ -436,8 +300,8 @@
 	icon_off = "medical1"
 	req_access = list(access_medical)
 
-/obj/secure_closet/medical3
-	name = "Blood Freezer"
+/obj/secure_closet/chemical
+	name = "Chemical Closet"
 	icon_state = "medical1"
 	icon_closed = "medical"
 	icon_locked = "medical1"
@@ -445,112 +309,6 @@
 	icon_broken = "medicalbroken"
 	icon_off = "medical1"
 	req_access = list(access_medical)
-
-
-/obj/secure_closet/medicalcloset
-	name = "Medical Closet"
-	icon_state = "securemed1"
-	icon_closed = "securemed"
-	icon_locked = "securemed1"
-	icon_opened = "securemedopen"
-	icon_broken = "securemedbroken"
-	icon_off = "securemedoff"
-	req_access = list(access_medical)
-
-/obj/secure_closet/medicalcloset/New()
-	..()
-	sleep(2)
-	new /obj/item/device/pda/medical(src)
-	new /obj/item/clothing/under/rank/medical( src )
-	new /obj/item/clothing/shoes/white( src )
-	new /obj/item/weapon/storage/box/stma( src )
-	new /obj/item/clothing/suit/storage/labcoat(src)
-	new /obj/item/device/radio/headset/headset_med(src)
-	new /obj/item/clothing/gloves/latex(src)
-	new /obj/item/weapon/storage/belt/medical(src)
-	new /obj/item/weapon/storage/backpack/medic(src)
-	return
-
-
-/obj/secure_closet/genetics
-	name = "Genetic's Closet"
-	icon_state = "securemed1"
-	icon_closed = "securemed"
-	icon_locked = "securemed1"
-	icon_opened = "securemedopen"
-	icon_broken = "securemedbroken"
-	icon_off = "securemedoff"
-	req_access = list(access_medlab)
-
-/obj/secure_closet/genetics/New()
-    ..()
-    sleep(2)
-    new /obj/item/device/pda/gene(src)
-    new /obj/item/clothing/under/rank/geneticist( src )
-    new /obj/item/clothing/shoes/white( src )
-    new /obj/item/weapon/storage/box/stma( src )
-    new /obj/item/clothing/suit/storage/labcoat(src)
-    new /obj/item/device/radio/headset/headset_medsci(src)
-    new /obj/item/clothing/gloves/latex(src)
-    new /obj/item/weapon/storage/belt/medical(src)
-    new /obj/item/weapon/storage/backpack/medic(src)
-    return
-
-
-/obj/secure_closet/cmo
-	name = "Chief Medical Officer's Closet"
-	icon_state = "cmosecure1"
-	icon_closed = "cmosecure"
-	icon_locked = "cmosecure1"
-	icon_opened = "cmosecureopen"
-	icon_broken = "cmosecurebroken"
-	icon_off = "cmosecureoff"
-	req_access = list(access_medical)
-
-/obj/secure_closet/chemical
-	name = "Chemical Closet"
-	icon_state = "secureres1"
-	icon_closed = "secureres"
-	icon_locked = "secureres1"
-	icon_opened = "secureresopen"
-	icon_broken = "secureresbroken"
-	icon_off = "secureresoff"
-	req_access = list(access_chemistry)
-
-/obj/secure_closet/chem
-	name = "Chemical's Closet"
-	icon_state = "secureres1"
-	icon_closed = "secureres"
-	icon_locked = "secureres1"
-	icon_opened = "secureresopen"
-	icon_broken = "secureresbroken"
-	icon_off = "secureresoff"
-	req_access = list(access_chemistry)
-
-
-/obj/secure_closet/robot
-	name = "Robotic Closet"
-	icon_state = "securemed1"
-	icon_closed = "securemed"
-	icon_locked = "securemed1"
-	icon_opened = "securemedopen"
-	icon_broken = "securemedbroken"
-	icon_off = "securemedoff"
-	req_access = list(access_robotics)
-
-/obj/secure_closet/robot/New()
-	..()
-	sleep(2)
-	new /obj/item/device/pda/robot(src)
-	new /obj/item/clothing/under/rank/roboticist( src )
-	new /obj/item/clothing/shoes/black( src )
-	new /obj/item/weapon/storage/box/lglo( src )
-	new /obj/item/clothing/suit/storage/labcoat(src)
-	new /obj/item/device/radio/headset/headset_medsci(src)
-	new /obj/item/clothing/gloves/latex(src)
-	new /obj/item/weapon/storage/backpack(src)
-	return
-
 
 /obj/secure_closet/medical2
 	name = "Anesthetic"
@@ -562,45 +320,41 @@
 	icon_off = "medical1"
 	req_access = list(access_medical)
 
+/obj/secure_closet/medical3
+	name = "Medical Doctor's Locker"
+	req_access = list(access_medical)
+
+/obj/secure_closet/RD
+	name = "Research Director"
+	req_access = list(access_rd)
+
+/obj/secure_closet/CMO
+	name = "Chief Medical Officer"
+	req_access = list(access_cmo)
+
 /obj/secure_closet/personal
 	desc = "The first card swiped gains control."
 	name = "Personal Closet"
 
+/obj/secure_closet/personal/patient
+	name = "Patient's closet"
 
 /obj/secure_closet/security1
 	name = "Security Equipment"
-	icon_state = "sec1"
-	icon_closed = "sec"
-	icon_locked = "sec1"
-	icon_opened = "secopen"
-	icon_broken = "secbroken"
-	icon_off = "secoff"
 	req_access = list(access_security)
 
 /obj/secure_closet/security2
 	name = "Forensics Locker"
-	icon_state = "sec1"
-	icon_closed = "sec"
-	icon_locked = "sec1"
-	icon_opened = "secopen"
-	icon_broken = "secbroken"
-	icon_off = "secoff"
 	req_access = list(access_forensics_lockers)
 
 /obj/secure_closet/scientist
 	name = "Scientist Locker"
-	icon_state = "secureres1"
-	icon_closed = "secureres"
-	icon_locked = "secureres1"
-	icon_opened = "secureresopen"
-	icon_broken = "secureresbroken"
-	icon_off = "secureresoff"
-	req_access = list(access_tox_storage)
 
+	req_access = list(access_tox_storage)
 /obj/secure_closet/chemtoxin
 	name = "Chemistry Locker"
-	req_access = list(access_medical)
 
+	req_access = list(access_medical)
 /obj/secure_closet/bar
 	name = "Booze"
 	req_access = list(access_bar)
@@ -610,7 +364,13 @@
 	req_access = list(access_kitchen)
 
 /obj/secure_closet/meat
-	name = "Meat Locker"
+	name = "Meat Fridge"
+	icon_state = "fridge1"
+	icon_closed = "fridge"
+	icon_locked = "fridge1"
+	icon_opened = "fridgeopen"
+	icon_broken = "fridgebroken"
+	icon_off = "fridge1"
 
 /obj/secure_closet/fridge
 	name = "Refrigerator"
@@ -621,14 +381,31 @@
 	icon_broken = "fridgebroken"
 	icon_off = "fridge1"
 
-/obj/secure_closet/refrigerator
-	name = "Refrigerator"
+/obj/secure_closet/money_freezer
+	name = "Freezer"
 	icon_state = "fridge1"
 	icon_closed = "fridge"
 	icon_locked = "fridge1"
 	icon_opened = "fridgeopen"
 	icon_broken = "fridgebroken"
 	icon_off = "fridge1"
+	req_access = list(access_heads_vault)
+
+/obj/secure_closet/engineering_chief
+	name = "Chief Engineer's Locker"
+	req_access = list(access_ce)
+
+/obj/secure_closet/engineering_electrical
+	name = "Electrical Supplies"
+	req_access = list(access_engine)
+
+/obj/secure_closet/engineering_welding
+	name = "Welding Supplies"
+	req_access = list(access_engine)
+
+/obj/secure_closet/engineering_personal
+	name = "Engineer's Locker"
+	req_access = list(access_engine)
 
 /obj/secure_closet/wall
 	name = "wall locker"

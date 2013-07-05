@@ -23,7 +23,7 @@
 
 	process()
 		..()
-		if(!on)
+		if(!on || !network)
 			return 0
 		var/air_heat_capacity = air_contents.heat_capacity()
 		var/combined_heat_capacity = current_heat_capacity + air_heat_capacity
@@ -35,6 +35,6 @@
 
 		//todo: have current temperature affected. require power to bring down current temperature again
 
-		if(network && abs(old_temperature-air_contents.temperature) > 1)
+		if(abs(old_temperature-air_contents.temperature) > 1)
 			network.update = 1
 		return 1

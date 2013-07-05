@@ -3,44 +3,52 @@
 	var/turf/T = get_turf(src)
 
 //	if (isturf(T))	//let cryo/sleeper handle adjusting body temp in their respective alter_health procs
-//		bodytemperature = adjustBodyTemp(bodytemperature, (shuttlefloor ? shuttlefloor.temp : T.temp), 1.0) //TODO: DEFERRED
+//		src.bodytemperature = adjustBodyTemp(src.bodytemperature, (shuttlefloor ? shuttlefloor.temp : T.temp), 1.0) //TODO: DEFERRED
 
-	if (stat == 2)
+	if (src.stat == 2)
 		return
 	else
-		if (stat!=0)
+		if (src.stat!=0)
 			src:cameraFollow = null
 			src:current = null
 			src:machine = null
 
-		updatehealth()
+		src.updatehealth()
 
 		/*if (istype(T, /turf))
-			var/ficheck = firecheck(T)
+			var/ficheck = src.firecheck(T)
 			if (ficheck)
-				fireloss += ficheck * 10
-				updatehealth()
-				if (fire)
-					fire.icon_state = "fire1"
-			else if (fire)
-				fire.icon_state = "fire0"
+				src.fireloss += ficheck * 10
+				src.updatehealth()
+				if (src.fire)
+					src.fire.icon_state = "fire1"
+			else if (src.fire)
+				src.fire.icon_state = "fire0"
 		*/ //TODO: DEFERRED
+		if (src.malfhack)
+			if (src.malfhack.aidisabled)
+				src << "\red ERROR: APC access disabled, hack attempt canceled."
+				src.malfhacking = 0
+				src.malfhack = null
+			else
 
-		if (health <= -100.0)
+
+
+		if (src.health <= -100.0)
 			death()
 			return
-		else if (health < 0)
-			oxyloss++
+		else if (src.health < 0 && !istype(src.loc, /obj/machinery/computer/aifixer))
+			src.oxyloss++
 
-		if (machine)
-			if (!( machine.check_eye(src) ))
-				reset_view(null)
+		if (src.machine)
+			if (!( src.machine.check_eye(src) ))
+				src.reset_view(null)
 
 		//var/stage = 0
-		if (client)
+		if (src.client)
 			//stage = 1
 			if (istype(src, /mob/living/silicon/ai))
-				var/isblind = 0
+				var/blind = 0
 				//stage = 2
 				var/area/loc = null
 				if (istype(T, /turf))
@@ -48,65 +56,70 @@
 					loc = T.loc
 					if (istype(loc, /area))
 						//stage = 4
-						if (!loc.power_equip)
+						if (!loc.master.power_equip && isturf(src.loc))
 							//stage = 5
-							isblind = 1
+							blind = 1
 
-				if (!isblind)
+				if (!blind)
 					//stage = 4.5
-					if (blind.layer!=0)
-						blind.layer = 0
-					sight |= SEE_TURFS
-					sight |= SEE_MOBS
-					sight |= SEE_OBJS
-					see_in_dark = 8
-					see_invisible = 2
+					if (src.blind.layer!=0)
+						src.blind.layer = 0
+					src.sight |= SEE_TURFS
+					src.sight |= SEE_MOBS
+					src.sight |= SEE_OBJS
+					src.see_in_dark = 8
+					src.see_invisible = 2
 
 					if (src:aiRestorePowerRoutine==2)
 						src << "Alert cancelled. Power has been restored without our assistance."
 						src:aiRestorePowerRoutine = 0
 						spawn(1)
-							while (oxyloss>0 && stat!=2)
+							while (src.oxyloss>0 && stat!=2)
 								sleep(50)
-								oxyloss-=1
-							oxyloss = 0
+								src.oxyloss-=1
+							src.oxyloss = 0
 						return
 					else if (src:aiRestorePowerRoutine==3)
 						src << "Alert cancelled. Power has been restored."
 						src:aiRestorePowerRoutine = 0
 						spawn(1)
-							while (oxyloss>0 && stat!=2)
+							while (src.oxyloss>0 && stat!=2)
 								sleep(50)
-								oxyloss-=1
-							oxyloss = 0
+								src.oxyloss-=1
+							src.oxyloss = 0
 						return
 				else
 
 					//stage = 6
-					blind.screen_loc = "1,1 to 15,15"
-					if (blind.layer!=18)
-						blind.layer = 18
-					sight = sight&~SEE_TURFS
-					sight = sight&~SEE_MOBS
-					sight = sight&~SEE_OBJS
-					see_in_dark = 0
-					see_invisible = 0
+					src.blind.screen_loc = "1,1 to 15,15"
+					if (src.blind.layer!=18)
+						src.blind.layer = 18
+					src.sight = src.sight&~SEE_TURFS
+					src.sight = src.sight&~SEE_MOBS
+					src.sight = src.sight&~SEE_OBJS
+					src.see_in_dark = 0
+					src.see_invisible = 0
 
-					if ((!loc.power_equip) || istype(T, /turf/space))
+					if (((!loc.master.power_equip) || istype(T, /turf/space)) && isturf(src.loc))
 						if (src:aiRestorePowerRoutine==0)
 							src:aiRestorePowerRoutine = 1
+
 							src << "You've lost power!"
-							set_zeroth_law("")
-							clear_supplied_laws()
+//							world << "DEBUG CODE TIME! [loc] is the area the AI is sucking power from"
+							if (!checktraitor(src))
+								src.set_zeroth_law("")
+							src.clear_supplied_laws()
+							var/time = time2text(world.realtime,"hh:mm:ss")
+							lawchanges.Add("[time] <b>:</b> [src.name]'s noncore laws have been reset due to power failure")
 							spawn(50)
 								while ((src:aiRestorePowerRoutine!=0) && stat!=2)
-									oxyloss += 2
+									src.oxyloss += 2
 									sleep(50)
 
 							spawn(20)
 								src << "Backup battery online. Scanners, camera, and radio interface offline. Beginning fault-detection."
 								sleep(50)
-								if (loc.power_equip)
+								if (loc.master.power_equip)
 									if (!istype(T, /turf/space))
 										src << "Alert cancelled. Power has been restored without our assistance."
 										src:aiRestorePowerRoutine = 0
@@ -131,7 +144,7 @@
 									src << "Unable to locate APC!"
 									src:aiRestorePowerRoutine = 2
 									return
-								if (loc.power_equip)
+								if (loc.master.power_equip)
 									if (!istype(T, /turf/space))
 										src << "Alert cancelled. Power has been restored without our assistance."
 										src:aiRestorePowerRoutine = 0
@@ -148,7 +161,7 @@
 									src << "APC connection lost!"
 									src:aiRestorePowerRoutine = 2
 									return
-								if (loc.power_equip)
+								if (loc.master.power_equip)
 									if (!istype(T, /turf/space))
 										src << "Alert cancelled. Power has been restored without our assistance."
 										src:aiRestorePowerRoutine = 0
@@ -165,7 +178,7 @@
 									src << "APC connection lost!"
 									src:aiRestorePowerRoutine = 2
 									return
-								if (loc.power_equip)
+								if (loc.master.power_equip)
 									if (!istype(T, /turf/space))
 										src << "Alert cancelled. Power has been restored without our assistance."
 										src:aiRestorePowerRoutine = 0
@@ -182,7 +195,7 @@
 									src << "APC connection lost!"
 									src:aiRestorePowerRoutine = 2
 									return
-								if (loc.power_equip)
+								if (loc.master.power_equip)
 									if (!istype(T, /turf/space))
 										src << "Alert cancelled. Power has been restored without our assistance."
 										src:aiRestorePowerRoutine = 0
@@ -195,14 +208,14 @@
 								theAPC.attack_ai(src)
 								src:aiRestorePowerRoutine = 3
 								src << "Your laws have been reset:"
-								show_laws()
+								src.show_laws()
 
 /mob/living/silicon/ai/updatehealth()
-	if (!nodamage)
-		if(fire_res_on_core)
-			health = health_full - (oxyloss + toxloss + bruteloss)
+	if (src.nodamage == 0)
+		if(src.fire_res_on_core)
+			src.health = 100 - src.oxyloss - src.toxloss - src.bruteloss
 		else
-			health = health_full - (oxyloss + toxloss + fireloss + bruteloss)
+			src.health = 100 - src.oxyloss - src.toxloss - src.fireloss - src.bruteloss
 	else
-		health = health_full
-		stat = 0
+		src.health = 100
+		src.stat = 0

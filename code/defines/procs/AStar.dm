@@ -115,10 +115,14 @@ proc
 	PathWeightCompare(PathNode/a, PathNode/b)
 		return a.f - b.f
 
-	AStar(start, end, adjacent, dist, maxnodes, maxnodedepth = 30, mintargetdist, minnodedist, id=null, var/list/exclude = null)
+	AStar(start,end,adjacent,dist,maxnodes,maxnodedepth = 30,mintargetdist,minnodedist,id=null, var/turf/exclude=null)
+
+//		world << "A*: [start] [end] [adjacent] [dist] [maxnodes] [maxnodedepth] [mintargetdist], [minnodedist] [id]"
 		var/PriorityQueue/open = new /PriorityQueue(/proc/PathWeightCompare)
 		var/closed[] = new()
 		var/path[]
+		start = get_turf(start)
+		if(!start) return 0
 
 		open.Enqueue(new /PathNode(start,null,0,call(start,dist)(end)))
 
@@ -128,9 +132,8 @@ proc
 			closed.Add(cur.source)
 
 			var/closeenough
-
 			if(mintargetdist)
-				closeenough = call(cur.source, dist)(end) <= mintargetdist
+				closeenough = call(cur.source,dist)(end) <= mintargetdist
 
 			if(cur.source == end || closeenough)
 				path = new()
@@ -141,7 +144,6 @@ proc
 				break
 
 			var/L[] = call(cur.source,adjacent)(id)
-
 			if(minnodedist && maxnodedepth)
 				if(call(cur.source,minnodedist)(end) + cur.nt >= maxnodedepth)
 					continue
@@ -149,39 +151,29 @@ proc
 				if(cur.nt >= maxnodedepth)
 					continue
 
-			find_path:
-				for(var/datum/d in L)
-					if(exclude)
-						if(exclude.Find(d.type) || exclude.Find(d))
-							continue
-					for(var/datum/e in d)
-						if(exclude)
-							if(exclude.Find(e.type) || exclude.Find(e))
-								continue find_path
+			for(var/datum/d in L)
+				if(d == exclude)
+					continue
+				var/ng = cur.g + call(cur.source,dist)(d)
+				if(d.bestF)
+					if(ng + call(d,dist)(end) < d.bestF)
+						for(var/i = 1; i <= open.L.len; i++)
+							var/PathNode/n = open.L[i]
+							if(n.source == d)
+								open.Remove(i)
+								break
+					else
+						continue
 
-					var/ng = cur.g + call(cur.source,dist)(d)
-
-					if(d.bestF)
-						if(ng + call(d,dist)(end) < d.bestF)
-							for(var/i = 1; i <= open.L.len; i++)
-								var/PathNode/n = open.L[i]
-								if(n.source == d)
-									open.Remove(i)
-									break
-						else
-							continue
-
-					open.Enqueue(new /PathNode(d,cur,ng,call(d,dist)(end),cur.nt+1))
-
-					if(maxnodes && open.L.len > maxnodes)
-						open.L.Cut(open.L.len)
+				open.Enqueue(new /PathNode(d,cur,ng,call(d,dist)(end),cur.nt+1))
+				if(maxnodes && open.L.len > maxnodes)
+					open.L.Cut(open.L.len)
 		}
 
 		var/PathNode/temp
 		while(!open.IsEmpty())
 			temp = open.Dequeue()
 			temp.source.bestF = 0
-
 		while(closed.len)
 			temp = closed[closed.len]
 			temp.bestF = 0

@@ -1,99 +1,682 @@
+// A datum for dealing with threshold limit values
+// used in /obj/machinery/alarm
+/datum/tlv
+	var
+		min2
+		min1
+		max1
+		max2
+	New(_min2 as num, _min1 as num, _max1 as num, _max2 as num)
+		min2 = _min2
+		min1 = _min1
+		max1 = _max1
+		max2 = _max2
+	proc/get_danger_level(curval as num)
+		if (max2 >=0 && curval>=max2)
+			return 2
+		if (min2 >=0 && curval<=min2)
+			return 2
+		if (max1 >=0 && curval>=max1)
+			return 1
+		if (min1 >=0 && curval<=min1)
+			return 1
+		return 0
+	proc/CopyFrom(datum/tlv/other)
+		min2 = other.min2
+		min1 = other.min1
+		max1 = other.max1
+		max2 = other.max2
+
 /obj/machinery/alarm
-	var/const/ALERT_ATMOSPHERE_L = ONE_ATMOSPHERE*0.9
-	var/const/ALERT_ATMOSPHERE_U = ONE_ATMOSPHERE*1.1
-	var/const/UNSAFE_ATMOSPHERE_L = ONE_ATMOSPHERE*0.7
-	var/const/UNSAFE_ATMOSPHERE_U = ONE_ATMOSPHERE*1.4
-	var/const/ALERT_O2_L = MOLES_O2STANDARD*0.9
-	var/const/ALERT_O2_U = MOLES_O2STANDARD*1.1
-	var/const/UNSAFE_O2_L = MOLES_O2STANDARD*0.8
-	var/const/ALERT_TEMPERATURE_L = T20C-10
-	var/const/ALERT_TEMPERATURE_U = T20C+10
-	var/const/UNSAFE_TEMPERATURE_L = T20C-20
-	var/const/UNSAFE_TEMPERATURE_U = T20C+20
-	var/safe_old = 2
-	var/obj/machinery/atmospherics/pipe/vent/vent_connected
-	security = 1
+	name = "alarm"
+	icon = 'monitors.dmi'
+	icon_state = "alarm0"
+	anchored = 1
+	use_power = 1
+	idle_power_usage = 4
+	active_power_usage = 8
+	power_channel = ENVIRON
+	req_access = list(access_atmospherics)
+	var/frequency = 1439
+	//var/skipprocess = 0 //Experimenting
+	var/alarm_frequency = 1437
+#define AALARM_REPORT_TIMEOUT 100
+	var/datum/radio_frequency/radio_connection
+	var/locked = 1
+
+#define AALARM_MODE_SCRUBBING    1
+#define AALARM_MODE_VENTING      2 //makes draught
+#define AALARM_MODE_PANIC        3 //constantly sucks all air
+#define AALARM_MODE_REPLACEMENT  4 //sucks off all air, then refill and swithes to scrubbing
+#define AALARM_MODE_OFF          5
+	var/mode = AALARM_MODE_SCRUBBING
+
+#define AALARM_SCREEN_MAIN    1
+#define AALARM_SCREEN_VENT    2
+#define AALARM_SCREEN_SCRUB   3
+#define AALARM_SCREEN_MODE    4
+#define AALARM_SCREEN_SENSORS 5
+	var/screen = AALARM_SCREEN_MAIN
+	var/area_uid
+	var/area/alarm_area
+	var/danger_level = 0
+
+	// breathable air according to human/Life()
+	var/list/TLV = list(
+		"oxygen"         = new/datum/tlv(  16,   19, 135, 140), // Partial pressure, kpa
+		"carbon dioxide" = new/datum/tlv(-1.0, -1.0,   5,  10), // Partial pressure, kpa
+		"plasma"         = new/datum/tlv(-1.0, -1.0, 0.2, 0.5), // Partial pressure, kpa
+		"other"          = new/datum/tlv(-1.0, -1.0, 0.5, 1.0), // Partial pressure, kpa
+		"pressure"       = new/datum/tlv(ONE_ATMOSPHERE*0.80,ONE_ATMOSPHERE*0.90,ONE_ATMOSPHERE*1.10,ONE_ATMOSPHERE*1.20), /* kpa */
+		"temperature"    = new/datum/tlv(T0C, T0C+10, T0C+40, T0C+66), // K
+	)
+
+/*
+	// breathable air according to wikipedia
+		"oxygen"         = new/datum/tlv(   9,  12, 158, 296), // Partial pressure, kpa
+		"carbon dioxide" = new/datum/tlv(-1.0,-1.0, 0.5,   1), // Partial pressure, kpa
+*/
+/obj/machinery/alarm/server
+	//req_access = list(access_rd) //no, let departaments to work together
+	TLV = list(
+		"oxygen"         = new/datum/tlv(-1.0, -1.0,-1.0,-1.0), // Partial pressure, kpa
+		"carbon dioxide" = new/datum/tlv(-1.0, -1.0,   5,  10), // Partial pressure, kpa
+		"plasma"         = new/datum/tlv(-1.0, -1.0, 0.2, 0.5), // Partial pressure, kpa
+		"other"          = new/datum/tlv(-1.0, -1.0, 0.5, 1.0), // Partial pressure, kpa
+		"pressure"       = new/datum/tlv(ONE_ATMOSPHERE*0.80,ONE_ATMOSPHERE*0.90,ONE_ATMOSPHERE*1.40,ONE_ATMOSPHERE*1.60), /* kpa */
+		"temperature"    = new/datum/tlv(40, 60, 100, 120), // K
+	)
+
+//all air alarms in area are connected via magic
+/area
+	var/obj/machinery/alarm/master_air_alarm
+	var/list/air_vent_names
+	var/list/air_scrub_names
+	var/list/air_vent_info
+	var/list/air_scrub_info
+
 /obj/machinery/alarm/New()
 	..()
+	alarm_area = get_area(loc)
+	if (alarm_area.master)
+		alarm_area = alarm_area.master
+	area_uid = alarm_area.uid
+	if (name == "alarm")
+		name = "[alarm_area.name] Air Alarm"
 
+/obj/machinery/alarm/initialize()
+	set_frequency(frequency)
+	if (!master_is_operating())
+		elect_master()
 
-	if(!alarm_zone)
-		var/area/A = get_area(loc)
-		if(A.name)
-			alarm_zone = A.name
-		else
-			alarm_zone = "Unregistered"
+/obj/machinery/alarm/proc/master_is_operating()
+	return alarm_area.master_air_alarm && !(alarm_area.master_air_alarm.stat & (NOPOWER|BROKEN))
 
-	spawn(2)
-		for(var/obj/machinery/atmospherics/unary/vent_filter/V in get_area(loc))	//Strumpetplaya - Quick fix to get alarm interfaces working again
-			vent_connected = V
+/obj/machinery/alarm/proc/elect_master()
+	for (var/area/A in alarm_area.related)
+		for (var/obj/machinery/alarm/AA in A)
+			if (!(AA.stat & (NOPOWER|BROKEN)))
+				alarm_area.master_air_alarm = AA
+				if (!alarm_area.air_vent_names)
+					alarm_area.air_vent_names = new
+					alarm_area.air_scrub_names = new
+					alarm_area.air_vent_info = new
+					alarm_area.air_scrub_info = new
+				return 1
+	return 0
 
-		//for(var/obj/machinery/atmospherics/pipe/vent/V in get_area(loc))	//Before Head Changes
-		//	if(cmptextEx(vent_connected,V.vent_id))
-		//		vent_connected = V
+/obj/machinery/alarm/attack_hand(mob/user)
+	. = ..()
+	if (.)
+		return
+	user.machine = src
+	user << browse(return_text(),"window=air_alarm")
+	onclose(user, "air_alarm")
+	refresh_all()
+	return
 
-
-/obj/machinery/alarm/process()
-	if (src.skipprocess)
-		src.skipprocess--
+/obj/machinery/alarm/receive_signal(datum/signal/signal)
+	if(stat & (NOPOWER|BROKEN))
+		return
+	if (alarm_area.master_air_alarm != src)
+		if (master_is_operating())
+			return
+		elect_master()
+		if (alarm_area.master_air_alarm != src)
+			return
+	if(!signal || signal.encryption)
+		return
+	var/id_tag = signal.data["tag"]
+	if (!id_tag)
+		return
+	if (signal.data["area"] != area_uid)
+		return
+	if (signal.data["sigtype"] != "status")
 		return
 
-	var/turf/location = src.loc
-	var/area/A = get_area(location)
-	var/safe = 2
-	var/alert_info = 0
+	var/dev_type = signal.data["device"]
+	if(!(id_tag in alarm_area.air_scrub_names) && !(id_tag in alarm_area.air_vent_names))
+		register_env_machine(id_tag, dev_type)
+	if(dev_type == "AScr")
+		alarm_area.air_scrub_info[id_tag] = signal.data
+	else if(dev_type == "AVP")
+		alarm_area.air_vent_info[id_tag] = signal.data
 
+/obj/machinery/alarm/proc/register_env_machine(var/m_id, var/device_type)
+	var/new_name
+	if (device_type=="AVP")
+		new_name = "[alarm_area.name] Vent Pump #[alarm_area.air_vent_names.len+1]"
+		alarm_area.air_vent_names[m_id] = new_name
+	else if (device_type=="AScr")
+		new_name = "[alarm_area.name] Air Scrubber #[alarm_area.air_scrub_names.len+1]"
+		alarm_area.air_scrub_names[m_id] = new_name
+	else
+		return
+	spawn (10)
+		send_signal(m_id, list("init" = new_name) )
+
+/obj/machinery/alarm/proc/refresh_all()
+	for(var/id_tag in alarm_area.air_vent_names)
+		var/list/I = alarm_area.air_vent_info[id_tag]
+		if (I && I["timestamp"]+AALARM_REPORT_TIMEOUT/2 > world.time)
+			continue
+		send_signal(id_tag, list("status") )
+	for(var/id_tag in alarm_area.air_scrub_names)
+		var/list/I = alarm_area.air_scrub_info[id_tag]
+		if (I && I["timestamp"]+AALARM_REPORT_TIMEOUT/2 > world.time)
+			continue
+		send_signal(id_tag, list("status") )
+
+/obj/machinery/alarm/proc/set_frequency(new_frequency)
+	radio_controller.remove_object(src, frequency)
+	frequency = new_frequency
+	radio_connection = radio_controller.add_object(src, frequency, RADIO_TO_AIRALARM)
+
+/obj/machinery/alarm/proc/send_signal(var/target, var/list/command)//sends signal 'command' to 'target'. Returns 0 if no radio connection, 1 otherwise
+	if(!radio_connection)
+		return 0
+
+	var/datum/signal/signal = new
+	signal.transmission_method = 1 //radio signal
+	signal.source = src
+
+	signal.data = command
+	signal.data["tag"] = target
+	signal.data["sigtype"] = "command"
+
+	radio_connection.post_signal(src, signal, RADIO_FROM_AIRALARM)
+//			world << text("Signal [] Broadcasted to []", command, target)
+
+	return 1
+
+/obj/machinery/alarm/proc/return_text()
+	if(!(istype(usr, /mob/living/silicon)) && locked)
+		return "<html><head><title>[src]</title></head><body>[return_status()]<hr><i>(Swipe ID card to unlock interface)</i></body></html>"
+	else
+		return "<html><head><title>[src]</title></head><body>[return_status()]<hr>[return_controls()]</body></html>"
+
+/obj/machinery/alarm/proc/return_status()
+	var/turf/location = src.loc
+	var/datum/gas_mixture/environment = location.return_air()
+	var/total = environment.oxygen + environment.carbon_dioxide + environment.toxins + environment.nitrogen
+	var/output = "<b>Air Status:</b><br>"
+
+	if(total == 0)
+		output +={"<font color='red'><b>Warning: Cannot obtain air sample for analysis.</b></font>"}
+		return output
+
+	output += {"
+<style>
+.dl0 { color: green; }
+.dl1 { color: orange; }
+.dl2 { color: red; font-weght: bold;}
+</style>
+"}
+	var/datum/tlv/cur_tlv
+	var/GET_PP = R_IDEAL_GAS_EQUATION*environment.temperature/environment.volume
+
+	cur_tlv = TLV["pressure"]
+	var/environment_pressure = environment.return_pressure()
+	var/pressure_dangerlevel = cur_tlv.get_danger_level(environment_pressure)
+
+	cur_tlv = TLV["oxygen"]
+	var/oxygen_dangerlevel = cur_tlv.get_danger_level(environment.oxygen*GET_PP)
+	var/oxygen_percent = round(environment.oxygen / total * 100, 2)
+
+	cur_tlv = TLV["carbon dioxide"]
+	var/co2_dangerlevel = cur_tlv.get_danger_level(environment.carbon_dioxide*GET_PP)
+	var/co2_percent = round(environment.carbon_dioxide / total * 100, 2)
+
+	cur_tlv = TLV["plasma"]
+	var/plasma_dangerlevel = cur_tlv.get_danger_level(environment.toxins*GET_PP)
+	var/plasma_percent = round(environment.toxins / total * 100, 2)
+
+	cur_tlv = TLV["other"]
+	var/other_moles = 0.0
+	for(var/datum/gas/G in environment.trace_gases)
+		other_moles+=G.moles
+	var/other_dangerlevel = cur_tlv.get_danger_level(other_moles*GET_PP)
+
+	cur_tlv = TLV["temperature"]
+	var/temperature_dangerlevel = cur_tlv.get_danger_level(environment.temperature)
+
+	output += {"
+Pressure: <span class='dl[pressure_dangerlevel]'>[environment_pressure]</span>kPa<br>
+Oxygen: <span class='dl[oxygen_dangerlevel]'>[oxygen_percent]</span>%<br>
+Carbon dioxide: <span class='dl[co2_dangerlevel]'>[co2_percent]</span>%<br>
+Toxins: <span class='dl[plasma_dangerlevel]'>[plasma_percent]</span>%<br>
+"}
+	if (other_dangerlevel==2)
+		output += {"Notice: <span class='dl2'>High Concentration of Unknown Particles Detected</span><br>"}
+	else if (other_dangerlevel==1)
+		output += {"Notice: <span class='dl1'>Low Concentration of Unknown Particles Detected</span><br>"}
+
+	output += {"
+Temperature: <span class='dl[temperature_dangerlevel]'>[environment.temperature]</span>K<br>
+"}
+
+	var/display_danger_level = max(
+		pressure_dangerlevel,
+		oxygen_dangerlevel,
+		co2_dangerlevel,
+		plasma_dangerlevel,
+		other_dangerlevel,
+		temperature_dangerlevel
+	)
+
+	//Overall status
+	output += {"Local Status: "}
+	if(display_danger_level == 2)
+		output += {"<span class='dl2'>DANGER: Internals Required</span>"}
+	else if(display_danger_level == 1)
+		output += {"<span class='dl1'>Caution</span>"}
+	else if (alarm_area.atmosalm)
+		output += {"<span class='dl1'>Caution: Atmos alert in area</span>"}
+	else
+		output += {"<span class='dl0'>Optimal</span>"}
+
+	return output
+
+/obj/machinery/alarm/proc/return_controls()
+	var/output = ""//"<B>[alarm_zone] Air [name]</B><HR>"
+
+	switch(screen)
+		if (AALARM_SCREEN_MAIN)
+			if(alarm_area.atmosalm)
+				output += {"<a href='?src=\ref[src];atmos_reset=1'>Reset - Atmospheric Alarm</a><hr>"}
+			else
+				output += {"<a href='?src=\ref[src];atmos_alarm=1'>Activate - Atmospheric Alarm</a><hr>"}
+
+			output += {"
+<a href='?src=\ref[src];screen=[AALARM_SCREEN_SCRUB]'>Scrubbers Control</a><br>
+<a href='?src=\ref[src];screen=[AALARM_SCREEN_VENT]'>Vents Control</a><br>
+<a href='?src=\ref[src];screen=[AALARM_SCREEN_MODE]'>Set envirenomentals mode</a><br>
+<a href='?src=\ref[src];screen=[AALARM_SCREEN_SENSORS]'>Sensor Control</a><br>
+<HR>
+"}
+			if (mode==AALARM_MODE_PANIC)
+				output += "<font color='red'><B>PANIC SYPHON ACTIVE</B></font><br><A href='?src=\ref[src];mode=[AALARM_MODE_OFF]'>turn syphoning off</A>"
+			else
+				output += "<A href='?src=\ref[src];mode=[AALARM_MODE_PANIC]'><font color='red'><B>ACTIVATE PANIC SYPHON IN AREA</B></font></A>"
+		if (AALARM_SCREEN_VENT)
+			var/sensor_data = ""
+			if(alarm_area.air_vent_names.len)
+				for(var/id_tag in alarm_area.air_vent_names)
+					var/long_name = alarm_area.air_vent_names[id_tag]
+					var/list/data = alarm_area.air_vent_info[id_tag]
+					var/state = ""
+					if(!data)
+						state = "<font color='red'> can not be found!</font>"
+						data = list("external" = 0) //for "0" instead of empty string
+					else if (data["timestamp"]+AALARM_REPORT_TIMEOUT < world.time)
+						state = "<font color='red'> not responding!</font>"
+					sensor_data += {"
+<B>[long_name]</B>[state]<BR>
+<B>Operating:</B>
+<A href='?src=\ref[src];id_tag=[id_tag];command=power;val=[!data["power"]]'>[data["power"]?"on":"off"]</A>
+<BR>
+<B>Pressure checks:</B>
+<A href='?src=\ref[src];id_tag=[id_tag];command=checks;val=[data["checks"]^1]' [(data["checks"]&1)?"style='font-weight:bold;'":""]>external</A>
+<A href='?src=\ref[src];id_tag=[id_tag];command=checks;val=[data["checks"]^2]' [(data["checks"]&2)?"style='font-weight:bold;'":""]>internal</A>
+<BR>
+<B>External pressure bound:</B>
+<A href='?src=\ref[src];id_tag=[id_tag];command=adjust_external_pressure;val=-1000'>-</A>
+<A href='?src=\ref[src];id_tag=[id_tag];command=adjust_external_pressure;val=-100'>-</A>
+<A href='?src=\ref[src];id_tag=[id_tag];command=adjust_external_pressure;val=-10'>-</A>
+<A href='?src=\ref[src];id_tag=[id_tag];command=adjust_external_pressure;val=-1'>-</A>
+[data["external"]]
+<A href='?src=\ref[src];id_tag=[id_tag];command=adjust_external_pressure;val=+1'>+</A>
+<A href='?src=\ref[src];id_tag=[id_tag];command=adjust_external_pressure;val=+10'>+</A>
+<A href='?src=\ref[src];id_tag=[id_tag];command=adjust_external_pressure;val=+100'>+</A>
+<A href='?src=\ref[src];id_tag=[id_tag];command=adjust_external_pressure;val=+1000'>+</A>
+<BR>
+"}
+					if (data["direction"] == "siphon")
+						sensor_data += {"
+<B>Direction:</B>
+siphoning
+<BR>
+"}
+					sensor_data += {"<HR>"}
+			else
+				sensor_data = "No vents connected.<BR>"
+			output = {"<a href='?src=\ref[src];screen=[AALARM_SCREEN_MAIN]'>Main menu</a><br>[sensor_data]"}
+		if (AALARM_SCREEN_SCRUB)
+			var/sensor_data = ""
+			if(alarm_area.air_scrub_names.len)
+				for(var/id_tag in alarm_area.air_scrub_names)
+					var/long_name = alarm_area.air_scrub_names[id_tag]
+					var/list/data = alarm_area.air_scrub_info[id_tag]
+					var/state = ""
+					if(!data)
+						state = "<font color='red'> can not be found!</font>"
+						data = list("external" = 0) //for "0" instead of empty string
+					else if (data["timestamp"]+AALARM_REPORT_TIMEOUT < world.time)
+						state = "<font color='red'> not responding!</font>"
+
+					sensor_data += {"
+<B>[long_name]</B>[state]<BR>
+<B>Operating:</B>
+<A href='?src=\ref[src];id_tag=[id_tag];command=power;val=[!data["power"]]'>[data["power"]?"on":"off"]</A><BR>
+<B>Type:</B>
+<A href='?src=\ref[src];id_tag=[id_tag];command=scrubbing;val=[!data["scrubbing"]]'>[data["scrubbing"]?"scrubbing":"syphoning"]</A><BR>
+"}
+
+					if(data["scrubbing"])
+						sensor_data += {"
+<B>Filtering:</B>
+Carbon Dioxide
+<A href='?src=\ref[src];id_tag=[id_tag];command=co2_scrub;val=[!data["filter_co2"]]'>[data["filter_co2"]?"on":"off"]</A>;
+Toxins
+<A href='?src=\ref[src];id_tag=[id_tag];command=tox_scrub;val=[!data["filter_toxins"]]'>[data["filter_toxins"]?"on":"off"]</A>;
+Nitrous Oxide
+<A href='?src=\ref[src];id_tag=[id_tag];command=n2o_scrub;val=[!data["filter_n2o"]]'>[data["filter_n2o"]?"on":"off"]</A>
+<BR>
+"}
+					sensor_data += {"
+<B>Panic syphon:</B> [data["panic"]?"<font color='red'><B>PANIC SYPHON ACTIVATED</B></font>":""]
+<A href='?src=\ref[src];id_tag=[id_tag];command=panic_siphon;val=[!data["panic"]]'><font color='[(data["panic"]?"blue'>Dea":"red'>A")]ctivate</font></A><BR>
+<HR>
+"}
+			else
+				sensor_data = "No scrubbers connected.<BR>"
+			output = {"<a href='?src=\ref[src];screen=[AALARM_SCREEN_MAIN]'>Main menu</a><br>[sensor_data]"}
+
+		if (AALARM_SCREEN_MODE)
+			output += {"
+<a href='?src=\ref[src];screen=[AALARM_SCREEN_MAIN]'>Main menu</a><br>
+<b>Air machinery mode for the area:</b><ul>"}
+			var/list/modes = list(
+				AALARM_MODE_SCRUBBING   = "Filtering",
+				AALARM_MODE_VENTING     = "Draught",
+				AALARM_MODE_PANIC       = "<font color='red'>PANIC</font>",
+				AALARM_MODE_REPLACEMENT = "<font color='red'>REPLACE AIR</font>",
+				AALARM_MODE_OFF         = "Off",
+			)
+			for (var/m=1,m<=modes.len,m++)
+				if (mode==m)
+					output += {"<li><A href='?src=\ref[src];mode=[m]'><b>[modes[m]]</b></A> (selected)</li>"}
+				else
+					output += {"<li><A href='?src=\ref[src];mode=[m]'>[modes[m]]</A></li>"}
+			output += "</ul>"
+		if (AALARM_SCREEN_SENSORS)
+			output += {"
+<a href='?src=\ref[src];screen=[AALARM_SCREEN_MAIN]'>Main menu</a><br>
+<b>Alarm thresholds:</b><br>
+Partial pressure for gases
+<style>/* some CSS woodoo here. Does not work perfect in ie6 but who cares? */
+table td { border-left: 1px solid black; border-top: 1px solid black;}
+table tr:first-child th { border-left: 1px solid black;}
+table th:first-child { border-top: 1px solid black; font-weight: normal;}
+table tr:first-child th:first-child { border: none;}
+.dl0 { color: green; }
+.dl1 { color: orange; }
+.dl2 { color: red; font-weght: bold;}
+</style>
+<table cellspacing=0>
+<TR><th></th><th class=dl2>min2</th><th class=dl1>min1</th><th class=dl1>max1</th><th class=dl2>max2</th></TR>
+"}
+			var/list/gases = list(
+				"oxygen"         = "O<sub>2</sub>",
+				"carbon dioxide" = "CO<sub>2</sub>",
+				"plasma"         = "Toxin",
+				"other"          = "Other",
+			)
+			var/list/thresholds = list("min2", "min1", "max1", "max2")
+			var/datum/tlv/tlv
+			for (var/g in gases)
+				output += {"
+<TR><th>[gases[g]]</th>
+"}
+				tlv = TLV[g]
+				for (var/v in thresholds)
+					output += {"
+<td>
+<A href='?src=\ref[src];command=set_threshold;env=[g];var=[v]'>[tlv.vars[v]>=0?tlv.vars[v]:"OFF"]</A>
+</td>
+"}
+				output += {"
+</TR>
+"}
+			tlv = TLV["pressure"]
+			output += {"
+<TR><th>Pressure</th>
+"}
+			for (var/v in thresholds)
+				output += {"
+<td>
+<A href='?src=\ref[src];command=set_threshold;env=pressure;var=[v]'>[tlv.vars[v]>=0?tlv.vars[v]:"OFF"]</A>
+</td>
+"}
+			output += {"
+</TR>
+"}
+			tlv = TLV["temperature"]
+			output += {"
+<TR><th>Temperature</th>
+"}
+			for (var/v in thresholds)
+				output += {"
+<td>
+<A href='?src=\ref[src];command=set_threshold;env=temperature;var=[v]'>[tlv.vars[v]>=0?tlv.vars[v]:"OFF"]</A>
+</td>
+"}
+			output += {"
+</TR>
+"}
+			output += {"</table>"}
+
+	return output
+
+/obj/machinery/alarm/Topic(href, href_list)
+	if(..())
+		return
+
+	if(href_list["command"])
+		var/device_id = href_list["id_tag"]
+		switch(href_list["command"])
+			if(
+				"power",
+				"adjust_external_pressure",
+				"checks",
+				"co2_scrub",
+				"tox_scrub",
+				"n2o_scrub",
+				"panic_siphon",
+				"scrubbing"
+			)
+				send_signal(device_id, list (href_list["command"] = text2num(href_list["val"])))
+				spawn(3)
+					src.updateUsrDialog()
+			//if("adjust_threshold") //was a good idea but required very wide window
+			if("set_threshold")
+				var/env = href_list["env"]
+				var/varname = href_list["var"]
+				var/datum/tlv/tlv = TLV[env]
+				var/newval = input("Enter [varname] for env", "Alarm triggers", tlv.vars[varname]) as num|null
+				if (isnull(newval) || ..() || locked)
+					return
+				if (newval<0)
+					tlv.vars[varname] = -1.0
+				else if (env=="temperature" && newval>5000)
+					tlv.vars[varname] = 5000
+				else if (env=="pressure" && newval>50*ONE_ATMOSPHERE)
+					tlv.vars[varname] = 50*ONE_ATMOSPHERE
+				else if (env!="temperature" && env!="pressure" && newval>200)
+					tlv.vars[varname] = 200
+				else
+					newval = round(newval,0.01)
+					tlv.vars[varname] = newval
+				spawn(1)
+					src.updateUsrDialog()
+
+	if(href_list["screen"])
+		screen = text2num(href_list["screen"])
+		spawn(1)
+			src.updateUsrDialog()
+
+
+	if(href_list["atmos_alarm"])
+		if (alarm_area.atmosalert(2))
+			post_alert(2)
+		spawn(1)
+			src.updateUsrDialog()
+		update_icon()
+	if(href_list["atmos_reset"])
+		if (alarm_area.atmosalert(0))
+			post_alert(0)
+		spawn(1)
+			src.updateUsrDialog()
+		update_icon()
+
+	if(href_list["mode"])
+		mode = text2num(href_list["mode"])
+		apply_mode()
+		spawn(5)
+			src.updateUsrDialog()
+
+	return
+
+/obj/machinery/alarm/proc/apply_mode()
+	switch(mode)
+		if(AALARM_MODE_SCRUBBING)
+			for(var/device_id in alarm_area.air_scrub_names)
+				send_signal(device_id, list(
+					"power"= 1,
+					"co2_scrub"= 1,
+					"scrubbing"= 1,
+					"panic_siphon"= 0,
+				))
+			for(var/device_id in alarm_area.air_vent_names)
+				send_signal(device_id, list(
+					"power"= 1,
+					"checks"= 1,
+					"set_external_pressure"= ONE_ATMOSPHERE
+				))
+
+		if(AALARM_MODE_VENTING)
+			for(var/device_id in alarm_area.air_scrub_names)
+				send_signal(device_id, list(
+					"power"= 1,
+					"panic_siphon"= 0,
+					"scrubbing"= 0
+				))
+			for(var/device_id in alarm_area.air_vent_names)
+				send_signal(device_id, list(
+					"power"= 1,
+					"checks"= 1,
+					"set_external_pressure"= ONE_ATMOSPHERE
+				))
+		if(
+			AALARM_MODE_PANIC,
+			AALARM_MODE_REPLACEMENT
+		)
+			for(var/device_id in alarm_area.air_scrub_names)
+				send_signal(device_id, list(
+					"power"= 1,
+					"panic_siphon"= 1
+				))
+			for(var/device_id in alarm_area.air_vent_names)
+				send_signal(device_id, list(
+					"power"= 0
+				))
+		if(AALARM_MODE_OFF)
+			for(var/device_id in alarm_area.air_scrub_names)
+				send_signal(device_id, list(
+					"power"= 0
+				))
+			for(var/device_id in alarm_area.air_vent_names)
+				send_signal(device_id, list(
+					"power"= 0
+				))
+
+/obj/machinery/alarm/update_icon()
 	if(stat & (NOPOWER|BROKEN))
 		icon_state = "alarmp"
 		return
+	switch(max(danger_level, alarm_area.atmosalm))
+		if (0)
+			src.icon_state = "alarm0"
+		if (1)
+			src.icon_state = "alarm2" //yes, alarm2 is yellow alarm
+		if (2)
+			src.icon_state = "alarm1"
 
-	use_power(5, ENVIRON)
+/obj/machinery/alarm/process()
+	if(stat & (NOPOWER|BROKEN))
+		return
 
-	if (!( istype(location, /turf) ))
+	var/turf/simulated/location = src.loc
+	if (!istype(location))
 		return 0
 
-	var/datum/gas_mixture/environment = location.return_air(1)
+	var/datum/gas_mixture/environment = location.return_air()
 
+	var/datum/tlv/cur_tlv
+	var/GET_PP = R_IDEAL_GAS_EQUATION*environment.temperature/environment.volume
+
+	cur_tlv = TLV["pressure"]
 	var/environment_pressure = environment.return_pressure()
+	var/pressure_dangerlevel = cur_tlv.get_danger_level(environment_pressure)
 
-	if((environment_pressure < ALERT_ATMOSPHERE_L) || (environment_pressure > ALERT_ATMOSPHERE_U))
-		//Pressure sensor
-		alert_info = 1
-		if((environment_pressure < UNSAFE_ATMOSPHERE_L) || (environment_pressure > UNSAFE_ATMOSPHERE_U))
-			safe = 0
+	cur_tlv = TLV["oxygen"]
+	var/oxygen_dangerlevel = cur_tlv.get_danger_level(environment.oxygen*GET_PP)
 
-	if(safe && ((environment.oxygen < ALERT_O2_L) || (environment.oxygen > ALERT_O2_U)))
-		//Oxygen Levels Sensor
-		alert_info = 2
+	cur_tlv = TLV["carbon dioxide"]
+	var/co2_dangerlevel = cur_tlv.get_danger_level(environment.carbon_dioxide*GET_PP)
 
-	if(safe && ((environment.temperature < ALERT_TEMPERATURE_L) || (environment.temperature > ALERT_TEMPERATURE_U)))
-		//Temperature Sensor
-		alert_info = 3
+	cur_tlv = TLV["plasma"]
+	var/plasma_dangerlevel = cur_tlv.get_danger_level(environment.toxins*GET_PP)
 
-	if(safe && (environment.carbon_dioxide > 0.05))
-		//CO2 Levels Sensor
-		alert_info = 4
+	cur_tlv = TLV["other"]
+	var/other_moles = 0.0
+	for(var/datum/gas/G in environment.trace_gases)
+		other_moles+=G.moles
+	var/other_dangerlevel = cur_tlv.get_danger_level(other_moles*GET_PP)
 
-	if(safe && (environment.toxins > 1))
-		//Plasma Levels Sensor
-		alert_info = 5
+	cur_tlv = TLV["temperature"]
+	var/temperature_dangerlevel = cur_tlv.get_danger_level(environment.temperature)
 
+	var/old_danger_level = danger_level
+	danger_level = max(
+		pressure_dangerlevel,
+		oxygen_dangerlevel,
+		co2_dangerlevel,
+		plasma_dangerlevel,
+		other_dangerlevel,
+		temperature_dangerlevel
+	)
+	if (old_danger_level!=danger_level)
+		apply_danger_level()
 
-	if(safe == 2) src.skipprocess = 1
-	else if(alarm_frequency)
-		post_alert(safe, alert_info)
-	if (safe != safe_old || !A.air_doors_activated)
-		src.icon_state = "alarm[!safe]"
-		if(!safe && !A.air_doors_activated)
-			spawn(50)
-				air_doors_close()
-		else if (safe && A.air_doors_activated)
-			air_doors_open()
-	safe_old = safe
-	updateUsrDialog()
+	if (mode==AALARM_MODE_REPLACEMENT && environment_pressure<ONE_ATMOSPHERE*0.05)
+		mode=AALARM_MODE_SCRUBBING
+		apply_mode()
+
+	src.updateDialog()
 	return
 
-/obj/machinery/alarm/proc/post_alert(alert_level, alert_type)
+/obj/machinery/alarm/proc/post_alert(alert_level)
 
 	var/datum/radio_frequency/frequency = radio_controller.return_frequency(alarm_frequency)
 
@@ -102,316 +685,128 @@
 	var/datum/signal/alert_signal = new
 	alert_signal.source = src
 	alert_signal.transmission_method = 1
-	alert_signal.data["zone"] = alarm_zone
+	alert_signal.data["zone"] = alarm_area.name
 	alert_signal.data["type"] = "Atmospheric"
-	alert_signal.data["subtype"] = alert_type
 
-	if(alert_level==0)
+	if(alert_level==2)
 		alert_signal.data["alert"] = "severe"
-	else
+	else if (alert_level==1)
 		alert_signal.data["alert"] = "minor"
+	else if (alert_level==0)
+		alert_signal.data["alert"] = "clear"
 
 	frequency.post_signal(src, alert_signal)
 
-/obj/machinery/alarm/attackby(W as obj, user as mob)
+/obj/machinery/alarm/proc/apply_danger_level()
+	var/new_area_danger_level = 0
+	for (var/area/A in alarm_area.related)
+		for (var/obj/machinery/alarm/AA in A)
+			if (!(AA.stat & (NOPOWER|BROKEN)))
+				new_area_danger_level = max(new_area_danger_level,AA.danger_level)
+	if (alarm_area.atmosalert(new_area_danger_level)) //if area was in normal state or if area was in alert state
+		post_alert(new_area_danger_level)
+	update_icon()
+
+/obj/machinery/alarm/attackby(obj/item/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/wirecutters))
 		stat ^= BROKEN
 		src.add_fingerprint(user)
 		for(var/mob/O in viewers(user, null))
 			O.show_message(text("\red [] has []activated []!", user, (stat&BROKEN) ? "de" : "re", src), 1)
+		update_icon()
+		return
+
+	else if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))// trying to unlock the interface with an ID card
+		if(stat & (NOPOWER|BROKEN))
+			user << "It does nothing"
+		else
+			if(src.allowed(usr))
+				locked = !locked
+				user << "\blue You [ locked ? "lock" : "unlock"] the Air Alarm interface."
+				src.updateUsrDialog()
+			else
+				user << "\red Access denied."
 		return
 	return ..()
 
 /obj/machinery/alarm/power_change()
-	if(powered(ENVIRON))
+	if(powered(power_channel))
 		stat &= ~NOPOWER
 	else
 		stat |= NOPOWER
+	spawn(rand(0,15))
+		update_icon()
 
-///obj/machinery/alarm/Click()
-//	return attack_hand(usr)
+/*/obj/machinery/alarm/Click()
+	if(istype(usr, /mob/living/silicon/ai))
+		return examine()
+	return ..()*/
 
-/obj/machinery/alarm/attack_hand(mob/user as mob)
-	if(!(user in range(3,src)) && !istype(user, /mob/living/silicon/))
-		user.machine = null
-		return
-	if(user.stat)
+	/*
+/obj/machinery/alarm/examine()
+	set src in oview(1)
+	if(usr.stat)
 		return
 	if(stat & (NOPOWER|BROKEN))
 		return
+	if(!(istype(usr, /mob/living/carbon/human) || ticker))
+		if (!istype(usr, /mob/living/silicon/ai))
+			usr << "\red You don't have the dexterity to do this!"
+			return
+	if (get_dist(usr, src) <= 3 || istype(usr, /mob/living/silicon/ai))
+		var/turf/T = src.loc
+		if (!( istype(T, /turf) ))
+			return
 
-	var/turf/location = loc
-	if (!( istype(location, /turf) ))
+		var/turf_total = T.co2 + T.oxygen + T.poison + T.sl_gas + T.n2
+		turf_total = max(turf_total, 1)
+		usr.show_message("\blue <B>Results:</B>", 1)
+		var/t = ""
+		var/t1 = turf_total / CELLSTANDARD * 100
+		if ((90 < t1 && t1 < 110))
+			usr.show_message(text("\blue Air Pressure: []%", t1), 1)
+		else
+			usr.show_message(text("\blue Air Pressure:\red []%", t1), 1)
+		t1 = T.n2 / turf_total * 100
+		t1 = round(t1, 0.0010)
+		if ((60 < t1 && t1 < 80))
+			t += text("<font color=blue>Nitrogen: []</font> ", t1)
+		else
+			t += text("<font color=red>Nitrogen: []</font> ", t1)
+		t1 = T.oxygen / turf_total * 100
+		t1 = round(t1, 0.0010)
+		if ((20 < t1 && t1 < 24))
+			t += text("<font color=blue>Oxygen: []</font> ", t1)
+		else
+			t += text("<font color=red>Oxygen: []</font> ", t1)
+		t1 = T.poison / turf_total * 100
+		t1 = round(t1, 0.0010)
+		if (t1 < 0.5)
+			t += text("<font color=blue>Plasma: []</font> ", t1)
+		else
+			t += text("<font color=red>Plasma: []</font> ", t1)
+		t1 = T.co2 / turf_total * 100
+		t1 = round(t1, 0.0010)
+		if (t1 < 1)
+			t += text("<font color=blue>CO2: []</font> ", t1)
+		else
+			t += text("<font color=red>CO2: []</font> ", t1)
+		t1 = T.sl_gas / turf_total * 100
+		t1 = round(t1, 0.0010)
+		if (t1 < 5)
+			t += text("<font color=blue>NO2: []</font>", t1)
+		else
+			t += text("<font color=red>NO2: []</font>", t1)
+		t1 = T.temp - T0C
+		if (T.temp > 326.444 || T.temp < 282.591)
+			t += text("<br><font color=red>Temperature: []</font>", t1)
+		else
+			t += text("<br><font color=blue>Temperature: []</font>", t1)
+		usr.show_message(t, 1)
 		return
-
-	var/dat = ""
-
-	if(check_panel(user))
-
-		var/datum/gas_mixture/environment = location.return_air(1)
-
-		var/pressure = environment.return_pressure()
-		var/total_moles = environment.total_moles()
-
-		dat += "\blue <B>[alarm_zone] Atmosphere:</B><br>"
-		if(abs(pressure - ONE_ATMOSPHERE) < 10)
-			dat += "\blue Pressure: [round(pressure,0.1)] kPa<br>"
-		else
-			dat += "\red Pressure: [round(pressure,0.1)] kPa<br>"
-		if(total_moles)
-			var/o2_concentration = environment.oxygen/total_moles
-			var/n2_concentration = environment.nitrogen/total_moles
-			var/co2_concentration = environment.carbon_dioxide/total_moles
-			var/plasma_concentration = environment.toxins/total_moles
-
-			var/unknown_concentration =  1-(o2_concentration+n2_concentration+co2_concentration+plasma_concentration)
-			if(abs(n2_concentration - N2STANDARD) < 20)
-				dat += "\blue Nitrogen: [round(n2_concentration*100)]%<br>"
-			else
-				dat += "\red Nitrogen: [round(n2_concentration*100)]%<br>"
-
-			if(abs(o2_concentration - O2STANDARD) < 2)
-				dat += "\blue Oxygen: [round(o2_concentration*100)]%<br>"
-			else
-				dat += "\red Oxygen: [round(o2_concentration*100)]%<br>"
-
-			if(co2_concentration > 0.01)
-				dat += "\red CO2: [round(co2_concentration*100)]%<br>"
-			else
-				dat += "\blue CO2: [round(co2_concentration*100)]%<br>"
-
-			if(plasma_concentration > 0.01)
-				dat += "\red Plasma: [round(plasma_concentration*100)]%<br>"
-
-			if(unknown_concentration > 0.01)
-				dat += "\red Unknown: [round(unknown_concentration*100)]%<br>"
-			if(abs(environment.temperature - T20C) < 7)
-				dat += "\blue Temperature: [round(environment.temperature-T0C)]&deg;C"
-			else
-				dat += "\red Temperature: [round(environment.temperature-T0C)]&deg;C"
-		if((user in range(1,src)) || istype(user, /mob/living/silicon/))
-			dat += "<BR><BR>"
-			var/area/A = get_area(loc)
-			if(!A.air_doors_activated)
-				dat += "<A href='?src=\ref[src];activate_alarm=1'>Activate Emergency Seal</A>"
-			else
-				dat += "<A href='?src=\ref[src];deactivate_alarm=1'>Deactivate Emergency Seal</A>"
-			dat += "<BR><BR>"
-			if(vent_connected)
-				if(!vent_connected.panic_fill)
-					dat += "<A href='?src=\ref[src];activate_panic_fill=1'>Activate Panic Fill</A>"
-				else
-					dat += "<A href='?src=\ref[src];deactivate_panic_fill=1'>Deactivate Panic Fill</A>"
-			else
-				dat += "\red No vents connected!"
-		dat += text("<BR><BR><A href='?src=\ref[];mach_close=alarm'>Close</A>", user)
-		user << browse(dat, "window=alarm;size=400x500")
 	else
-		var/list/readouts = list()
-
-		var/list/fake_gases = list(
-		"Argon","Chlorine","Butane","Fat","N2O","Radon","Krypton","Fluorine","Plasma","Cyanide","Intelligence","Lizards",
-		"Children","Luck","Skill","Concentrated Power of Will","Leeroy Jenkins","Bumcivilian","Pig Iron","Boiling Bronze",
-		"Intelligent Calcium","Vacuum","Wanted Level"
-		)
-
-		var/pressure = rand(0,1201) + rand()
-
-		if(abs(pressure - ONE_ATMOSPHERE) < 10)
-			readouts += "\blue Pressure: [round(pressure,0.1)] kPa<br>"
-		else
-			readouts += "\red Pressure: [round(pressure,0.1)] kPa<br>"
-
-		var/o2_concentration = rand()
-		var/n2_concentration = rand()
-		var/co2_concentration = rand()
-		var/plasma_concentration = rand()
-
-		var/unknown_concentration =  1-(o2_concentration+n2_concentration+co2_concentration+plasma_concentration)
-
-		readouts += "\blue [pick(fake_gases)]: [round(n2_concentration*100)]%<br>"
-
-		readouts += "\blue [pick(fake_gases)]: [round(o2_concentration*100)]%<br>"
-
-		readouts += "\blue [pick(fake_gases)]: [round(co2_concentration*100)]%<br>"
-
-		if(plasma_concentration > 0.01)
-			readouts += "\red [pick(fake_gases)]: [round(plasma_concentration*100)]%<br>"
-
-		if(unknown_concentration > 0.01)
-			readouts += "\red [pick(fake_gases)]: [round(unknown_concentration*100)]%<br>"
-
-		var/temp = rand(-270,1200)
-		readouts += "\blue Temperature: [round(temp)]&deg;C"
-
-		var/list/buttons = list()
-		if((user in range(1,src)) || istype(user, /mob/living/silicon/))
-			var/area/A = get_area(loc)
-			if(!A.air_doors_activated)
-				buttons += "activate_alarm=1"
-			else
-				buttons += "deactivate_alarm=1"
-			if(vent_connected)
-				if(!vent_connected.panic_fill)
-					buttons += "activate_panic_fill=1"
-				else
-					buttons += "deactivate_panic_fill=1"
-
-		dat = mockpanel(buttons,"\blue <B>[alarm_zone] Atmosphere:</B><br>",null,readouts)
-
-	user << browse(dat, "window=alarm;size=400x500")
-	user.machine = src
-	onclose(user, "alarm")
-
-	return 1
-
-/obj/machinery/alarm/Topic(href,href_list[])
-	if(href_list["activate_alarm"])
-		air_doors_close(1)
-	if(href_list["deactivate_alarm"])
-		air_doors_open(1)
-	if(href_list["activate_panic_fill"])
-		vent_connected.panic_fill = 1
-	if(href_list["deactivate_panic_fill"])
-		vent_connected.panic_fill = 0
-
-	mocktxt = null
-
-	spawn(10)					//Added by Strumpetplaya - Alarm Changes - Moved Door Delay to here
-		updateUsrDialog()
-
-/obj/machinery/alarm/call_function(var/datum/function/F)
-	if(uppertext(F.arg1) != net_pass)
-		var/datum/function/R = new()
-		R.name = "response"
-		R.source_id = address
-		R.destination_id = F.source_id
-		R.arg1 += "Incorrect Access token"
-		send_packet(src,F.source_id,R)
-		return 0 // send a wrong password really.
-	if(F.name == "alarm")
-		air_doors_close(1)
-	else if(F.name == "dealarm")
-		air_doors_open(1)
-	..()
-
-
-
-obj/machinery/alarm/proc
-	air_doors_close(manual)
-		var/area/A = get_area(loc)
-		for(var/obj/machinery/door/airlock/E in A.auxdoors)
-			var/obj/LightTest = locate(/obj/alertlighting/atmoslight) in E.loc
-			if(isnull(LightTest))
-				var/obj/alertlighting/atmoslight/F = new/obj/alertlighting/atmoslight(E.loc)
-				var/image/imagelight = image('alert.dmi',F,icon_state = "blueold")
-				world << imagelight
-			if((!E.arePowerSystemsOn()) || (E.stat & NOPOWER)) continue
-			if(!E.density)
-				spawn(0)
-				E.close()
-				sleep(10)
-				if(E.density)
-					E.locked = 1
-					E.air_locked = 1
-					E.update_icon()
-			if(E.operating)
-				spawn(10)
-					E.close()
-					//spawn(10)
-					if(E.density)
-						E.locked = 1
-						E.air_locked = 1
-						E.update_icon()
-			else if(!E.locked) //Don't lock already bolted doors.
-				E.locked = 1
-				E.air_locked = 1
-				E.update_icon()
-			if(!A.fire)
-				for(var/obj/machinery/door/firedoor/D in E.loc)
-					if(!D.blocked)
-						if(D.operating)
-							D.nextstate = CLOSED
-						else if(!D.density)
-							spawn(0)
-							D.close()
-		/*	if((!D.arePowerSystemsOn()) || (D.stat & NOPOWER)) continue
-			if(!D.density)
-				spawn(0)
-				D.close()
-				sleep(10)
-				if(D.density)
-					D.locked = 1
-					D.air_locked = 1
-					D.update_icon()
-			else if(!D.locked) //Don't lock already bolted doors.
-				D.locked = 1
-				D.air_locked = 1
-				D.update_icon()
-		if(!fire)
-			for(var/obj/machinery/door/firedoor/D in alldoors)
-				if(!D.blocked)
-					if(D.operating)
-						D.nextstate = CLOSED
-					else if(!D.density)
-						spawn(0)
-						D.close()
-		*/
-		for(var/area/RA in A.related)
-			for(var/turf/T in RA)
-				if(T.density != 1)
-					var/obj/LightTest = locate(/obj/alertlighting/atmoslight) in T
-					if(isnull(LightTest))
-						var/obj/alertlighting/atmoslight/F = new/obj/alertlighting/atmoslight(T)
-						var/image/imagelight = image('alert.dmi',F,icon_state = "blueold")
-						world << imagelight
-			RA.activate_air_doors(manual*5)
-
-	air_doors_open(manual)
-		var/area/A = get_area(loc)
-		for(var/obj/machinery/door/airlock/E in A.auxdoors)
-			var/area/B = get_area(E.loc)
-			if(B.air_doors_activated != 1)
-				var/turf/C = E.loc
-				for (var/obj/alertlighting/atmoslight/G in C)
-					del(G)
-				if((!E.arePowerSystemsOn()) || (E.stat & NOPOWER)) continue
-					//E.air_locked = 0
-				if(E.air_locked) //Don't mess with doors locked for other reasons.
-					if(E.density)
-						E.locked = 0
-						E.air_locked =0
-						E.update_icon()
-			if(!A.fire)
-				for(var/obj/machinery/door/firedoor/D in E.loc)
-					if(!D.blocked)
-						if(D.operating)
-							D.nextstate = OPEN
-						else if(D.density)
-							spawn(0)
-							D.open()
-		for(var/area/RA in A.related)
-			for(var/turf/T in RA)
-				for (var/obj/alertlighting/atmoslight/F in T)
-					del(F)
-			RA.deactivate_air_doors(manual*5)
-
-
-
-
-
-/* Commented By Strumpetplaya - This is how the procs above looked before my alarm changes.
-obj/machinery/alarm/proc
-	air_doors_close(manual)
-		var/area/A = get_area(loc)
-		for(var/area/RA in A.related)
-			RA.activate_air_doors(manual*5)
-	air_doors_open(manual)
-		var/area/A = get_area(loc)
-		for(var/area/RA in A.related)
-			RA.deactivate_air_doors(manual*5)
-*/
-
+		usr << "\blue <B>You are too far away.</B>"
+	*/
 
 
 /obj/machinery/firealarm/temperature_expose(datum/gas_mixture/air, temperature, volume)
@@ -429,6 +824,10 @@ obj/machinery/alarm/proc
 /obj/machinery/firealarm/attack_paw(mob/user as mob)
 	return src.attack_hand(user)
 
+/obj/machinery/firealarm/emp_act(severity)
+	if(prob(50/severity)) alarm()
+	..()
+
 /obj/machinery/firealarm/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/wirecutters))
 		src.detecting = !( src.detecting )
@@ -445,7 +844,13 @@ obj/machinery/alarm/proc
 	if(stat & (NOPOWER|BROKEN))
 		return
 
-	use_power(10, ENVIRON)
+	var/area/A = src.loc
+	A = A.loc
+
+	if(A.fire)
+		src.icon_state = "fire1"
+	else
+		src.icon_state = "fire0"
 
 	if (src.timing)
 		if (src.time > 0)
@@ -474,7 +879,7 @@ obj/machinery/alarm/proc
 	var/area/A = src.loc
 	var/d1
 	var/d2
-	if (check_panel(user))
+	if (istype(user, /mob/living/carbon/human) || istype(user, /mob/living/silicon))
 		A = A.loc
 
 		if (A.fire)
@@ -491,43 +896,27 @@ obj/machinery/alarm/proc
 		user << browse(dat, "window=firealarm")
 		onclose(user, "firealarm")
 	else
-
 		A = A.loc
-		var/list/possible_buttons = list()
 		if (A.fire)
-			possible_buttons += "reset=1"
+			d1 = text("<A href='?src=\ref[];reset=1'>[]</A>", src, stars("Reset - Lockdown"))
 		else
-			possible_buttons += "alarm=1"
+			d1 = text("<A href='?src=\ref[];alarm=1'>[]</A>", src, stars("Alarm - Lockdown"))
 		if (src.timing)
-			possible_buttons += "time=0"
+			d2 = text("<A href='?src=\ref[];time=0'>[]</A>", src, stars("Stop Time Lock"))
 		else
-			possible_buttons += "time=1"
-
-		possible_buttons += "tp=-30"
-		possible_buttons += "tp=-1"
-		possible_buttons += "tp=1"
-		possible_buttons += "tp=30"
-
-		var/timer_txt = pick("Countdown to Apocalypse: ","Shuttle ETA: ","Unimportant Numbers: ","X = ","You Are Customer #","Party Begins In: ")
-
-		var/dat = mockpanel(possible_buttons,"<HTML><HEAD></HEAD><BODY><TT><b>Fire Alarm</b><BR><HR><BR>","<br>[timer_txt]")
-
-
-		var/rnd_time = rand(1,900)
-
-		var/second = rnd_time % 60
-		var/minute = (rnd_time - second) / 60
-
-		user << browse(dat + "<TT>[minute]:[second]</TT>", "window=firealarm")
+			d2 = text("<A href='?src=\ref[];time=1'>[]</A>", src, stars("Initiate Time Lock"))
+		var/second = src.time % 60
+		var/minute = (src.time - second) / 60
+		var/dat = text("<HTML><HEAD></HEAD><BODY><TT><B>[]</B> []\n<HR>\nTimer System: []<BR>\nTime Left: [][] <A href='?src=\ref[];tp=-30'>-</A> <A href='?src=\ref[];tp=-1'>-</A> <A href='?src=\ref[];tp=1'>+</A> <A href='?src=\ref[];tp=30'>+</A>\n</TT></BODY></HTML>", stars("Fire alarm"), d1, d2, (minute ? text("[]:", minute) : null), second, src, src, src, src)
+		user << browse(dat, "window=firealarm")
 		onclose(user, "firealarm")
 	return
 
 /obj/machinery/firealarm/Topic(href, href_list)
 	..()
-	mocktxt = null
 	if (usr.stat || stat & (BROKEN|NOPOWER))
 		return
-	if ((usr.contents.Find(src) || ((get_dist(src, usr) <= 1) && istype(src.loc, /turf))) || (istype(usr, /mob/living/silicon/ai)))
+	if ((usr.contents.Find(src) || ((get_dist(src, usr) <= 1) && istype(src.loc, /turf))) || (istype(usr, /mob/living/silicon)))
 		usr.machine = src
 		if (href_list["reset"])
 			src.reset()
@@ -542,8 +931,7 @@ obj/machinery/alarm/proc
 						var/tp = text2num(href_list["tp"])
 						src.time += tp
 						src.time = min(max(round(src.time), 0), 120)
-		spawn(10)					//Added by Strumpetplaya - Alarm Changes - Try to curb alarm spamming
-			updateUsrDialog()
+		src.updateUsrDialog()
 
 		src.add_fingerprint(usr)
 	else
@@ -551,78 +939,28 @@ obj/machinery/alarm/proc
 		return
 	return
 
-//reset() Edited by Strumpetplaya
 /obj/machinery/firealarm/proc/reset()
 	if (!( src.working ))
 		return
-	if(stat & (NOPOWER|BROKEN))
-		return
 	var/area/A = src.loc
 	A = A.loc
 	if (!( istype(A, /area) ))
 		return
-	mocktxt = null
-	for(var/obj/machinery/door/firedoor/E in A.auxdoors)
-		var/area/B = get_area(E.loc)
-		if(B.fire != 1)
-			var/turf/C = E.loc
-			for (var/obj/alertlighting/firelight/G in C)
-				del(G)
-			if(!E.blocked)
-				if(E.operating)
-					E.nextstate = OPEN
-				else if(E.density)
-					spawn(0)
-					E.open()
 	for(var/area/RA in A.related)
-		for(var/turf/T in RA)
-			if(T.density != 1)
-				for (var/obj/alertlighting/firelight/F in T)
-					del(F)
-
 		RA.firereset()
 	return
 
-
-
-//alarm() Edited by Strumpetplaya
 /obj/machinery/firealarm/proc/alarm()
 	if (!( src.working ))
 		return
-	if(stat & (NOPOWER|BROKEN))
-		return
 	var/area/A = src.loc
 	A = A.loc
-	mocktxt = null
 	if (!( istype(A, /area) ))
 		return
-	for(var/obj/machinery/door/firedoor/E in A.auxdoors)
-		var/obj/LightTest = locate(/obj/alertlighting/firelight) in E.loc
-		if(isnull(LightTest))
-			var/obj/alertlighting/firelight/F = new/obj/alertlighting/firelight(E.loc)
-			var/image/imagelight = image('alert.dmi',F,icon_state = "blue")
-			world << imagelight
-		if(!E.blocked)
-			if(E.operating)
-				E.nextstate = CLOSED
-			else if(!E.density)
-				spawn(0)
-				E.close()
 	for(var/area/RA in A.related)
-		for(var/turf/T in RA)
-			if(T.density != 1)
-				var/obj/LightTest = locate(/obj/alertlighting/firelight) in T
-				if(isnull(LightTest))
-					var/obj/alertlighting/firelight/F = new/obj/alertlighting/firelight(T)
-					var/image/imagelight = image('alert.dmi',F,icon_state = "blue")
-					world << imagelight
 		RA.firealert()
 	//playsound(src.loc, 'signal.ogg', 75, 0)
 	return
-
-
-
-
 
 /obj/machinery/partyalarm/attack_paw(mob/user as mob)
 	return src.attack_hand(user)

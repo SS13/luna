@@ -7,25 +7,28 @@
 	var/metal_amount = 0
 	var/operating = 0
 	var/obj/item/robot_parts/being_built = null
+	use_power = 1
+	idle_power_usage = 20
+	active_power_usage = 5000
 
 /obj/machinery/robotic_fabricator/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if (istype(O, /obj/item/stack/sheet/metal))
 		if (src.metal_amount < 150000.0)
 			var/count = 0
 			spawn(15)
-				if(!O)
-					return
-				while(metal_amount < 150000 && O:amount)
-					src.metal_amount += 3500
-					O:amount--
-					count++
+				if(O)
+					if(!O:amount)
+						return
+					while(metal_amount < 150000 && O:amount)
+						src.metal_amount += O:m_amt /*O:height * O:width * O:length * 100000.0*/
+						O:amount--
+						count++
 
-				if (O:amount < 1)
-					del(O)
+					if (O:amount < 1)
+						del(O)
 
-				user << "You insert [count] metal sheet\s into the fabricator."
-				user.update_clothing()
-				updateDialog()
+					user << "You insert [count] metal sheet\s into the fabricator."
+					updateDialog()
 		else
 			user << "The robot part maker is full. Please remove metal from the robot part maker in order to insert more."
 
@@ -38,8 +41,6 @@
 /obj/machinery/robotic_fabricator/process()
 	if (stat & (NOPOWER | BROKEN))
 		return
-
-	use_power(1000)
 
 /obj/machinery/robotic_fabricator/attack_paw(user as mob)
 	return src.attack_hand(user)
@@ -57,7 +58,7 @@ Please wait until completion...</TT><BR>
 "}
 	else
 		dat = {"
-<B>Metal amount:</B> [min(150000, src.metal_amount)] cm<sup>3</sup> (MAX: 150,000)<BR><HR>
+<B>Metal Amount:</B> [min(150000, src.metal_amount)] cm<sup>3</sup> (MAX: 150,000)<BR><HR>
 <BR>
 <A href='?src=\ref[src];make=1'>Left Arm (25,000 cc metal.)<BR>
 <A href='?src=\ref[src];make=2'>Right Arm (25,000 cc metal.)<BR>
@@ -66,7 +67,6 @@ Please wait until completion...</TT><BR>
 <A href='?src=\ref[src];make=5'>Chest (50,000 cc metal).<BR>
 <A href='?src=\ref[src];make=6'>Head (50,000 cc metal).<BR>
 <A href='?src=\ref[src];make=7'>Robot Frame (75,000 cc metal).<BR>
-<A href='?src=\ref[src];make=8'>AI Construct (100,000 cc metal).<BR>
 "}
 
 	user << browse("<HEAD><TITLE>Robotic Fabricator Control Panel</TITLE></HEAD><TT>[dat]</TT>", "window=robot_fabricator")
@@ -124,15 +124,11 @@ Please wait until completion...</TT><BR>
 					build_time = 600
 					build_cost = 75000
 
-				if (8)
-					build_type = "/obj/structure/AIcore"
-					build_time = 1000
-					build_cost = 100000
-
 			var/building = text2path(build_type)
 			if (!isnull(building))
 				if (src.metal_amount >= build_cost)
 					src.operating = 1
+					src.use_power = 2
 
 					src.metal_amount = max(0, src.metal_amount - build_cost)
 
@@ -141,13 +137,11 @@ Please wait until completion...</TT><BR>
 					src.icon_state = "fab-active"
 					src.updateUsrDialog()
 
-					use_power(5000)
-
 					spawn (build_time)
 						if (!isnull(src.being_built))
 							src.being_built.loc = get_turf(src)
 							src.being_built = null
-
+						src.use_power = 1
 						src.operating = 0
 						src.icon_state = "fab-idle"
 		return

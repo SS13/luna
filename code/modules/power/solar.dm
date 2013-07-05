@@ -1,23 +1,21 @@
 /obj/machinery/power/solar/New()
 	..()
 	spawn(10)
-		update_icon()
+		updateicon()
 		update_solar_exposure()
 
-
-		var/datum/UnifiedNetwork/Network = Networks[/obj/cabling/power]
-
-		if(Network)
-			for(var/obj/machinery/power/solar_control/SC in Network.Nodes)
+		if(powernet)
+			for(var/obj/machinery/power/solar_control/SC in powernet.nodes)
 				if(SC.id == id)
 					control = SC
 
 /obj/machinery/power/solar/attackby(obj/item/weapon/W, mob/user)
 	..()
-	src.add_fingerprint(user)
-	src.health -= W.force
-	src.healthcheck()
-	return
+	if (W)
+		src.add_fingerprint(user)
+		src.health -= W.force
+		src.healthcheck()
+		return
 
 /obj/machinery/power/solar/blob_act()
 	src.health--
@@ -35,7 +33,7 @@
 			return
 	return
 
-/obj/machinery/power/solar/proc/update_icon()
+/obj/machinery/power/solar/proc/updateicon()
 	overlays = null
 	if(stat & BROKEN)
 		overlays += image('power.dmi', icon_state = "solar_panel-b", layer = FLY_LAYER)
@@ -45,6 +43,8 @@
 	return
 
 /obj/machinery/power/solar/proc/update_solar_exposure()
+	if(!sun)
+		return
 	if(obscured)
 		sunfrac = 0
 		return
@@ -63,26 +63,24 @@
 	if(stat & BROKEN)
 		return
 
-	var/datum/UnifiedNetwork/Network = Networks[/obj/cabling/power]
-
 	//return //TODO: FIX
 
 	if(!obscured)
 		var/sgen = SOLARGENRATE * sunfrac
-		AddPower(sgen)
-		if(Network && control)
-			if(control in Network.Nodes) //this line right here...
+		add_avail(sgen)
+		if(powernet && control)
+			if(control in powernet.nodes) //this line right here...
 				control.gen += sgen
 
 	if(adir != ndir)
 		spawn(10+rand(0,15))
 			adir = (360+adir+dd_range(-10,10,ndir-adir))%360
-			update_icon()
+			updateicon()
 			update_solar_exposure()
 
 /obj/machinery/power/solar/proc/broken()
 	stat |= BROKEN
-	update_icon()
+	updateicon()
 	return
 
 /obj/machinery/power/solar/meteorhit()
@@ -99,6 +97,10 @@
 				new /obj/item/weapon/shard( src.loc )
 			return
 		if(2.0)
+			if (prob(25))
+				new /obj/item/weapon/shard( src.loc )
+				del(src)
+				return
 			if (prob(50))
 				broken()
 		if(3.0)
@@ -107,7 +109,7 @@
 	return
 
 /obj/machinery/power/solar/blob_act()
-	if(prob(50))
+	if(prob(75))
 		broken()
 		src.density = 0
 
@@ -120,14 +122,13 @@
 /obj/machinery/power/solar_control/New()
 	..()
 	spawn(15)
-		var/datum/UnifiedNetwork/Network = Networks[/obj/cabling/power]
-		if(!Network) return
-		for(var/obj/machinery/power/solar/S in Network.Nodes)
+		if(!powernet) return
+		for(var/obj/machinery/power/solar/S in powernet.nodes)
 			if(S.id != id) continue
 			cdir = S.adir
-			update_icon()
+			updateicon()
 
-/obj/machinery/power/solar_control/proc/update_icon()
+/obj/machinery/power/solar_control/proc/updateicon()
 	if(stat & BROKEN)
 		icon_state = "broken"
 		overlays = null
@@ -170,7 +171,7 @@
 		cdir = (cdir+trackrate/abs(trackrate)+360)%360
 
 		set_panels(cdir)
-		update_icon()
+		updateicon()
 
 	src.updateDialog()
 
@@ -181,7 +182,7 @@
 		return
 	cdir = angle
 	set_panels(cdir)
-	update_icon()
+	updateicon()
 
 	src.updateDialog()
 
@@ -232,14 +233,14 @@
 		cdir = text2num(href_list["dir"])
 		spawn(1)
 			set_panels(cdir)
-			update_icon()
+			updateicon()
 
 	if(href_list["rate control"])
 		if(href_list["cdir"])
 			src.cdir = dd_range(0,359,(360+src.cdir+text2num(href_list["cdir"]))%360)
 			spawn(1)
 				set_panels(cdir)
-				update_icon()
+				updateicon()
 		if(href_list["tdir"])
 			src.trackrate = dd_range(-7200,7200,src.trackrate+text2num(href_list["tdir"]))
 			if(src.trackrate) nexttime = world.timeofday + 3600/abs(trackrate)
@@ -256,9 +257,8 @@
 	return
 
 /obj/machinery/power/solar_control/proc/set_panels(var/cdir)
-	var/datum/UnifiedNetwork/Network = Networks[/obj/cabling/power]
-	if(!Network) return
-	for(var/obj/machinery/power/solar/S in Network.Nodes)
+	if(!powernet) return
+	for(var/obj/machinery/power/solar/S in powernet.nodes)
 		if(S.id != id) continue
 		S.control = src
 		S.ndir = cdir
@@ -266,15 +266,15 @@
 /obj/machinery/power/solar_control/power_change()
 	if(powered())
 		stat &= ~NOPOWER
-		update_icon()
+		updateicon()
 	else
 		spawn(rand(0, 15))
 			stat |= NOPOWER
-			update_icon()
+			updateicon()
 
 /obj/machinery/power/solar_control/proc/broken()
 	stat |= BROKEN
-	update_icon()
+	updateicon()
 
 /obj/machinery/power/solar_control/meteorhit()
 	broken()
@@ -295,6 +295,6 @@
 	return
 
 /obj/machinery/power/solar_control/blob_act()
-	if (prob(50))
+	if (prob(75))
 		broken()
 		src.density = 0

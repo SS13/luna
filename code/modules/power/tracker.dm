@@ -29,17 +29,18 @@
 		// find all solar controls and update them
 		// currently, just update all controllers in world
 		// ***TODO: better communication system using network
-		for(var/obj/machinery/power/solar_control/C in world)
-			C.tracker_update(angle)
+		if(powernet)
+			for(var/obj/machinery/power/solar_control/C in powernet.nodes)
+				C.tracker_update(angle)
 
 
 	// timed process
 	// make sure we can draw power from the powernet
 	process()
-		var/avail = Surplus()
+		var/avail = surplus()
 
 		if(avail > 500)
-			AddLoad(500)
+			add_load(500)
 			stat &= ~NOPOWER
 		else
 			stat |= NOPOWER

@@ -1,14 +1,18 @@
 /datum/disease/gbs
 	name = "GBS"
 	max_stages = 5
-	spread = "Airborne"
-	cure = "Epilepsy Pills"
+	spread = "On contact"
+	spread_type = CONTACT_GENERAL
+	cure = "Synaptizine & Sulfur"
+	cure_id = list("synaptizine","sulfur")
+	cure_chance = 15//higher chance to cure, since two reagents are required
+	agent = "Gravitokinetic Bipotential SADS+"
 	affected_species = list("Human")
+	curable = 0
+	permeability_mod = 1
 
 /datum/disease/gbs/stage_act()
 	..()
-	if (!affected_mob.stat != 2)
-		return
 	switch(stage)
 		if(2)
 			if(prob(45))

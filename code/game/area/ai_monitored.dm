@@ -2,6 +2,7 @@
 	name = "AI Monitored Area"
 	var/obj/machinery/camera/motion/motioncamera = null
 
+
 /area/ai_monitored/New()
 	..()
 	// locate and store the motioncamera
@@ -22,7 +23,6 @@
 
 /obj/machinery/camera/motion
 	name = "Motion Security Camera"
-	desc = "A motion security camera with a closed panel."
 	var/list/motionTargets = list()
 	var/detectTime = 0
 	var/locked = 1

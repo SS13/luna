@@ -7,9 +7,9 @@ obj/machinery/atmospherics/mixer
 
 	dir = SOUTH
 	initialize_directions = SOUTH|NORTH|WEST
+	req_access = list(access_atmospherics)
 
 	var/on = 0
-	var/id
 
 	var/datum/gas_mixture/air_in1
 	var/datum/gas_mixture/air_in2
@@ -43,8 +43,6 @@ obj/machinery/atmospherics/mixer
 		return
 
 	New()
-
-		id = tag
 		..()
 		switch(dir)
 			if(NORTH)
@@ -76,10 +74,9 @@ obj/machinery/atmospherics/mixer
 
 		//Calculate necessary moles to transfer using PV=nRT
 
-		var/pressure_delta = target_pressure - output_starting_pressure //How much pressure to add
-
-		var/transfer_moles1 = 0 //How much is needed from pipe A
-		var/transfer_moles2 = 0 //How much is needed from pipe B
+		var/pressure_delta = target_pressure - output_starting_pressure
+		var/transfer_moles1 = 0
+		var/transfer_moles2 = 0
 
 		if(air_in1.temperature > 0)
 			transfer_moles1 = (node1_concentration*pressure_delta)*air_out.volume/(air_in1.temperature * R_IDEAL_GAS_EQUATION)
@@ -87,18 +84,12 @@ obj/machinery/atmospherics/mixer
 		if(air_in2.temperature > 0)
 			transfer_moles2 = (node2_concentration*pressure_delta)*air_out.volume/(air_in2.temperature * R_IDEAL_GAS_EQUATION)
 
-
-
 		var/air_in1_moles = air_in1.total_moles()
 		var/air_in2_moles = air_in2.total_moles()
 
-
-
 		if((air_in1_moles < transfer_moles1) || (air_in2_moles < transfer_moles2))
-
-
-
-			var/ratio = min((transfer_moles1 ? air_in1_moles/transfer_moles1 : 1e31), (transfer_moles2 ? air_in2_moles/transfer_moles2 : 1e31))
+			if(!transfer_moles1 || !transfer_moles2) return
+			var/ratio = min(air_in1_moles/transfer_moles1, air_in2_moles/transfer_moles2)
 
 			transfer_moles1 *= ratio
 			transfer_moles2 *= ratio
@@ -258,3 +249,53 @@ obj/machinery/atmospherics/mixer
 			node_out = null
 
 		return null
+
+
+	attack_hand(user as mob)
+		if(..())
+			return
+		src.add_fingerprint(usr)
+		if(!src.allowed(user))
+			user << "\red Access denied."
+			return
+		usr.machine = src
+		var/dat = {"<b>Power: </b><a href='?src=\ref[src];power=1'>[on?"On":"Off"]</a><br>
+					<b>Desirable output pressure: </b>
+					[target_pressure]kPa | <a href='?src=\ref[src];set_press=1'>Change</a>
+					<br>
+					<b>Node 1 Concentration:</b>
+					<a href='?src=\ref[src];node1_c=-0.1'><b>-</b></a>
+					<a href='?src=\ref[src];node1_c=-0.01'>-</a>
+					[node1_concentration]([node1_concentration*100]%)
+					<a href='?src=\ref[src];node1_c=0.01'><b>+</b></a>
+					<a href='?src=\ref[src];node1_c=0.1'>+</a>
+					<br>
+					<b>Node 2 Concentration:</b>
+					<a href='?src=\ref[src];node2_c=-0.1'><b>-</b></a>
+					<a href='?src=\ref[src];node2_c=-0.01'>-</a>
+					[node2_concentration]([node2_concentration*100]%)
+					<a href='?src=\ref[src];node2_c=0.01'><b>+</b></a>
+					<a href='?src=\ref[src];node2_c=0.1'>+</a>
+					"}
+
+		user << browse("<HEAD><TITLE>[src.name] control</TITLE></HEAD><TT>[dat]</TT>", "window=atmo_mixer")
+		onclose(user, "atmo_mixer")
+		return
+
+	Topic(href,href_list)
+		if(href_list["power"])
+			on = !on
+		if(href_list["set_press"])
+			var/new_pressure = input(usr,"Enter new output pressure (0-4500kPa)","Pressure control",src.target_pressure) as num
+			src.target_pressure = max(0, min(4500, new_pressure))
+		if(href_list["node1_c"])
+			var/value = text2num(href_list["node1_c"])
+			src.node1_concentration = max(0, min(1, src.node1_concentration + value))
+			src.node2_concentration = max(0, min(1, src.node2_concentration - value))
+		if(href_list["node2_c"])
+			var/value = text2num(href_list["node2_c"])
+			src.node2_concentration = max(0, min(1, src.node2_concentration + value))
+			src.node1_concentration = max(0, min(1, src.node1_concentration - value))
+		src.update_icon()
+		src.updateUsrDialog()
+		return

@@ -1,20 +1,22 @@
 /obj/alien
 	name = "alien thing"
-	desc = "There is something alien about this."
+	desc = "theres something alien about this"
 	icon = 'alien.dmi'
+	unacidable = 1 //Aliens won't ment their own.
 
 /obj/alien/egg
-	desc = "It looks like a weird egg."
+	desc = "It looks like a weird egg"
 	name = "egg"
 	icon_state = "egg"
+	density = 0
+	anchored = 0
 
-	density = 1
-	anchored = 1
+	var/health = 100
 
 
-/obj/alien/head  // To do: Hmm? Vat is this? - Abi
+/obj/alien/head
 	name = "severed head"
-	desc = "A severed head..."
+	desc = "a severed head..."
 	icon_state = "weeds"
 
 	density = 0
@@ -22,7 +24,7 @@
 
 /obj/alien/skin_suit
 	name = "skin"
-	desc = "A person's skin..."
+	desc = "a persons skin, disgusting"
 	icon_state = "weeds"
 
 	density = 0
@@ -33,14 +35,29 @@
 	desc = "Looks like some kind of slimy growth."
 	icon_state = "resin"
 
-	density = 0
-	opacity = 0
+	density = 1
+	opacity = 1
 	anchored = 1
+	var/health = 50
+	var/affecting = null
 
 /obj/alien/weeds
 	name = "weeds"
-	desc = "Strange purple weeds."
+	desc = "Weird purple weeds."
 	icon_state = "weeds"
 
 	anchored = 1
 	density = 0
+	var/health = 50
+
+/obj/alien/acid
+	name = "acid"
+	desc = "Burbling corrossive stuff. I wouldn't want to touch it."
+	icon_state = "acid"
+
+	density = 0
+	opacity = 0
+	anchored = 1
+
+	var/obj/target
+	var/ticks = 0

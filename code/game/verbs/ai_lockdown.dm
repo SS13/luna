@@ -2,13 +2,13 @@
 	set category = "AI Commands"
 	set name = "Lockdown"
 
-	usr << "\red Lockdown command temporarily disabled until we can keep it from lagging the crap out of everything."
-/*
 	if(usr.stat == 2)
 		usr <<"You cannot initiate lockdown because you are dead!"
 		return
 
-	world << "\red Lockdown initiated by [usr.name]!"
+	src << "<b>Initiating lockdowns has been disabled due to system stress.</b>"
+//	Commented this out to disable Lockdowns -- TLE
+/*	world << "\red Lockdown initiated by [usr.name]!"
 
 	for(var/obj/machinery/firealarm/FA in world) //activate firealarms
 		spawn( 0 )

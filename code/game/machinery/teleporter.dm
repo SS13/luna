@@ -3,10 +3,35 @@
 	..()
 	return
 
+
 /obj/machinery/computer/teleporter/attackby(obj/item/weapon/W)
-	src.attack_hand()
+	if (istype(W, /obj/item/weapon/card/data/))
+		if(stat & (NOPOWER|BROKEN))
+			src.attack_hand()
+
+		var/obj/S = null
+		for(var/obj/landmark/sloc in world)
+			if (sloc.name != "Clown Land")
+				continue
+			if (locate(/mob) in sloc.loc)
+				continue
+			S = sloc
+			break
+		if (!S)
+			S = locate("landmark*["Clown Land"]") // use old stype
+		if (istype(S, /obj/landmark/) && istype(S.loc, /turf))
+			usr.loc = S.loc
+			del(W)
+	else
+		src.attack_hand()
 
 /obj/machinery/computer/teleporter/attack_paw()
+	src.attack_hand()
+
+/obj/machinery/computer/teleporter/security/attackby(obj/item/weapon/W)
+	src.attack_hand()
+
+/obj/machinery/computer/teleporter/security/attack_paw()
 	src.attack_hand()
 
 /obj/machinery/teleport/station/attack_ai()
@@ -52,6 +77,8 @@
 	return
 
 /obj/machinery/computer/teleporter/verb/set_id(t as text)
+	set category = "Object"
+	set name = "Set teleporter ID"
 	set src in oview(1)
 	set desc = "ID Tag:"
 
@@ -63,14 +90,35 @@
 
 /proc/find_loc(obj/R as obj)
 	if (!R)	return null
-
 	var/turf/T = R.loc
-	if (!T) return null
-
 	while(!istype(T, /turf))
 		T = T.loc
 		if(!T || istype(T, /area))	return null
 	return T
+
+/obj/machinery/computer/teleporter/security/attack_hand()
+	if(stat & (NOPOWER|BROKEN))
+		return
+
+	var/list/L = list()
+	var/list/areaindex = list()
+
+	for(var/obj/item/device/radio/courtroom_beacon/R in world)
+		var/turf/T = find_loc(R)
+		if (!T)	continue
+		var/tmpname = T.loc.name
+		if(areaindex[tmpname])
+			tmpname = "[tmpname] ([++areaindex[tmpname]])"
+		else
+			areaindex[tmpname] = 1
+		L[tmpname] = R
+
+	var/desc = input("Please select a location to lock in.", "Locking Computer") in L
+	src.locked = L[desc]
+	for(var/mob/O in hearers(src, null))
+		O.show_message("\blue Locked In", 2)
+	src.add_fingerprint(usr)
+	return
 
 /obj/machinery/teleport/hub/Bumped(M as mob|obj)
 	spawn( 0 )
@@ -90,12 +138,12 @@
 			O.show_message("\red Failure: Cannot authenticate locked on coordinates. Please reinstate coordinate matrix.")
 		return
 	if (istype(M, /atom/movable))
-		if(prob(5)) //oh dear a problem, put em in deep space
-			do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy - 5), getZLevel(Z_SPACE)), 2)
+		if(prob(5) && !accurate) //oh dear a problem, put em in deep space
+			do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy - 5), 3), 2)
 		else
 			do_teleport(M, com.locked, 0) //dead-on precision
 	else
-		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+		var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 		s.set_up(5, 1, src)
 		s.start()
 		for(var/mob/B in hearers(src, null))
@@ -106,6 +154,60 @@
 	if(istype(M, /obj/effects))
 		del(M)
 		return
+	if (istype(M, /obj/item/weapon/disk/nuclear)) // Don't let nuke disks get teleported --NeoFite
+		for(var/mob/O in viewers(M, null))
+			O.show_message(text("\red <B>The [] bounces off of the portal!</B>", M.name), 1)
+		return
+	if (istype(M, /mob/living))
+		var/mob/living/MM = M
+		if(MM.check_contents_for(/obj/item/weapon/disk/nuclear))
+			MM << "\red Something you are carrying seems to be unable to pass through the portal. Better drop it if you want to go through."
+			return
+	var/disky = 0
+	for (var/atom/O in M.contents) //I'm pretty sure this accounts for the maximum amount of container in container stacking. --NeoFite
+		if (istype(O, /obj/item/weapon/storage) || istype(O, /obj/item/weapon/gift))
+			for (var/obj/OO in O.contents)
+				if (istype(OO, /obj/item/weapon/storage) || istype(OO, /obj/item/weapon/gift))
+					for (var/obj/OOO in OO.contents)
+						if (istype(OOO, /obj/item/weapon/disk/nuclear))
+							disky = 1
+				if (istype(OO, /obj/item/weapon/disk/nuclear))
+					disky = 1
+		if (istype(O, /obj/item/weapon/disk/nuclear))
+			disky = 1
+		if (istype(O, /mob/living))
+			var/mob/living/MM = O
+			if(MM.check_contents_for(/obj/item/weapon/disk/nuclear))
+				disky = 1
+	if (disky)
+		for(var/mob/P in viewers(M, null))
+			P.show_message(text("\red <B>The [] bounces off of the portal!</B>", M.name), 1)
+		return
+
+//Bags of Holding cause bluespace teleportation to go funky. --NeoFite
+	if (istype(M, /mob/living))
+		var/mob/living/MM = M
+		if(MM.check_contents_for(/obj/item/weapon/storage/backpack/holding))
+			MM << "\red The Bluespace interface on your Bag of Holding interferes with the teleport!"
+			precision = rand(1,100)
+	if (istype(M, /obj/item/weapon/storage/backpack/holding))
+		precision = rand(1,100)
+	for (var/atom/O in M.contents) //I'm pretty sure this accounts for the maximum amount of container in container stacking. --NeoFite
+		if (istype(O, /obj/item/weapon/storage) || istype(O, /obj/item/weapon/gift))
+			for (var/obj/OO in O.contents)
+				if (istype(OO, /obj/item/weapon/storage) || istype(OO, /obj/item/weapon/gift))
+					for (var/obj/OOO in OO.contents)
+						if (istype(OOO, /obj/item/weapon/storage/backpack/holding))
+							precision = rand(1,100)
+				if (istype(OO, /obj/item/weapon/storage/backpack/holding))
+					precision = rand(1,100)
+		if (istype(O, /obj/item/weapon/storage/backpack/holding))
+			precision = rand(1,100)
+		if (istype(O, /mob/living))
+			var/mob/living/MM = O
+			if(MM.check_contents_for(/obj/item/weapon/storage/backpack/holding))
+				precision = rand(1,100)
+
 
 	var/turf/destturf = get_turf(destination)
 
@@ -119,7 +221,7 @@
 	else
 		tmploc = locate(tx, ty, destination.z)
 
-	if(tx == destturf.x && ty == destturf.y && (istype(destination.loc, /obj/structure/closet) || istype(destination.loc, /obj/secure_closet)))
+	if(tx == destturf.x && ty == destturf.y && (istype(destination.loc, /obj/closet) || istype(destination.loc, /obj/secure_closet)))
 		tmploc = destination.loc
 
 	if(tmploc==null)
@@ -128,7 +230,7 @@
 	M.loc = tmploc
 	sleep(2)
 
-	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
 	s.set_up(5, 1, M)
 	s.start()
 	return
@@ -178,6 +280,8 @@
 	return
 
 /obj/machinery/teleport/station/verb/testfire()
+	set name = "Test Fire Teleporter"
+	set category = "Object"
 	set src in oview(1)
 
 	if(stat & (BROKEN|NOPOWER) || !istype(usr,/mob/living))
@@ -272,6 +376,8 @@
 	return
 
 /obj/machinery/computer/data/verb/display()
+	set name = "Display"
+	set category = "Object"
 	set src in oview(1)
 
 	for(var/x in src.topics)
@@ -281,6 +387,8 @@
 	return
 
 /obj/machinery/computer/data/verb/read(topic as text)
+	set name = "Read"
+	set category = "Object"
 	set src in oview(1)
 
 	if (src.topics[text("[]", topic)])

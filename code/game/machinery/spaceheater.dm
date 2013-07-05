@@ -22,7 +22,7 @@
 		update_icon()
 		return
 
-	proc/update_icon()
+	update_icon()
 		if(open)
 			icon_state = "sheater-open"
 		else
@@ -132,7 +132,7 @@
 							usr.r_hand = cell
 
 						cell.add_fingerprint(usr)
-						cell.update_icon()
+						cell.updateicon()
 						cell = null
 
 						usr.visible_message("\blue [usr] removes the power cell from \the [src].", "\blue You remove the power cell from \the [src].")
@@ -175,10 +175,11 @@
 						if(removed)
 
 							var/heat_capacity = removed.heat_capacity()
-							if(heat_capacity)
-								//world << "heating ([heat_capacity])"
-								removed.temperature = (removed.temperature*heat_capacity + heating_power)/heat_capacity
-								cell.use(heating_power/20000)
+							//world << "heating ([heat_capacity])"
+							if(heat_capacity == 0 || heat_capacity == null) // Added check to avoid divide by zero (oshi-) runtime errors -- TLE
+								heat_capacity = 1
+							removed.temperature = min((removed.temperature*heat_capacity + heating_power)/heat_capacity, 1000) // Added min() check to try and avoid wacky superheating issues in low gas scenarios -- TLE
+							cell.use(heating_power/20000)
 
 							//world << "now at [removed.temperature]"
 

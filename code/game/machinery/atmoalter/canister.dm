@@ -1,6 +1,6 @@
 /obj/machinery/portable_atmospherics/canister
 	name = "canister"
-	icon = 'icons/obj/atmos.dmi'
+	icon = 'atmos.dmi'
 	icon_state = "yellow"
 	density = 1
 	var/health = 100.0
@@ -10,43 +10,44 @@
 	var/release_pressure = ONE_ATMOSPHERE
 
 	var/color = "yellow"
-	var/can_label = 1
+	var/is_labeled = 0
 	var/filled = 0.5
 	pressure_resistance = 7*ONE_ATMOSPHERE
 	var/temperature_resistance = 1000 + T0C
 	volume = 1000
+	use_power = 0
 	var/release_log = ""
 
 /obj/machinery/portable_atmospherics/canister/sleeping_agent
 	name = "Canister: \[N2O\]"
 	icon_state = "redws"
 	color = "redws"
-	can_label = 0
+	is_labeled = 1
 /obj/machinery/portable_atmospherics/canister/nitrogen
 	name = "Canister: \[N2\]"
 	icon_state = "red"
 	color = "red"
-	can_label = 0
+	is_labeled = 1
 /obj/machinery/portable_atmospherics/canister/oxygen
 	name = "Canister: \[O2\]"
 	icon_state = "blue"
 	color = "blue"
-	can_label = 0
+	is_labeled = 1
 /obj/machinery/portable_atmospherics/canister/toxins
 	name = "Canister \[Toxin (Bio)\]"
 	icon_state = "orange"
 	color = "orange"
-	can_label = 0
+	is_labeled = 1
 /obj/machinery/portable_atmospherics/canister/carbon_dioxide
 	name = "Canister \[CO2\]"
 	icon_state = "black"
 	color = "black"
-	can_label = 0
+	is_labeled = 1
 /obj/machinery/portable_atmospherics/canister/air
 	name = "Canister \[Air\]"
 	icon_state = "grey"
 	color = "grey"
-	can_label = 0
+	is_labeled = 1
 
 /obj/machinery/portable_atmospherics/canister/update_icon()
 	src.overlays = 0
@@ -57,21 +58,18 @@
 	else
 		icon_state = "[color]"
 		if(holding)
-			overlays += "can-open"
-
-		if(connected_port)
-			overlays += "can-connector"
+			overlays += image('atmos.dmi', "can-oT")
 
 		var/tank_pressure = air_contents.return_pressure()
 
 		if (tank_pressure < 10)
-			overlays += image('icons/obj/atmos.dmi', "can-o0")
+			overlays += image('atmos.dmi', "can-o0")
 		else if (tank_pressure < ONE_ATMOSPHERE)
-			overlays += image('icons/obj/atmos.dmi', "can-o1")
+			overlays += image('atmos.dmi', "can-o1")
 		else if (tank_pressure < 15*ONE_ATMOSPHERE)
-			overlays += image('icons/obj/atmos.dmi', "can-o2")
+			overlays += image('atmos.dmi', "can-o2")
 		else
-			overlays += image('icons/obj/atmos.dmi', "can-o3")
+			overlays += image('atmos.dmi', "can-o3")
 	return
 
 /obj/machinery/portable_atmospherics/canister/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
@@ -88,7 +86,7 @@
 		location.assume_air(air_contents)
 
 		src.destroyed = 1
-		playsound(src.loc, 'sound/effects/spray.ogg', 10, 1, -3)
+		playsound(src.loc, 'spray.ogg', 10, 1, -3)
 		src.density = 0
 		update_icon()
 
@@ -130,11 +128,6 @@
 				loc.assume_air(removed)
 			src.update_icon()
 
-	if(air_contents.return_pressure() < 1)
-		can_label = 1
-	else
-		can_label = 0
-
 	src.updateDialog()
 	return
 
@@ -154,15 +147,9 @@
 	return 0
 
 /obj/machinery/portable_atmospherics/canister/blob_act()
-	src.health -= 200
+	src.health -= 1
 	healthcheck()
 	return
-/*
-/obj/machinery/portable_atmospherics/canister/bullet_act(var/obj/item/projectile/Proj)
-	if(Proj.damage)
-		src.health -= round(Proj.damage / 2)
-		healthcheck()
-	..()*/
 
 /obj/machinery/portable_atmospherics/canister/meteorhit(var/obj/O as obj)
 	src.health = 0
@@ -171,46 +158,29 @@
 
 /obj/machinery/portable_atmospherics/canister/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 	if(!istype(W, /obj/item/weapon/wrench) && !istype(W, /obj/item/weapon/tank) && !istype(W, /obj/item/device/analyzer) && !istype(W, /obj/item/device/pda))
-		visible_message("\red [user] hits the [src] with a [W]!")
+		for(var/mob/V in viewers(src, null))
+			V.show_message(text("\red [user] hits the [src] with a [W]!"))
 		src.health -= W.force
-		src.add_fingerprint(user)
 		healthcheck()
-
-	if(istype(user, /mob/living/silicon/robot) && istype(W, /obj/item/weapon/tank/jetpack))
-		var/datum/gas_mixture/thejetpack = W:air_contents
-		var/env_pressure = thejetpack.return_pressure()
-		var/pressure_delta = min(10*ONE_ATMOSPHERE - env_pressure, (air_contents.return_pressure() - env_pressure)/2)
-		//Can not have a pressure delta that would cause environment pressure > tank pressure
-		var/transfer_moles = 0
-		if((air_contents.temperature > 0) && (pressure_delta > 0))
-			transfer_moles = pressure_delta*thejetpack.volume/(air_contents.temperature * R_IDEAL_GAS_EQUATION)//Actually transfer the gas
-			var/datum/gas_mixture/removed = air_contents.remove(transfer_moles)
-			thejetpack.merge(removed)
-			user << "You pulse-pressurize your jetpack from the tank."
-		return
-
 	..()
 
 /obj/machinery/portable_atmospherics/canister/attack_ai(var/mob/user as mob)
-	return src.interact(user)
+	return src.attack_hand(user)
 
 /obj/machinery/portable_atmospherics/canister/attack_paw(var/mob/user as mob)
-	return src.interact(user)
+	return src.attack_hand(user)
 
 /obj/machinery/portable_atmospherics/canister/attack_hand(var/mob/user as mob)
-	return src.interact(user)
-
-/obj/machinery/portable_atmospherics/canister/proc/interact(var/mob/user as mob)
 	if (src.destroyed)
 		return
 
-	user.set_machine(src)
+	user.machine = src
 	var/holding_text
 	if(holding)
 		holding_text = {"<BR><B>Tank Pressure</B>: [holding.air_contents.return_pressure()] KPa<BR>
 <A href='?src=\ref[src];remove_tank=1'>Remove Tank</A><BR>
 "}
-	var/output_text = {"<TT><B>[name]</B>[can_label?" <A href='?src=\ref[src];relabel=1'><small>relabel</small></a>":""]<BR>
+	var/output_text = {"<TT><B>[name]</B>[!is_labeled?" <A href='?src=\ref[src];relabel=1'><small>relabel</small></a>":""]<BR>
 Pressure: [air_contents.return_pressure()] KPa<BR>
 Port Status: [(connected_port)?("Connected"):("Disconnected")]
 [holding_text]
@@ -226,15 +196,11 @@ Release Pressure: <A href='?src=\ref[src];pressure_adj=-1000'>-</A> <A href='?sr
 	return
 
 /obj/machinery/portable_atmospherics/canister/Topic(href, href_list)
-
-	//Do not use "if(..()) return" here, canisters will stop working in unpowered areas like space or on the derelict.
-	if(!usr.canmove || usr.stat || usr.restrained() || !in_range(loc, usr))
-		usr << browse(null, "window=canister")
-		onclose(usr, "canister")
+	..()
+	if (usr.stat || usr.restrained())
 		return
-
 	if (((get_dist(src, usr) <= 1) && istype(src.loc, /turf)))
-		usr.set_machine(src)
+		usr.machine = src
 
 		if(href_list["toggle"])
 			if (valve_open)
@@ -262,7 +228,7 @@ Release Pressure: <A href='?src=\ref[src];pressure_adj=-1000'>-</A> <A href='?sr
 				release_pressure = max(ONE_ATMOSPHERE/10, release_pressure+diff)
 
 		if (href_list["relabel"])
-			if (can_label)
+			if (!is_labeled)
 				var/list/colors = list(\
 					"\[N2O\]" = "redws", \
 					"\[N2\]" = "red", \
@@ -277,12 +243,21 @@ Release Pressure: <A href='?src=\ref[src];pressure_adj=-1000'>-</A> <A href='?sr
 					src.color = colors[label]
 					src.icon_state = colors[label]
 					src.name = "Canister: [label]"
+					is_labeled = 1
 		src.updateUsrDialog()
 		src.add_fingerprint(usr)
 		update_icon()
 	else
 		usr << browse(null, "window=canister")
 		return
+	return
+
+/obj/machinery/portable_atmospherics/canister/bullet_act(flag)
+	if (flag == PROJECTILE_BULLET)
+		src.health = 0
+		spawn( 0 )
+			healthcheck()
+			return
 	return
 
 /obj/machinery/portable_atmospherics/canister/toxins/New()

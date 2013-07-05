@@ -1,7 +1,4 @@
 /////////////////////////// DNA DATUM
-
-#define STRUCDNASIZE 25
-
 /datum/dna
 	var/unique_enzymes = null
 	var/struc_enzymes = null
@@ -9,9 +6,9 @@
 
 /datum/dna/proc/check_integrity()
 	//Lazy.
-//	if(length(uni_identity) != 39) uni_identity = "00600200A00E0110148FC01300B0095BD7FD3F4"
-//	if(length(struc_enzymes)!= STRUCDNASIZE*3) struc_enzymes = "2013E85C944C19A4B00185144725785DC6406A4508186248487555169453220780579106750610"
-	return
+	if(length(uni_identity) != 39) uni_identity = "00600200A00E0110148FC01300B0095BD7FD3F4"
+	if(length(struc_enzymes)!= 42) struc_enzymes = "0983E840344C39F4B059D5145FC5785DC6406A4000"
+
 /datum/dna/proc/ready_dna(mob/living/carbon/human/character)
 
 	var/temp
@@ -21,7 +18,7 @@
 	// determine DNA fragment from hairstyle
 	// :wtc:
 
-	var/list/styles = list("bald", "hair_a", "hair_b", "hair_longfringe", "hair_vlongfringe", "hair_longest", "hair_test", "hair_c", "hair_d", "hair_e", "hair_f", "hair_bedhead", "hair_bedheadv2", "hair_spikey", "hair_dreads", "hair_afro", "hair_bigafro", "hair_braid", "hair_kigami", "hair_ponytail" )
+	var/list/styles = list("bald", "hair_a", "hair_b", "hair_c", "hair_d", "hair_e", "hair_f", "hair_bedhead", "hair_dreads" )
 	var/hrange = round(4095 / styles.len)
 
 	var/style = styles.Find(character.hair_icon_state)
@@ -70,7 +67,7 @@
 
 	uni_identity = temp
 
-	var/mutstring = "2013E85C944C19A4B00185144725785DC6406A4508186248487555169453220780579106750610"
+	var/mutstring = "2013E85C944C19A4B00185144725785DC6406A4508"
 
 	struc_enzymes = mutstring
 
@@ -252,15 +249,10 @@
 		var/hairnum = hex2num(getblock(structure,13,3))
 
 
-		var/list/styles = list("bald", "hair_a", "hair_b", "hair_longfringe", "hair_vlongfringe", "hair_longest", "hair_test", "hair_c", "hair_d", "hair_e", "hair_f", "hair_bedhead", "hair_bedheadv2", "hair_spikey", "hair_dreads", "hair_afro", "hair_bigafro", "hair_braid", "hair_kigami", "hair_ponytail" )
+		var/list/styles = list("bald", "hair_a", "hair_b", "hair_c", "hair_d", "hair_e", "hair_f", "hair_bedhead", "hair_dreads" )
 		var/hrange = round(4095 / styles.len)
 
 		var/style = round(hairnum / hrange)
-
-		if (style > styles.len)
-			style = styles.len
-		if (style < 1)
-			style = 1
 
 		H.hair_icon_state = styles[style]
 		H.h_style = H.hair_icon_state
@@ -273,29 +265,12 @@
 	else
 		return 0
 
-/proc/ismuton(var/block,var/mob/M)
-	return isblockon(getblock(M.dna.struc_enzymes, block,3),block)
-
-/proc/domutcheck(mob/M as mob, connected, inj)
-	if (!M) return
+/proc/domutcheck(mob/living/M as mob, connected, inj)
 	//telekinesis = 1
 	//firemut = 2
 	//xray = 4
 	//hulk = 8
 	//clumsy = 16
-	//nobreath = 32
-	//remoteviewing = 64
-	//regenerate = 128
-	//Increaserun = 256
-	//remotetalk = 512
-	//morphskincolour = 1024
-	//blend = 2048
-	//hallucinationimmunity = 4096
-	//fingerprints = 8192
-	//shockimmunity = 16384
-	//smallsize = 32768
-
-
 	M.dna.check_integrity()
 
 	M.disabilities = 0
@@ -305,62 +280,17 @@
 	M.see_in_dark = 2
 	M.see_invisible = 0
 
-
-	if(ismuton(NOBREATHBLOCK,M))
-		if(prob(15))
-			M << "\blue You stop breathing"
-			M.mutations |= mNobreath
-	if(ismuton(REMOTEVIEWBLOCK,M))
-		if(prob(15))
-			M << "\blue Your mind expands"
-			M.mutations |= mRemote
-	if(ismuton(REGENERATEBLOCK,M))
-		if(prob(15))
-			M << "\blue You feel strange"
-			M.mutations |= mRegen
-	if(ismuton(INCREASERUNBLOCK,M))
-		if(prob(15))
-			M << "\blue You feel quick"
-			M.mutations |= mRun
-	if(ismuton(REMOTETALKBLOCK,M))
-		if(prob(15))
-			M << "\blue You expand your mind outwards"
-			M.mutations |= mRemotetalk
-	if(ismuton(MORPHBLOCK,M))
-		if(prob(15))
-			M.mutations |= mMorph
-			M << "\blue Your skin feels strange"
-	if(ismuton(BLENDBLOCK,M))
-		if(prob(15))
-			M.mutations |= mBlend
-			M << "\blue You feel alone"
-	if(ismuton(HALLUCINATIONBLOCK,M))
-		if(prob(15))
-			M.mutations |= mHallucination
-			M << "\blue Your mind says 'Hello'"
-	if(ismuton(NOPRINTSBLOCK,M))
-		if(prob(15))
-			M.mutations |= mFingerprints
-			M << "\blue Your fingers feel numb"
-	if(ismuton(SHOCKIMMUNITYBLOCK,M))
-		if(prob(15))
-			M.mutations |= mShock
-			M << "\blue You feel strange"
-	if(ismuton(SMALLSIZEBLOCK,M))
-		if(prob(15))
-			M << "\blue Your skin feels rubbery"
-			M.mutations |= mSmallsize
-
-
-
-	if (isblockon(getblock(M.dna.struc_enzymes, HULKBLOCK,3),HULKBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, 1,3),1))
+		M.disabilities |= 1
+		M << "\red Your eyes feel strange."
+	if (isblockon(getblock(M.dna.struc_enzymes, HULKBLOCK,3),2))
 		if(inj || prob(15))
 			M << "\blue Your muscles hurt."
 			M.mutations |= 8
-	if (isblockon(getblock(M.dna.struc_enzymes, HEADACHEBLOCK,3),HEADACHEBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, 3,3),3))
 		M.disabilities |= 2
 		M << "\red You get a headache."
-	if (isblockon(getblock(M.dna.struc_enzymes, FAKEBLOCK,3),FAKEBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, FAKEBLOCK,3),4))
 		M << "\red You feel strange."
 		if (prob(95))
 			if(prob(50))
@@ -369,37 +299,37 @@
 				randmuti(M)
 		else
 			randmutg(M)
-	if (isblockon(getblock(M.dna.struc_enzymes, COUGHBLOCK,3),COUGHBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, 5,3),5))
 		M.disabilities |= 4
 		M << "\red You start coughing."
-	if (isblockon(getblock(M.dna.struc_enzymes, CLUMSYBLOCK,3),CLUMSYBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, CLUMSYBLOCK,3),6))
 		M << "\red You feel lightheaded."
 		M.mutations |= 16
-	if (isblockon(getblock(M.dna.struc_enzymes, TWITCHBLOCK,3),TWITCHBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, 7,3),7))
 		M.disabilities |= 8
 		M << "\red You twitch."
-	if (isblockon(getblock(M.dna.struc_enzymes, XRAYBLOCK,3),XRAYBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, XRAYBLOCK,3),8))
 		if(inj || prob(30))
 			M << "\blue The walls suddenly disappear."
 			M.sight |= (SEE_MOBS|SEE_OBJS|SEE_TURFS)
 			M.see_in_dark = 8
 			M.see_invisible = 2
 			M.mutations |= 4
-	if (isblockon(getblock(M.dna.struc_enzymes, NERVOUSBLOCK,3),NERVOUSBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, 9,3),9))
 		M.disabilities |= 16
 		M << "\red You feel nervous."
-	if (isblockon(getblock(M.dna.struc_enzymes, FIREBLOCK,3),FIREBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, FIREBLOCK,3),10))
 		if(inj || prob(30))
 			M << "\blue Your body feels warm."
 			M.mutations |= 2
-	if (isblockon(getblock(M.dna.struc_enzymes, BLINDBLOCK,3),BLINDBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, BLINDBLOCK,3),11))
 		M.sdisabilities |= 1
-		M << "\red You can't seem to see anything."
-	if (isblockon(getblock(M.dna.struc_enzymes, TELEBLOCK,3),TELEBLOCK))
+		M << "\red You cant seem to see anything."
+	if (isblockon(getblock(M.dna.struc_enzymes, TELEBLOCK,3),12))
 		if(inj || prob(15))
 			M << "\blue You feel smarter."
 			M.mutations |= 1
-	if (isblockon(getblock(M.dna.struc_enzymes, DEAFBLOCK,3),DEAFBLOCK))
+	if (isblockon(getblock(M.dna.struc_enzymes, DEAFBLOCK,3),13))
 		M.sdisabilities |= 4
 		M.ear_deaf = 1
 		M << "\red Its kinda quiet..."
@@ -407,44 +337,45 @@
 //////////////////////////////////////////////////////////// Monkey Block
 	if (isblockon(getblock(M.dna.struc_enzymes, 14,3),14) && istype(M, /mob/living/carbon/human))
 	// human > monkey
+		var/mob/living/carbon/human/H = M
 		var/list/implants = list() //Try to preserve implants.
-		for(var/obj/item/weapon/implant/W in M)
-			if (istype(W, /obj/item/weapon/implant))
-				implants += W
-		for(var/obj/item/weapon/W in M)
-			M.u_equip(W)
-			if (M.client)
-				M.client.screen -= W
-			if (W)
-				W.loc = M.loc
-				W.dropped(M)
-				W.layer = initial(W.layer)
-		for(var/obj/item/clothing/C)
-			C.dropped(M)
-			if (M.client)
-				M.client.screen -= C
+		for(var/obj/item/weapon/implant/W in H)
+			implants += W
+
 		if(!connected)
+			for(var/obj/item/W in (H.contents-implants))
+				if (W==H.w_uniform) // will be teared
+					continue
+				H.drop_from_slot(W)
 			M.update_clothing()
 			M.monkeyizing = 1
 			M.canmove = 0
 			M.icon = null
 			M.invisibility = 101
-			var/atom/movable/overlay/animation = new /atom/movable/overlay( M.loc )
+			var/atom/movable/overlay/animation = new( M.loc )
 			animation.icon_state = "blank"
 			animation.icon = 'mob.dmi'
 			animation.master = src
 			flick("h2monkey", animation)
-			sleep(48 * tick_multiplier)
+			sleep(48)
 			del(animation)
 
-		var/mob/living/carbon/monkey/O = new /mob/living/carbon/monkey(src)
-		O.dna = M.dna
-		M.dna = null
+		var/mob/living/carbon/monkey/O = new(src)
+		if (M.dna)
+			O.dna = M.dna
+			M.dna = null
 
-		for(var/obj/T in M)
+
+		O.virus = M.virus
+		M.virus = null
+		if (O.virus)
+			O.virus.affected_mob = O
+
+
+		for(var/obj/T in (M.contents-implants))
 			del(T)
-		for(var/R in M.organs)
-			del(M.organs["[R]"])
+		//for(var/R in M.organs)
+		//	del(M.organs[text("[]", R)])
 
 		O.loc = M.loc
 
@@ -456,49 +387,41 @@
 			O.loc = C
 			C.occupant = O
 			connected = null
-		O.name = "monkey ([copytext(md5(M.real_name), 2, 6)])"
+		O.name = text("monkey ([])",copytext(md5(M.real_name), 2, 6))
+		O.take_overall_damage(M.bruteloss + 40, M.fireloss)
 		O.toxloss += (M.toxloss + 20)
-		O.bruteloss += (M.bruteloss + 40)
 		O.oxyloss += M.oxyloss
-		O.fireloss += M.fireloss
 		O.stat = M.stat
 		O.a_intent = "hurt"
 		for (var/obj/item/weapon/implant/I in implants)
 			I.loc = O
 			I.implanted = O
-			continue
 		del(M)
 		return
 
 	if (!isblockon(getblock(M.dna.struc_enzymes, 14,3),14) && !istype(M, /mob/living/carbon/human))
-	// monkey > human
-		var/list/implants = list()
-		for (var/obj/item/weapon/implant/I in M) //Still preserving implants
-			implants += I
-
+	// monkey > human,
+		var/mob/living/carbon/monkey/Mo = M
+		var/list/implants = list() //Still preserving implants
+		for(var/obj/item/weapon/implant/W in Mo)
+			implants += W
 		if(!connected)
-			for(var/obj/item/weapon/W in M)
-				M.u_equip(W)
-				if (M.client)
-					M.client.screen -= W
-				if (W)
-					W.loc = M.loc
-					W.dropped(M)
-					W.layer = initial(W.layer)
+			for(var/obj/item/W in (Mo.contents-implants))
+				Mo.drop_from_slot(W)
 			M.update_clothing()
 			M.monkeyizing = 1
 			M.canmove = 0
 			M.icon = null
 			M.invisibility = 101
-			var/atom/movable/overlay/animation = new /atom/movable/overlay( M.loc )
+			var/atom/movable/overlay/animation = new( M.loc )
 			animation.icon_state = "blank"
 			animation.icon = 'mob.dmi'
 			animation.master = src
 			flick("monkey2h", animation)
-			sleep(48 * tick_multiplier)
+			sleep(48)
 			del(animation)
 
-		var/mob/living/carbon/human/O = new /mob/living/carbon/human( src )
+		var/mob/living/carbon/human/O = new( src )
 		if (isblockon(getblock(M.dna.uni_identity, 11,3),11))
 			O.gender = FEMALE
 		else
@@ -506,8 +429,13 @@
 		O.dna = M.dna
 		M.dna = null
 
-		for(var/obj/T in M)
-			del(T)
+		O.virus = M.virus
+		M.virus = null
+		if (O.virus)
+			O.virus.affected_mob = O
+
+		//for(var/obj/T in M)
+		//	del(T)
 
 		O.loc = M.loc
 
@@ -533,31 +461,25 @@
 				O.real_name = randomname
 				i++
 		updateappearance(O,O.dna.uni_identity)
-	//	O.toxloss += M.toxloss
-	//	O.bruteloss += M.bruteloss
-	//	O.oxyloss += M.oxyloss
-	//	O.fireloss += M.fireloss
-	//	O.stat = M.stat
+		O.take_overall_damage(M.bruteloss, M.fireloss)
+		O.toxloss += M.toxloss
+		O.oxyloss += M.oxyloss
+		O.stat = M.stat
 		for (var/obj/item/weapon/implant/I in implants)
 			I.loc = O
 			I.implanted = O
-			continue
-
-		O.update_clothing()
-		O.toxloss += (M.toxloss + 20)
-		O.bruteloss += (M.bruteloss + 40)
-		O.oxyloss += M.oxyloss
 		del(M)
 		return
 //////////////////////////////////////////////////////////// Monkey Block
-	if (M) M.update_clothing()
+	if (M)
+		M.update_clothing()
 	return null
 /////////////////////////// DNA MISC-PROCS
 
 
 /////////////////////////// DNA MACHINES
-/*/obj/machinery/dna_scannernew/allow_drop()
-	return 0*/
+/obj/machinery/dna_scannernew/allow_drop()
+	return 0
 
 /obj/machinery/dna_scannernew/relaymove(mob/user as mob)
 	if (user.stat)
@@ -567,6 +489,8 @@
 
 /obj/machinery/dna_scannernew/verb/eject()
 	set src in oview(1)
+	set category = "Object"
+	set name = "Eject DNA Scanner"
 
 	if (usr.stat != 0)
 		return
@@ -576,6 +500,8 @@
 
 /obj/machinery/dna_scannernew/verb/move_inside()
 	set src in oview(1)
+	set category = "Object"
+	set name = "Enter DNA Scanner"
 
 	if (usr.stat != 0)
 		return
@@ -669,7 +595,7 @@
 
 
 /obj/machinery/dna_scannernew/blob_act()
-	if(prob(50))
+	if(prob(75))
 		for(var/atom/movable/A as mob|obj in src)
 			A.loc = src.loc
 		del(src)
@@ -691,7 +617,7 @@
 
 /obj/machinery/scan_consolenew/blob_act()
 
-	if(prob(50))
+	if(prob(75))
 		del(src)
 
 /obj/machinery/scan_consolenew/power_change()
@@ -713,7 +639,7 @@
 	return
 
 /obj/machinery/scan_consolenew/attackby(obj/item/W as obj, mob/user as mob)
-	if ((istype(W, /obj/item/weapon/disk/data/genetics)) && (!src.diskette))
+	if ((istype(W, /obj/item/weapon/disk/data)) && (!src.diskette))
 		user.drop_item()
 		W.loc = src
 		src.diskette = W
@@ -723,7 +649,6 @@
 /obj/machinery/scan_consolenew/process() //not really used right now
 	if(stat & (NOPOWER|BROKEN))
 		return
-	use_power(250) // power stuff
 	if (!( src.status )) //remove this
 		return
 	return
@@ -742,7 +667,7 @@
 		src.delete = src.delete
 
 	else if (!src.delete && src.temphtml) //Window in buffer - its a menu, dont add clear message
-		dat = "[src.temphtml]<BR><BR><A href='?src=\ref[src];clear=1'>Main Menu</A>"
+		dat = text("[]<BR><BR><A href='?src=\ref[];clear=1'>Main Menu</A>", src.temphtml, src)
 	else
 		if (src.connected) //Is something connected?
 			var/mob/occupant = src.connected.occupant
@@ -783,12 +708,14 @@
 			dat += text("<BR><BR><A href='?src=\ref[];mach_close=scannernew'>Close</A>", user)
 		else
 			dat = "<font color='red'> Error: No DNA Modifier connected. </FONT>"
-	user << browse(dat, "window=scannernew;size=1000x625")
+	user << browse(dat, "window=scannernew;size=550x625")
 	onclose(user, "scannernew")
 	return
 
 /obj/machinery/scan_consolenew/Topic(href, href_list)
 	if(..())
+		return
+	if(!istype(usr.loc, /turf))
 		return
 	if ((usr.contents.Find(src) || in_range(src, usr) && istype(src.loc, /turf)) || (istype(usr, /mob/living/silicon)))
 		usr.machine = src
@@ -797,13 +724,12 @@
 				src.connected.locked = !( src.connected.locked )
 		////////////////////////////////////////////////////////
 		if (href_list["genpulse"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=1000x625")
-				return
 			src.delete = 1
 			src.temphtml = text("Working ... Please wait ([] Seconds)", src.radduration)
-			usr << browse(temphtml, "window=scannernew;size=1000x650")
+			usr << browse(temphtml, "window=scannernew;size=550x650")
 			onclose(usr, "scannernew")
+			var/lock_state = src.connected.locked
+			src.connected.locked = 1//lock it
 			sleep(10*src.radduration)
 			if (!src.connected.occupant)
 				temphtml = null
@@ -820,57 +746,36 @@
 				else
 					randmuti(src.connected.occupant)
 			src.connected.occupant.radiation += ((src.radstrength*3)+src.radduration*3)
+			src.connected.locked = lock_state
 			temphtml = null
 			delete = 0
 		if (href_list["radset"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=1000x625")
-				return
 			src.temphtml = text("Radiation Duration: <B><font color='green'>[]</B></FONT><BR>", src.radduration)
 			src.temphtml += text("Radiation Intensity: <font color='green'><B>[]</B></FONT><BR><BR>", src.radstrength)
 			src.temphtml += text("<A href='?src=\ref[];radleminus=1'>--</A> Duration <A href='?src=\ref[];radleplus=1'>++</A><BR>", src, src)
 			src.temphtml += text("<A href='?src=\ref[];radinminus=1'>--</A> Intesity <A href='?src=\ref[];radinplus=1'>++</A><BR>", src, src)
 			src.delete = 0
 		if (href_list["radleplus"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=1000x625")
-				return
 			if (src.radduration < 20)
 				src.radduration++
 				src.radduration++
 			dopage(src,"radset")
 		if (href_list["radleminus"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=1000x625")
-				return
 			if (src.radduration > 2)
 				src.radduration--
 				src.radduration--
 			dopage(src,"radset")
 		if (href_list["radinplus"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=1000x625")
-				return
 			if (src.radstrength < 10)
 				src.radstrength++
 			dopage(src,"radset")
 		if (href_list["radinminus"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=550x625")
-				return
 			if (src.radstrength > 1)
 				src.radstrength--
 			dopage(src,"radset")
 		////////////////////////////////////////////////////////
 		if (href_list["unimenu"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=550x625")
-				return
 			//src.temphtml = text("Unique Identifier: <font color='blue'>[]</FONT><BR><BR>", src.connected.occupant.dna.uni_identity)
-			if (!src.connected.occupant)
-				temphtml = null
-				delete = 0
-				return null
 			src.temphtml = text("Unique Identifier: <font color='blue'>[getleftblocks(src.connected.occupant.dna.uni_identity,uniblock,3)][src.subblock == 1 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.uni_identity,src.uniblock,3),1,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.uni_identity,src.uniblock,3),1,1)][src.subblock == 2 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.uni_identity,src.uniblock,3),2,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.uni_identity,src.uniblock,3),2,1)][src.subblock == 3 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.uni_identity,src.uniblock,3),3,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.uni_identity,src.uniblock,3),3,1)][getrightblocks(src.connected.occupant.dna.uni_identity,uniblock,3)]</FONT><BR><BR>")
 			src.temphtml += text("Selected Block: <font color='blue'><B>[]</B></FONT><BR>", src.uniblock)
 			src.temphtml += text("<A href='?src=\ref[];unimenuminus=1'><-</A> Block <A href='?src=\ref[];unimenuplus=1'>-></A><BR><BR>", src, src)
@@ -904,6 +809,8 @@
 			src.temphtml = text("Working ... Please wait ([] Seconds)", src.radduration)
 			usr << browse(temphtml, "window=scannernew;size=550x650")
 			onclose(usr, "scannernew")
+			var/lock_state = src.connected.locked
+			src.connected.locked = 1//lock it
 			sleep(10*src.radduration)
 			if (!src.connected.occupant)
 				temphtml = null
@@ -928,44 +835,31 @@
 					randmuti(src.connected.occupant)
 					updateappearance(src.connected.occupant,src.connected.occupant.dna.uni_identity)
 				src.connected.occupant.radiation += ((src.radstrength*2)+src.radduration)
+			src.connected.locked = lock_state
 			dopage(src,"unimenu")
 			src.delete = 0
 		////////////////////////////////////////////////////////
 		if (href_list["rejuv"])
-			if (!src.connected.occupant)
-				temphtml = null
-				delete = 0
-				return null
 			var/mob/living/carbon/human/H = src.connected.occupant
-			if (H.reagents.get_reagent_amount("inaprovaline") < 60)
-				H.reagents.add_reagent("inaprovaline", 30)
-			usr << text("Occupant now has [] units of inaprovaline in \his bloodstream.", H.reagents.get_reagent_amount("inaprovaline"))
-			src.delete = 0
+			if(H)
+				if (H.reagents.get_reagent_amount("inaprovaline") < 60)
+					H.reagents.add_reagent("inaprovaline", 30)
+				usr << text("Occupant now has [] units of rejuvenation in his/her bloodstream.", H.reagents.get_reagent_amount("inaprovaline"))
+				src.delete = 0
 		////////////////////////////////////////////////////////
 		if (href_list["strucmenu"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=550x625")
-				return
-			if (!src.connected.occupant)
-				temphtml = null
-				delete = 0
-				return null
-			src.temphtml = text("Structural Enzymes: <font color='blue'>[getleftblocks(src.connected.occupant.dna.struc_enzymes,strucblock,3)][src.subblock == 1 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1)][src.subblock == 2 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1)][src.subblock == 3 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)][getrightblocks(src.connected.occupant.dna.struc_enzymes,strucblock,3)]</FONT><BR><BR>")
-			//src.temphtml = text("Structural Enzymes: <font color='blue'>[]</FONT><BR><BR>", src.connected.occupant.dna.struc_enzymes)
-			src.temphtml += text("Selected Block: <font color='blue'><B>[src.strucblock]</B></FONT><BR>")
-			src.temphtml += text("<A href='?src=\ref[];strucmenuminus=1'><-</A> <A href='?src=\ref[src];setblock=1'>Block</A> <A href='?src=\ref[];strucmenuplus=1'>-></A><BR><BR>", src, src)
-			src.temphtml += text("Selected Sub-Block: <font color='blue'><B>[]</B></FONT><BR>", src.subblock)
-			src.temphtml += text("<A href='?src=\ref[];strucmenusubminus=1'><-</A> Sub-Block <A href='?src=\ref[];strucmenusubplus=1'>-></A><BR><BR>", src, src)
-			src.temphtml += "<B>Modify Block:</B><BR>"
-			src.temphtml += text("<A href='?src=\ref[];strucpulse=1'>Radiation</A><BR>", src)
-			src.delete = 0
-		if (href_list["setblock"])
-			var/i = text2num(input("Which block do you want to select ?"))
-			if(i>0 && i<STRUCDNASIZE)
-				src.strucblock = i
-
+			if(src.connected.occupant)
+				src.temphtml = text("Structural Enzymes: <font color='blue'>[getleftblocks(src.connected.occupant.dna.struc_enzymes,strucblock,3)][src.subblock == 1 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1)][src.subblock == 2 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1)][src.subblock == 3 ? "<U><B>"+getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)+"</U></B>" : getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)][getrightblocks(src.connected.occupant.dna.struc_enzymes,strucblock,3)]</FONT><BR><BR>")
+				//src.temphtml = text("Structural Enzymes: <font color='blue'>[]</FONT><BR><BR>", src.connected.occupant.dna.struc_enzymes)
+				src.temphtml += text("Selected Block: <font color='blue'><B>[]</B></FONT><BR>", src.strucblock)
+				src.temphtml += text("<A href='?src=\ref[];strucmenuminus=1'><-</A> Block <A href='?src=\ref[];strucmenuplus=1'>-></A><BR><BR>", src, src)
+				src.temphtml += text("Selected Sub-Block: <font color='blue'><B>[]</B></FONT><BR>", src.subblock)
+				src.temphtml += text("<A href='?src=\ref[];strucmenusubminus=1'><-</A> Sub-Block <A href='?src=\ref[];strucmenusubplus=1'>-></A><BR><BR>", src, src)
+				src.temphtml += "<B>Modify Block:</B><BR>"
+				src.temphtml += text("<A href='?src=\ref[];strucpulse=1'>Radiation</A><BR>", src)
+				src.delete = 0
 		if (href_list["strucmenuplus"])
-			if (src.strucblock < STRUCDNASIZE)
+			if (src.strucblock < 14)
 				src.strucblock++
 			dopage(src,"strucmenu")
 		if (href_list["strucmenuminus"])
@@ -985,61 +879,63 @@
 			var/newblock
 			var/tstructure2
 			var/oldblock
-			block = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),src.subblock,1)
-			src.delete = 1
-			src.temphtml = text("Working ... Please wait ([] Seconds)", src.radduration)
-			usr << browse(temphtml, "window=scannernew;size=550x650")
-			onclose(usr, "scannernew")
-			sleep(10*src.radduration)
-			if (!src.connected.occupant)
+			var/lock_state = src.connected.locked
+			src.connected.locked = 1//lock it
+			if (src.connected.occupant)
+				block = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),src.subblock,1)
+				src.delete = 1
+				src.temphtml = text("Working ... Please wait ([] Seconds)", src.radduration)
+				usr << browse(temphtml, "window=scannernew;size=550x650")
+				onclose(usr, "scannernew")
+				sleep(10*src.radduration)
+			else
 				temphtml = null
 				delete = 0
 				return null
 			///
-			if (prob((80 + (src.radduration / 2))))
-				if ((src.strucblock != 2 || src.strucblock != 12 || src.strucblock != 8 || src.strucblock || 10) && prob (20))
-					oldblock = src.strucblock
-					block = miniscramble(block, src.radstrength, src.radduration)
-					newblock = null
-					if (src.strucblock > 1 && src.strucblock < 5)
-						src.strucblock++
-					else if (src.strucblock > 5 && src.strucblock < STRUCDNASIZE)
-						src.strucblock--
-					if (src.subblock == 1) newblock = block + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1) + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)
-					if (src.subblock == 2) newblock = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1) + block + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)
-					if (src.subblock == 3) newblock = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1) + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1) + block
-					tstructure2 = setblock(src.connected.occupant.dna.struc_enzymes, src.strucblock, newblock,3)
-					src.connected.occupant.dna.struc_enzymes = tstructure2
-					domutcheck(src.connected.occupant,src.connected)
-					src.connected.occupant.radiation += (src.radstrength+src.radduration)
-					src.strucblock = oldblock
-				else
+			if(src.connected.occupant)
+				if (prob((80 + (src.radduration / 2))))
+					if ((src.strucblock != 2 || src.strucblock != 12 || src.strucblock != 8 || src.strucblock || 10) && prob (20))
+						oldblock = src.strucblock
+						block = miniscramble(block, src.radstrength, src.radduration)
+						newblock = null
+						if (src.strucblock > 1 && src.strucblock < 5)
+							src.strucblock++
+						else if (src.strucblock > 5 && src.strucblock < 14)
+							src.strucblock--
+						if (src.subblock == 1) newblock = block + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1) + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)
+						if (src.subblock == 2) newblock = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1) + block + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)
+						if (src.subblock == 3) newblock = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1) + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1) + block
+						tstructure2 = setblock(src.connected.occupant.dna.struc_enzymes, src.strucblock, newblock,3)
+						src.connected.occupant.dna.struc_enzymes = tstructure2
+						domutcheck(src.connected.occupant,src.connected)
+						src.connected.occupant.radiation += (src.radstrength+src.radduration)
+						src.strucblock = oldblock
+					else
 					//
-					block = miniscramble(block, src.radstrength, src.radduration)
-					newblock = null
-					if (src.subblock == 1) newblock = block + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1) + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)
-					if (src.subblock == 2) newblock = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1) + block + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)
-					if (src.subblock == 3) newblock = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1) + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1) + block
-					tstructure2 = setblock(src.connected.occupant.dna.struc_enzymes, src.strucblock, newblock,3)
-					src.connected.occupant.dna.struc_enzymes = tstructure2
-					domutcheck(src.connected.occupant,src.connected)
-					src.connected.occupant.radiation += (src.radstrength+src.radduration)
-			else
-				if	(prob(80-src.radduration))
-					randmutb(src.connected.occupant)
-					domutcheck(src.connected.occupant,src.connected)
+						block = miniscramble(block, src.radstrength, src.radduration)
+						newblock = null
+						if (src.subblock == 1) newblock = block + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1) + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)
+						if (src.subblock == 2) newblock = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1) + block + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),3,1)
+						if (src.subblock == 3) newblock = getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),1,1) + getblock(getblock(src.connected.occupant.dna.struc_enzymes,src.strucblock,3),2,1) + block
+						tstructure2 = setblock(src.connected.occupant.dna.struc_enzymes, src.strucblock, newblock,3)
+						src.connected.occupant.dna.struc_enzymes = tstructure2
+						domutcheck(src.connected.occupant,src.connected)
+						src.connected.occupant.radiation += (src.radstrength+src.radduration)
 				else
-					randmuti(src.connected.occupant)
-					updateappearance(src.connected.occupant,src.connected.occupant.dna.uni_identity)
-				src.connected.occupant.radiation += ((src.radstrength*2)+src.radduration)
+					if	(prob(80-src.radduration))
+						randmutb(src.connected.occupant)
+						domutcheck(src.connected.occupant,src.connected)
+					else
+						randmuti(src.connected.occupant)
+						updateappearance(src.connected.occupant,src.connected.occupant.dna.uni_identity)
+					src.connected.occupant.radiation += ((src.radstrength*2)+src.radduration)
+			src.connected.locked = lock_state
 			///
 			dopage(src,"strucmenu")
 			src.delete = 0
 		////////////////////////////////////////////////////////
 		if (href_list["buffermenu"])
-			if(src.connected.occupant == usr)
-				usr << browse(null, "window=scannernew;size=550x625")
-				return
 			src.temphtml = "<B>Buffer 1:</B><BR>"
 			if (!(src.buffer1))
 				src.temphtml += "Buffer Empty<BR>"
@@ -1050,7 +946,7 @@
 			if (src.connected.occupant) src.temphtml += text("Save : <A href='?src=\ref[];b1addui=1'>UI</A> - <A href='?src=\ref[];b1adduiue=1'>UI+UE</A> - <A href='?src=\ref[];b1addse=1'>SE</A><BR>", src, src, src)
 			if (src.buffer1) src.temphtml += text("Transfer to: <A href='?src=\ref[];b1transfer=1'>Occupant</A> - <A href='?src=\ref[];b1injector=1'>Injector</A><BR>", src, src)
 			//if (src.buffer1) src.temphtml += text("<A href='?src=\ref[];b1iso=1'>Isolate Block</A><BR>", src)
-			if (src.diskette) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=1'>Save To</a> | <A href='?src=\ref[src];load_disk=1'>Load From</a><br>"
+			if (src.buffer1) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=1'>Save To</a> | <A href='?src=\ref[src];load_disk=1'>Load From</a><br>"
 			if (src.buffer1) src.temphtml += text("<A href='?src=\ref[];b1label=1'>Edit Label</A><BR>", src)
 			if (src.buffer1) src.temphtml += text("<A href='?src=\ref[];b1clear=1'>Clear Buffer</A><BR><BR>", src)
 			if (!src.buffer1) src.temphtml += "<BR>"
@@ -1064,7 +960,7 @@
 			if (src.connected.occupant) src.temphtml += text("Save : <A href='?src=\ref[];b2addui=1'>UI</A> - <A href='?src=\ref[];b2adduiue=1'>UI+UE</A> - <A href='?src=\ref[];b2addse=1'>SE</A><BR>", src, src, src)
 			if (src.buffer2) src.temphtml += text("Transfer to: <A href='?src=\ref[];b2transfer=1'>Occupant</A> - <A href='?src=\ref[];b2injector=1'>Injector</A><BR>", src, src)
 			//if (src.buffer2) src.temphtml += text("<A href='?src=\ref[];b2iso=1'>Isolate Block</A><BR>", src)
-			if (src.diskette) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=2'>Save To</a> | <A href='?src=\ref[src];load_disk=2'>Load From</a><br>"
+			if (src.buffer2) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=2'>Save To</a> | <A href='?src=\ref[src];load_disk=2'>Load From</a><br>"
 			if (src.buffer2) src.temphtml += text("<A href='?src=\ref[];b2label=1'>Edit Label</A><BR>", src)
 			if (src.buffer2) src.temphtml += text("<A href='?src=\ref[];b2clear=1'>Clear Buffer</A><BR><BR>", src)
 			if (!src.buffer2) src.temphtml += "<BR>"
@@ -1078,7 +974,7 @@
 			if (src.connected.occupant) src.temphtml += text("Save : <A href='?src=\ref[];b3addui=1'>UI</A> - <A href='?src=\ref[];b3adduiue=1'>UI+UE</A> - <A href='?src=\ref[];b3addse=1'>SE</A><BR>", src, src, src)
 			if (src.buffer3) src.temphtml += text("Transfer to: <A href='?src=\ref[];b3transfer=1'>Occupant</A> - <A href='?src=\ref[];b3injector=1'>Injector</A><BR>", src, src)
 			//if (src.buffer3) src.temphtml += text("<A href='?src=\ref[];b3iso=1'>Isolate Block</A><BR>", src)
-			if (src.diskette) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=3'>Save To</a> | <A href='?src=\ref[src];load_disk=3'>Load From</a><br>"
+			if (src.buffer3) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=3'>Save To</a> | <A href='?src=\ref[src];load_disk=3'>Load From</a><br>"
 			if (src.buffer3) src.temphtml += text("<A href='?src=\ref[];b3label=1'>Edit Label</A><BR>", src)
 			if (src.buffer3) src.temphtml += text("<A href='?src=\ref[];b3clear=1'>Clear Buffer</A><BR><BR>", src)
 			if (!src.buffer3) src.temphtml += "<BR>"
@@ -1123,15 +1019,14 @@
 			src.buffer3iue = 1
 			dopage(src,"buffermenu")
 		if (href_list["b2addui"])
-			if(src.connected.occupant)
-				src.buffer2iue = 0
-				src.buffer2 = src.connected.occupant.dna.uni_identity
-				if (!istype(src.connected.occupant,/mob/living/carbon/human))
-					src.buffer2owner = src.connected.occupant.name
-				else
-					src.buffer2owner = src.connected.occupant.real_name
-				src.buffer2label = "Unique Identifier"
-				src.buffer2type = "ui"
+			src.buffer2iue = 0
+			src.buffer2 = src.connected.occupant.dna.uni_identity
+			if (!istype(src.connected.occupant,/mob/living/carbon/human))
+				src.buffer2owner = src.connected.occupant.name
+			else
+				src.buffer2owner = src.connected.occupant.real_name
+			src.buffer2label = "Unique Identifier"
+			src.buffer2type = "ui"
 			dopage(src,"buffermenu")
 		if (href_list["b3addui"])
 			src.buffer3iue = 0
@@ -1154,15 +1049,14 @@
 			src.buffer1type = "se"
 			dopage(src,"buffermenu")
 		if (href_list["b2addse"])
-			if(src.connected.occupant)
-				src.buffer2iue = 0
-				src.buffer2 = src.connected.occupant.dna.struc_enzymes
-				if (!istype(src.connected.occupant,/mob/living/carbon/human))
-					src.buffer2owner = src.connected.occupant.name
-				else
-					src.buffer2owner = src.connected.occupant.real_name
-				src.buffer2label = "Structural Enzymes"
-				src.buffer2type = "se"
+			src.buffer2iue = 0
+			src.buffer2 = src.connected.occupant.dna.struc_enzymes
+			if (!istype(src.connected.occupant,/mob/living/carbon/human))
+				src.buffer2owner = src.connected.occupant.name
+			else
+				src.buffer2owner = src.connected.occupant.real_name
+			src.buffer2label = "Structural Enzymes"
+			src.buffer2type = "se"
 			dopage(src,"buffermenu")
 		if (href_list["b3addse"])
 			src.buffer3iue = 0
@@ -1193,13 +1087,13 @@
 			src.buffer3iue = null
 			dopage(src,"buffermenu")
 		if (href_list["b1label"])
-			src.buffer1label = input("New Label:","Edit Label","Infos here")
+			src.buffer1label = sanitize(input("New Label:","Edit Label","Infos here"))
 			dopage(src,"buffermenu")
 		if (href_list["b2label"])
-			src.buffer2label = input("New Label:","Edit Label","Infos here")
+			src.buffer2label = sanitize(input("New Label:","Edit Label","Infos here"))
 			dopage(src,"buffermenu")
 		if (href_list["b3label"])
-			src.buffer3label = input("New Label:","Edit Label","Infos here")
+			src.buffer3label = sanitize(input("New Label:","Edit Label","Infos here"))
 			dopage(src,"buffermenu")
 		if (href_list["b1transfer"])
 			if (!src.connected.occupant)
@@ -1325,39 +1219,26 @@
 				return
 			if ((isnull(src.diskette)) || (src.diskette.read_only))
 				return
-			var/saved = 1
 			switch(buffernum)
 				if(1)
-					if(!buffer1)
-						saved = 0
-					else
-						src.diskette.data = buffer1
-						src.diskette.data_type = src.buffer1type
-						src.diskette.ue = src.buffer1iue
-						src.diskette.owner = src.buffer1owner
-						src.diskette.name = "data disk - '[src.buffer1owner]'"
+					src.diskette.data = buffer1
+					src.diskette.data_type = src.buffer1type
+					src.diskette.ue = src.buffer1iue
+					src.diskette.owner = src.buffer1owner
+					src.diskette.name = "data disk - '[src.buffer1owner]'"
 				if(2)
-					if(!buffer2)
-						saved = 0
-					else
-						src.diskette.data = buffer2
-						src.diskette.data_type = src.buffer2type
-						src.diskette.ue = src.buffer2iue
-						src.diskette.owner = src.buffer2owner
-						src.diskette.name = "data disk - '[src.buffer2owner]'"
+					src.diskette.data = buffer2
+					src.diskette.data_type = src.buffer2type
+					src.diskette.ue = src.buffer2iue
+					src.diskette.owner = src.buffer2owner
+					src.diskette.name = "data disk - '[src.buffer2owner]'"
 				if(3)
-					if(!buffer3)
-						saved = 0
-					else
-						src.diskette.data = buffer3
-						src.diskette.data_type = src.buffer3type
-						src.diskette.ue = src.buffer3iue
-						src.diskette.owner = src.buffer3owner
-						src.diskette.name = "data disk - '[src.buffer3owner]'"
-			if(!saved)
-				src.temphtml = "\red ERROR:Data equals null"
-			else
-				src.temphtml = "Data saved."
+					src.diskette.data = buffer3
+					src.diskette.data_type = src.buffer3type
+					src.diskette.ue = src.buffer3iue
+					src.diskette.owner = src.buffer3owner
+					src.diskette.name = "data disk - '[src.buffer3owner]'"
+			src.temphtml = "Data saved."
 		if (href_list["eject_disk"])
 			if (!src.diskette)
 				return

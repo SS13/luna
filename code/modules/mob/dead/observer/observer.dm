@@ -1,60 +1,54 @@
-/mob/dead/observer
-	icon = 'mob.dmi'
-	icon_state = "ghost"
-	layer = 4
-	density = 0
-	stat = 2
-	canmove = 0
-	blinded = 0
-	anchored = 1	//  don't get pushed around
-	var/mob/corpse = null	//	observer mode
-	var/datum/hud/living/carbon/hud = null // hud
+/mob/dead/observer/New(mob/corpse)
+	src.invisibility = 10
+	src.sight |= SEE_TURFS | SEE_MOBS | SEE_OBJS | SEE_SELF
+	src.see_invisible = 15
+	src.see_in_dark = 100
+	src.verbs += /mob/dead/observer/proc/dead_tele
 
-/mob/dead/observer/New(turf/loc,mob/the_corpse)
-	invisibility = 10
-	sight |= SEE_TURFS | SEE_MOBS | SEE_OBJS | SEE_SELF
-	see_invisible = 15
-	ear_deaf = 0
-	ear_damage = 0
-	see_in_dark = 100
-	verbs += /mob/dead/observer/proc/dead_tele
-	src.loc = loc
-	if(the_corpse)
-		corpse = the_corpse
-		real_name = corpse.real_name
-		name = corpse.real_name
-		verbs += /mob/dead/observer/proc/reenter_corpse
+	if(corpse)
+		src.corpse = corpse
+		src.loc = get_turf(corpse)
+		src.real_name = corpse.real_name
+		src.name = corpse.real_name
+		src.verbs += /mob/dead/observer/proc/reenter_corpse
+
 /mob/proc/ghostize()
+	set category = "Special Verbs"
 	set name = "Ghost"
 	set desc = "You cannot be revived as a ghost"
-	if(client)
-		if(isturf(src.loc))
-			var/mob/dead/observer/newghost = new/mob/dead/observer(src.loc,src)
-			newghost.timeofdeath = src.timeofdeath
-			client.mob = newghost
 
-		else
-			var/atom/object = src.loc
-			client.mob = new/mob/dead/observer(object.loc,src)
-			client.eye = client.mob
+	/*if(src.stat != 2) //this check causes nothing but troubles. Commented out for Nar-Sie's sake. --rastaf0
+		src << "Only dead people and admins get to ghost, and admins don't use this verb to ghost while alive."
+		return*/
+	if(src.key)
+		var/mob/dead/observer/ghost = new(src)
+		ghost.key = src.key
+		src.verbs -= /mob/proc/ghostize
+		if (ghost.client)
+			ghost.client.eye = ghost
+	return
+
+/mob/proc/adminghostize()
+	if(src.client)
+		src.client.mob = new/mob/dead/observer(src)
 	return
 
 /mob/dead/observer/Move(NewLoc, direct)
 	if(NewLoc)
-		loc = NewLoc
+		src.loc = NewLoc
 		return
-	if((direct & NORTH) && y < world.maxy)
-		y++
-	if((direct & SOUTH) && y > 1)
-		y--
-	if((direct & EAST) && x < world.maxx)
-		x++
-	if((direct & WEST) && x > 1)
-		x--
+	if((direct & NORTH) && src.y < world.maxy)
+		src.y++
+	if((direct & SOUTH) && src.y > 1)
+		src.y--
+	if((direct & EAST) && src.x < world.maxx)
+		src.x++
+	if((direct & WEST) && src.x > 1)
+		src.x--
 
 /mob/dead/observer/examine()
 	if(usr)
-		usr << desc
+		usr << src.desc
 
 /mob/dead/observer/can_use_hands()	return 0
 /mob/dead/observer/is_active()		return 0
@@ -62,11 +56,19 @@
 /mob/dead/observer/Stat()
 	..()
 	statpanel("Status")
-	if (client.statpanel == "Status")
-		if(LaunchControl.online && main_shuttle.location < 2)
-			var/timeleft = LaunchControl.timeleft()
-			if (timeleft)
-				stat(null, "ETA-[(timeleft / 60) % 60]:[add_zero(num2text(timeleft % 60), 2)]")
+	if (src.client.statpanel == "Status")
+		if(ticker)
+			if(ticker.mode)
+				//world << "DEBUG: ticker not null"
+				if(ticker.mode.name == "AI malfunction")
+					//world << "DEBUG: malf mode ticker test"
+					if(ticker.mode:malf_mode_declared)
+						stat(null, "Time left: [max(ticker.mode:AI_win_timeleft/(ticker.mode:apcs/3), 0)]")
+		if(emergency_shuttle)
+			if(emergency_shuttle.online && emergency_shuttle.location < 2)
+				var/timeleft = emergency_shuttle.timeleft()
+				if (timeleft)
+					stat(null, "ETA-[(timeleft / 60) % 60]:[add_zero(num2text(timeleft % 60), 2)]")
 
 /mob/dead/observer/proc/reenter_corpse()
 	set category = "Special Verbs"
@@ -77,12 +79,24 @@
 //	if(corpse.stat == 2)
 //		alert("Your body is dead!")
 //		return
-	if(client && client.holder && client.holder.state == 2)
-		var/rank = client.holder.rank
-		client.clear_admin_verbs()
-		client.holder.state = 1
-		client.update_admins(rank)
-	client.mob = corpse
+	if(src.client && src.client.holder && src.client.holder.state == 2)
+		var/rank = src.client.holder.rank
+		src.client.clear_admin_verbs()
+		src.client.holder.state = 1
+		src.client.update_admins(rank)
+	if(iscultist(corpse) && corpse.ajourn==1 && corpse.stat!=2) //checks if it's an astral-journeying cultistm if it is and he's not on an astral journey rune, re-entering won't work
+		var/S=0
+		for(var/obj/rune/R in world)
+			if(corpse.loc==R.loc && R.word1 == wordhell && R.word2 == wordtravel && R.word3 == wordself)
+				S=1
+		if(!S)
+			usr << "\red The astral cord that ties your body and your spirit has been severed. You are likely to wander the realm beyond until your body is finally dead and thus reunited with you."
+			return
+	if(corpse.ajourn)
+		corpse.ajourn=0
+	src.client.mob = corpse
+	if (corpse.stat==2)
+		src.verbs += /mob/proc/ghostize
 	del(src)
 
 /mob/dead/observer/proc/dead_tele()
@@ -92,95 +106,34 @@
 	if((usr.stat != 2) || !istype(usr, /mob/dead/observer))
 		usr << "Not when you're not dead!"
 		return
-	var/A
 	usr.verbs -= /mob/dead/observer/proc/dead_tele
-	spawn(50)
+	spawn(30)
 		usr.verbs += /mob/dead/observer/proc/dead_tele
-	A = input("Area to jump to", "BOOYEA", A) in list("Engine","Hallways","Toxins","Storage","Maintenance","Crew Quarters","Medical","Security","Chapel","Bridge","Thunderdome")
-	var/t = A
-	switch (A)
-		if ("Engine")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/engine) && !istype(B, /area/engine/combustion) && !istype(B, /area/engine/engine_walls))
-					L += B
-			A = L
-		if ("Hallways")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/hallway))
-					L += B
-			A = L
-		if ("Toxins")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/toxins) && !istype(B, /area/toxins/test_area))
-					L += B
-			A = L
-		if ("Storage")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/storage))
-					L += B
-			A = L
-		if ("Maintenance")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/maintenance))
-					L += B
-			A = L
-		if ("Crew Quarters")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/crew_quarters))
-					L += B
-			A = L
-		if ("Medical")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/medical))
-					L += B
-			A = L
-		if ("Security")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/security))
-					L += B
-			A = L
-		if ("Chapel")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/chapel))
-					L += B
-			A = L
-		if ("Bridge")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/bridge))
-					L += B
-			A = L
-		if ("Thunderdome")
-			usr << "\red Two men enter, one leaves"
-			return
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/tdome))
-					L += B
-			A = L
+	var/A
+	A = input("Area to jump to", "BOOYEA", A) in ghostteleportlocs
+	var/area/thearea = ghostteleportlocs[A]
 
 	var/list/L = list()
-	for(var/area/AR in A)
-		for(var/turf/T in AR)
-			if(!T.density)
-				var/clear = 1
-				for(var/obj/O in T)
-					if(O.density)
-						clear = 0
-						break
-				if(clear)
-					L+=T
-	if (!L.len)
-		log_admin("TELEPORT ERROR ([t])")
+	for(var/turf/T in get_area_turfs(thearea.type))
+		L+=T
 	usr.loc = pick(L)
 
+/mob/dead/observer/verb/toggle_alien_candidate()
+	set name = "Toggle Be Alien Candidate"
+	set category = "OOC"
+	set desc = "Determines whether you will or will not be an alien candidate when someone bursts."
+	if(src.client.be_alien)
+		src.client.be_alien = 0
+		src << "You are now excluded from alien candidate lists until end of round."
+	else if(!src.client.be_alien)
+		src.client.be_alien = 1
+		src << "You are now included in alien candidate lists until end of round."
+
+/mob/dead/observer/memory()
+	set hidden = 1
+	src << "\red You are dead! You have no mind to store memory!"
+
+/mob/dead/observer/add_memory()
+	set hidden = 1
+	src << "\red You are dead! You have no mind to store memory!"
 

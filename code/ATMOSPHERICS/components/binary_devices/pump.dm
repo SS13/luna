@@ -12,23 +12,8 @@ Thus, the two variables affect pump operation are set in New():
 			but overall network volume is also increased as this increases...
 */
 
-
-/*
-Every cycle, the pump uses the air in air_in to try and make air_out the perfect pressure.
-
-node1, air1, network1 correspond to input
-node2, air2, network2 correspond to output
-
-Thus, the two variables affect pump operation are set in New():
-	air1.volume
-		This is the volume of gas available to the pump that may be transfered to the output
-	air2.volume
-		Higher quantities of this cause more air to be perfected later
-			but overall network volume is also increased as this increases...
-*/
-
 obj/machinery/atmospherics/binary/pump
-	icon = 'icons/obj/atmospherics/pump.dmi'
+	icon = 'pump.dmi'
 	icon_state = "intact_off"
 
 	name = "Gas pump"
@@ -41,14 +26,14 @@ obj/machinery/atmospherics/binary/pump
 	var/id = null
 	var/datum/radio_frequency/radio_connection
 
-	on
-		on = 1
-		icon_state = "intact_on"
+/*
+	attack_hand(mob/user)
+		on = !on
+		update_icon()
+*/
 
 	update_icon()
-		if(stat & NOPOWER)
-			icon_state = "intact_off"
-		else if(node1 && node2)
+		if(node1&&node2)
 			icon_state = "intact_[on?("on"):("off")]"
 		else
 			if(node1)
@@ -60,7 +45,7 @@ obj/machinery/atmospherics/binary/pump
 		return
 
 	process()
-//		..()
+		..()
 		if(stat & (NOPOWER|BROKEN))
 			return
 		if(!on)
@@ -118,14 +103,14 @@ obj/machinery/atmospherics/binary/pump
 
 			return 1
 
-	proc/interact(mob/user as mob)
-		var/dat = {"<b>Power: </b><a href='?src=\ref[src];power=1'>[on?"On":"Off"]</a><br>
-					<b>Desirable output pressure: </b>
-					[round(target_pressure,0.1)]kPa | <a href='?src=\ref[src];set_press=1'>Change</a>
-					"}
+		interact(mob/user as mob)
+			var/dat = {"<b>Power: </b><a href='?src=\ref[src];power=1'>[on?"On":"Off"]</a><br>
+						<b>Desirable output pressure: </b>
+						[round(target_pressure,0.1)]kPa | <a href='?src=\ref[src];set_press=1'>Change</a>
+						"}
 
-		user << browse("<HEAD><TITLE>[src.name] control</TITLE></HEAD><TT>[dat]</TT>", "window=atmo_pump")
-		onclose(user, "atmo_pump")
+			user << browse("<HEAD><TITLE>[src.name] control</TITLE></HEAD><TT>[dat]</TT>", "window=atmo_pump")
+			onclose(user, "atmo_pump")
 
 	initialize()
 		..()
@@ -167,18 +152,17 @@ obj/machinery/atmospherics/binary/pump
 		if(!src.allowed(user))
 			user << "\red Access denied."
 			return
-		usr.set_machine(src)
+		usr.machine = src
 		interact(user)
 		return
 
 	Topic(href,href_list)
-		if(..()) return
 		if(href_list["power"])
 			on = !on
 		if(href_list["set_press"])
 			var/new_pressure = input(usr,"Enter new output pressure (0-4500kPa)","Pressure control",src.target_pressure) as num
 			src.target_pressure = max(0, min(4500, new_pressure))
-		usr.set_machine(src)
+		usr.machine = src
 		src.update_icon()
 		src.updateUsrDialog()
 		return
@@ -187,7 +171,7 @@ obj/machinery/atmospherics/binary/pump
 		..()
 		update_icon()
 
-/*	attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
+	attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 		if (!istype(W, /obj/item/weapon/wrench))
 			return ..()
 		if (!(stat & NOPOWER) && on)
@@ -203,7 +187,7 @@ obj/machinery/atmospherics/binary/pump
 			user << "\red You cannot unwrench this [src], it too exerted due to internal pressure."
 			add_fingerprint(user)
 			return 1
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		playsound(src.loc, 'Ratchet.ogg', 50, 1)
 		user << "\blue You begin to unfasten \the [src]..."
 		if (do_after(user, 40))
 			user.visible_message( \
@@ -211,4 +195,4 @@ obj/machinery/atmospherics/binary/pump
 				"\blue You have unfastened \the [src].", \
 				"You hear ratchet.")
 			new /obj/item/pipe(loc, make_from=src)
-			del(src)*/
+			del(src)

@@ -52,7 +52,9 @@ DNA INJECTOR
 			M.dna.struc_enzymes = setblock(M.dna.struc_enzymes,block,dna,3)
 			domutcheck(M, null,1)
 			uses--
-	del(src)
+
+	spawn(0)//this prevents the collapse of space-time continuum
+		del(src)
 	return uses
 
 /obj/item/weapon/dnainjector/attack(mob/M as mob, mob/user as mob)
@@ -71,14 +73,37 @@ DNA INJECTOR
 			O.t_loc = M.loc
 			O.place = "dnainjector"
 			M.requests += O
+			if (dnatype == "se")
+				if (isblockon(getblock(dna, 14,3),14) && istype(M, /mob/living/carbon/human))
+					message_admins("[key_name_admin(user)] injected [key_name_admin(M)] with the [src.name] \red(MONKEY)")
+					log_game("[key_name(user)] injected [key_name(M)] with the [src.name] (MONKEY)")
+				else
+					message_admins("[key_name_admin(user)] injected [key_name_admin(M)] with the [src.name]")
+					log_game("[key_name(user)] injected [key_name(M)] with the [src.name]")
+			else
+				message_admins("[key_name_admin(user)] injected [key_name_admin(M)] with the [src.name]")
+				log_game("[key_name(user)] injected [key_name(M)] with the [src.name]")
+
 			spawn( 0 )
 				O.process()
-				user.update_clothing()
 				return
-		if(istype(M, /mob/living/carbon/monkey))
+		else
 			for(var/mob/O in viewers(M, null))
 				O.show_message(text("\red [] has been injected with [] by [].", M, src, user), 1)
 				//Foreach goto(192)
+			if (!(istype(M, /mob/living/carbon/human) || istype(M, /mob/living/carbon/monkey)))
+				user << "\red Apparently it didn't work."
+				return
 			inject(M)
+			if (dnatype == "se")
+				if (isblockon(getblock(dna, 14,3),14) && istype(M, /mob/living/carbon/human))
+					message_admins("[key_name_admin(user)] injected [key_name_admin(M)] with the [src.name] \red(MONKEY)")
+					log_game("[key_name(user)] injected [key_name(M)] with the [src.name] (MONKEY)")
+				else
+					message_admins("[key_name_admin(user)] injected [key_name_admin(M)] with the [src.name]")
+					log_game("[key_name(user)] injected [key_name(M)] with the [src.name]")
+			else
+				message_admins("[key_name_admin(user)] injected [key_name_admin(M)] with the [src.name]")
+				log_game("[key_name(user)] injected [key_name(M)] with the [src.name]")
 			user.show_message(text("\red You inject [M]"))
 	return

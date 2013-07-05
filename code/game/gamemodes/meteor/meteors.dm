@@ -1,10 +1,10 @@
 #define METEOR_TEMPERATURE
 
-/var/const/meteor_wave_delay = 600 //minimum wait between waves in tenths of seconds
+/var/const/meteor_wave_delay = 625 //minimum wait between waves in tenths of seconds
 //set to at least 100 unless you want evarr ruining every round
 
-/var/const/meteors_in_wave = 2
-/var/const/meteors_in_small_wave = 1
+/var/const/meteors_in_wave = 50
+/var/const/meteors_in_small_wave = 10
 
 /proc/meteor_wave()
 	if(!ticker || wavesecret)
@@ -12,7 +12,7 @@
 
 	wavesecret = 1
 	for(var/i = 0 to meteors_in_wave)
-		spawn(rand(10,100)*tick_multiplier)
+		spawn(rand(10,100))
 			spawn_meteor()
 	spawn(meteor_wave_delay)
 		wavesecret = 0
@@ -24,55 +24,62 @@
 
 /proc/spawn_meteor()
 
-	AGAIN
-
 	var/startside = pick(cardinal)
 	var/startx
 	var/starty
 	var/endx
 	var/endy
+	var/turf/pickedstart
+	var/turf/pickedgoal
+	var/max_i = 10//number of tries to spawn meteor.
 
-	switch(startside)
 
-		if(NORTH)
-			starty = world.maxy-1
-			startx = rand(1, world.maxx-1)
-			endy = 1
-			endx = rand(1, world.maxx-1)
+	do
+		switch(startside)
+			if(NORTH)
+				starty = world.maxy-1
+				startx = rand(1, world.maxx-1)
+				endy = 1
+				endx = rand(1, world.maxx-1)
+			if(EAST)
+				starty = rand(1,world.maxy-1)
+				startx = world.maxx-1
+				endy = rand(1, world.maxy-1)
+				endx = 1
+			if(SOUTH)
+				starty = 1
+				startx = rand(1, world.maxx-1)
+				endy = world.maxy-1
+				endx = rand(1, world.maxx-1)
+			if(WEST)
+				starty = rand(1, world.maxy-1)
+				startx = 1
+				endy = rand(1,world.maxy-1)
+				endx = world.maxx-1
 
-		if(EAST)
-			starty = rand(1,world.maxy-1)
-			startx = world.maxx-1
-			endy = rand(1, world.maxy-1)
-			endx = 1
+		pickedstart = locate(startx, starty, 1)
+		pickedgoal = locate(endx, endy, 1)
+		max_i--
+		if(max_i<=0) return
 
-		if(SOUTH)
-			starty = 1
-			startx = rand(1, world.maxx-1)
-			endy = world.maxy-1
-			endx = rand(1, world.maxx-1)
+	while (!istype(pickedstart, /turf/space) || pickedstart.loc.name != "Space" ) //FUUUCK, should never happen.
 
-		if(WEST)
-			starty = rand(1, world.maxy-1)
-			startx = 1
-			endy = rand(1,world.maxy-1)
-			endx = world.maxx-1
-
-	var/turf/pickedstart = locate(startx, starty, rand(1, 4))
-	var/turf/pickedgoal = locate(endx, endy, pickedstart.z)
-
-	if (!istype(pickedstart, /turf/space) || pickedstart.loc.name != "Space" ) //FUUUCK, should never happen.
-		goto AGAIN
 
 	var/obj/meteor/M
+	switch(rand(1, 100))
 
-	if(rand(50))
-		M = new /obj/meteor( pickedstart )
-	else
-		M = new /obj/meteor/small( pickedstart )
-	M.dest = new /obj(pickedgoal)
-	M.dest.name = "METEORTARGET_THIS_IS_A_HACK"
-	walk_towards(M, M.dest, 1)
+		if(1 to 10)
+			M = new /obj/meteor/big( pickedstart )
+		if(11 to 75)
+			M = new /obj/meteor( pickedstart )
+		if(76 to 100)
+			M = new /obj/meteor/small( pickedstart )
+
+	M.dest = pickedgoal
+	spawn(0)
+		walk_towards(M, M.dest, 1)
+
+	return
 
 /obj/meteor
 	name = "meteor"
@@ -81,7 +88,7 @@
 	density = 1
 	anchored = 1.0
 	var/hits = 1
-	var/obj/dest
+	var/dest
 
 /obj/meteor/small
 	name = "small meteor"
@@ -96,15 +103,15 @@
 
 /obj/meteor/Bump(atom/A)
 	spawn(0)
-		for(var/mob/M in view(A, null))
+		for(var/mob/M in range(10, src))
 			if(!M.stat && !istype(M, /mob/living/silicon/ai)) //bad idea to shake an ai's view
 				shake_camera(M, 3, 1)
 		if (A)
 			A.meteorhit(src)
 			playsound(src.loc, 'meteorimpact.ogg', 40, 1)
 		if (--src.hits <= 0)
-			if(prob(15) && !istype(A, /obj/structure/grille))
-				explosion(loc, 2, 5, 8, 10, 1)
+			if(prob(15) && !istype(A, /obj/grille))
+				explosion(src.loc, 0, 1, 2, 3, 0)
 				playsound(src.loc, "explosion", 50, 1)
 			del(src)
 	return
@@ -116,8 +123,24 @@
 		del(src)
 	return
 
-/obj/meteor/Del()
-	if(src.dest.name == "METEORTARGET_THIS_IS_A_HACK")
-		del src.dest
+/obj/meteor/big
+	name = "big meteor"
+	hits = 5
 
-	..()
+	ex_act(severity)
+		return
+
+	Bump(atom/A)
+		spawn(0)
+			for(var/mob/M in range(10, src))
+				if(!M.stat && !istype(M, /mob/living/silicon/ai)) //bad idea to shake an ai's view
+					shake_camera(M, 3, 1)
+			if (A)
+				explosion(src.loc, 0, 1, 2, 3, 0)
+				playsound(src.loc, 'meteorimpact.ogg', 40, 1)
+			if (--src.hits <= 0)
+				if(prob(15) && !istype(A, /obj/grille))
+					explosion(src.loc, 1, 2, 3, 4, 0)
+					playsound(src.loc, "explosion", 50, 1)
+				del(src)
+		return

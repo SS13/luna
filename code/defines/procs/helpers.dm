@@ -1,122 +1,3 @@
-/proc/replace(haystack, needle, newneedle)
-	var
-		list/find_list = stringsplit(haystack, needle)
-		final_text = listjoin(find_list,newneedle)
-	return final_text
-
-/proc/listjoin(list/list, delimiter)
-	var
-		final_text
-		iter = 1
-	for(var/E in list)
-		if(iter > 1) final_text += "[delimiter]"
-		final_text += E
-		iter++
-	return final_text
-
-/proc/get_dir_3d(var/atom/ref, var/atom/target)
-	if (get_turf(ref) == get_turf(target))
-		return 0
-	return get_dir(ref, target) | (target.z > ref.z ? DOWN : 0) | (target.z < ref.z ? UP : 0)
-
-//Bwahahaha! I am extending a built-in proc for personal gain!
-//(And a bit of nonpersonal gain, I guess)
-/proc/get_step_3d(atom/ref, dir)
-	if(!dir)
-		return get_turf(ref)
-	if(!dir&(UP|DOWN))
-		return get_step(ref,dir)
-	//Well, it *did* use temporary vars dx, dy, and dz, but this probably should be as fast as possible
-	return locate(ref.x+((dir&EAST)?1:0)-((dir&WEST)?1:0),ref.y+((dir&NORTH)?1:0)-((dir&SOUTH)?1:0),ref.z+((dir&DOWN)?1:0)-((dir&UP)?1:0))
-
-/proc/get_dist_3d(var/atom/Ref, var/atom/Trg)
-	return max(abs(Trg.x - Ref.x), abs(Trg.y - Ref.y), abs(Trg.z - Ref.z))
-
-/proc/reverse_dir_3d(dir)
-	var/ndir = (dir&NORTH)?SOUTH : 0
-	ndir |= (dir&SOUTH)?NORTH : 0
-	ndir |= (dir&EAST)?WEST : 0
-	ndir |= (dir&WEST)?EAST : 0
-	ndir |= (dir&UP)?DOWN : 0
-	ndir |= (dir&DOWN)?UP : 0
-	return ndir
-
-/proc/step_towards_3d(var/atom/movable/Ref, var/atom/movable/Trg)
-	if (!Ref || !Trg)
-		return 0
-	if(Ref.z == Trg.z)
-		var/S = Ref.loc
-		step_towards(Ref, Trg)
-		if(Ref.loc != S)
-			return 1
-		return 0
-
-	var/dx = (Trg.x - Ref.x) / max(abs(Trg.x - Ref.x), 1)
-	var/dy = (Trg.y - Ref.y) / max(abs(Trg.y - Ref.y), 1)
-	var/dz = (Trg.z - Ref.z) / max(abs(Trg.z - Ref.z), 1)
-
-	var/turf/T = locate(Ref.x + dx, Ref.y + dy, Ref.z + dz)
-
-	if (!T)
-		return 0
-
-	Ref.Move(T)
-
-	if (Ref.loc != T)
-		return 0
-
-	return 1
-
-/proc/walk_to_3d(var/atom/movable/Ref, var/atom/movable/Trg, var/min=0, var/lag=0)
-	if (Ref.is_walking_to_3d)
-		return
-	else
-		Ref.is_walking_to_3d = 1
-		spawn(0) walk_to_3d_loop(Ref, Trg, min, lag)
-	return
-
-/proc/walk_to_3d_loop(var/atom/movable/Ref, var/atom/movable/Trg, var/min=0, var/lag=0)
-	if (istype(Ref, /obj/machinery/bot/secbot))
-		var/obj/machinery/bot/secbot/S = Ref
-		var/blockcount
-		S.path = AStar(S.loc, S.target.loc, /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 120, id=S.botcard, exclude=list(/obj/landmark/alterations/nopath, avoid=null))
-		S.path = reverselist(S.path)
-		while (S.target && get_dist(S,S.target) > min)
-			sleep(lag * tick_multiplier)
-			var/turf/next
-			if (S.path.len > 0)
-				next = S.path[1]
-				if(next == S.loc)
-					S.path -= next
-					continue
-			if (!S.path.len || (S.target && S.path.len && get_dist(S.path[S.path.len],S.target) > 4)) // Recalculate the path if there is no path or if the target has moved too far away from the end of it
-				spawn(lag)
-					if (S.target)
-						S.path = AStar(S.loc, S.target.loc, /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 120, id=S.botcard, exclude=list(/obj/landmark/alterations/nopath, avoid=null))
-						S.path = reverselist(S.path)
-			if(istype( next, /turf/simulated))
-				var/moved = step_towards_3d(S, next)	// attempt to move
-				if(moved)	// successful move
-					blockcount = 0
-					S.path -= S.loc
-				else		// failed to move
-					blockcount++
-
-					if(blockcount > 10)	// attempt 5 times before recomputing
-						// find new path excluding blocked turf
-						spawn(lag)
-							if (S.target)
-								S.path = AStar(S.loc, S.target.loc, /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 120, id=S.botcard, exclude=list(/obj/landmark/alterations/nopath, avoid=next))
-								S.path = reverselist(S.path)
-								if(S.path.len == 0)
-									continue
-								else
-									blockcount = 0
-	Ref.is_walking_to_3d = 0
-
-/atom/movable/var/is_walking_to_3d
-
-
 /proc/hex2num(hex)
 
 	if (!( istext(hex) ))
@@ -174,7 +55,7 @@
 		num -= val * 16 ** power
 		switch(val)
 			if(9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0)
-				hex += "[val]"
+				hex += text("[]", val)
 			if(10.0)
 				hex += "A"
 			if(11.0)
@@ -190,11 +71,55 @@
 			else
 		power--
 	while(length(hex) < placeholder)
-		hex = "0[hex]"
+		hex = text("0[]", hex)
 	return hex
 
+/proc/invertHTML(HTMLstring)
 
-/*/proc/sanitize(var/t)
+	if (!( istext(HTMLstring) ))
+		CRASH("Given non-text argument!")
+		return
+	else
+		if (length(HTMLstring) != 7)
+			CRASH("Given non-HTML argument!")
+			return
+	var/textr = copytext(HTMLstring, 2, 4)
+	var/textg = copytext(HTMLstring, 4, 6)
+	var/textb = copytext(HTMLstring, 6, 8)
+	var/r = hex2num(textr)
+	var/g = hex2num(textg)
+	var/b = hex2num(textb)
+	textr = num2hex(255 - r)
+	textg = num2hex(255 - g)
+	textb = num2hex(255 - b)
+	if (length(textr) < 2)
+		textr = text("0[]", textr)
+	if (length(textg) < 2)
+		textr = text("0[]", textg)
+	if (length(textb) < 2)
+		textr = text("0[]", textb)
+	return text("#[][][]", textr, textg, textb)
+	return
+
+/proc/shuffle(var/list/shufflelist)
+	if(!shufflelist)
+		return
+	var/list/new_list = list()
+	var/list/old_list = shufflelist.Copy()
+	while(old_list.len)
+		var/item = pick(old_list)
+		new_list += item
+		old_list -= item
+	return new_list
+
+/proc/uniquelist(var/list/L)
+	var/list/K = list()
+	for(var/item in L)
+		if(!(item in K))
+			K += item
+	return K
+
+/proc/sanitize(var/t)
 	var/index = findtext(t, "\n")
 	while(index)
 		t = copytext(t, 1, index) + "#" + copytext(t, index+1)
@@ -204,40 +129,117 @@
 	while(index)
 		t = copytext(t, 1, index) + "#" + copytext(t, index+1)
 		index = findtext(t, "\t")
-
 	index = findtext(t, "ÿ")
 	while(index)
-		t = copytext(t, 1, index) + "__255;" + copytext(t, index+1)
+		t = copytext(t, 1, index) + "____255;" + copytext(t, index+1)
 		index = findtext(t, "ÿ")
 
 	t = html_encode(t)
 
-	index = findtext(t, "__255;")
+	index = findtext(t, "____255;")
 	while(index)
-		t = copytext(t, 1, index) + "&#255;" + copytext(t, index+6)
-		index = findtext(t, "__255;")
+		t = copytext(t, 1, index) + "&#255;" + copytext(t, index+8)
+		index = findtext(t, "____255;")
 
 	return t
 
-/proc/sanitize_spec(var/t)
-	var/index = findtext(t, "\n")
+/proc/sanitize_ya(var/t)
+	var/index = findtext(t, "ÿ")
 	while(index)
-		t = copytext(t, 1, index) + "#" + copytext(t, index+1)
-		index = findtext(t, "\n")
-
-	index = findtext(t, "\t")
-	while(index)
-		t = copytext(t, 1, index) + "#" + copytext(t, index+1)
-		index = findtext(t, "\t")
-
-	index = findtext(t, "ÿ")
-	while(index)
-		t = copytext(t, 1, index) + "ß" + copytext(t, index+1)
+		t = copytext(t, 1, index) + "____255;" + copytext(t, index+1)
 		index = findtext(t, "ÿ")
 
 	t = html_encode(t)
 
-	return t*/
+	index = findtext(t, "____255;")
+	while(index)
+		t = copytext(t, 1, index) + "&#1103;" + copytext(t, index+8)
+		index = findtext(t, "____255;")
+	return t
+
+/proc/strip_html(var/t,var/limit=MAX_MESSAGE_LEN)
+	t = copytext(t,1,limit)
+	var/index = findtext(t, "<")
+	while(index)
+		t = copytext(t, 1, index) + copytext(t, index+1)
+		index = findtext(t, "<")
+	index = findtext(t, ">")
+	while(index)
+		t = copytext(t, 1, index) + copytext(t, index+1)
+		index = findtext(t, ">")
+	return sanitize(t)
+
+/proc/adminscrub(var/t,var/limit=MAX_MESSAGE_LEN)
+	t = copytext(t,1,limit)
+	var/index = findtext(t, "<")
+	while(index)
+		t = copytext(t, 1, index) + copytext(t, index+1)
+		index = findtext(t, "<")
+	index = findtext(t, ">")
+	while(index)
+		t = copytext(t, 1, index) + copytext(t, index+1)
+		index = findtext(t, ">")
+	return html_encode(t)
+
+/proc/add_zero(t, u)
+	while (length(t) < u)
+		t = "0[t]"
+	return t
+
+/proc/add_lspace(t, u)
+	while(length(t) < u)
+		t = " [t]"
+	return t
+
+/proc/add_tspace(t, u)
+	while(length(t) < u)
+		t = "[t] "
+	return t
+
+/proc/trim_left(text)
+	for (var/i = 1 to length(text))
+		if (text2ascii(text, i) > 32)
+			return copytext(text, i)
+	return ""
+
+/proc/trim_right(text)
+	for (var/i = length(text), i > 0, i--)
+		if (text2ascii(text, i) > 32)
+			return copytext(text, 1, i + 1)
+
+	return ""
+
+/proc/trim(text)
+	return trim_left(trim_right(text))
+
+/proc/capitalize(var/t as text)
+	return uppertext(copytext(t, 1, 2)) + copytext(t, 2)
+
+/proc/sortList(var/list/L)
+	if(L.len < 2)
+		return L
+	var/middle = L.len / 2 + 1 // Copy is first,second-1
+	return mergeLists(sortList(L.Copy(0,middle)), sortList(L.Copy(middle))) //second parameter null = to end of list
+
+/proc/sortNames(var/list/L)
+	var/list/Q = new()
+	for(var/atom/x in L)
+		Q[x.name] = x
+	return sortList(Q)
+
+/proc/mergeLists(var/list/L, var/list/R)
+	var/Li=1
+	var/Ri=1
+	var/list/result = new()
+	while(Li <= L.len && Ri <= R.len)
+		if(sorttext(L[Li], R[Ri]) < 1)
+			result += R[Ri++]
+		else
+			result += L[Li++]
+
+	if(Li <= L.len)
+		return (result + L.Copy(Li, 0))
+	return (result + R.Copy(Ri, 0))
 
 /proc/dd_file2list(file_path, separator)
 	var/file
@@ -249,19 +251,32 @@
 		file = file(file_path)
 	return dd_text2list(file2text(file), separator)
 
+/proc/dd_range(var/low, var/high, var/num)
+	return max(low,min(high,num))
+
 /proc/dd_replacetext(text, search_string, replacement_string)
 	var/textList = dd_text2list(text, search_string)
 	return dd_list2text(textList, replacement_string)
 
 /proc/dd_replaceText(text, search_string, replacement_string)
-	var/textList = dd_text2list(text, search_string)
+	var/textList = dd_text2List(text, search_string)
 	return dd_list2text(textList, replacement_string)
+
+/proc/dd_hasprefix(text, prefix)
+	var/start = 1
+	var/end = length(prefix) + 1
+	return findtext(text, prefix, start, end)
 
 /proc/dd_hasPrefix(text, prefix)
 	var/start = 1
 	var/end = length(prefix) + 1
 	return findtext(text, prefix, start, end) //was findtextEx
 
+/proc/dd_hassuffix(text, suffix)
+	var/start = length(text) - length(suffix)
+	if(start)
+		return findtext(text, suffix, start, null)
+	return
 
 /proc/dd_hasSuffix(text, suffix)
 	var/start = length(text) - length(suffix)
@@ -286,6 +301,24 @@
 			return textList
 	return
 
+/proc/dd_text2List(text, separator, var/list/withinList)
+	var/textlength = length(text)
+	var/separatorlength = length(separator)
+	if(withinList && !withinList.len) withinList = null
+	var/list/textList = new()
+	var/searchPosition = 1
+	var/findPosition = 1
+	while(1)
+		findPosition = findtext(text, separator, searchPosition, 0) //was findtextEx
+		var/buggyText = copytext(text, searchPosition, findPosition)
+		if(!withinList || (buggyText in withinList)) textList += "[buggyText]"
+		if(!findPosition) return textList
+		searchPosition = findPosition + separatorlength
+		if(searchPosition > textlength)
+			textList += ""
+			return textList
+	return
+
 /proc/dd_list2text(var/list/the_list, separator)
 	var/total = the_list.len
 	if(!total)
@@ -298,6 +331,48 @@
 		newText += "[the_list[count]]"
 		count++
 	return newText
+
+/proc/english_list(var/list/input, nothing_text = "nothing", and_text = " and ", comma_text = ", ", final_comma_text = "," )
+	var/total = input.len
+	if (!total)
+		return "[nothing_text]"
+	else if (total == 1)
+		return "[input[1]]"
+	else if (total == 2)
+		return "[input[1]][and_text][input[2]]"
+	else
+		var/output = ""
+		var/index = 1
+		while (index < total)
+			if (index == total - 1)
+				comma_text = final_comma_text
+
+			output += "[input[index]][comma_text]"
+			index++
+
+		return "[output][and_text][input[index]]"
+
+/proc/dd_centertext(message, length)
+	var/new_message = message
+	var/size = length(message)
+	var/delta = length - size
+	if(size == length)
+		return new_message
+	if(size > length)
+		return copytext(new_message, 1, length + 1)
+	if(delta == 1)
+		return new_message + " "
+	if(delta % 2)
+		new_message = " " + new_message
+		delta--
+	var/spaces = add_lspace("",delta/2-1)
+	return spaces + new_message + spaces
+
+/proc/dd_limittext(message, length)
+	var/size = length(message)
+	if(size <= length)
+		return message
+	return copytext(message, 1, length + 1)
 
 /proc/angle2dir(var/degree)
 	degree = ((degree+22.5)%365)
@@ -319,6 +394,50 @@
 /proc/scrub_input(var/Message, var/Title, var/Default, var/length=MAX_MESSAGE_LEN)
 	return strip_html(input(Message,Title,Default) as text, length)
 
+/proc/InRange(var/A, var/lower, var/upper)
+	if(A < lower) return 0
+	if(A > upper) return 0
+	return 1
+
+/proc/LinkBlocked(turf/A, turf/B)
+	if(A == null || B == null) return 1
+	var/adir = get_dir(A,B)
+	var/rdir = get_dir(B,A)
+	if((adir & (NORTH|SOUTH)) && (adir & (EAST|WEST)))	//	diagonal
+		var/iStep = get_step(A,adir&(NORTH|SOUTH))
+		if(!LinkBlocked(A,iStep) && !LinkBlocked(iStep,B)) return 0
+
+		var/pStep = get_step(A,adir&(EAST|WEST))
+		if(!LinkBlocked(A,pStep) && !LinkBlocked(pStep,B)) return 0
+		return 1
+
+	if(DirBlocked(A,adir)) return 1
+	if(DirBlocked(B,rdir)) return 1
+	return 0
+
+
+/proc/DirBlocked(turf/loc,var/dir)
+	for(var/obj/window/D in loc)
+		if(!D.density)			continue
+		if(D.dir == SOUTHWEST)	return 1
+		if(D.dir == dir)		return 1
+
+	for(var/obj/machinery/door/D in loc)
+		if(!D.density)			continue
+		if(istype(D, /obj/machinery/door/window))
+			if((dir & SOUTH) && (D.dir & (EAST|WEST)))		return 1
+			if((dir & EAST ) && (D.dir & (NORTH|SOUTH)))	return 1
+		else return 1	// it's a real, air blocking door
+	return 0
+
+/proc/TurfBlockedNonWindow(turf/loc)
+	for(var/obj/O in loc)
+		if(O.density && !istype(O, /obj/window))
+			return 1
+	return 0
+
+/proc/sign(x) //Should get bonus points for being the most compact code in the world!
+	return x!=0?x/abs(x):0 //((x<0)?-1:((x>0)?1:0))
 
 /*	//Kelson's version (doesn't work)
 /proc/getline(atom/M,atom/N)
@@ -347,6 +466,202 @@
 	return line
 */
 
+/proc/getline(atom/M,atom/N)//Ultra-Fast Bresenham Line-Drawing Algorithm
+	var/px=M.x		//starting x
+	var/py=M.y
+	var/line[] = list(locate(px,py,M.z))
+	var/dx=N.x-px	//x distance
+	var/dy=N.y-py
+	var/dxabs=abs(dx)//Absolute value of x distance
+	var/dyabs=abs(dy)
+	var/sdx=sign(dx)	//Sign of x distance (+ or -)
+	var/sdy=sign(dy)
+	var/x=dxabs>>1	//Counters for steps taken, setting to distance/2
+	var/y=dyabs>>1	//Bit-shifting makes me l33t.  It also makes getline() unnessecarrily fast.
+	var/j			//Generic integer for counting
+	if(dxabs>=dyabs)	//x distance is greater than y
+		for(j=0;j<dxabs;j++)//It'll take dxabs steps to get there
+			y+=dyabs
+			if(y>=dxabs)	//Every dyabs steps, step once in y direction
+				y-=dxabs
+				py+=sdy
+			px+=sdx		//Step on in x direction
+			line+=locate(px,py,M.z)//Add the turf to the list
+	else
+		for(j=0;j<dyabs;j++)
+			x+=dxabs
+			if(x>=dyabs)
+				x-=dyabs
+				px+=sdx
+			py+=sdy
+			line+=locate(px,py,M.z)
+	return line
+
+/proc/IsGuestKey(key)
+	if (findtext(key, "Guest-", 1, 7) != 1) //was findtextEx
+		return 0
+
+	var/i, ch, len = length(key)
+
+	for (i = 7, i <= len, ++i)
+		ch = text2ascii(key, i)
+		if (ch < 48 || ch > 57)
+			return 0
+
+	return 1
+
+/proc/pickweight(list/L)
+	var/total = 0
+	var/item
+	for (item in L)
+		if (!L[item])
+			L[item] = 1
+		total += L[item]
+
+	total = rand(1, total)
+	for (item in L)
+		total -=L [item]
+		if (total <= 0)
+			return item
+
+	return null
+
+/proc/sanitize_frequency(var/f)
+	f = round(f)
+	f = max(1441, f) // 144.1
+	f = min(1489, f) // 148.9
+	if ((f % 2) == 0)
+		f += 1
+	return f
+
+/proc/format_frequency(var/f)
+	return "[round(f / 10)].[f % 10]"
+
+/proc/ainame(var/mob/M as mob)
+	var/randomname = pick(ai_names)
+	var/newname = input(M,"You are the AI. Would you like to change your name to something else?", "Name change",randomname)
+
+	if (length(newname) == 0)
+		newname = randomname
+
+	if (newname)
+		if (newname == "Inactive AI")
+			M << "That name is reserved."
+			return ainame(M)
+		for (var/mob/living/silicon/ai/A in world)
+			if (A.real_name == newname)
+				M << "There's already an AI with that name."
+				return ainame(M)
+		if (length(newname) >= 26)
+			newname = copytext(newname, 1, 26)
+		newname = dd_replacetext(newname, ">", "'")
+		M.real_name = newname
+		M.name = newname
+
+/proc/clname(var/mob/M as mob) //--All praise goes to NEO|Phyte, all blame goes to DH, and it was Cindi-Kate's idea
+	var/randomname = pick(clown_names)
+	var/newname = input(M,"You are the clown. Would you like to change your name to something else?", "Name change",randomname)
+	var/oldname = M.real_name
+
+	if (length(newname) == 0)
+		newname = randomname
+
+	if (newname)
+		if (newname == "Unknown")
+			M << "That name is reserved."
+			return clname(M)
+		for (var/mob/living/carbon/A in world)
+			if (A.real_name == newname)
+				M << "There's already a clown with that name."
+				return clname(M)
+		if (length(newname) >= 26)
+			newname = copytext(newname, 1, 26)
+		newname = dd_replacetext(newname, ">", "'")
+		M.real_name = newname
+		M.name = newname
+
+	for (var/obj/item/device/pda/pda in M.contents)
+		if (pda.owner == oldname)
+			pda.owner = newname
+			pda.name = "PDA-[newname] ([pda.ownjob])"
+			break
+	for(var/obj/item/weapon/card/id/id in M.contents)
+		if(id.registered == oldname)
+			id.registered = newname
+			id.name = "[id.registered]'s ID Card ([id.assignment])"
+			break
+
+/proc/ionnum()
+	return "[pick("!","@","#","$","%","^","&","*")][pick(pick("!","@","#","$","%","^","&","*"))][pick(pick("!","@","#","$","%","^","&","*"))][pick(pick("!","@","#","$","%","^","&","*"))]"
+
+/proc/freeborg()
+	var/select = null
+	var/list/names = list()
+	var/list/borgs = list()
+	var/list/namecounts = list()
+	for (var/mob/living/silicon/robot/A in world)
+		var/name = A.real_name
+		if (A.stat == 2)
+			continue
+		if (A.connected_ai)
+			continue
+		else
+			if(A.module)
+				name += " ([A.module.name])"
+			names.Add(name)
+			namecounts[name] = 1
+		borgs[name] = A
+
+	if (borgs.len)
+		select = input("Unshackled borg signals detected:", "Borg selection", null, null) as null|anything in borgs
+		return borgs[select]
+
+/proc/activeais()
+	var/select = null
+	var/list/names = list()
+	var/list/ais = list()
+	var/list/namecounts = list()
+	for (var/mob/living/silicon/ai/A in world)
+		var/name = A.real_name
+		if (A.real_name == "Inactive AI")
+			continue
+		if (A.stat == 2)
+			continue
+		if (A.control_disabled == 1)
+			continue
+		else
+			names.Add(name)
+			namecounts[name] = 1
+		ais[name] = A
+
+	if (ais.len)
+		select = input("AI signals detected:", "AI selection") in ais
+		return ais[select]
+
+/proc/getmobs()
+
+	var/list/mobs = sortmobs()
+	var/list/names = list()
+	var/list/creatures = list()
+	var/list/namecounts = list()
+	for(var/mob/M in mobs)
+		var/name = M.name
+		if (name in names)
+			namecounts[name]++
+			name = "[name] ([namecounts[name]])"
+		else
+			names.Add(name)
+			namecounts[name] = 1
+		if (M.real_name && M.real_name != M.name)
+			name += " \[[M.real_name]\]"
+		if (M.stat == 2)
+			if(istype(M, /mob/dead/observer/))
+				name += " \[ghost\]"
+			else
+				name += " \[dead\]"
+		creatures[name] = M
+
+	return creatures
 
 /proc/sortmobs()
 
@@ -361,14 +676,81 @@
 		mob_list.Add(M)
 	for(var/mob/dead/observer/M in world)
 		mob_list.Add(M)
-	for(var/mob/dead/official/M in world)
-		mob_list.Add(M)
 	for(var/mob/new_player/M in world)
 		mob_list.Add(M)
 	for(var/mob/living/carbon/monkey/M in world)
 		mob_list.Add(M)
-
+	for(var/mob/living/silicon/hivebot/M in world)
+		mob_list.Add(M)
+	for(var/mob/living/silicon/hive_mainframe/M in world)
+		mob_list.Add(M)
 	return mob_list
+
+/proc/convert2energy(var/M)
+	var/E = M*(SPEED_OF_LIGHT_SQ)
+	return E
+
+/proc/convert2mass(var/E)
+	var/M = E/(SPEED_OF_LIGHT_SQ)
+	return M
+
+/proc/modulus(var/M)
+	if(M >= 0)
+		return M
+	if(M < 0)
+		return -M
+
+
+/proc/key_name(var/whom, var/include_link = null, var/include_name = 1)
+	var/mob/the_mob = null
+	var/client/the_client = null
+	var/the_key = ""
+
+	if (isnull(whom))
+		return "*null*"
+	else if (istype(whom, /client))
+		the_client = whom
+		the_mob = the_client.mob
+		the_key = the_client.key
+	else if (ismob(whom))
+		the_mob = whom
+		the_client = the_mob.client
+		the_key = the_mob.key
+	else if (istype(whom, /datum))
+		var/datum/the_datum = whom
+		return "*invalid:[the_datum.type]*"
+	else
+		return "*invalid*"
+
+	var/text = ""
+
+	if (!the_key)
+		text += "*no client*"
+	else
+		if (include_link && !isnull(the_mob))
+			if (istext(include_link))
+				text += "<a href=\"byond://?src=[include_link];priv_msg=\ref[the_mob]\">"
+			else
+				text += "<a href=\"byond://?src=\ref[include_link];priv_msg=\ref[the_mob]\">"
+
+		if (the_client && the_client.holder && the_client.stealth && !include_name)
+			text += "Administrator"
+		else
+			text += "[the_key]"
+
+		if (!isnull(include_link) && !isnull(the_mob))
+			text += "</a>"
+
+	if (include_name && !isnull(the_mob))
+		if (the_mob.real_name)
+			text += "/([the_mob.real_name])"
+		else if (the_mob.name)
+			text += "/([the_mob.name])"
+
+	return text
+
+/proc/key_name_admin(var/whom, var/include_name = 1)
+	return key_name(whom, "%admin_ref%", include_name)
 
 
 // Registers the on-close verb for a browse window (client/verb/.windowclose)
@@ -386,7 +768,7 @@
 // Otherwise, the user mob's machine var will be reset directly.
 //
 /proc/onclose(mob/user, windowid, var/atom/ref=null)
-
+	if(!user.client) return
 	var/param = "null"
 	if(ref)
 		param = "\ref[ref]"
@@ -422,18 +804,131 @@
 		src.mob.machine = null
 	return
 
+/proc/reverselist(var/list/input)
+	var/list/output = new/list()
+	for(var/A in input)
+		output += A
+	return output
+
+/proc/get_turf_loc(var/mob/M) //gets the location of the turf that the mob is on, or what the mob is in is on, etc
+	//in case they're in a closet or sleeper or something
+	var/atom/loc = M.loc
+	while(!istype(loc, /turf/))
+		loc = loc.loc
+	return loc
+
+// returns the turf located at the map edge in the specified direction relative to A
+// used for mass driver
+/proc/get_edge_target_turf(var/atom/A, var/direction)
+
+	var/turf/target = locate(A.x, A.y, A.z)
+		//since NORTHEAST == NORTH & EAST, etc, doing it this way allows for diagonal mass drivers in the future
+		//and isn't really any more complicated
+
+		// Note diagonal directions won't usually be accurate
+	if(direction & NORTH)
+		target = locate(target.x, world.maxy, target.z)
+	if(direction & SOUTH)
+		target = locate(target.x, 1, target.z)
+	if(direction & EAST)
+		target = locate(world.maxx, target.y, target.z)
+	if(direction & WEST)
+		target = locate(1, target.y, target.z)
+
+	return target
 
 // returns turf relative to A in given direction at set range
 // result is bounded to map size
 // note range is non-pythagorean
 // used for disposal system
+/proc/get_ranged_target_turf(var/atom/A, var/direction, var/range)
 
-/proc/FindRecursive(var/target,var/atom/haystack)
-	for(var/v in haystack.contents)
-		if(v==target)
-			return v
+	var/x = A.x
+	var/y = A.y
+	if(direction & NORTH)
+		y = min(world.maxy, y + range)
+	if(direction & SOUTH)
+		y = max(1, y - range)
+	if(direction & EAST)
+		x = min(world.maxx, x + range)
+	if(direction & WEST)
+		x = max(1, x - range)
+
+	return locate(x,y,A.z)
+
+
+// returns turf relative to A offset in dx and dy tiles
+// bound to map limits
+/proc/get_offset_target_turf(var/atom/A, var/dx, var/dy)
+	var/x = min(world.maxx, max(1, A.x + dx))
+	var/y = min(world.maxy, max(1, A.y + dy))
+	return locate(x,y,A.z)
+
+/*
+/proc/dir2text(var/d)
+	var/dir
+	switch(d)
+		if(1)
+			dir = "NORTH"
+		if(2)
+			dir = "SOUTH"
+		if(4)
+			dir = "EAST"
+		if(8)
+			dir = "WEST"
+		if(5)
+			dir = "NORTHEAST"
+		if(6)
+			dir = "SOUTHEAST"
+		if(9)
+			dir = "NORTHWEST"
+		if(10)
+			dir = "SOUTHWEST"
 		else
-			var/other = FindRecursive(target,v)
-			if(other)
-				return other
-	return null
+			dir = null
+	return dir
+*/
+
+//Makes sure MIDDLE is between LOW and HIGH. If not, it adjusts it. Returns the adjusted value.
+/proc/between(var/low, var/middle, var/high)
+	return max(min(middle, high), low)
+
+//returns random gauss number
+proc/GaussRand(var/sigma)
+  var/x,y,rsq
+  do
+    x=2*rand()-1
+    y=2*rand()-1
+    rsq=x*x+y*y
+  while(rsq>1 || !rsq)
+  return sigma*y*sqrt(-2*log(rsq)/rsq)
+
+//returns random gauss number, rounded to 'roundto'
+proc/GaussRandRound(var/sigma,var/roundto)
+	return round(GaussRand(sigma),roundto)
+
+proc/anim(a,b,c,d,e)
+//a is location, b is animation icon, c is the layer, d is the flick animation, e is sleep time (optional).
+//Make sure that c actually has a layer or the game will run time error.
+	var/atom/movable/overlay/animation = new(a)
+	animation.icon = b
+	animation.icon_state = "blank"
+	animation.layer = c:layer+1//++ won't work right here.
+	animation.master = a
+	flick(d, animation)
+	if(e)
+		sleep(e)
+	else
+		sleep(15)
+	del(animation)
+
+
+//returns list element or null. Should prevent "index out of bounds" error.
+proc/listgetindex(var/list/list,index)
+	if(istype(list) && list.len)
+		if(isnum(index))
+			if(index>0 && index<=list.len)
+				return list[index]
+		else if(index in list)
+			return list[index]
+	return

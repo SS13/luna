@@ -1,4 +1,5 @@
 
+
 /atom/proc/MouseDrop_T()
 	return
 
@@ -11,7 +12,7 @@
 /atom/proc/attack_ai(mob/user as mob)
 	return
 
-//for aliens, it works the same as monkeys except for alien -> mob interactions which will be defined in the
+//for aliens, it works the same as monkeys except for alien-> mob interactions which will be defined in the
 //appropiate mob files
 /atom/proc/attack_alien(mob/user as mob)
 	src.attack_paw(user)
@@ -30,11 +31,6 @@
 	src.hand_p(user)
 	return
 
-/*
-	if(hascall(src,"pull"))
-		call(src,/atom/movable/verb/pull)()
-*/
-	return
 
 /atom/proc/hitby(atom/movable/AM as mob|obj)
 	return
@@ -43,46 +39,48 @@
 	if (istype(W, /obj/item/device/detective_scanner))
 		for(var/mob/O in viewers(src, null))
 			if ((O.client && !( O.blinded )))
-				O << "\red [src] has been scanned by [user] with the [W]"
+				O << text("\red [src] has been scanned by [user] with the [W]")
 	else
-		if (!( istype(W, /obj/item/weapon/grab) ) || !(istype(W, /obj/item/weapon/cleaner)))
+		if (!( istype(W, /obj/item/weapon/grab) ) && !(istype(W, /obj/item/weapon/plastique)) &&!(istype(W, /obj/item/weapon/cleaner)) && !(istype(W, /obj/item/weapon/plantbgone)) )
 			for(var/mob/O in viewers(src, null))
 				if ((O.client && !( O.blinded )))
-					O << "\red <B>[src] has been hit by [user] with [W]</B>"
+					O << text("\red <B>[] has been hit by [] with []</B>", src, user, W)
 	return
 
-/atom/proc/add_fingerprint(mob/living/carbon/human/M as mob)
-	if ((!( istype(M, /mob/living/carbon/human) ) || !( istype(M.dna, /datum/dna) )))
-		return 0
-	add_fibers(M)
+
+/atom/proc/add_fingerprint(mob/living/M as mob)
+	if(isnull(M)) return
+	if(isnull(M.key)) return
 	if (!( src.flags ) & 256)
 		return
-	if (M.gloves)
-		if(src.fingerprintslast != M.key)
-			src.fingerprintshidden += "(Wearing gloves). Real name: [M.real_name], Key: [M.key]"
-			src.fingerprintslast = M.key
-		return 0
-	if (M.mutations & mFingerprints)
-		if(src.fingerprintslast != M.key)
-			src.fingerprintshidden += "(Has no fingerprints) Real name: [M.real_name], Key: [M.key]"
-			src.fingerprintslast = M.key
-		return 0
-	if (!( src.fingerprints ))
-		src.fingerprints = text("[]", md5(M.dna.uni_identity))
-		if(src.fingerprintslast != M.key)
-			src.fingerprintshidden += "Real name: [M.real_name], Key: [M.key]"
-			src.fingerprintslast = M.key
-		return 1
+	if (ishuman(M))
+		var/mob/living/carbon/human/H = M
+		if (!istype(H.dna, /datum/dna))
+			return 0
+		if (H.gloves)
+			if(src.fingerprintslast != H.key)
+				src.fingerprintshidden += text("(Wearing gloves). Real name: [], Key: []",H.real_name, H.key)
+				src.fingerprintslast = H.key
+			return 0
+		if (!( src.fingerprints ))
+			src.fingerprints = text("[]", md5(H.dna.uni_identity))
+			if(src.fingerprintslast != H.key)
+				src.fingerprintshidden += text("Real name: [], Key: []",H.real_name, H.key)
+				src.fingerprintslast = H.key
+			return 1
+		else
+			var/list/L = params2list(src.fingerprints)
+			L -= md5(H.dna.uni_identity)
+			while(L.len >= 3)
+				L -= L[1]
+			L += md5(H.dna.uni_identity)
+			src.fingerprints = list2params(L)
+			if(src.fingerprintslast != H.key)
+				src.fingerprintshidden += text("Real name: [], Key: []",H.real_name, H.key)
+				src.fingerprintslast = H.key
 	else
-		var/list/L = params2list(src.fingerprints)
-		L -= md5(M.dna.uni_identity)
-		while(L.len >= 3)
-			L -= L[1]
-		L += md5(M.dna.uni_identity)
-		src.fingerprints = list2params(L)
-
 		if(src.fingerprintslast != M.key)
-			src.fingerprintshidden += "Real name: [M.real_name], Key: [M.key]"
+			src.fingerprintshidden += text("Real name: [], Key: []",M.real_name, M.key)
 			src.fingerprintslast = M.key
 	return
 
@@ -108,20 +106,19 @@
 			var/list/objsonturf = range(0,src)
 			var/i
 			for(i=1, i<=objsonturf.len, i++)
-				if(istype(objsonturf[i],/obj/effect/decal/cleanable/blood))
-					return 0
-			var/obj/effect/decal/cleanable/blood/this = new /obj/effect/decal/cleanable/blood(source2)
+				if(istype(objsonturf[i],/obj/decal/cleanable/blood))
+					return
+			var/obj/decal/cleanable/blood/this = new /obj/decal/cleanable/blood(source2)
 			this.blood_DNA = M.dna.unique_enzymes
 			this.blood_type = M.b_type
-			this.virus = M.virus
-			if(M.virus2)
-				this.virus2 = M.virus2.getcopy()
-			this.blood_owner = M
+			if (M.virus)
+				this.virus = new M.virus.type
+				this.virus.holder = this
 		else if (istype(src, /mob/living/carbon/human))
 			src.blood_DNA = M.dna.unique_enzymes
 			src.blood_type = M.b_type
 		else
-			return 0
+			return
 	else
 		var/list/L = params2list(src.blood_DNA)
 		L -= M.dna.unique_enzymes
@@ -129,19 +126,55 @@
 			L -= L[1]
 		L += M.dna.unique_enzymes
 		src.blood_DNA = list2params(L)
-	return 1
+	return
+
+
+// Only adds blood on the floor -- Skie
+/atom/proc/add_blood_floor(mob/living/carbon/M as mob)
+	if( istype(M, /mob/living/carbon/monkey) )
+		if( istype(src, /turf/simulated) )
+			var/turf/simulated/source1 = src
+			var/obj/decal/cleanable/blood/this = new /obj/decal/cleanable/blood(source1)
+			this.blood_DNA = M.dna.unique_enzymes
+			if(M.virus)
+				this.virus = new M.virus.type
+				this.virus.holder = this
+
+	else if( istype(M, /mob/living/carbon/alien ))
+		if( istype(src, /turf/simulated) )
+			var/turf/simulated/source2 = src
+			var/obj/decal/cleanable/xenoblood/this = new /obj/decal/cleanable/xenoblood(source2)
+			if(M.virus)
+				this.virus = new M.virus.type
+				this.virus.holder = this
+
+	else if( istype(M, /mob/living/silicon/robot ))
+		if( istype(src, /turf/simulated) )
+			var/turf/simulated/source2 = src
+			var/obj/decal/cleanable/oil/this = new /obj/decal/cleanable/oil(source2)
+			if(M.virus)
+				this.virus = new M.virus.type
+				this.virus.holder = this
+
+
 
 /atom/proc/clean_blood()
-	if(istype(src, /obj)) src:contaminated = 0
+
 	if (!( src.flags ) & 256)
 		return
 	if ( src.blood_DNA )
+		if (istype (src, /mob/living/carbon))
+			var/obj/item/source2 = src
+			source2.blood_DNA = null
+			//var/icon/I = new /icon(source2.icon_old, source2.icon_state) //doesnt have icon_old
+			//source2.icon = I
 		if (istype (src, /obj/item))
 			var/obj/item/source2 = src
 			source2.blood_DNA = null
-			var/icon/I = new /icon(source2.icon_old, source2.icon_state)
-			source2.icon = I
-		else if (istype(src, /turf/simulated))
+//			var/icon/I = new /icon(source2.icon_old, source2.icon_state)
+			source2.icon = source2.icon_old
+			source2.update_icon()
+		if (istype(src, /turf/simulated))
 			var/obj/item/source2 = src
 			source2.blood_DNA = null
 			var/icon/I = new /icon(source2.icon_old, source2.icon_state)
@@ -163,74 +196,37 @@
 		build_click(usr, usr.client.buildmode, location, control, params, src)
 		return
 
-	return DblClick(location, control, params)
+	return DblClick()
 
-/atom/DblClick(location, control, params) //TODO: DEFERRED: REWRITE
+/atom/DblClick() //TODO: DEFERRED: REWRITE
+//	world << "checking if this shit gets called at all"
 	if (world.time <= usr:lastDblClick+2)
-		//world << "BLOCKED atom.DblClick() on [src] by [usr] : src.type is [src.type]"
+//		world << "BLOCKED atom.DblClick() on [src] by [usr] : src.type is [src.type]"
 		return
 	else
-		//world << "atom.DblClick() on [src] by [usr] : src.type is [src.type]"
+//		world << "atom.DblClick() on [src] by [usr] : src.type is [src.type]"
 		usr:lastDblClick = world.time
+	if (istype(usr, /mob/living/silicon/ai))
+		var/mob/living/silicon/ai/ai = usr
+		if (ai.control_disabled)
+			return
+	if (istype (usr, /mob/living/silicon/robot))
+		var/mob/living/silicon/robot/bot = usr
+		if (bot.lockcharge) return
 	..()
 
-	//Putting it here for now. It diverts stuff to the mech clicking procs. Putting it here stops us drilling items in our inventory Carn
-	if(istype(usr.loc,/obj/mecha))
-		if(usr.client && (src in usr.client.screen))
-			return
-		var/obj/mecha/Mech = usr.loc
-		Mech.click_action(src,usr)
-		return
-
-	var/parameters = params2list(params)
-
-	// ------ SHIFT-CLICK -----
-
-	if(parameters["shift"])
-		if(!isAI(usr))
-			ShiftClick(usr)
-		return
-
-	// ------- ALT-CLICK -------
-
-	if(parameters["alt"])
-		if(!isAI(usr))
-			AltClick(usr)
-		return
-
-	usr.log_m("Clicked on [src]")
 
 	if(usr.in_throw_mode)
 		return usr:throw_item(src)
 
-	var/obj/item/W = null
-	if(ismob(src) && istype(usr,/mob/living/silicon/ai))
-		usr:ai_actual_track(src)
-	if(istype(usr, /mob/living/silicon/robot))
-		var/mob/living/silicon/robot/R = usr
-		W = R.selected_module()
-		if(!W)
-			var/count
-			var/list/objects = list()
-			if(usr:module_state_1)
-				objects += usr:module_state_1
-				count++
-			if(usr:module_state_2)
-				objects += usr:module_state_2
-				count++
-			if(usr:module_state_3)
-				objects += usr:module_state_3
-				count++
-			if(count > 1)
-				var/input = input("Please, select an item!", "Item", null, null) as obj in objects
-				W = input
-			else if(count != 0)
-				for(var/obj in objects)
-					W = obj
-			else if(count == 0)
-				W = null
-	else
-		W = usr.equipped()
+	var/obj/item/W = usr.equipped()
+
+
+	if(istype(usr, /mob/living/silicon/hivebot)||istype(usr, /mob/living/silicon/robot))
+		if(!isnull(usr:module_active))
+			W = usr:module_active
+		else
+			W = null
 
 	if (W == src && usr.stat == 0)
 		spawn (0)
@@ -241,71 +237,110 @@
 		return
 
 	if ((!( src in usr.contents ) && (((!( isturf(src) ) && (!( isturf(src.loc) ) && (src.loc && !( isturf(src.loc.loc) )))) || !( isturf(usr.loc) )) && (src.loc != usr.loc && (!( istype(src, /obj/screen) ) && !( usr.contents.Find(src.loc) ))))))
-		return
+		if (istype(usr, /mob/living/silicon/ai))
+			var/mob/living/silicon/ai/ai = usr
+			if (ai.control_disabled || ai.malfhacking)
+				return
+		else
+			return
 
 	var/t5 = in_range(src, usr) || src.loc == usr
 
 	if (istype(usr, /mob/living/silicon/ai))
 		t5 = 1
 
-	if (istype(usr, /mob/living/silicon/robot) && W == null)
+	if ((istype(usr, /mob/living/silicon/robot) || istype(usr, /mob/living/silicon/hivebot)) && W == null)
 		t5 = 1
 
 	if (istype(src, /datum/organ) && src in usr.contents)
 		return
 
+//	world << "according to dblclick(), t5 is [t5]"
 	if (((t5 || (W && (W.flags & 16))) && !( istype(src, /obj/screen) )))
 		if (usr.next_move < world.time)
 			usr.prev_move = usr.next_move
 			usr.next_move = world.time + 10
 		else
 			return
-
 		if ((src.loc && (get_dist(src, usr) < 2 || src.loc == usr.loc)))
 			var/direct = get_dir(usr, src)
+			var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy( usr.loc )
 			var/ok = 0
 			if ( (direct - 1) & direct)
 				var/turf/Step_1
 				var/turf/Step_2
 				switch(direct)
-					if(EAST|NORTH)
+					if(5.0)
 						Step_1 = get_step(usr, NORTH)
 						Step_2 = get_step(usr, EAST)
 
-					if(EAST|SOUTH)
+					if(6.0)
 						Step_1 = get_step(usr, SOUTH)
 						Step_2 = get_step(usr, EAST)
 
-					if(NORTH|WEST)
+					if(9.0)
 						Step_1 = get_step(usr, NORTH)
 						Step_2 = get_step(usr, WEST)
 
-					if(SOUTH|WEST)
+					if(10.0)
 						Step_1 = get_step(usr, SOUTH)
 						Step_2 = get_step(usr, WEST)
 
 					else
-
 				if(Step_1 && Step_2)
-					var/check_1 = 1
-					var/check_2 = 1
+					var/check_1 = 0
+					var/check_2 = 0
+					if(step_to(D, Step_1))
+						check_1 = 1
+						for(var/obj/border_obstacle in Step_1)
+							if(border_obstacle.flags & ON_BORDER)
+								if(!border_obstacle.CheckExit(D, src))
+									check_1 = 0
+						for(var/obj/border_obstacle in get_turf(src))
+							if((border_obstacle.flags & ON_BORDER) && (src != border_obstacle))
+								if(!border_obstacle.CanPass(D, D.loc, 1, 0))
+									check_1 = 0
 
-					check_1 = CanReachThrough(get_turf(usr), Step_1, src) && CanReachThrough(Step_1, get_turf(src), src)
+					D.loc = usr.loc
+					if(step_to(D, Step_2))
+						check_2 = 1
 
-					check_2 = CanReachThrough(get_turf(usr), Step_2, src) && CanReachThrough(Step_2, get_turf(src), src)
-
-					ok = (check_1 || check_2)
+						for(var/obj/border_obstacle in Step_2)
+							if(border_obstacle.flags & ON_BORDER)
+								if(!border_obstacle.CheckExit(D, src))
+									check_2 = 0
+						for(var/obj/border_obstacle in get_turf(src))
+							if((border_obstacle.flags & ON_BORDER) && (src != border_obstacle))
+								if(!border_obstacle.CanPass(D, D.loc, 1, 0))
+									check_2 = 0
+					if(check_1 || check_2)
+						ok = 1
 			else
+				if(loc == usr.loc)
+					ok = 1
+				else
+					ok = 1
 
-				ok = CanReachThrough(get_turf(usr), get_turf(src), src)
+					//Now, check objects to block exit that are on the border
+					for(var/obj/border_obstacle in usr.loc)
+						if(border_obstacle.flags & ON_BORDER)
+							if(!border_obstacle.CheckExit(D, src))
+								ok = 0
 
+					//Next, check objects to block entry that are on the border
+					for(var/obj/border_obstacle in get_turf(src))
+						if((border_obstacle.flags & ON_BORDER) && (src != border_obstacle))
+							if(!border_obstacle.CanPass(D, D.loc, 1, 0))
+								ok = 0
+
+			del(D)
 			if (!( ok ))
+
 				return 0
 
-		if ( !(usr.restrained()) )
+		if (!( usr.restrained() ))
 			if (W)
 				if (t5)
-					src.alog(W,usr)
 					src.attackby(W, usr)
 				if (W)
 					W.afterattack(src, usr, (t5 ? 1 : 0))
@@ -319,7 +354,7 @@
 						if (istype(usr, /mob/living/carbon/alien/humanoid))
 							src.attack_alien(usr, usr.hand)
 						else
-							if (istype(usr, /mob/living/silicon))
+							if (istype(usr, /mob/living/silicon/ai) || istype(usr, /mob/living/silicon/robot)|| istype(usr, /mob/living/silicon/hivebot))
 								src.attack_ai(usr, usr.hand)
 		else
 			if (istype(usr, /mob/living/carbon/human))
@@ -331,7 +366,7 @@
 					if (istype(usr, /mob/living/carbon/alien/humanoid))
 						src.hand_al(usr, usr.hand)
 					else
-						if (istype(usr, /mob/living/silicon))
+						if (istype(usr, /mob/living/silicon/ai) || istype(usr, /mob/living/silicon/robot)|| istype(usr, /mob/living/silicon/hivebot))
 							src.hand_a(usr, usr.hand)
 
 	else
@@ -343,7 +378,6 @@
 				return
 			if (!( usr.restrained() ))
 				if ((W && !( istype(src, /obj/screen) )))
-					src.alog(W,usr)
 					src.attackby(W, usr)
 
 					if (W)
@@ -369,235 +403,18 @@
 	return
 
 
-	if( iscarbon(usr) && !usr.buckled )
-		if( src.x && src.y && usr.x && usr.y )
-			var/dx = src.x - usr.x
-			var/dy = src.y - usr.y
-
-			if(dy || dx)
-				if(abs(dx) < abs(dy))
-					if(dy > 0)	usr.dir = NORTH
-					else		usr.dir = SOUTH
-				else
-					if(dx > 0)	usr.dir = EAST
-					else		usr.dir = WEST
-			else
-				if(pixel_y > 16)		usr.dir = NORTH
-				else if(pixel_y < -16)	usr.dir = SOUTH
-				else if(pixel_x > 16)	usr.dir = EAST
-				else if(pixel_x < -16)	usr.dir = WEST
-
-/atom/proc/AltClick()
-	if(hascall(src,"pull"))
-		src:pull()
-	return
-
-/atom/proc/ShiftClick(var/mob/M as mob)
-
-	if(istype(M.machine, /obj/machinery/computer/security)) //No examining by looking through cameras
-		return
-
-	//I dont think this was ever really a problem and it's only creating more bugs...
-//	if(( abs(src.x-M.x)<8 || abs(src.y-M.y)<8 ) && src.z == M.z ) //This should prevent non-observers to examine stuff from outside their view.
-	examine()
-
-	return
-
-/atom/proc/CanReachThrough(turf/srcturf, turf/targetturf, atom/target)
-	var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy( srcturf )
-
-	if(targetturf.density && targetturf != get_turf(target))
-		return 0
-
-	//Now, check objects to block exit that are on the border
-	for(var/obj/border_obstacle in srcturf)
-		if(border_obstacle.flags & ON_BORDER)
-			if(!border_obstacle.CheckExit(D, targetturf))
-				del D
-				return 0
-
-	//Next, check objects to block entry that are on the border
-	for(var/obj/border_obstacle in targetturf)
-		if((border_obstacle.flags & ON_BORDER) && (src != border_obstacle))
-			if(!border_obstacle.CanPass(D, srcturf, 1, 0))
-				del D
-				return 0
-
-	del D
-	return 1
-/atom/proc/CanReachTrough2(turf/srcturf, turf/targetturf, atom/target)
-// HORRIBLE
-/*
-	var/direct = get_dir(target, src)
-	var/canpass1 = 0
-	var/canpass2 = 0
-	world << "[direct]"
-	switch(direct)
-		if(1)
-			world << "NORTH || SOUTH || WEST || EAST"
-			if(CanReachThrough(srcturf,targetturf,target))
-				return 1
-			else
-				return 0
-		if(2)
-			world << "NORTH || SOUTH || WEST || EAST"
-			if(CanReachThrough(srcturf,targetturf,target))
-				return 1
-			else
-				return 0
-		if(4)
-			world << "NORTH || SOUTH || WEST || EAST"
-			if(CanReachThrough(srcturf,targetturf,target))
-				return 1
-			else
-				return 0
-		if(8)
-			world << "NORTH || SOUTH || WEST || EAST"
-			if(CanReachThrough(srcturf,targetturf,target))
-				return 1
-			else
-				return 0
-		if(NORTHWEST)
-			world << "NORTHWEST"
-			var/turf/north = get_step(src,1)
-			var/turf/west = get_step(north,8)
-			canpass1 = north.TestEnter(target)
-			canpass2 = west.TestEnter(target)
-			if(canpass1 && canpass2)
-				return 1
-			else
-				return 0
-		if(NORTHEAST)
-			world << "NORTHEAST"
-			var/turf/north = get_step(src,1)
-			var/turf/west = get_step(north,4)
-			canpass1 = north.TestEnter(target)
-			canpass2 = west.TestEnter(target)
-			if(canpass1 && canpass2)
-				return 1
-			else
-				return 0
-		if(SOUTHEAST)
-			world << "SOUTHEAST"
-			var/turf/north = get_step(src,2)
-			var/turf/west = get_step(north,4)
-			canpass1 = north.TestEnter(target)
-			canpass2 = west.TestEnter(target)
-			if(canpass1 && canpass2)
-				return 1
-			else
-				return 0
-		if(SOUTHWEST)
-			world << "SOUTHWEST"
-			var/turf/north = get_step(src,2)
-			var/turf/west = get_step(north,8)
-			canpass1 = north.TestEnter(target)
-			canpass2 = west.TestEnter(target)
-			if(canpass1 && canpass2)
-				return 1
-			else
-				return 0
-			//HEADBACK
-
-	var/direct = get_dir(usr, src)
-	var/ok = 0
-	if ( (direct - 1) & direct)
-		var/turf/Step_1
-		var/turf/Step_2
-		switch(direct)
-			if(EAST|NORTH)
-				Step_1 = get_step(target, NORTH)
-				Step_2 = get_step(target, EAST)
-			if(EAST|SOUTH)
-				Step_1 = get_step(target, SOUTH)
-				Step_2 = get_step(target, EAST)
-			if(NORTH|WEST)
-				Step_1 = get_step(target, NORTH)
-				Step_2 = get_step(target, WEST)
-			if(SOUTH|WEST)
-				Step_1 = get_step(target, SOUTH)
-				Step_2 = get_step(target, WEST)
-			else
-		if(Step_1 && Step_2)
-			var/check_1 = 1
-			var/check_2 = 1
-			check_1 = CanReachThrough(get_turf(target), Step_1, src) && CanReachThrough(Step_1, get_turf(src), src)
-			check_2 = CanReachThrough(get_turf(target), Step_2, src) && CanReachThrough(Step_2, get_turf(src), src)
-			if(check_1 && check_2)
-				return 1
+/atom/proc/get_global_map_pos()
+	if(!global_map.len) return
+	var/cur_x = null
+	var/cur_y = null
+	var/list/y_arr = null
+	for(cur_x=1,cur_x<=global_map.len,cur_x++)
+		y_arr = global_map[cur_x]
+		cur_y = y_arr.Find(src.z)
+		if(cur_y)
+			break
+//	world << "X = [cur_x]; Y = [cur_y]"
+	if(cur_x && cur_y)
+		return list("x"=cur_x,"y"=cur_y)
 	else
-		if(CanReachThrough(get_turf(target), get_turf(src), src))
-			return 1
-
-
-/turf/proc/TestEnter(atom/movable/mover as mob|obj, atom/forget as mob|obj|turf|area)
-	if (!mover || !isturf(mover.loc))
-		return 1
-
-
-	//First, check objects to block exit that are not on the border
-	for(var/obj/obstacle in mover.loc)
-		if((obstacle.flags & ~ON_BORDER) && (mover != obstacle) && (forget != obstacle))
-			if(!obstacle.CheckExit(mover, src))
-				return 0
-
-	//Now, check objects to block exit that are on the border
-	for(var/obj/border_obstacle in mover.loc)
-		if((border_obstacle.flags & ON_BORDER) && (mover != border_obstacle) && (forget != border_obstacle))
-			if(!border_obstacle.CheckExit(mover, src))
-				return 0
-
-	//Next, check objects to block entry that are on the border
-	for(var/obj/border_obstacle in src)
-		if(border_obstacle.flags & ON_BORDER)
-			if(!border_obstacle.CanPass(mover, mover.loc, 1, 0) && (forget != border_obstacle))
-				return 0
-
-	//Then, check the turf itself
-	if (!src.CanPass(mover, src))
 		return 0
-
-	//Finally, check objects/mobs to block entry that are not on the border
-	for(var/atom/movable/obstacle in src)
-		if(obstacle.flags & ~ON_BORDER)
-			if(!obstacle.CanPass(mover, mover.loc, 1, 0) && (forget != obstacle))
-				return 0
-	return 1 //Nothing found to block so return success!
-*/
-/atom/proc/alog(var/atom/device,var/mob/mb)
-	src.logs += "[src.name] used by a [device.name] by [mb.real_name]([mb.key])"
-	mb.log_m("[src.name] used by a [device.name]")
-
-
-
-/atom/proc/addoverlay(var/overlays)
-	src.overlayslist += overlays
-	src.overlays += overlays
-
-/atom/proc/removeoverlay(var/overlays)
-	if (istype(overlays, /image)) // This is needed due to the way overlayss work. The overlays being passed to this proc is in most instances not the same object, so we need to compare their attributes
-		var/image/I = overlays
-		for (var/image/L in src.overlayslist)
-			if (L.icon == I.icon && L.icon_state == I.icon_state && L.dir == I.dir && L.layer == I.layer)
-				src.overlayslist -= L
-				break
-	else
-		src.overlayslist -= overlays
-	src.overlays -= overlays // Seems that the overlayss list is special and is able to remove them. Suspect it does similar to the if block above.
-
-/atom/proc/clearoverlays()
-	src.overlayslist = new/list()
-	src.overlays = null
-
-/atom/proc/addalloverlays(var/list/overlayss)
-	src.overlayslist = overlayss
-	src.overlays = overlayss
-
-/atom/movable/proc/forceMove(atom/destination)
-	if(destination)
-		if(loc)
-			loc.Exited(src)
-		loc = destination
-		loc.Entered(src)
-		return 1
-	return 0

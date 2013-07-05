@@ -80,10 +80,14 @@
 			signal.transmission_method = 1 //radio signal
 			signal.source = src
 
-			signal.data["tag"] = id
-			signal.data["device"] = "AO"
-			signal.data["power"] = on?("on"):("off")
-			signal.data["volume_rate"] = volume_rate
+			signal.data = list(
+				"tag" = id,
+				"device" = "AO",
+				"power" = on,
+				"volume_rate" = volume_rate,
+				//"timestamp" = world.time,
+				"sigtype" = "status"
+			 )
 
 			radio_connection.post_signal(src, signal)
 
@@ -95,30 +99,32 @@
 		set_frequency(frequency)
 
 	receive_signal(datum/signal/signal)
-		if(signal.data["tag"] && (signal.data["tag"] != id))
+		if(!signal.data["tag"] || (signal.data["tag"] != id) || (signal.data["sigtype"]!="command"))
 			return 0
 
-		switch(signal.data["command"])
-			if("power_on")
-				on = 1
+		if("power" in signal.data)
+			on = text2num(signal.data["power"])
 
-			if("power_off")
-				on = 0
+		if("power_toggle" in signal.data)
+			on = !on
 
-			if("power_toggle")
-				on = !on
+		if("inject" in signal.data)
+			spawn inject()
+			return
 
-			if("inject")
-				spawn inject()
+		if("set_volume_rate" in signal.data)
+			var/number = text2num(signal.data["set_volume_rate"])
+			volume_rate = between(0, number, air_contents.volume)
 
-			if("set_volume_rate")
-				var/number = text2num(signal.data["parameter"])
-				number = min(max(number, 0), air_contents.volume)
+		if("status" in signal.data)
+			spawn(2)
+				broadcast_status()
+			return //do not update_icon
 
-				volume_rate = number
-
-		if(signal.data["tag"])
-			spawn(5 * tick_multiplier) broadcast_status()
+			//log_admin("DEBUG \[[world.timeofday]\]: outlet_injector/receive_signal: unknown command \"[signal.data["command"]]\"\n[signal.debug_print()]")
+			//return
+		spawn(2)
+			broadcast_status()
 		update_icon()
 
 	hide(var/i) //to make the little pipe section invisible, the icon changes.

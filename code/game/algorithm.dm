@@ -1,8 +1,6 @@
 /world/New()
 	..()
 
-	//
-
 	diary = file("data/logs/[time2text(world.realtime, "YYYY/MM-Month/DD-Day")].log")
 	diary << ""
 	diary << ""
@@ -10,18 +8,18 @@
 	diary << "---------------------"
 	diary << ""
 
-	//jobban_loadbanfile()
-	//jobban_updatelegacybans()
-
-	setuptitles()
-	spawn
-		SetupAnomalies()
-		//tgrid.Setup() //Part of Alfie's travel code
-	spawn(30 * tick_multiplier)
-		//EXPERIMENTAL
-		Optimize()
-		sleep_offline = 1
-		//EXPERIMENTAL
+	jobban_loadbanfile()
+	jobban_updatelegacybans()
+	LoadBans()
+	process_teleport_locs() //Sets up the wizard teleport locations
+	process_ghost_teleport_locs() //Sets up ghost teleport locations.
+	sleep_offline = 1
+	
+	if (config.kick_inactive)
+		spawn(30)
+			//EXPERIMENTAL
+			Optimize()
+			//EXPERIMENTAL
 
 	spawn(0)
 		SetupOccupationsList()
@@ -37,12 +35,17 @@ var/opt_inactive = null
 		KickInactiveClients()
 		opt_inactive = world.timeofday
 
-	spawn(100 * tick_multiplier) Optimize()
+	spawn(100) Optimize()
 
 /world/proc/KickInactiveClients()
 	for(var/client/C)
-		if(!C.holder && ((C.inactivity/10)/60) >= 15)
-			C << "\red You have been inactive for more than 15 minutes and have been disconnected."
+		if(!C.holder && ((C.inactivity/10)/60) >= 10) // Used to be 15 -- TLE
+			//C << "\red You have been inactive for more than 10 minutes and have been disconnected."
+			if(C.mob)
+				if(!istype(C.mob, /mob/dead/))
+					log_access("AFK: [key_name(C)]")
+					C << "\red You have been inactive for more than 10 minutes and have been disconnected."
+					C.mob.logged_in = 0
 			del(C)
 
 /// EXPERIMENTAL STUFF
@@ -72,14 +75,20 @@ proc/countJob(rank)
 	slot_w_uniform = 14
 	slot_l_store = 15
 	slot_r_store = 16
-//	slot_w_radio = 17
+	slot_s_store = 17
 	slot_in_backpack = 18
-
+	slot_h_store = 19
 
 /mob/living/carbon/human/proc/equip_if_possible(obj/item/weapon/W, slot) // since byond doesn't seem to have pointers, this seems like the best way to do this :/
 	//warning: icky code
 	var/equipped = 0
 	if((slot == l_store || slot == r_store || slot == belt || slot == wear_id) && !src.w_uniform)
+		del(W)
+		return
+	if(slot == s_store && !src.wear_suit)
+		del(W)
+		return
+	if(slot == h_store && !src.head)
 		del(W)
 		return
 	switch(slot)
@@ -147,22 +156,23 @@ proc/countJob(rank)
 			if(!src.r_store)
 				src.r_store = W
 				equipped = 1
-//		if(slot_w_radio)
-//			if(!src.w_radio)
-//				src.w_radio = W
-//				equipped = 1
+		if(slot_s_store)
+			if(!src.s_store)
+				src.s_store = W
+				equipped = 1
 		if(slot_in_backpack)
 			if (src.back && istype(src.back, /obj/item/weapon/storage/backpack))
 				var/obj/item/weapon/storage/backpack/B = src.back
 				if(B.contents.len < 7 && W.w_class <= 3)
 					W.loc = B
 					equipped = 1
-					W.loc = B
+		if(slot_h_store)
+			if(!src.h_store)
+				src.h_store = W
+				equipped = 1
 
 	if(equipped)
 		W.layer = 20
-		if(!(slot == slot_in_backpack))
-			W.loc = src
 	else
 		del(W)
 

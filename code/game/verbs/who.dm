@@ -6,11 +6,14 @@
 
 	var/list/peeps = list()
 
-	for (var/client/C)
-		if (C.stealth && !usr.client.holder)
-			peeps += "\t[C.fakekey]"
+	for (var/mob/M in world)
+		if (!M.client)
+			continue
+
+		if (M.client.stealth && !usr.client.holder)
+			peeps += "\t[M.client.fakekey]"
 		else
-			peeps += "\t[C][C.stealth ? " <i>(as [C.fakekey])</i>" : ""]"
+			peeps += "\t[M.client][M.client.stealth ? " <i>(as [M.client.fakekey])</i>" : ""]"
 
 	peeps = sortList(peeps)
 
@@ -20,16 +23,14 @@
 	usr << "<b>Total Players: [length(peeps)]</b>"
 
 /client/verb/adminwho()
-	set name = "Adminwho"
 	set category = "Admin"
+	set name = "Adminwho"
 
-	usr << "<b>Current Tyrants:</b>"
+	usr << "<b>Current Admins:</b>"
 
-	for (var/client/C)
-		if(C.holder)
+	for (var/mob/M in world)
+		if(M && M.client && M.client.holder)
 			if(usr.client.holder)
-				usr << "[C.mob.key] is a [C.holder.rank][C.stealth ? " <i>(as [C.fakekey])</i>" : ""]"
-			else if(!C.stealth)
-				usr << "\t[C] is a [pick(nobles)]"
-
-var/list/nobles = list("Master Chief", "Crusader", "Conqueror", "Overlord", "Pan-Galactic Tycoon", "Master Industrialist", "Federation Marshal", "Planetary Senator", "Security Master Chief", "Major NanoTrasen Shareholder", "Shipbuilding Guardian")
+				usr << "[M.key] is a [M.client.holder.rank][M.client.stealth ? " <i>(as [M.client.fakekey])</i>" : ""]"
+			else if(!M.client.stealth)
+				usr << "\t[M.client]"

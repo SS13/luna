@@ -18,7 +18,7 @@
 	src.update()
 	for(var/obj/blob/B in orange(1,src))
 		if(prob(100/(iteration/2))) //200, 100 etc
-			spawn(rand(10,100)*tick_multiplier)
+			spawn(rand(10,100))
 				if(B)
 					B.poisoned(iteration+1)
 
@@ -52,6 +52,7 @@
 		return
 
 	for(var/dirn in cardinal)
+		sleep(3) // -- Skie
 		var/turf/T = get_step(src, dirn)
 
 		if (istype(T.loc, /area/arrival))
@@ -65,7 +66,7 @@
 		if(T.Enter(B,src) && !(locate(/obj/blob) in T))
 			B.loc = T							// open cell, so expand
 		else
-			if(prob(50))						// closed cell, 50% chance to not expand
+			if(prob(60))						// closed cell, 40% chance to not expand
 				if(!locate(/obj/blob) in T)
 					for(var/atom/A in T)			// otherwise explode contents of turf
 						A.blob_act()
@@ -78,10 +79,10 @@
 		if(1)
 			del(src)
 		if(2)
-			src.health -= rand(20,30)
+			src.health -= rand(60,90)
 			src.update()
 		if(3)
-			src.health -= rand(15,25)
+			src.health -= rand(30,40)
 			src.update()
 
 
@@ -113,23 +114,27 @@
 /obj/blob/attackby(var/obj/item/weapon/W, var/mob/user)
 	playsound(src.loc, 'attackblob.ogg', 50, 1)
 
-	src.visible_message("\red <B>The blob has been attacked with \the [W][(user ? " by [user]." : ".")]")
+	src.visible_message("\red <B>The magma has been attacked with \the [W][(user ? " by [user]." : ".")]")
 
 	var/damage = W.force / 4.0
 
 	if(istype(W, /obj/item/weapon/weldingtool))
 		var/obj/item/weapon/weldingtool/WT = W
-
 		if(WT.welding)
-			damage = 15
+			damage = -5
 			playsound(src.loc, 'Welder.ogg', 100, 1)
+
+	else if(istype(W, /obj/item/weapon/extinguisher))
+		var/obj/item/weapon/extinguisher/WT = W
+		if (!WT.safety && !WT.reagents.total_volume < 1 && !world.time < WT.last_use + 20)
+			damage = 10
 
 	src.health -= damage
 	src.update()
 
 /obj/blob/examine()
 	set src in oview(1)
-	usr << "A mysterious alien blob-like organism."
+	usr << "Delicious magma."
 
 /datum/station_state/proc/count()
 	for(var/turf/T in world)
@@ -163,9 +168,9 @@
 		if(O.z != 1)
 			continue
 
-		if(istype(O, /obj/structure/window))
+		if(istype(O, /obj/window))
 			src.window++
-		else if(istype(O, /obj/structure/grille))
+		else if(istype(O, /obj/grille))
 			if(!O:destroyed)
 				src.grille++
 		else if(istype(O, /obj/machinery/door))
@@ -214,7 +219,7 @@
 /obj/blob/idle/Del()		//idle blob that spawns a normal blob when killed.
 
 	var/obj/blob/B = new /obj/blob( src.loc )
-	spawn(30*tick_multiplier)
+	spawn(30)
 		B.Life()
 	..()
 

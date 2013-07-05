@@ -2,61 +2,47 @@
 CONTAINS:
 SPACE CLEANER
 MOP
-*/
-/obj/item/weapon/cleaner
-	desc = "Space Cleaner!"
-	icon = 'janitor.dmi'
-	name = "space cleaner"
-	icon_state = "cleaner"
-	item_state = "cleaner"
-	var/saftey = 1
-	flags = ONBELT|TABLEPASS|OPENCONTAINER|FPRINT|USEDELAY
-	throwforce = 3
-	w_class = 2.0
-	throw_speed = 2
-	throw_range = 10
 
+*/
 /obj/item/weapon/cleaner/New()
-	var/datum/reagents/R = new/datum/reagents(100)
+	var/datum/reagents/R = new/datum/reagents(250)
 	reagents = R
 	R.my_atom = src
-	R.add_reagent("cleaner", 50)
-
-/obj/item/weapon/cleaner/attack_self(mob/user as mob)
-	if(saftey == 1)
-		saftey = 0
-		user << "\blue You flick the catch to off"
-	else
-		saftey = 1
-		user << "\blue You flick the catch back on"
+	R.add_reagent("cleaner", 250)
 
 /obj/item/weapon/cleaner/attack(mob/living/carbon/human/M as mob, mob/user as mob)
 	return
 
 /obj/item/weapon/cleaner/afterattack(atom/A as mob|obj, mob/user as mob)
-	if (saftey == 1)
-		user << "\blue The catch is still on!"
+	if (istype(A, /obj/item/weapon/storage/backpack ))
 		return
-	if (src.reagents.total_volume < 1)
-		user << "\blue Its empty!"
+	else if (src.reagents.total_volume < 1)
+		user << "\blue Add more cleaner!"
 		return
 
-	var/obj/effect/decal/D = new/obj/effect/decal(get_turf(src))
+	var/obj/decal/D = new/obj/decal(get_turf(src))
 	D.name = "chemicals"
 	D.icon = 'chemical.dmi'
 	D.icon_state = "chempuff"
-	D.create_reagents(10)
-	src.reagents.trans_to(D, 10)
-	playsound(src.loc, 'zzzt.ogg', 50, 1, -6)
+	D.create_reagents(5)
+	src.reagents.trans_to(D, 5)
+	playsound(src.loc, 'spray2.ogg', 50, 1, -6)
 
 	spawn(0)
 		for(var/i=0, i<3, i++)
-			step_towards_3d(D,A)
+			step_towards(D,A)
 			D.reagents.reaction(get_turf(D))
 			for(var/atom/T in get_turf(D))
 				D.reagents.reaction(T)
 			sleep(3)
 		del(D)
+
+	if(isrobot(user)) //Cyborgs can clean forever if they keep charged
+		var/mob/living/silicon/robot/janitor = user
+		janitor.cell.charge -= 20
+		var/refill = src.reagents.get_master_reagent_id()
+		spawn(600)
+			src.reagents.add_reagent(refill, 10)
 
 	return
 
@@ -67,19 +53,6 @@ MOP
 	return
 
 // MOP
-/obj/item/weapon/mop
-	desc = "The world of janitalia wouldn't be complete without a mop."
-	name = "mop"
-	icon = 'janitor.dmi'
-	icon_state = "mop"
-	var/mopping = 0
-	var/mopcount = 0
-	force = 3.0
-	throwforce = 10.0
-	throw_speed = 5
-	throw_range = 10
-	w_class = 3.0
-	flags = FPRINT | TABLEPASS
 
 /obj/item/weapon/mop/New()
 	var/datum/reagents/R = new/datum/reagents(5)
@@ -98,16 +71,19 @@ MOP
 		user << "\blue You have finished mopping!"
 		src.reagents.reaction(A,1,10)
 		A.clean_blood()
-		for(var/obj/effect/decal/cleanable/C in A)
-			del(C)
+		for(var/obj/rune/R in A)
+			del(R)
+		for(var/obj/decal/cleanable/crayon/R in A)
+			del(R)
 		mopcount++
-	else if (istype(A, /obj/effect/decal/cleanable) || istype(A, /obj/overlay))
+	else if (istype(A, /obj/decal/cleanable/blood) || istype(A, /obj/overlay) || istype(A, /obj/decal/cleanable/xenoblood) || istype(A, /obj/rune) || istype(A,/obj/decal/cleanable/crayon) )
 		for(var/mob/O in viewers(user, null))
 			O.show_message(text("\red <B>[user] begins to clean [A]</B>"), 1)
 		sleep(20)
-		user << "\blue You have finished mopping!"
-		var/turf/U = A.loc
-		src.reagents.reaction(U)
+		if(A)
+			user << "\blue You have finished mopping!"
+			var/turf/U = A.loc
+			src.reagents.reaction(U)
 		if(A) del(A)
 		mopcount++
 

@@ -10,6 +10,7 @@ would spawn and follow the beaker, even if it is carried or thrown.
 	name = "effects"
 	icon = 'effects.dmi'
 	mouse_opacity = 0
+	unacidable = 1//So effects are not targeted by alien acid.
 	flags = TABLEPASS
 
 /obj/effects/water
@@ -107,7 +108,7 @@ steam.start() -- spawns the effect
 			if(src.cardinals)
 				direction = pick(cardinal)
 			else
-				direction = pick(cardinal8)
+				direction = pick(alldirs)
 			for(i=0, i<pick(1,2,3), i++)
 				sleep(5)
 				step(steam,direction)
@@ -139,7 +140,7 @@ steam.start() -- spawns the effect
 	playsound(src.loc, "sparks", 100, 1)
 	var/turf/T = src.loc
 	if (istype(T, /turf))
-		T.hotspot_expose(3000,100)
+		T.hotspot_expose(1000,100)
 	spawn (100)
 		del(src)
 	return
@@ -147,7 +148,7 @@ steam.start() -- spawns the effect
 /obj/effects/sparks/Del()
 	var/turf/T = src.loc
 	if (istype(T, /turf))
-		T.hotspot_expose(3000,100)
+		T.hotspot_expose(1000,100)
 	..()
 	return
 
@@ -155,17 +156,17 @@ steam.start() -- spawns the effect
 	..()
 	var/turf/T = src.loc
 	if (istype(T, /turf))
-		T.hotspot_expose(3000,100)
+		T.hotspot_expose(1000,100)
 	return
 
-/datum/effect/effect/system/spark_spread
+/datum/effects/system/spark_spread
 	var/number = 3
 	var/cardinals = 0
 	var/turf/location
 	var/atom/holder
 	var/total_sparks = 0 // To stop it being spammed and lagging!
 
-/datum/effect/effect/system/spark_spread/proc/set_up(n = 3, c = 0, loca)
+/datum/effects/system/spark_spread/proc/set_up(n = 3, c = 0, loca)
 	if(n > 10)
 		n = 10
 	number = n
@@ -175,10 +176,10 @@ steam.start() -- spawns the effect
 	else
 		location = get_turf(loca)
 
-/datum/effect/effect/system/spark_spread/proc/attach(atom/atom)
+/datum/effects/system/spark_spread/proc/attach(atom/atom)
 	holder = atom
 
-/datum/effect/effect/system/spark_spread/proc/start()
+/datum/effects/system/spark_spread/proc/start()
 	var/i = 0
 	for(i=0, i<src.number, i++)
 		if(src.total_sparks > 20)
@@ -192,7 +193,7 @@ steam.start() -- spawns the effect
 			if(src.cardinals)
 				direction = pick(cardinal)
 			else
-				direction = pick(cardinal8)
+				direction = pick(alldirs)
 			for(i=0, i<pick(1,2,3), i++)
 				sleep(5)
 				step(sparks,direction)
@@ -201,89 +202,6 @@ steam.start() -- spawns the effect
 				src.total_sparks--
 
 
-//////////////////////////////////
-//////SPARKELS FIREWORKS
-/////////////////////////////////
-////////////////////////////
-/obj/effects/sparkels
-	name = "sparkel"
-	icon = 'fireworks.dmi'//findback
-	icon_state = "sparkel"
-	var/amount = 6.0
-	anchored = 1.0
-	mouse_opacity = 0
-/obj/effects/sparkels/New()
-	..()
-	var/icon/I = new(src.icon,src.icon_state)
-	var/r = rand(0,255)
-	var/g = rand(0,255)
-	var/b = rand(0,255)
-	world.log << "Colour , [r],[g],[b]"
-	I.Blend(rgb(r,g,b),ICON_MULTIPLY)
-	src.icon = I
-	playsound(src.loc, "sparks", 100, 1)
-	var/turf/T = src.loc
-	if (istype(T, /turf))
-		T.hotspot_expose(3000,100)
-	spawn (100)
-		del(src)
-	return
-
-/obj/effects/sparkels/Del()
-	var/turf/T = src.loc
-	if (istype(T, /turf))
-		T.hotspot_expose(3000,100)
-	..()
-	return
-/obj/effects/sparkels/Move()
-	..()
-	var/turf/T = src.loc
-	if (istype(T, /turf))
-		T.hotspot_expose(3000,100)
-	return
-
-
-/datum/effects/system/sparkel_spread
-	var/number = 3
-	var/cardinals = 0
-	var/turf/location
-	var/atom/holder
-	var/total_sparks = 0 // To stop it being spammed and lagging!
-
-/datum/effects/system/sparkel_spread/proc/set_up(n = 3, c = 0, loca)
-	if(n > 10)
-		n = 10
-	number = n
-	cardinals = c
-	if(istype(loca, /turf/))
-		location = loca
-	else
-		location = get_turf(loca)
-
-/datum/effects/system/sparkel_spread/proc/attach(atom/atom)
-	holder = atom
-
-/datum/effects/system/sparkel_spread/proc/start()
-	var/i = 0
-	for(i=0, i<src.number, i++)
-		if(src.total_sparks > 20)
-			return
-		spawn(0)
-			if(holder)
-				src.location = get_turf(holder)
-			var/obj/effects/sparkels/sparks = new(src.location)
-			src.total_sparks++
-			var/direction
-			if(src.cardinals)
-				direction = pick(cardinal)
-			else
-				direction = pick(cardinal8)
-			for(i=0, i<pick(1,2,3), i++)
-				sleep(5)
-				step(sparks,direction)
-			spawn(20)
-				del(sparks)
-				src.total_sparks--
 
 
 
@@ -357,7 +275,7 @@ steam.start() -- spawns the effect
 				if(src.cardinals)
 					direction = pick(cardinal)
 				else
-					direction = pick(cardinal8)
+					direction = pick(alldirs)
 			for(i=0, i<pick(0,1,1,1,2,2,2,3), i++)
 				sleep(10)
 				step(smoke,direction)
@@ -405,14 +323,14 @@ steam.start() -- spawns the effect
 				M.emote("cough")
 				spawn ( 20 )
 					M.coughedtime = 0
-	for(var/atom/A in src)
-		reagents.reaction(A, 1, 1)
 	return
 
 /obj/effects/bad_smoke/HasEntered(mob/living/carbon/M as mob )
 	..()
 	if(istype(M, /mob/living/carbon))
-		if (!(M.internal != null && M.wear_mask && (M.wear_mask.flags & MASKINTERNALS)))
+		if (M.internal != null && M.wear_mask && (M.wear_mask.flags & MASKINTERNALS))
+			return
+		else
 			M.drop_item()
 			M.oxyloss += 1
 			if (M.coughedtime != 1)
@@ -420,8 +338,6 @@ steam.start() -- spawns the effect
 				M.emote("cough")
 				spawn ( 20 )
 					M.coughedtime = 0
-		if(reagents)
-			src.reagents.reaction(M, 1, 1)
 	return
 
 /datum/effects/system/bad_smoke_spread
@@ -431,9 +347,8 @@ steam.start() -- spawns the effect
 	var/atom/holder
 	var/total_smoke = 0 // To stop it being spammed and lagging!
 	var/direction
-	var/list/carried_reagents
 
-/datum/effects/system/bad_smoke_spread/proc/set_up(n = 5, c = 0, loca, direct, var/datum/reagents/carry = null)
+/datum/effects/system/bad_smoke_spread/proc/set_up(n = 5, c = 0, loca, direct)
 	if(n > 20)
 		n = 20
 	number = n
@@ -444,9 +359,7 @@ steam.start() -- spawns the effect
 		location = get_turf(loca)
 	if(direct)
 		direction = direct
-	if(carry)
-		for(var/datum/reagent/RE in carry.reagent_list)
-			carried_reagents += RE.id
+
 
 /datum/effects/system/bad_smoke_spread/proc/attach(atom/atom)
 	holder = atom
@@ -466,17 +379,114 @@ steam.start() -- spawns the effect
 				if(src.cardinals)
 					direction = pick(cardinal)
 				else
-					direction = pick(cardinal8)
+					direction = pick(alldirs)
 			for(i=0, i<pick(0,1,1,1,2,2,2,3), i++)
 				sleep(10)
 				step(smoke,direction)
-			smoke.create_reagents(50)
-			for(var/datum/reagent/RE in src.carried_reagents)
-				smoke.reagents.add_reagent(RE, 5)
 			spawn(150+rand(10,30))
 				del(smoke)
 				src.total_smoke--
 
+
+/////////////////////////////////////////////
+// Sleep smoke
+/////////////////////////////////////////////
+
+/obj/effects/sleep_smoke
+	name = "smoke"
+	icon_state = "smoke"
+	opacity = 1
+	anchored = 0.0
+	mouse_opacity = 0
+	var/amount = 6.0
+	//Remove this bit to use the old smoke
+	icon = '96x96.dmi'
+	pixel_x = -32
+	pixel_y = -32
+
+/obj/effects/sleep_smoke/New()
+	..()
+	spawn (200+rand(10,30))
+		del(src)
+	return
+
+/obj/effects/sleep_smoke/Move()
+	..()
+	for(var/mob/living/carbon/M in get_turf(src))
+		if (M.internal != null && M.wear_mask && (M.wear_mask.flags & MASKINTERNALS))
+//		if (M.wear_suit, /obj/item/clothing/suit/wizrobe && (M.hat, /obj/item/clothing/head/wizard) && (M.shoes, /obj/item/clothing/shoes/sandal))  // I'll work on it later
+		else
+			M.drop_item()
+			M:sleeping += 1
+			if (M.coughedtime != 1)
+				M.coughedtime = 1
+				M.emote("cough")
+				spawn ( 20 )
+					M.coughedtime = 0
+	return
+
+/obj/effects/sleep_smoke/HasEntered(mob/living/carbon/M as mob )
+	..()
+	if(istype(M, /mob/living/carbon))
+		if (M.internal != null && M.wear_mask && (M.wear_mask.flags & MASKINTERNALS))
+//		if (M.wear_suit, /obj/item/clothing/suit/wizrobe && (M.hat, /obj/item/clothing/head/wizard) && (M.shoes, /obj/item/clothing/shoes/sandal)) // Work on it later
+			return
+		else
+			M.drop_item()
+			M:sleeping += 1
+			if (M.coughedtime != 1)
+				M.coughedtime = 1
+				M.emote("cough")
+				spawn ( 20 )
+					M.coughedtime = 0
+	return
+
+/datum/effects/system/sleep_smoke_spread
+	var/number = 3
+	var/cardinals = 0
+	var/turf/location
+	var/atom/holder
+	var/total_smoke = 0 // To stop it being spammed and lagging!
+	var/direction
+
+/datum/effects/system/sleep_smoke_spread/proc/set_up(n = 5, c = 0, loca, direct)
+	if(n > 20)
+		n = 20
+	number = n
+	cardinals = c
+	if(istype(loca, /turf/))
+		location = loca
+	else
+		location = get_turf(loca)
+	if(direct)
+		direction = direct
+
+
+/datum/effects/system/sleep_smoke_spread/proc/attach(atom/atom)
+	holder = atom
+
+/datum/effects/system/sleep_smoke_spread/proc/start()
+	var/i = 0
+	for(i=0, i<src.number, i++)
+		if(src.total_smoke > 20)
+			return
+		spawn(0)
+			if(holder)
+				src.location = get_turf(holder)
+			var/obj/effects/sleep_smoke/smoke = new /obj/effects/sleep_smoke(src.location)
+			src.total_smoke++
+			var/direction = src.direction
+			if(!direction)
+				if(src.cardinals)
+					direction = pick(cardinal)
+				else
+					direction = pick(alldirs)
+			for(i=0, i<pick(0,1,1,1,2,2,2,3), i++)
+				sleep(10)
+				step(smoke,direction)
+			spawn(150+rand(10,30))
+				del(smoke)
+				src.total_smoke--
 
 /////////////////////////////////////////////
 // Mustard Gas
@@ -500,7 +510,7 @@ steam.start() -- spawns the effect
 /obj/effects/mustard_gas/Move()
 	..()
 	for(var/mob/living/carbon/human/R in get_turf(src))
-		if (R.internal != null && usr.wear_mask && (R.wear_mask.flags & MASKINTERNALS) && R.wear_suit != null && !istype(R.wear_suit, /obj/item/clothing/suit/storage/labcoat) && !istype(R.wear_suit, /obj/item/clothing/suit/straight_jacket) && !istype(R.wear_suit, /obj/item/clothing/suit/straight_jacket && !istype(R.wear_suit, /obj/item/clothing/suit/armor)))
+		if (R.internal != null && usr.wear_mask && (R.wear_mask.flags & MASKINTERNALS) && R.wear_suit != null && !istype(R.wear_suit, /obj/item/clothing/suit/labcoat) && !istype(R.wear_suit, /obj/item/clothing/suit/straight_jacket) && !istype(R.wear_suit, /obj/item/clothing/suit/straight_jacket && !istype(R.wear_suit, /obj/item/clothing/suit/armor)))
 		else
 			R.burn_skin(0.75)
 			if (R.coughedtime != 1)
@@ -514,7 +524,7 @@ steam.start() -- spawns the effect
 /obj/effects/mustard_gas/HasEntered(mob/living/carbon/human/R as mob )
 	..()
 	if (istype(R, /mob/living/carbon/human))
-		if (R.internal != null && usr.wear_mask && (R.wear_mask.flags & MASKINTERNALS) && R.wear_suit != null && !istype(R.wear_suit, /obj/item/clothing/suit/storage/labcoat) && !istype(R.wear_suit, /obj/item/clothing/suit/straight_jacket) && !istype(R.wear_suit, /obj/item/clothing/suit/straight_jacket && !istype(R.wear_suit, /obj/item/clothing/suit/armor)))
+		if (R.internal != null && usr.wear_mask && (R.wear_mask.flags & MASKINTERNALS) && R.wear_suit != null && !istype(R.wear_suit, /obj/item/clothing/suit/labcoat) && !istype(R.wear_suit, /obj/item/clothing/suit/straight_jacket) && !istype(R.wear_suit, /obj/item/clothing/suit/straight_jacket && !istype(R.wear_suit, /obj/item/clothing/suit/armor)))
 			return
 		R.burn_skin(0.75)
 		if (R.coughedtime != 1)
@@ -563,7 +573,7 @@ steam.start() -- spawns the effect
 				if(src.cardinals)
 					direction = pick(cardinal)
 				else
-					direction = pick(cardinal8)
+					direction = pick(alldirs)
 			for(i=0, i<pick(0,1,1,1,2,2,2,3), i++)
 				sleep(10)
 				step(smoke,direction)
@@ -709,9 +719,9 @@ steam.start() -- spawns the effect
 		sleep(30)
 
 		if(metal)
-			var/obj/structure/foamedmetal/M = new(src.loc)
+			var/obj/foamedmetal/M = new(src.loc)
 			M.metal = metal
-			M.update_icon()
+			M.updateicon()
 
 		flick("[icon_state]-disolve", src)
 		sleep(5)
@@ -752,8 +762,9 @@ steam.start() -- spawns the effect
 			F.amount = amount
 			if(!metal)
 				F.create_reagents(10)
-				for(var/datum/reagent/R in reagents.reagent_list)
-					F.reagents.add_reagent(R.id,1)
+				if (reagents)
+					for(var/datum/reagent/R in reagents.reagent_list)
+						F.reagents.add_reagent(R.id,1)
 		sleep(15)
 
 // foam disolves when heated
@@ -772,13 +783,13 @@ steam.start() -- spawns the effect
 
 	if (istype(AM, /mob/living/carbon))
 		var/mob/M =	AM
-		if ((istype(M, /mob/living/carbon/human) && istype(M:shoes, /obj/item/clothing/shoes/galoshes)))
+		if (istype(M, /mob/living/carbon/human) && (istype(M:shoes, /obj/item/clothing/shoes) && M:shoes.flags&NOSLIP))
 			return
 
 		M.pulling = null
 		M << "\blue You slipped on the foam!"
 		playsound(src.loc, 'slip.ogg', 50, 1, -3)
-		M.stunned = 5
+		M.stunned = 2
 		M.weakened = 2
 
 
@@ -833,7 +844,7 @@ steam.start() -- spawns the effect
 // wall formed by metal foams
 // dense and opaque, but easy to break
 
-/obj/structure/foamedmetal
+/obj/foamedmetal
 	icon = 'effects.dmi'
 	icon_state = "metalfoam"
 	density = 1
@@ -841,21 +852,21 @@ steam.start() -- spawns the effect
 	anchored = 1
 	name = "foamed metal"
 	desc = "A lightweight foamed metal wall."
-	var/metal = 1		// 1=aluminium, 2=iron
+	var/metal = 1		// 1=aluminum, 2=iron
 
 	New()
 		..()
 		update_nearby_tiles(1)
 		spawn(1)
-			ul_SetOpacity(1)
+			sd_NewOpacity(1)
 
 	Del()
-		ul_SetOpacity(0)
+		sd_NewOpacity(0)
 		density = 0
 		update_nearby_tiles(1)
 		..()
 
-	proc/update_icon()
+	proc/updateicon()
 		if(metal == 1)
 			icon_state = "metalfoam"
 		else
@@ -877,7 +888,7 @@ steam.start() -- spawns the effect
 		return
 
 	attack_hand(var/mob/user)
-		if (user.mutations & HULK || (prob(75 - metal*25)))
+		if (user.mutations & 8 || (prob(75 - metal*25)))
 			user << "\blue You smash through the metal foam wall."
 			for(var/mob/O in oviewers(user))
 				if ((O.client && !( O.blinded )))
@@ -961,4 +972,57 @@ steam.start() -- spawns the effect
 
 		return 1
 
+/datum/effects/system/reagents_explosion
+	var/amount					// TNT equivalent
+	var/turf/location
+	var/flashing = 0			// does explosion creates flash effect?
+	var/flashing_factor = 0		// factor of how powerful the flash effect relatively to the explosion
 
+/datum/effects/system/reagents_explosion/proc/set_up (amt, loc, flash = 0, flash_fact = 0)
+	amount = amt
+	if(istype(loc, /turf/))
+		location = loc
+	else
+		location = get_turf(loc)
+
+	flashing = flash
+	flashing_factor = flash_fact
+
+	return
+
+/datum/effects/system/reagents_explosion/proc/start()
+	if (amount <= 2)
+		var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+		s.set_up(2, 1, location)
+		s.start()
+
+		for(var/mob/M in viewers(5, location))
+			M << "\red The solution violently explodes."
+		for(var/mob/M in viewers(1, location))
+			if (prob (50 * amount))
+				M << "\red The explosion knocks you down."
+				M.weakened += rand (1, 5)
+		return
+	else
+		var/devastation = -1
+		var/heavy = -1
+		var/light = -1
+		var/flash = -1
+
+		// Clamp all values to MAX_EXPLOSION_RANGE
+		if (round(amount/12) > 0)
+			devastation = min (MAX_EXPLOSION_RANGE, devastation + round(amount/12))
+
+		if (round(amount/6) > 0)
+			heavy = min (MAX_EXPLOSION_RANGE, heavy + round(amount/6))
+
+		if (round(amount/3) > 0)
+			light = min (MAX_EXPLOSION_RANGE, light + round(amount/3))
+
+		if (flash && flashing_factor)
+			flash += (round(amount/4) * flashing_factor)
+
+		for(var/mob/M in viewers(8, location))
+			M << "\red The solution violently explodes."
+
+		explosion(location, devastation, heavy, light, flash)

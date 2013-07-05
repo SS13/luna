@@ -8,29 +8,27 @@
 /datum/data/vending_product
 	var/product_name = "generic"
 	var/product_path = null
-	//var/amount = 0
-	var/price = 0
+	var/amount = 0
 	var/display_color = "blue"
 
 /obj/machinery/vending/New()
 	..()
 	spawn(4)
-	//	src.slogan_list = dd_text2list(src.product_slogans, ";")
-		src.slogan_list = list()
-		var/list/temp_paths = dd_replacetext(src.product_paths, "\n", "")
-		var/list/temp_pathsL = dd_text2list(temp_paths, ";")
-		//var/list/temp_amounts = dd_text2list(src.product_amounts, ";")
-		var/list/temp_prices = dd_text2list(src.product_prices, ";")
-		var/list/temp_hidden = dd_text2list(src.product_hidden, ";")
-		var/list/temp_hiddenprices = dd_text2list(src.hidden_prices, ";")
+		src.slogan_list = dd_text2List(src.product_slogans, ";")
+		var/list/temp_paths = dd_text2List(src.product_paths, ";")
+		var/list/temp_amounts = dd_text2List(src.product_amounts, ";")
+		var/list/temp_hidden = dd_text2List(src.product_hidden, ";")
+		var/list/temp_hideamt = dd_text2List(src.product_hideamt, ";")
 		//Little sanity check here
-		if ((isnull(temp_pathsL)) || (isnull(temp_prices)) || (temp_pathsL.len != temp_prices.len))
+		if ((isnull(temp_paths)) || (isnull(temp_amounts)) || (temp_paths.len != temp_amounts.len) || (temp_hidden.len != temp_hideamt.len))
 			stat |= BROKEN
+			power_change()
 			return
 
-		src.build_inventory(temp_pathsL,temp_prices)
+		src.build_inventory(temp_paths,temp_amounts)
 		 //Add hidden inventory
-		src.build_inventory(temp_hidden,temp_hiddenprices,1)
+		src.build_inventory(temp_hidden,temp_hideamt, 1)
+		power_change()
 		return
 
 	return
@@ -54,7 +52,7 @@
 	return
 
 /obj/machinery/vending/blob_act()
-	if (prob(25))
+	if (prob(50))
 		spawn(0)
 			src.malfunction()
 			del(src)
@@ -62,7 +60,7 @@
 
 	return
 
-/obj/machinery/vending/proc/build_inventory(var/list/path_list,var/list/price_list,hidden=0)
+/obj/machinery/vending/proc/build_inventory(var/list/path_list,var/list/amt_list,hidden=0)
 
 	for(var/p=1, p <= path_list.len ,p++)
 		var/checkpath = text2path(path_list[p])
@@ -73,13 +71,14 @@
 		R.product_name = capitalize(temp.name)
 		R.product_path = path_list[p]
 		R.display_color = pick("red","blue","green")
+//		R.amount = text2num(amt_list[p])
+//		src.product_records += R
 
 		if(hidden)
-			R.price = text2num(price_list[p])
+			R.amount = text2num(amt_list[p])
 			src.hidden_records += R
-
 		else
-			R.price = text2num(price_list[p])
+			R.amount = text2num(amt_list[p])
 			src.product_records += R
 
 		del(temp)
@@ -102,94 +101,12 @@
 			src.overlays += image(src.icon, "[initial(icon_state)]-panel")
 		src.updateUsrDialog()
 		return
-	else if (istype(W,/obj/item/weapon/vending_charge/))
-		DoCharge(W,user)
-			//points += W.charge_amt
-			//del(W)
+	else if(istype(W, /obj/item/device/multitool)||istype(W, /obj/item/weapon/wirecutters))
+		if(src.panel_open)
+			attack_hand(user)
+		return
 	else
 		..()
-
-/obj/machinery/vending/proc/DoCharge(obj/item/weapon/vending_charge/V as obj, mob/user as mob)
-	if(charge_type == V.charge_type)
-		points += V.charge_amt
-		del(V)
-		user << "You insert the charge into the machine."
-
-/obj/item/weapon/vending_charge
-	name = "Vending Charge"
-	var/charge_amt = 10
-	var/charge_type = "generic"
-	icon = 'vending.dmi'
-	icon_state = "generic-charge"
-
-/obj/item/weapon/vending_charge/medical
-	name = "Medical Charge"
-	charge_type = "medical"
-	icon_state = "medical-charge"
-
-/obj/item/weapon/vending_charge/chemistry
-	name = "Chemistry Charge"
-	charge_type = "chemistry"
-	icon_state = "chemistry-charge"
-
-/obj/item/weapon/vending_charge/genetics
-	name = "Genetics Charge"
-	charge_type = "genetics"
-	icon_state = "generic-charge"
-
-/obj/item/weapon/vending_charge/toxins
-	name = "Toxins Charge"
-	charge_type = "toxins"
-	icon_state = "toxins-charge"
-
-/obj/item/weapon/vending_charge/robotics
-	name = "Robotics Charge"
-	charge_type = "robotics"
-	icon_state = "robotics-charge"
-
-/obj/item/weapon/vending_charge/bar
-	name = "Bar Charge"
-	charge_type = "bar"
-	charge_amt = 50
-	icon_state = "bar-charge"
-
-/obj/item/weapon/vending_charge/kitchen
-	name = "Kitchen Charge"
-	charge_type = "kitchen"
-	icon_state = "kitchen-charge"
-
-/obj/item/weapon/vending_charge/engineering
-	name = "Engineering Charge"
-	charge_type = "engineering"
-	icon_state = "engineering-charge"
-
-/obj/item/weapon/vending_charge/security
-	name = "Security Charge"
-	charge_type = "security"
-	icon_state = "security-charge"
-
-/obj/item/weapon/vending_charge/coffee
-	name = "Coffee Charge"
-	charge_type = "coffee"
-	icon_state = "coffee-charge"
-
-/obj/item/weapon/vending_charge/snack
-	name = "Snack Charge"
-	charge_type = "snack"
-	icon_state = "snack-charge"
-
-/obj/item/weapon/vending_charge/cart
-	name = "Cart Charge"
-	charge_type = "cart"
-	icon_state = "cart-charge"
-
-/obj/item/weapon/vending_charge/cigarette
-	name = "Cigarette Charge"
-	charge_type = "cigarette"
-	icon_state = "cigarette-charge"
-
-
-
 
 /obj/machinery/vending/attack_paw(mob/user as mob)
 	return attack_hand(user)
@@ -233,7 +150,7 @@
 		user << browse(pdat, "window=vendwires")
 		onclose(user, "vendwires")
 
-	var/dat = "<TT><b>Select an item:</b></TT><br>"
+	var/dat = "<TT><b>Select an item:</b><br>"
 
 	if (src.product_records.len == 0)
 		dat += "<font color = 'red'>No product loaded!</font>"
@@ -241,18 +158,17 @@
 		var/list/display_records = src.product_records
 		if(src.extended_inventory)
 			display_records = (src.product_records + src.hidden_records)
-		dat += "<TABLE width=100%><TR><TD><TT><B>Product:</B></TT></TD> <TD><TT><B>Cost:</B></TT></TD><TD></TD></TR>"
 
 		for (var/datum/data/vending_product/R in display_records)
-			dat += "<TR><TD><TT><FONT color = '[R.display_color]'><B>[R.product_name]</B></TT></TD>"
-			dat += " <TD><TT>[R.price]</TT></TD> </font>"
-			if (R.price <= points)
-				dat += "<TD><TT><a href='byond://?src=\ref[src];vend=\ref[R]'>Vend</A></TT></TD></TR>"
+			dat += "<FONT color = '[R.display_color]'><B>[R.product_name]</B>:"
+			dat += " [R.amount] </font>"
+			if (R.amount > 0)
+				dat += "<a href='byond://?src=\ref[src];vend=\ref[R]'>Vend</A>"
 			else
-				dat += "<TD><TT><font color = 'red'>NOT ENOUGH POINTS</font></TD></TT></TR>"
-			//dat += "<br>"
+				dat += "<font color = 'red'>SOLD OUT</font>"
+			dat += "<br>"
 
-		dat += "</TABLE><br><TT><b>Points available: [points]</b><br></TT>"
+		dat += "</TT>"
 
 	user << browse(dat, "window=vending")
 	onclose(user, "vending")
@@ -288,11 +204,11 @@
 				src.vend_ready = 1
 				return
 
-			if (R.price > points)
+			if (R.amount <= 0)
 				src.vend_ready = 1
 				return
 
-			points -= R.price
+			R.amount--
 
 			if(((src.last_reply + (src.vend_delay + 200)) <= world.time) && src.vend_reply)
 				spawn(0)
@@ -384,44 +300,45 @@
 
 //Oh no we're malfunctioning!  Dump out some product and break.
 /obj/machinery/vending/proc/malfunction()
-//	for(var/datum/data/vending_product/R in src.product_records)
-//		if (R.amount <= 0) //Try to use a record that actually has something to dump.
-//			continue
-//		var/dump_path = text2path(R.product_path)
-//		if (!dump_path)
-//			continue
-//
-//		while(R.amount>0)
-//			new dump_path(src.loc)
-//			R.amount--
-//		break
-//
-//	stat |= BROKEN
-//	src.icon_state = "[initial(icon_state)]-broken"
-//	return
+	for(var/datum/data/vending_product/R in src.product_records)
+		if (R.amount <= 0) //Try to use a record that actually has something to dump.
+			continue
+		var/dump_path = text2path(R.product_path)
+		if (!dump_path)
+			continue
+
+		while(R.amount>0)
+			new dump_path(src.loc)
+			R.amount--
+		break
+
+	stat |= BROKEN
+	src.icon_state = "[initial(icon_state)]-broken"
+	return
 
 //Somebody cut an important wire and now we're following a new definition of "pitch."
 /obj/machinery/vending/proc/throw_item()
-//	var/obj/throw_item = null
-//	var/mob/living/target = locate() in view(7,src)
-//	if(!target)
-//		return 0
-//
-//	for(var/datum/data/vending_product/R in src.product_records)
-//		if (R.amount <= 0) //Try to use a record that actually has something to dump.
-//			continue
-//		var/dump_path = text2path(R.product_path)
-//		if (!dump_path)
-//			continue
-//
-//		R.amount--
-//		throw_item = new dump_path(src.loc)
-//		break
-//
-//	spawn(0)
-//		throw_item.throw_at(target, 16, 3)
-//	src.visible_message("\red <b>[src] launches [throw_item.name] at [target.name]!</b>")
-//	return 1
+	var/obj/throw_item = null
+	var/mob/living/target = locate() in view(7,src)
+	if(!target)
+		return 0
+
+	for(var/datum/data/vending_product/R in src.product_records)
+		if (R.amount <= 0) //Try to use a record that actually has something to dump.
+			continue
+		var/dump_path = text2path(R.product_path)
+		if (!dump_path)
+			continue
+
+		R.amount--
+		throw_item = new dump_path(src.loc)
+		break
+	if (!throw_item)
+		return 0
+	spawn(0)
+		throw_item.throw_at(target, 16, 3)
+	src.visible_message("\red <b>[src] launches [throw_item.name] at [target.name]!</b>")
+	return 1
 
 /obj/machinery/vending/proc/isWireColorCut(var/wireColor)
 	var/wireFlag = APCWireColorToFlag[wireColor]
@@ -468,15 +385,16 @@
 			src.shoot_inventory = !src.shoot_inventory
 
 
-//"Borrowed" airlock shocking code.
 /obj/machinery/vending/proc/shock(mob/user, prb)
-
-
-	if(!prob(prb))
-		return 0
-
 	if(stat & (BROKEN|NOPOWER))		// unpowered, no shock
 		return 0
-
-	return Electrocute(user, 1)
+	if(!prob(prb))
+		return 0
+	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	s.set_up(5, 1, src)
+	s.start()
+	if (electrocute_mob(user, get_area(src), src, 0.7))
+		return 1
+	else
+		return 0
 

@@ -1,5 +1,5 @@
 /obj/item/weapon/tank/blob_act()
-	if(prob(25))
+	if(prob(50))
 		var/turf/location = src.loc
 		if (!( istype(location, /turf) ))
 			del(src)
@@ -10,9 +10,9 @@
 		del(src)
 
 /obj/item/weapon/tank/attack_self(mob/user as mob)
-	user.machine = src
 	if (!(src.air_contents))
 		return
+	user.machine = src
 
 	var/using_internal
 	if(istype(loc,/mob/living/carbon))
@@ -48,17 +48,25 @@
 					location.internal = null
 					location.internals.icon_state = "internal0"
 					usr << "\blue You close the tank release valve."
+					if (location.internals)
+						location.internals.icon_state = "internal0"
 				else
 					if(location.wear_mask && (location.wear_mask.flags & MASKINTERNALS))
 						location.internal = src
-						usr << "\blue You open the tank valve."
+						usr << "\blue You open \the [src] valve."
+						if (location.internals)
+							location.internals.icon_state = "internal1"
 					else
-						usr << "\blue The valve immediately closes."
+						usr << "\blue You need something to connect to \the [src]."
 
 		src.add_fingerprint(usr)
+/*
+ * the following is needed for a tank lying on the floor. But currently we restrict players to use not weared tanks as intrals. --rastaf
 		for(var/mob/M in viewers(1, src.loc))
 			if ((M.client && M.machine == src))
 				src.attack_self(M)
+*/
+		src.attack_self(usr)
 	else
 		usr << browse(null, "window=tank")
 		return
@@ -104,6 +112,9 @@
 
 		var/pressure = air_contents.return_pressure()
 		if(pressure > TANK_FRAGMENT_PRESSURE)
+			if(!istype(src.loc,/obj/item/device/transfer_valve))
+				message_admins("Explosive tank rupture! last key to touch the tank was [src.fingerprintslast].")
+				log_game("Explosive tank rupture! last key to touch the tank was [src.fingerprintslast].")
 			//world << "\blue[x],[y] tank is exploding: [pressure] kPa"
 			//Give the gas a chance to build up more pressure through reacting
 			air_contents.react()
@@ -112,20 +123,13 @@
 			pressure = air_contents.return_pressure()
 
 			var/range = (pressure-TANK_FRAGMENT_PRESSURE)/TANK_FRAGMENT_SCALE
-			range = min(range, 12)		// was 8
+			range = min(range, MAX_EXPLOSION_RANGE)		// was 8 - - - Changed to a configurable define -- TLE
 			var/turf/epicenter = get_turf(loc)
 
-
 			//world << "\blue Exploding Pressure: [pressure] kPa, intensity: [range]"
-			if(epicenter)
-				explosion(epicenter, round(range*0.25), round(range*0.5), round(range), round(range*1.5), 1)
-				del(src)
-				return
-			else
-				message_admins("Whoops a bomb fucked up, [loc]")
-				del(src)
-				return
 
+			explosion(epicenter, round(range*0.25), round(range*0.5), round(range), round(range*1.5))
+			del(src)
 
 		else if(pressure > TANK_RUPTURE_PRESSURE)
 			//world << "\blue[x],[y] tank is rupturing: [pressure] kPa, integrity [integrity]"
@@ -146,9 +150,11 @@
 
 		else if(integrity < 3)
 			integrity++
-
+/* redundant. --rastaf0
 /obj/item/weapon/tank/attack(mob/M as mob, mob/user as mob)
 	..()
+*/
+	/*
 	if ((prob(30) && M.stat < 2))
 		var/mob/living/carbon/human/H = M
 
@@ -169,9 +175,11 @@
 			if ((O.client && !( O.blinded )))
 				O << text("\red <B>[] has been knocked unconscious!</B>", M)
 	return
+	*/
 
 /obj/item/weapon/tank/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	var/obj/item/weapon/icon = src
+	..()
+	var/obj/icon = src
 	if (istype(src.loc, /obj/item/assembly))
 		icon = src.loc
 	if ((istype(W, /obj/item/device/analyzer) || (istype(W, /obj/item/device/pda))) && get_dist(user, src) <= 1)
@@ -202,7 +210,10 @@
 			user << "\blue Temperature: [round(air_contents.temperature-T0C)]&deg;C"
 		else
 			user << "\blue Tank is empty!"
-
+		src.add_fingerprint(user)
+	else if (istype(W,/obj/item/latexballon))
+		var/obj/item/latexballon/LB = W
+		LB.blow(src)
 		src.add_fingerprint(user)
 	return
 
@@ -210,7 +221,7 @@
 	..()
 
 	src.air_contents = new /datum/gas_mixture()
-	src.air_contents.volume = 70 //liters
+	src.air_contents.volume = volume //liters
 	src.air_contents.temperature = T20C
 
 	processing_items.Add(src)
@@ -226,82 +237,98 @@
 	..()
 
 /obj/item/weapon/tank/examine()
-	var/obj/item/weapon/icon = src
+	var/obj/icon = src
 	if (istype(src.loc, /obj/item/assembly))
 		icon = src.loc
-		if (!in_range(src, usr))
-			if (icon == src) usr << "\blue It's a \icon[icon]! If you want any more information you'll need to get closer."
-			return
+	if (!in_range(src, usr))
+		if (icon == src) usr << "\blue It's \a \icon[icon][src]! If you want any more information you'll need to get closer."
+		return
 
-		var/celsius_temperature = src.air_contents.temperature-T0C
-		var/descriptive
+	var/celsius_temperature = src.air_contents.temperature-T0C
+	var/descriptive
 
-		if (celsius_temperature < 20)
-			descriptive = "cold"
-		else if (celsius_temperature < 40)
-			descriptive = "room temperature"
-		else if (celsius_temperature < 80)
-			descriptive = "lukewarm"
-		else if (celsius_temperature < 100)
-			descriptive = "warm"
-		else if (celsius_temperature < 300)
-			descriptive = "hot"
-		else
-			descriptive = "furiously hot"
+	if (celsius_temperature < 20)
+		descriptive = "cold"
+	else if (celsius_temperature < 40)
+		descriptive = "room temperature"
+	else if (celsius_temperature < 80)
+		descriptive = "lukewarm"
+	else if (celsius_temperature < 100)
+		descriptive = "warm"
+	else if (celsius_temperature < 300)
+		descriptive = "hot"
+	else
+		descriptive = "furiously hot"
 
-		usr << text("\blue The \icon[] feels []", icon, descriptive)
+	usr << text("\blue \The \icon[][src] feels []", icon, descriptive)
 
 	return
 
 /obj/item/weapon/tank/air/New()
 	..()
-	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C) * O2STANDARD
-	src.air_contents.nitrogen = (6*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C) * N2STANDARD
+
+	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C) * O2STANDARD
+	src.air_contents.nitrogen = (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C) * N2STANDARD
 	return
 
 /obj/item/weapon/tank/oxygen/New()
 	..()
-	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
+
+	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
 
-/obj/item/weapon/tank/emergency_oxygen
-	name = "emergency oxygentank"
-	icon_state = "emergency"
-	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
-	w_class = 2.5
-	force = 4.0
 /obj/item/weapon/tank/emergency_oxygen/New()
 	..()
-	src.air_contents.volume = 15 //liters
-	src.air_contents.oxygen = (1*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
+
+	src.air_contents.oxygen = (3*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
 
-/obj/item/weapon/tank/emergency_oxygen/engi
-	icon_state = "emergency_engi"
-/obj/item/weapon/tank/emergency_oxygen/engi/New()
+/obj/item/weapon/tank/jetpack/New()
 	..()
-	src.air_contents.volume = 25 //liters
-	src.air_contents.oxygen = (1*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
+	src.ion_trail = new /datum/effects/system/ion_trail_follow()
+	src.ion_trail.set_up(src)
+	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
 
-/obj/item/weapon/tank/emergency_double
-	name = "double emergency oxygentank"
-	icon_state = "emergency_double"
-	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
-	w_class = 2.5
-	force = 6.0
-/obj/item/weapon/tank/emergency_double/New()
-	..()
-	src.air_contents.volume = 30 //liters
+/obj/item/weapon/tank/jetpack/verb/toggle()
+	set name = "Toggle Jetpack"
+	set category = "Object"
+	src.on = !( src.on )
+	if(src.name == "Void Jetpack (oxygen)")         //Slight change added by me. i didn't make it an if-elseif because some of you might want to add other types of resprited packs :3 -Agouri
+		src.icon_state = text("voidjetpack[]", src.on)
+	else
+		src.icon_state = text("jetpack[]", src.on)
+	if(src.on)
+		src.ion_trail.start()
+	else
+		src.ion_trail.stop()
 	return
 
-/obj/item/weapon/tank/emergency_double/engi
-	icon_state = "emergency_double_engi"
-/obj/item/weapon/tank/emergency_double/engi/New()
-	..()
-	src.air_contents.volume = 50 //liters
-	return
+/obj/item/weapon/tank/jetpack/proc/allow_thrust(num, mob/living/user as mob)
+	if (!( src.on ))
+		return 0
+	if ((num < 0.01 || src.air_contents.total_moles() < num))
+		src.ion_trail.stop()
+		return 0
 
+	var/datum/gas_mixture/G = src.air_contents.remove(num)
+
+	if (G.oxygen >= 0.01)
+		return 1
+	if (G.toxins > 0.001)
+		if (user)
+			var/d = G.toxins / 2
+			d = min(abs(user.health + 100), d, 25)
+			user.take_organ_damage(0,d)
+		return (G.oxygen >= 0.0075 ? 0.5 : 0)
+	else
+		if (G.oxygen >= 0.0075)
+			return 0.5
+		else
+			return 0
+	//G = null
+	del(G)
+	return
 
 /obj/item/weapon/tank/anesthetic/New()
 	..()
@@ -336,201 +363,155 @@
 	if(air_contents.temperature > (T0C + 400))
 		strength = fuel_moles/15
 
-		explosion(ground_zero, strength, strength*2, strength*3, strength*4, 1)
+		explosion(ground_zero, strength, strength*2, strength*3, strength*4)
 
 	else if(air_contents.temperature > (T0C + 250))
 		strength = fuel_moles/20
 
-		explosion(ground_zero, 0, strength, strength*2, strength*3, 1)
+		explosion(ground_zero, 0, strength, strength*2, strength*3)
 
 	else if(air_contents.temperature > (T0C + 100))
 		strength = fuel_moles/25
 
-		explosion(ground_zero, 0, 0, strength, strength*3, 1)
+		explosion(ground_zero, 0, 0, strength, strength*3)
 
 	else
 		ground_zero.assume_air(air_contents)
 		ground_zero.hotspot_expose(1000, 125)
 
-	if(src.master) del(src.master)
+	if(src.master)
+		del(src.master)
 	del(src)
 
 /obj/item/weapon/tank/plasma/attackby(obj/item/weapon/W as obj, mob/user as mob)
+
 	..()
 	if (istype(W, /obj/item/assembly/rad_ignite))
 		var/obj/item/assembly/rad_ignite/S = W
 		if (!( S.status ))
 			return
-		var/obj/item/assembly/r_i_ptank/R = new /obj/item/assembly/r_i_ptank( user )
+		var/obj/item/assembly/r_i_ptank/R = new
+
 		R.part1 = S.part1
 		S.part1.loc = R
 		S.part1.master = R
+
 		R.part2 = S.part2
 		S.part2.loc = R
 		S.part2.master = R
-		S.layer = initial(S.layer)
-		if (user.client)
-			user.client.screen -= S
-		if (user.r_hand == S)
-			user.u_equip(S)
-			user.r_hand = R
-		else
-			user.u_equip(S)
-			user.l_hand = R
+
 		src.master = R
-		src.layer = initial(src.layer)
-		user.u_equip(src)
-		if (user.client)
-			user.client.screen -= src
-		src.loc = R
 		R.part3 = src
-		R.layer = 20
-		R.loc = user
+
+		user.put_in_hand(R)
+		user.before_take_item(src)
+		src.loc = R
+
 		S.part1 = null
 		S.part2 = null
-		//S = null
 		del(S)
 	if (istype(W, /obj/item/assembly/prox_ignite))
 		var/obj/item/assembly/prox_ignite/S = W
 		if (!( S.status ))
 			return
-		var/obj/item/assembly/m_i_ptank/R = new /obj/item/assembly/m_i_ptank( user )
+		var/obj/item/assembly/m_i_ptank/R = new
 		R.part1 = S.part1
 		S.part1.loc = R
 		S.part1.master = R
+
 		R.part2 = S.part2
 		S.part2.loc = R
 		S.part2.master = R
-		S.layer = initial(S.layer)
-		if (user.client)
-			user.client.screen -= S
-		if (user.r_hand == S)
-			user.u_equip(S)
-			user.r_hand = R
-		else
-			user.u_equip(S)
-			user.l_hand = R
+
 		src.master = R
-		src.layer = initial(src.layer)
-		user.u_equip(src)
-		if (user.client)
-			user.client.screen -= src
-		src.loc = R
 		R.part3 = src
-		R.layer = 20
-		R.loc = user
+
+		user.put_in_hand(R)
+		user.before_take_item(src)
+		src.loc = R
+
 		S.part1 = null
 		S.part2 = null
-		//S = null
 		del(S)
 
 	if (istype(W, /obj/item/assembly/time_ignite))
 		var/obj/item/assembly/time_ignite/S = W
 		if (!( S.status ))
 			return
-		var/obj/item/assembly/t_i_ptank/R = new /obj/item/assembly/t_i_ptank( user )
+		var/obj/item/assembly/t_i_ptank/R = new
 		R.part1 = S.part1
 		S.part1.loc = R
 		S.part1.master = R
+
 		R.part2 = S.part2
 		S.part2.loc = R
 		S.part2.master = R
-		S.layer = initial(S.layer)
-		if (user.client)
-			user.client.screen -= S
-		if (user.r_hand == S)
-			user.u_equip(S)
-			user.r_hand = R
-		else
-			user.u_equip(S)
-			user.l_hand = R
+
 		src.master = R
-		src.layer = initial(src.layer)
-		user.u_equip(src)
-		if (user.client)
-			user.client.screen -= src
-		src.loc = R
 		R.part3 = src
-		R.layer = 20
-		R.loc = user
+
+		user.put_in_hand(R)
+		user.before_take_item(src)
+		src.loc = R
+
 		S.part1 = null
 		S.part2 = null
-		//S = null
 		del(S)
 	if (istype(W, /obj/item/assembly/a_i_a))
 		var/obj/item/assembly/a_i_a/S = W
 		if (!( S.status ))
 			return
-		var/obj/item/clothing/suit/armor/a_i_a_ptank/R = new /obj/item/clothing/suit/armor/a_i_a_ptank( user )
+		var/obj/item/clothing/suit/armor/a_i_a_ptank/R = new
 		R.part1 = S.part1
 		S.part1.loc = R
 		S.part1.master = R
+
 		R.part2 = S.part2
 		S.part2.loc = R
 		S.part2.master = R
+
 		R.part3 = S.part3
 		S.part3.loc = R
 		S.part3.master = R
-		S.layer = initial(S.layer)
-		if (user.client)
-			user.client.screen -= S
-		if (user.r_hand == S)
-			user.u_equip(S)
-			user.r_hand = R
-		else
-			user.u_equip(S)
-			user.l_hand = R
+
 		src.master = R
-		src.layer = initial(src.layer)
-		user.u_equip(src)
-		if (user.client)
-			user.client.screen -= src
-		src.loc = R
 		R.part4 = src
-		R.layer = 20
-		R.loc = user
+
+		user.put_in_hand(R)
+		user.before_take_item(src)
+		src.loc = R
+
 		S.part1 = null
 		S.part2 = null
 		S.part3 = null
-		//S = null
 		del(S)
 // PantsNote: More flamethrower assembly code. WOO!
 	if (istype(W, /obj/item/assembly/w_r_ignite))
 		var/obj/item/assembly/w_r_ignite/S = W
 		if (!( S.status ))
 			return
-		var/obj/item/weapon/flamethrower/R = new /obj/item/weapon/flamethrower( user )
+		var/obj/item/weapon/flamethrower/R = new
 		R.part1 = S.part1
 		S.part1.loc = R
 		S.part1.master = R
+
 		R.part2 = S.part2
 		S.part2.loc = R
 		S.part2.master = R
+
 		R.part3 = S.part3
 		S.part3.loc = R
 		S.part3.master = R
-		S.layer = initial(S.layer)
-		if (user.client)
-			user.client.screen -= S
-		if (user.r_hand == S)
-			user.u_equip(S)
-			user.r_hand = R
-		else
-			user.u_equip(S)
-			user.l_hand = R
+
 		src.master = R
-		src.layer = initial(src.layer)
-		user.u_equip(src)
-		if (user.client)
-			user.client.screen -= src
-		src.loc = R
 		R.part4 = src
-		R.layer = 20
-		R.loc = user
+
+		user.put_in_hand(R)
+		user.before_take_item(src)
+		src.loc = R
+
 		S.part1 = null
 		S.part2 = null
 		S.part3 = null
-		//S = null
 		del(S)
-
 	return

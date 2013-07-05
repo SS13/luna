@@ -16,7 +16,7 @@
 
 	use_power(5)
 
-	var/datum/gas_mixture/environment = target.return_air(1)
+	var/datum/gas_mixture/environment = target.return_air()
 	if(!environment)
 		icon_state = "meterX"
 		return 0
@@ -25,13 +25,13 @@
 	if(env_pressure <= 0.15*ONE_ATMOSPHERE)
 		icon_state = "meter0"
 	else if(env_pressure <= 1.8*ONE_ATMOSPHERE)
-		var/val = min(round(env_pressure/(ONE_ATMOSPHERE*0.3) + 0.5), 6)
+		var/val = round(env_pressure/(ONE_ATMOSPHERE*0.3) + 0.5)
 		icon_state = "meter1_[val]"
 	else if(env_pressure <= 30*ONE_ATMOSPHERE)
-		var/val = min(round(env_pressure/(ONE_ATMOSPHERE*5)-0.35) + 1, 6)
+		var/val = round(env_pressure/(ONE_ATMOSPHERE*5)-0.35) + 1
 		icon_state = "meter2_[val]"
 	else if(env_pressure <= 59*ONE_ATMOSPHERE)
-		var/val = min(round(env_pressure/(ONE_ATMOSPHERE*5) - 6) + 1, 6)
+		var/val = round(env_pressure/(ONE_ATMOSPHERE*5) - 6) + 1
 		icon_state = "meter3_[val]"
 	else
 		icon_state = "meter4"
@@ -44,21 +44,22 @@
 		var/datum/signal/signal = new
 		signal.source = src
 		signal.transmission_method = 1
-
-		signal.data["tag"] = id
-		signal.data["device"] = "AM"
-		signal.data["pressure"] = round(env_pressure)
-
+		signal.data = list(
+			"tag" = id,
+			"device" = "AM",
+			"pressure" = round(env_pressure),
+			"sigtype" = "status"
+		)
 		radio_connection.post_signal(src, signal)
 
 /obj/machinery/meter/examine()
-	set src in oview(1)
+	set src in view(3)
 
 	var/t = "A gas flow meter. "
 	if (src.target)
-		var/datum/gas_mixture/environment = target.return_air(1)
+		var/datum/gas_mixture/environment = target.return_air()
 		if(environment)
-			t += text("The pressure gauge reads [] kPa", round(environment.return_pressure(), 0.1))
+			t += "The pressure gauge reads [round(environment.return_pressure(), 0.01)] kPa; [round(environment.temperature,0.01)]&deg;K ([round(environment.temperature-T0C,0.01)]&deg;C)"
 		else
 			t += "The sensor error light is blinking."
 	else
@@ -71,14 +72,14 @@
 /obj/machinery/meter/Click()
 
 	if(stat & (NOPOWER|BROKEN))
-		return
+		return 1
 
 	var/t = null
-	if (get_dist(usr, src) <= 3 || istype(usr, /mob/living/silicon/ai))
+	if (get_dist(usr, src) <= 3 || istype(usr, /mob/living/silicon/ai) || istype(usr, /mob/dead))
 		if (src.target)
-			var/datum/gas_mixture/environment = target.return_air(1)
+			var/datum/gas_mixture/environment = target.return_air()
 			if(environment)
-				t = text("<B>Pressure:</B> [] kPa", round(environment.return_pressure(), 0.1))
+				t = "<B>Pressure:</B> [round(environment.return_pressure(), 0.01)] kPa; <B>Temperature:</B> [round(environment.temperature,0.01)]&deg;K ([round(environment.temperature-T0C,0.01)]&deg;C)"
 			else
 				t = "\red <B>Results: Sensor Error!</B>"
 		else
@@ -87,4 +88,17 @@
 		usr << "\blue <B>You are too far away.</B>"
 
 	usr << t
-	return
+	return 1
+	
+/obj/machinery/meter/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
+	if (!istype(W, /obj/item/weapon/wrench))
+		return ..()
+	playsound(src.loc, 'Ratchet.ogg', 50, 1)
+	user << "\blue You begin to unfasten \the [src]..."
+	if (do_after(user, 40))
+		user.visible_message( \
+			"[user] unfastens \the [src].", \
+			"\blue You have unfastened \the [src].", \
+			"You hear ratchet.")
+		new /obj/item/pipe_meter(src.loc)
+		del(src)

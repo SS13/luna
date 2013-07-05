@@ -1,3 +1,34 @@
+/obj/machinery/computer/med_data/attackby(I as obj, user as mob)
+	if(istype(I, /obj/item/weapon/screwdriver))
+		playsound(src.loc, 'Screwdriver.ogg', 50, 1)
+		if(do_after(user, 20))
+			if (src.stat & BROKEN)
+				user << "\blue The broken glass falls out."
+				var/obj/computerframe/A = new /obj/computerframe( src.loc )
+				new /obj/item/weapon/shard( src.loc )
+				var/obj/item/weapon/circuitboard/med_data/M = new /obj/item/weapon/circuitboard/med_data( A )
+				for (var/obj/C in src)
+					C.loc = src.loc
+				A.circuit = M
+				A.state = 3
+				A.icon_state = "3"
+				A.anchored = 1
+				del(src)
+			else
+				user << "\blue You disconnect the monitor."
+				var/obj/computerframe/A = new /obj/computerframe( src.loc )
+				var/obj/item/weapon/circuitboard/med_data/M = new /obj/item/weapon/circuitboard/med_data( A )
+				for (var/obj/C in src)
+					C.loc = src.loc
+				A.circuit = M
+				A.state = 4
+				A.icon_state = "4"
+				A.anchored = 1
+				del(src)
+	else
+		src.attack_hand(user)
+	return
+
 /obj/machinery/computer/med_data/attack_ai(user as mob)
 	return src.attack_hand(user)
 
@@ -17,7 +48,6 @@
 				if(1.0)
 					dat += {"
 <A href='?src=\ref[src];search=1'>Search Records</A>
-<BR><A href='?src=\ref[src];searchblood=1'>Search DNA</A>
 <BR><A href='?src=\ref[src];screen=2'>List Records</A>
 <BR>
 <BR><A href='?src=\ref[src];screen=5'>Virus Database</A>
@@ -41,7 +71,7 @@
 					else
 						dat += "<B>General Record Lost!</B><BR>"
 					if ((istype(src.active2, /datum/data/record) && data_core.medical.Find(src.active2)))
-						dat += text("<BR>\n<CENTER><B>Medical Data</B></CENTER><BR>\nBlood Type: <A href='?src=\ref[];field=b_type'>[]</A><BR>\nDNA: <a href='?src=\ref[];field=bloodsample'>[]</a><BR>\n<BR>\nMinor Disabilities: <A href='?src=\ref[];field=mi_dis'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=mi_dis_d'>[]</A><BR>\n<BR>\nMajor Disabilities: <A href='?src=\ref[];field=ma_dis'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=ma_dis_d'>[]</A><BR>\n<BR>\nAllergies: <A href='?src=\ref[];field=alg'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=alg_d'>[]</A><BR>\n<BR>\nCurrent Diseases: <A href='?src=\ref[];field=cdi'>[]</A> (per disease info placed in log/comment section)<BR>\nDetails: <A href='?src=\ref[];field=cdi_d'>[]</A><BR>\n<BR>\nImportant Notes:<BR>\n\t<A href='?src=\ref[];field=notes'>[]</A><BR>\n<BR>\n<CENTER><B>Comments/Log</B></CENTER><BR>", src, src.active2.fields["b_type"], src, src.active2.fields["bloodsample"], src, src.active2.fields["mi_dis"], src, src.active2.fields["mi_dis_d"], src, src.active2.fields["ma_dis"], src, src.active2.fields["ma_dis_d"], src, src.active2.fields["alg"], src, src.active2.fields["alg_d"], src, src.active2.fields["cdi"], src, src.active2.fields["cdi_d"], src, src.active2.fields["notes"])
+						dat += text("<BR>\n<CENTER><B>Medical Data</B></CENTER><BR>\nBlood Type: <A href='?src=\ref[];field=b_type'>[]</A><BR>\nDNA: <A href='?src=\ref[];field=b_dna'>[]</A><BR>\n<BR>\nMinor Disabilities: <A href='?src=\ref[];field=mi_dis'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=mi_dis_d'>[]</A><BR>\n<BR>\nMajor Disabilities: <A href='?src=\ref[];field=ma_dis'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=ma_dis_d'>[]</A><BR>\n<BR>\nAllergies: <A href='?src=\ref[];field=alg'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=alg_d'>[]</A><BR>\n<BR>\nCurrent Diseases: <A href='?src=\ref[];field=cdi'>[]</A> (per disease info placed in log/comment section)<BR>\nDetails: <A href='?src=\ref[];field=cdi_d'>[]</A><BR>\n<BR>\nImportant Notes:<BR>\n\t<A href='?src=\ref[];field=notes'>[]</A><BR>\n<BR>\n<CENTER><B>Comments/Log</B></CENTER><BR>", src, src.active2.fields["b_type"], src, src.active2.fields["b_dna"], src, src.active2.fields["mi_dis"], src, src.active2.fields["mi_dis_d"], src, src.active2.fields["ma_dis"], src, src.active2.fields["ma_dis_d"], src, src.active2.fields["alg"], src, src.active2.fields["alg_d"], src, src.active2.fields["cdi"], src, src.active2.fields["cdi_d"], src, src.active2.fields["notes"])
 						var/counter = 1
 						while(src.active2.fields[text("com_[]", counter)])
 							dat += text("[]<BR><A href='?src=\ref[];del_c=[]'>Delete Entry</A><BR><BR>", src.active2.fields[text("com_[]", counter)], src, counter)
@@ -53,16 +83,13 @@
 						dat += text("<A href='?src=\ref[src];new=1'>New Record</A><BR><BR>")
 					dat += text("\n<A href='?src=\ref[];print_p=1'>Print Record</A><BR>\n<A href='?src=\ref[];screen=2'>Back</A><BR>", src, src)
 				if(5.0)
-					dat += {"<CENTER><B>Virus Database</B></CENTER>
-					<br><a href='?src=\ref[src];vir=gbs'>GBS</a>
-					<br><a href='?src=\ref[src];vir=cc'>Common Cold</a>
-					<br><a href='?src=\ref[src];vir=f'>Flu</A>
-					<br><a href='?src=\ref[src];vir=jf'>Jungle Fever</a>
-					<br><a href='?src=\ref[src];vir=ca'>Clowning Around</a>
-					<br><a href='?src=\ref[src];vir=p'>Plasmatoid</a>
-					<br><a href='?src=\ref[src];vir=dna'>Space Rhinovirus</a>
-					<br><a href='?src=\ref[src];vir=bot'>Robot Transformation</a>
-					<br><a href='?src=\ref[src];screen=1'>Back</a>"}
+					dat += "<CENTER><B>Virus Database</B></CENTER>"
+					for(var/Dt in typesof(/datum/disease/))
+						var/datum/disease/Dis = new Dt(0)
+						if(!Dis.desc)
+							continue
+						dat += "<br><a href='?src=\ref[src];vir=[Dt]'>[Dis.name]</a>"
+					dat += "<br><a href='?src=\ref[src];screen=1'>Back</a>"
 				if(6.0)
 					dat += "<center><b>Medical Robot Monitor</b></center>"
 					dat += "<a href='?src=\ref[src];screen=1'>Back</a>"
@@ -139,87 +166,20 @@
 				src.active2 = null
 
 			if(href_list["vir"])
-				switch(href_list["vir"])
-					if("gbs")
-						src.temp = {"<b>Name:</b> GBS
-<BR><b>Number of stages:</b> 5
-<BR><b>Spread:</b> Airborne Transmission
-<BR><b>Possible Cure:</b> Spaceacillin
-<BR><b>Affected Species:</b> Human
+				var/type = href_list["vir"]
+				var/datum/disease/Dis = new type(0)
+				var/AfS = ""
+				for(var/Str in Dis.affected_species)
+					AfS += " [Str];"
+				src.temp = {"<b>Name:</b> [Dis.name]
+<BR><b>Number of stages:</b> [Dis.max_stages]
+<BR><b>Spread:</b> [Dis.spread] Transmission
+<BR><b>Possible Cure:</b> [(Dis.cure||"none")]
+<BR><b>Affected Species:</b>[AfS]
 <BR>
-<BR><b>Notes:</b> If left untreated death will occur.
+<BR><b>Notes:</b> [Dis.desc]
 <BR>
-<BR><b>Severity:</b> Major"}
-					if("cc")
-						src.temp = {"<b>Name:</b> Common Cold
-<BR><b>Number of stages:</b> 3
-<BR><b>Spread:</b> Airborne Transmission
-<BR><b>Possible Cure:</b> Rest
-<BR><b>Affected Species:</b> Human
-<BR>
-<BR><b>Notes:</b> If left untreated the subject will contract the flu.
-<BR>
-<BR><b>Severity:</b> Minor"}
-					if("f")
-						src.temp = {"<b>Name:</b> The Flu
-<BR><b>Number of stages:</b> 3
-<BR><b>Spread:</b> Airborne Transmission
-<BR><b>Possible Cure:</b> Rest
-<BR><b>Affected Species:</b> Human
-<BR>
-<BR><b>Notes:</b> If left untreated the subject will feel quite unwell.
-<BR>
-<BR><b>Severity:</b> Medium"}
-					if("jf")
-						src.temp = {"<b>Name:</b> Jungle Fever
-<BR><b>Number of stages:</b> 1
-<BR><b>Spread:</b> Airborne Transmission
-<BR><b>Possible Cure:</b> None
-<BR><b>Affected Species:</b> Monkey
-<BR>
-<BR><b>Notes:</b> Monkies with this disease will bite humans, causing humans to spontaneously to mutate into a monkey.
-<BR>
-<BR><b>Severity:</b> Medium"}
-					if("ca")
-						src.temp = {"<b>Name:</b> Clowning Around
-<BR><b>Number of stages:</b> 4
-<BR><b>Spread:</b> Airborne Transmission
-<BR><b>Possible Cure:</b> Spaceacillin
-<BR><b>Affected Species:</b> Human
-<BR>
-<BR><b>Notes:</b> Subjects are affected by rampant honking and a fondness for shenanigans. They may also spontaneously phase through closed airlocks.
-<BR>
-<BR><b>Severity:</b> Laughable"}
-					if("p")
-						src.temp = {"<b>Name:</b> Plasmatoid
-<BR><b>Number of stages:</b> 3
-<BR><b>Spread:</b> Airborne Transmission
-<BR><b>Possible Cure:</b> Inaprovaline
-<BR><b>Affected Species:</b> Human and Monkey
-<BR>
-<BR><b>Notes:</b> With this disease the victim will need plasma to breathe.
-<BR>
-<BR><b>Severity:</b> Major"}
-					if("dna")
-						src.temp = {"<b>Name:</b> Space Rhinovirus
-<BR><b>Number of stages:</b> 4
-<BR><b>Spread:</b> Airborne Transmission
-<BR><b>Possible Cure:</b> Spaceacillin
-<BR><b>Affected Species:</b> Human
-<BR>
-<BR><b>Notes:</b> This disease transplants the genetic code of the intial vector into new hosts.
-<BR>
-<BR><b>Severity:</b> Medium"}
-					if("bot")
-						src.temp = {"<b>Name:</b> Robot Transformation
-<BR><b>Number of stages:</b> 5
-<BR><b>Spread:</b> Infected food
-<BR><b>Possible Cure:</b> None
-<BR><b>Affected Species:</b> Human
-<BR>
-<BR><b>Notes:</b> This disease, actually acute nanomachine infection, converts the victim into a cyborg.
-<BR>
-<BR><b>Severity:</b> Major"}
+<BR><b>Severity:</b> [Dis.severity]"}
 
 			if (href_list["del_all"])
 				src.temp = text("Are you sure you wish to delete all records?<br>\n\t<A href='?src=\ref[];temp=1;del_all2=1'>Yes</A><br>\n\t<A href='?src=\ref[];temp=1'>No</A><br>", src, src)
@@ -237,7 +197,7 @@
 				switch(href_list["field"])
 					if("fingerprint")
 						if (istype(src.active1, /datum/data/record))
-							var/t1 = input("Please input fingerprint hash:", "Med. records", src.active1.fields["id"], null)  as text
+							var/t1 = input("Please input fingerprint hash:", "Med. records", src.active1.fields["fingerprint"], null)  as text
 							if ((!( t1 ) || !( src.authenticated ) || usr.stat || usr.restrained() || (!in_range(src, usr) && (!istype(usr, /mob/living/silicon))) || src.active1 != a1))
 								return
 							src.active1.fields["fingerprint"] = t1
@@ -316,12 +276,12 @@
 					if("b_type")
 						if (istype(src.active2, /datum/data/record))
 							src.temp = text("<B>Blood Type:</B><BR>\n\t<A href='?src=\ref[];temp=1;b_type=an'>A-</A> <A href='?src=\ref[];temp=1;b_type=ap'>A+</A><BR>\n\t<A href='?src=\ref[];temp=1;b_type=bn'>B-</A> <A href='?src=\ref[];temp=1;b_type=bp'>B+</A><BR>\n\t<A href='?src=\ref[];temp=1;b_type=abn'>AB-</A> <A href='?src=\ref[];temp=1;b_type=abp'>AB+</A><BR>\n\t<A href='?src=\ref[];temp=1;b_type=on'>O-</A> <A href='?src=\ref[];temp=1;b_type=op'>O+</A><BR>", src, src, src, src, src, src, src, src)
-					if("bloodsample")
-						if (istype(src.active2, /datum/data/record))
-							var/t1 = input("Please input DNA:", "Med. records", src.active2.fields["bloodsample"], null)  as text
-							if ((!( t1 ) || !( src.authenticated ) || usr.stat || usr.restrained() || (!in_range(src, usr) && (!istype(usr, /mob/living/silicon))) || src.active2 != a2))
+					if("b_dna")
+						if (istype(src.active1, /datum/data/record))
+							var/t1 = input("Please input DNA hash:", "Med. records", src.active1.fields["dna"], null)  as text
+							if ((!( t1 ) || !( src.authenticated ) || usr.stat || usr.restrained() || (!in_range(src, usr) && (!istype(usr, /mob/living/silicon))) || src.active1 != a1))
 								return
-							src.active2.fields["bloodsample"] = t1
+							src.active1.fields["dna"] = t1
 					else
 
 			if (href_list["p_stat"])
@@ -401,7 +361,7 @@
 					R.fields["id"] = src.active1.fields["id"]
 					R.name = text("Medical Record #[]", R.fields["id"])
 					R.fields["b_type"] = "Unknown"
-					R.fields["bloodsample"] = "Unknown"
+					R.fields["b_dna"] = "Unknown"
 					R.fields["mi_dis"] = "None"
 					R.fields["mi_dis_d"] = "No minor disabilities have been declared."
 					R.fields["ma_dis"] = "None"
@@ -453,25 +413,6 @@
 							//Foreach continue //goto(3334)
 					src.screen = 4
 
-			if(href_list["searchblood"])
-				var/t1 = input("Search String: (DNA)", "Med. records", null, null)  as text
-				if ((!( t1 ) || usr.stat || !( src.authenticated ) || usr.restrained() || (!in_range(src, usr)) && (!istype(usr, /mob/living/silicon))))
-					return
-				src.active1 = null
-				src.active2 = null
-				t1 = lowertext(t1)
-				for(var/datum/data/record/R in data_core.medical)
-					if (lowertext(R.fields["bloodsample"]) == t1)
-						src.active2 = R
-				if (!( src.active2 ))
-					src.temp = text("Could not locate record [].", t1)
-				else
-
-					for(var/datum/data/record/E in data_core.general)
-						if ((E.fields["name"] == src.active2.fields["name"] || E.fields["id"] == src.active2.fields["id"]))
-							src.active1 = E
-					src.screen = 4
-
 			if (href_list["print_p"])
 				if (!( src.printing ))
 					src.printing = 1
@@ -483,7 +424,7 @@
 					else
 						P.info += "<B>General Record Lost!</B><BR>"
 					if ((istype(src.active2, /datum/data/record) && data_core.medical.Find(src.active2)))
-						P.info += text("<BR>\n<CENTER><B>Medical Data</B></CENTER><BR>\nBlood Type: <A href='?src=\ref[];field=b_type'>[]</A><BR>\nDNA: <a href='?src=\ref[];field=bloodsample'>[]</a><BR>\n<BR>\nMinor Disabilities: <A href='?src=\ref[];field=mi_dis'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=mi_dis_d'>[]</A><BR>\n<BR>\nMajor Disabilities: <A href='?src=\ref[];field=ma_dis'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=ma_dis_d'>[]</A><BR>\n<BR>\nAllergies: <A href='?src=\ref[];field=alg'>[]</A><BR>\nDetails: <A href='?src=\ref[];field=alg_d'>[]</A><BR>\n<BR>\nCurrent Diseases: <A href='?src=\ref[];field=cdi'>[]</A> (per disease info placed in log/comment section)<BR>\nDetails: <A href='?src=\ref[];field=cdi_d'>[]</A><BR>\n<BR>\nImportant Notes:<BR>\n\t<A href='?src=\ref[];field=notes'>[]</A><BR>\n<BR>\n<CENTER><B>Comments/Log</B></CENTER><BR>", src, src.active2.fields["b_type"], src, src.active2.fields["bloodsample"], src, src.active2.fields["mi_dis"], src, src.active2.fields["mi_dis_d"], src, src.active2.fields["ma_dis"], src, src.active2.fields["ma_dis_d"], src, src.active2.fields["alg"], src, src.active2.fields["alg_d"], src, src.active2.fields["cdi"], src, src.active2.fields["cdi_d"], src, src.active2.fields["notes"])
+						P.info += text("<BR>\n<CENTER><B>Medical Data</B></CENTER><BR>\nBlood Type: []<BR>\nDNA: []<BR>\n<BR>\nMinor Disabilities: []<BR>\nDetails: []<BR>\n<BR>\nMajor Disabilities: []<BR>\nDetails: []<BR>\n<BR>\nAllergies: []<BR>\nDetails: []<BR>\n<BR>\nCurrent Diseases: [] (per disease info placed in log/comment section)<BR>\nDetails: []<BR>\n<BR>\nImportant Notes:<BR>\n\t[]<BR>\n<BR>\n<CENTER><B>Comments/Log</B></CENTER><BR>", src.active2.fields["b_type"], src.active2.fields["b_dna"], src.active2.fields["mi_dis"], src.active2.fields["mi_dis_d"], src.active2.fields["ma_dis"], src.active2.fields["ma_dis_d"], src.active2.fields["alg"], src.active2.fields["alg_d"], src.active2.fields["cdi"], src.active2.fields["cdi_d"], src.active2.fields["notes"])
 						var/counter = 1
 						while(src.active2.fields[text("com_[]", counter)])
 							P.info += text("[]<BR>", src.active2.fields[text("com_[]", counter)])

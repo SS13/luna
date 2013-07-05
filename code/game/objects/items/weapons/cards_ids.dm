@@ -13,6 +13,8 @@ FINGERPRINT CARD
 // DATA CARDS
 
 /obj/item/weapon/card/data/verb/label(t as text)
+	set name = "Label Disk"
+	set category = "Object"
 	set src in usr
 
 	if (t)
@@ -35,18 +37,48 @@ FINGERPRINT CARD
 	return
 
 /obj/item/weapon/card/id/verb/read()
+	set name = "Read ID Card"
+	set category = "Object"
 	set src in usr
 
 	usr << text("\icon[] []: The current assignment on the card is [].", src, src.name, src.assignment)
 	return
 
 /obj/item/weapon/card/id/syndicate/attack_self(mob/user as mob)
-	src.registered = input(user, "What name would you like to put on this card?", "Agent card name", ishuman(user) ? user.real_name : user.name)
-	src.assignment = input(user, "What occupation would you like to put on this card?\nNote: This will not grant any access levels other than Maintenance.", "Agent card job assignment", "Unassigned")
-	src.name = "[src.registered]'s ID Card ([src.assignment])"
-	user << "\blue You successfully forge the ID card."
+	if(!src.registered)
+		src.registered = input(user, "What name would you like to put on this card?", "Agent card name", ishuman(user) ? user.real_name : user.name)
+		src.assignment = input(user, "What occupation would you like to put on this card?\nNote: This will not grant any access levels other than Maintenance.", "Agent card job assignment", "Assistant")
+		src.name = "[src.registered]'s ID Card ([src.assignment])"
+		user << "\blue You successfully forge the ID card."
+	else
+		..()
 
+/obj/item/weapon/card/id/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
+	if(istype(W,/obj/item/weapon/photo))
+		if(!(PHOTO))
+			src.PHOTO = W
+			usr.before_take_item(W)
+			W.loc = src
+			//src.orient2hud(usr)
+			add_fingerprint(usr)
+			usr << "\blue You add the photo to the ID"
+		else
+			usr << "\blue There is already a photo on this ID"
 
+			//PHOTO.loc = locate(0,0,0)
+
+/obj/item/weapon/card/id/verb/removePhoto()
+	set name = "Remove Photo From ID"
+	set category = "Object"
+
+	if(PHOTO)
+		contents -= PHOTO
+		PHOTO.loc = usr.loc
+		PHOTO.layer = 3
+		PHOTO = null
+	else
+		usr << "\blue There is no photo to remove"
 
 
 // FINGERPRINT HOLDER
@@ -114,6 +146,7 @@ FINGERPRINT CARD
 	return
 
 /obj/item/weapon/fcardholder/attackby(obj/item/weapon/P as obj, mob/user as mob)
+	..()
 	if (istype(P, /obj/item/weapon/f_card))
 		if (src.contents.len < 30)
 			user.drop_item()
@@ -201,7 +234,7 @@ FINGERPRINT CARD
 	return
 
 /obj/item/weapon/f_card/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
+	..()
 	if (istype(W, /obj/item/weapon/f_card))
 		if ((src.fingerprints || W.fingerprints))
 			return

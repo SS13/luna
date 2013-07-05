@@ -1,61 +1,21 @@
-/obj/item/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
-	if(exposed_temperature >= 1643 && m_amt)
-		var/obj/item/weapon/meltedmetal/S = new(src.loc)
-		S.desc = "Looks like this was \an [src] some time ago."
-		S.m_amt = src.m_amt
-		for(var/mob/M in viewers(5, S))
-			M << "\red \the [src] melts."
-		del(src)
-	else if(exposed_temperature >= 1650 && g_amt)
-		var/obj/item/weapon/meltedmetal/S = new(src.loc)
-		S.desc = "Looks like this was \an [src] some time ago."
-		S.g_amt = src.g_amt
-		for(var/mob/M in viewers(5, S))
-			M << "\red \the [src] melts."
-		del(src)
-/obj/item/weapon/paper/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
-	if(exposed_temperature >= 373.15)
-		for(var/mob/M in viewers(5, src))
-			M << "\red \the [src] burns up."
-		del(src)
+
 /obj/item/weapon/bedsheet/ex_act(severity)
 	if (severity <= 2)
 		del(src)
 		return
 	return
-/obj/item/weapon/pipesegment/
-	name = "Pipe segment"
-	desc = "used for emergency pipe repairs"
-	icon = 'pipes.dmi'
-	icon_state = "exposed"
-	m_amt = 50
+
 /obj/item/weapon/bedsheet/attack_self(mob/user as mob)
 	user.drop_item()
 	src.layer = 5
 	add_fingerprint(user)
 	return
-obj/item/weapon/cane
-	name = "Cane"
-	icon = 'items.dmi'
-	icon_state = "cane"
-	m_amt = 5
 
-/obj/item/weapon/meltedmetal
-	name = "Ruined metal"
-	icon = 'chemical.dmi'
-	icon_state = "molten"
-	m_amt = 0
-/obj/item/weapon/meltedglass
-	name = "Ruined glass"
-	icon = 'chemical.dmi'
-	icon_state = "molten"
-	m_amt = 0
-/obj/item/weapon/meltedmetal/temperature_expose()
-	return
-/obj/item/weapon/meltedglass/temperature_expose()
-	return
+
+
+
 /obj/item/weapon/handcuffs/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & CLUMSY) && prob(50))
+	if ((usr.mutations & 16) && prob(50))
 		usr << "\red Uh ... how do those things work?!"
 		if (istype(M, /mob/living/carbon/human))
 			var/obj/equip_e/human/O = new /obj/equip_e/human(  )
@@ -119,11 +79,11 @@ obj/item/weapon/cane
 /obj/item/weapon/extinguisher/afterattack(atom/target, mob/user , flag)
 	//TODO; Add support for reagents in water.
 
-	if( istype(target, /obj/structure/reagent_dispensers/watertank) && get_dist(src,target) <= 1)
+	if( istype(target, /obj/reagent_dispensers/watertank) && get_dist(src,target) <= 1)
 		var/obj/o = target
 		o.reagents.trans_to(src, 50)
 		user << "\blue Extinguisher refilled"
-		playsound(src.loc, 'zzzt.ogg', 50, 1, -6)
+		playsound(src.loc, 'refill.ogg', 50, 1, -6)
 		return
 
 	if (!safety)
@@ -135,7 +95,7 @@ obj/item/weapon/cane
 
 		src.last_use = world.time
 
-		playsound(src.loc, 'spray.ogg', 75, 1, -3)
+		playsound(src.loc, 'extinguish.ogg', 75, 1, -3)
 
 		var/direction = get_dir(src,target)
 
@@ -156,7 +116,7 @@ obj/item/weapon/cane
 				if(!W || !src) return
 				src.reagents.trans_to(W,1)
 				for(var/b=0, b<5, b++)
-					step_towards_3d(W,my_target)
+					step_towards(W,my_target)
 					if(!W) return
 					W.reagents.reaction(get_turf(W))
 					for(var/atom/atm in get_turf(W))
@@ -186,6 +146,52 @@ obj/item/weapon/cane
 		safety = 1
 	return
 
+/obj/item/weapon/pen/sleepypen
+	origin_tech = "syndicate=1"
+
+/obj/item/weapon/pen/sleepypen/attack_paw(mob/user as mob)
+	return src.attack_hand(user)
+	return
+
+/obj/item/weapon/pen/sleepypen/New()
+	var/datum/reagents/R = new/datum/reagents(30) //Used to be 300
+	reagents = R
+	R.my_atom = src
+	R.add_reagent("chloralhydrate", 30)	//Used to be 100 sleep toxin
+//	R.add_reagent("impedrezene", 100)
+//	R.add_reagent("cryptobiolin", 100)
+	..()
+	return
+
+/obj/item/weapon/pen/sleepypen/attack(mob/M as mob, mob/user as mob)
+	if (!( istype(M, /mob) ))
+		return
+	if (reagents.total_volume)
+		//for(var/mob/O in viewers(M, null))
+		//	O.show_message(text("\red [] has been stabbed with [] by [].", M, src, user), 1)
+		user << "\red You stab [M] with the pen."
+		M << "\red You feel a tiny prick!"
+		if(M.reagents) reagents.trans_to(M, 50) //used to be 150
+	return
+
+/obj/item/device/flashlight/pen/paralysis/New()
+	var/datum/reagents/R = new/datum/reagents(15)
+	reagents = R
+	R.my_atom = src
+	R.add_reagent("zombiepowder", 15)
+	..()
+	return
+
+/obj/item/device/flashlight/pen/paralysis/attack(mob/M as mob, mob/user as mob)
+	if (!( istype(M, /mob) ))
+		return
+	if (reagents.total_volume)
+		user << "\red You stab [M] with the penlight."
+		M << "\red You feel a tiny prick!"
+		if(M.reagents) reagents.trans_to(M, 15)
+	..()
+	return
+
 /obj/item/weapon/Bump(mob/M as mob)
 	spawn( 0 )
 		..()
@@ -199,7 +205,7 @@ obj/item/weapon/cane
 /obj/manifest/proc/manifest()
 	var/dat = "<B>Crew Manifest</B>:<BR>"
 	for(var/mob/living/carbon/human/M in world)
-		dat += text("    <B>[]</B> -  []<BR>", M.name, (istype(M.wear_id, /obj/item/weapon/card/id) ? text("[]", M.wear_id.assignment) : "Unknown Position"))
+		dat += text("    <B>[]</B> -  []<BR>", M.name, M.get_assignment())
 	var/obj/item/weapon/paper/P = new /obj/item/weapon/paper( src.loc )
 	P.info = dat
 	P.name = "paper- 'Crew Manifest'"
@@ -213,9 +219,13 @@ obj/item/weapon/cane
 	return
 
 
+
 /mob/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if ( istype(W, /obj/item/weapon/reagent_containers/syringe) && istype(src, /mob/living/silicon/ai) ) // The cyborgs have their own attackby
-		return
+	if (user.intent!="harm")
+		if (istype(src.l_hand,/obj/item/latexballon) && src.l_hand:air_contents && is_sharp(W))
+			return src.l_hand.attackby(W)
+		if (istype(src.r_hand,/obj/item/latexballon) && src.r_hand:air_contents && is_sharp(W))
+			return src.r_hand.attackby(W)
 	var/shielded = 0
 	for(var/obj/item/device/shield/S in src)
 		if (S.active)
@@ -233,10 +243,11 @@ obj/item/weapon/cane
 				safe = G.affecting
 		if (safe)
 			return safe.attackby(W, user)
-	if (!shielded || (shielded && (prob(65))))
-		spawn(0)
-			W.attack(src, user)
-			return
+	if ((!( shielded ) || !( W.flags ) & 32))
+		spawn( 0 )
+			if (W)
+				W.attack(src, user)
+				return
 	return
 
 
@@ -248,7 +259,7 @@ obj/item/weapon/cane
 	dat += "<HR>"
 	dat += "<B>Four uses use them wisely:</B><BR>"
 	dat += "<A href='byond://?src=\ref[src];spell_teleport=1'>Teleport</A><BR>"
-	dat += "Kind regards,<br>Wizards Federation<br><br>P.S. Don't forget to bring your gear, you'll need it to cast spells.<HR>"
+	dat += "Kind regards,<br>Wizards Federation<br><br>P.S. Don't forget to bring your gear, you'll need it to cast most spells.<HR>"
 	user << browse(dat, "window=scroll")
 	onclose(user, "scroll")
 	return
@@ -276,6 +287,26 @@ obj/item/weapon/cane
 
 
 
+
+/obj/item/brain/examine() // -- TLE
+	set src in oview(12)
+	if (!( usr ))
+		return
+	usr << "This is \icon[src] \an [src.name]."
+
+	if(src.owner)
+	//if the brain has an owner corpse
+		if(src.owner.client)
+		//if the player hasn't ghosted
+			usr << "You can feel the small spark of life still in this one."
+		else
+		//if the player HAS ghosted
+			for(var/mob/dead/observer/O in world)
+				if(O.corpse == src.owner && O.client)
+				//find their ghost
+					usr << "You can feel the small spark of life still in this one."
+	else
+		usr << "This one seems particularly lifeless. Perhaps it will regain some of its luster later. Perhaps not."
 
 /obj/item/brain/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	if(!istype(M, /mob))
@@ -315,21 +346,23 @@ obj/item/weapon/cane
 		if(M.client)
 			M.client.mob = new/mob/dead/observer(M)
 		//a mob can't have two clients so get rid of one
-
-		if(src.owner)
+		//this might actually be outdated since barring badminnery, a debrain'd body will have any client sucked out to the brain's internal mob. Leaving it anyway to be safe. --NEO
+		src.brainmob.mind.transfer_to(M)
+		src.brainmob = null
+//		if(src.owner)
 		//if the brain has an owner corpse
-			if(src.owner.client)
+//			if(src.owner.client)
 			//if the player hasn't ghosted
-				src.owner.client.mob = M
+//				src.owner.client.mob = M
 				//then put them in M
-			else
+//			else
 			//if the player HAS ghosted
-				for(var/mob/dead/observer/O in world)
-					if(O.corpse == src.owner && O.client)
+//				for(var/mob/dead/observer/O in world)
+//					if(O.corpse == src.owner && O.client)
 					//find their ghost
-						O.client.mob = M
+//						O.client.mob = M
 						//put their mob in M
-						del(O)
+//						del(O)
 						//delete thier ghost
 
 		M:brain_op_stage = 3.0
@@ -347,3 +380,93 @@ obj/item/weapon/cane
 
 	..()
 	return
+
+
+/obj/item/weapon/dice/attack_self(mob/user as mob) // Roll the dice -- TLE
+	var/temp_sides
+	if(src.sides < 1)
+		temp_sides = 2
+	else
+		temp_sides = src.sides
+	var/result = rand(1,temp_sides)
+	var/comment = ""
+	if(temp_sides == 20 && result == 20)
+		comment = "Nat 20!"
+	else if(temp_sides == 20 && result == 1)
+		comment = "Ouch, bad luck."
+	user << text("\red You throw a [src]. It lands on a [result]. [comment]")
+	for(var/mob/O in viewers(user, null))
+		if(O == (user))
+			continue
+		else
+			O.show_message(text("\red [user] has thrown a [src]. It lands on [result]. [comment]"), 1)
+
+/obj/item/latexballon
+	name = "Latex glove"
+	desc = "" //todo
+	icon_state = "latexballon"
+	item_state = "lgloves"
+	force = 0
+	throwforce = 0
+	w_class = 1.0
+	throw_speed = 1
+	throw_range = 15
+	var/state
+	var/datum/gas_mixture/air_contents = null
+
+/obj/item/latexballon/proc/blow(obj/item/weapon/tank/tank)
+	if (icon_state == "latexballon_bursted")
+		return
+	src.air_contents = tank.remove_air_volume(3)
+	icon_state = "latexballon_blow"
+	item_state = "latexballon"
+
+/obj/item/latexballon/proc/burst()
+	if (!air_contents)
+		return
+	playsound(src, 'Gunshot.ogg', 100, 1)
+	icon_state = "latexballon_bursted"
+	item_state = "lgloves"
+	loc.assume_air(air_contents)
+
+/obj/item/latexballon/ex_act(severity)
+	burst()
+	switch(severity)
+		if (1)
+			del(src)
+		if (2)
+			if (prob(50))
+				del(src)
+
+/obj/item/latexballon/bullet_act(severity)
+	burst()
+
+/obj/item/latexballon/temperature_expose(datum/gas_mixture/air, temperature, volume)
+	if(temperature > T0C+100)
+		burst()
+	return
+
+/obj/item/latexballon/attackby(obj/item/W as obj, mob/user as mob)
+	if (is_sharp(W))
+		burst()
+
+/proc/is_sharp(obj/item/W as obj)
+	return ( \
+		istype(W, /obj/item/weapon/screwdriver)                   || \
+		istype(W, /obj/item/weapon/pen)                           || \
+		istype(W, /obj/item/weapon/weldingtool)      && W:welding || \
+		istype(W, /obj/item/weapon/zippo)            && W:lit     || \
+		istype(W, /obj/item/weapon/match)            && W:lit     || \
+		istype(W, /obj/item/clothing/mask/cigarette) && W:lit     || \
+		istype(W, /obj/item/weapon/wirecutters)                   || \
+		istype(W, /obj/item/weapon/circular_saw)                  || \
+		istype(W, /obj/item/weapon/sword)            && W:active  || \
+		istype(W, /obj/item/weapon/blade)                         || \
+		istype(W, /obj/item/weapon/shovel)                        || \
+		istype(W, /obj/item/weapon/kitchenknife)                  || \
+		istype(W, /obj/item/weapon/scalpel)                       || \
+		istype(W, /obj/item/weapon/kitchen/utensil/knife)         || \
+		istype(W, /obj/item/weapon/shard)                         || \
+		istype(W, /obj/item/weapon/reagent_containers/syringe)    || \
+		istype(W, /obj/item/weapon/kitchen/utensil/fork) && W.icon_state != "forkloaded" \
+	)

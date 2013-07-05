@@ -1,21 +1,20 @@
-proc/empulse(turf/epicenter, heavy_range, light_range, log=0)
+proc/empulse(turf/epicenter, heavy_range, light_range, nolog=0)
 	if(!epicenter) return
-
-	if(!istype(epicenter, /turf))
-		epicenter = get_turf(epicenter.loc)
-
-	if(log)
+	if (!nolog)
 		message_admins("EMP with size ([heavy_range], [light_range]) in area [epicenter.loc.name] ")
 		log_game("EMP with size ([heavy_range], [light_range]) in area [epicenter.loc.name] ")
 
+	if (!istype(epicenter, /turf))
+		epicenter = get_turf(epicenter.loc)
+
 	if(heavy_range > 1)
-		var/obj/effect/overlay/pulse = new/obj/effect/overlay ( epicenter )
-		pulse.icon = 'icons/effects/effects.dmi'
+		var/obj/overlay/pulse = new/obj/overlay ( epicenter )
+		pulse.icon = 'effects.dmi'
 		pulse.icon_state = "emppulse"
 		pulse.name = "emp pulse"
 		pulse.anchored = 1
 		spawn(20)
-			pulse.delete()
+			del(pulse)
 
 	if(heavy_range > light_range)
 		light_range = heavy_range

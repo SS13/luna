@@ -7,6 +7,7 @@
 	return
 
 /obj/item/assembly/shock_kit/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	if ((istype(W, /obj/item/weapon/wrench) && !( src.status )))
 		var/turf/T = src.loc
 		if (ismob(T))
@@ -38,8 +39,8 @@
 /obj/item/assembly/shock_kit/receive_signal()
 	//*****
 	//world << "Shock kit got r_signal"
-	if (istype(src.loc, /obj/structure/stool/bed/chair/e_chair))
-		var/obj/structure/stool/bed/chair/e_chair/C = src.loc
+	if (istype(src.loc, /obj/stool/chair/e_chair))
+		var/obj/stool/chair/e_chair/C = src.loc
 		//world << "Shock kit sending shock to EC"
 		C.shock()
 	return

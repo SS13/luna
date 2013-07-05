@@ -90,7 +90,14 @@
 	var/class = 0		// 0 = mixed, 1=mostly. 2=pure
 	var/major = "waste"		// the major component type
 
-	var/max = max(m_amt,g_amt,w_amt)
+	var/max = 0
+
+	if(m_amt > max)
+		max = m_amt
+	else if(g_amt > max)
+		max = g_amt
+	else if(w_amt > max)
+		max = w_amt
 
 	if(max == total)
 		class = 2		// pure
@@ -100,10 +107,10 @@
 		class = 0		// mixed
 
 	if(class>0)
-		//var/remain = total - max
-		if(m_amt == max)
+		var/remain = total - max
+		if(m_amt > remain)
 			major = "metal"
-		else if(g_amt == max)
+		else if(g_amt > remain)
 			major = "glass"
 		else
 			major = "waste"
@@ -149,8 +156,7 @@
 		g_amt += other.g_amt
 		w_amt += other.w_amt
 
-		if (total + other_total)
-			blood = (total*blood + other_total*other.blood) / (total + other_total)
+		blood = (total*blood + other_total*other.blood) / (total + other_total)
 		del(other)
 
 	else
@@ -170,8 +176,7 @@
 
 		var/other_trans = m + g + w
 		other.update()
-		if (total + other_trans)
-			blood = (total*blood + other_trans*other.blood) / (total + other_trans)
+		blood = (total*blood + other_trans*other.blood) / (total + other_trans)
 
 
 	blood = round(blood,1)
@@ -212,8 +217,6 @@
 
 // attack with hand removes a single piece from a pile
 /obj/item/scrap/attack_hand(mob/user)
-	if(!m_amt && !g_amt && !w_amt)
-		del(src)
 	add_fingerprint(user)
 	if(src.is_single_piece())
 		return ..(user)
@@ -223,6 +226,7 @@
 
 
 /obj/item/scrap/attackby(obj/item/I, mob/user)
+	..()
 	if(istype(I, /obj/item/scrap))
 		var/obj/item/scrap/S = I
 		if( (S.total()+src.total() ) > MAX_SCRAP )
@@ -256,22 +260,7 @@
 
 	var/obj/item/scrap/S = new()
 
-	var/cmp
-	// To avoid a divide by zero error, need to check all possibilities.
-	if (m_amt && g_amt && w_amt)
-		cmp = pick(m_amt;1, g_amt;2, w_amt;3)
-	else if (m_amt && g_amt)
-		cmp = pick(m_amt;1, g_amt;2)
-	else if (m_amt && w_amt)
-		cmp = pick(m_amt;1, w_amt;3)
-	else if (g_amt && w_amt)
-		cmp = pick(g_amt;2, w_amt;3)
-	else if (m_amt)
-		cmp = 1
-	else if (g_amt)
-		cmp = 2
-	else
-		cmp = 3
+	var/cmp = pick(m_amt;1 , g_amt;2, w_amt;3)
 
 	var/amount = 400
 	switch(cmp)

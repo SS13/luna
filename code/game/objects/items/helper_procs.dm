@@ -1,4 +1,13 @@
-
+/proc/parse_zone(zone)
+	if(zone == "r_hand") return "right hand"
+	else if (zone == "l_hand") return "left hand"
+	else if (zone == "l_arm") return "left arm"
+	else if (zone == "r_arm") return "right arm"
+	else if (zone == "l_leg") return "left leg"
+	else if (zone == "r_leg") return "right leg"
+	else if (zone == "l_foot") return "left foot"
+	else if (zone == "r_foot") return "right foot"
+	else return zone
 
 /proc/text2dir(direction)
 	switch(uppertext(direction))
@@ -20,6 +29,19 @@
 			return 10
 		else
 	return
+
+/proc/get_turf(turf/location as turf)
+	while (location)
+		if (istype(location, /turf))
+			return location
+
+		location = location.loc
+	return null
+
+/proc/get_turf_or_move(turf/location as turf)
+	location = get_turf(location)
+	return location
+
 
 
 /proc/dir2text(direction)
@@ -43,51 +65,58 @@
 		else
 	return
 
-/obj/proc/hear_talk(mob/M as mob, message,italics,alt_name)
-	var/mob/mo = locate(/mob) in src
-	var/list/understood = list()
-	var/list/didnot = list()
-	if(mo)
-		for(var/mob/mos in src)
-			if(mos.say_understands(M))
-				understood += mos
-				continue
-			else
-				didnot += mos
-	var/rendered
-	if (length(understood))
-		var/message_a = M.say_quote(message)
-		if (italics)
-			message_a = "<i>[message_a]</i>"
+/proc/is_type_in_list(var/atom/A, var/list/L)
+	for(var/type in L)
+		if(istype(A, type))
+			return 1
+	return 0
 
-		if (!istype(M, /mob/living/carbon/human) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
-			rendered = "<span class='game say'><span class='name'>[M.name]</span> <span class='message'>[message_a]</span></span>"
-		else if(M.face_dmg)
-			rendered = "<span class='game say'><span class='name'>Unknown</span> <span class='message'>[message_a]</span></span>"
-		else
-			rendered = "<span class='game say'><span class='name'>[M.real_name]</span>[alt_name] <span class='message'>[message_a]</span></span>"
+//Quick type checks for some tools
+var/global/list/common_tools = list(
+/obj/item/weapon/cable_coil,
+/obj/item/weapon/wrench,
+/obj/item/weapon/weldingtool,
+/obj/item/weapon/screwdriver,
+/obj/item/weapon/wirecutters,
+/obj/item/device/multitool,
+/obj/item/weapon/crowbar)
 
-		for (var/mob/MS in understood)
-			MS.show_message(rendered, 6)
+/proc/istool(O)
+	if(O && is_type_in_list(O, common_tools))
+		return 1
+	return 0
 
-	if (length(didnot))
-		var/message_b
+/proc/iswrench(O)
+	if(istype(O, /obj/item/weapon/wrench))
+		return 1
+	return 0
 
-		if(M.say_unknown())
-			message_b = M.say_unknown()
+/proc/iswelder(O)
+	if(istype(O, /obj/item/weapon/weldingtool))
+		return 1
+	return 0
 
-		else if (M.voice_message)
-			message_b = M.voice_message
-		else
-			message_b = Ellipsis(message)
-			message_b = M.say_quote(message_b)
+/proc/iscoil(O)
+	if(istype(O, /obj/item/weapon/cable_coil))
+		return 1
+	return 0
 
-		if (italics)
-			message_b = "<i>[message_b]</i>"
+/proc/iswirecutter(O)
+	if(istype(O, /obj/item/weapon/wirecutters))
+		return 1
+	return 0
 
-		rendered = "<span class='game say'><span class='name'>[M.voice_name]</span> <span class='message'>[message_b]</span></span>"
+/proc/isscrewdriver(O)
+	if(istype(O, /obj/item/weapon/screwdriver))
+		return 1
+	return 0
 
-		for (var/mob/MS in didnot)
-			MS.show_message(rendered, 6)
+/proc/ismultitool(O)
+	if(istype(O, /obj/item/device/multitool))
+		return 1
+	return 0
 
-	// I HATE YOU FOR THIS
+/proc/iscrowbar(O)
+	if(istype(O, /obj/item/weapon/crowbar))
+		return 1
+	return 0
