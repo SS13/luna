@@ -1,10 +1,10 @@
-/obj/machinery/autolathe/attackby(var/obj/item/O as obj, var/mob/user as mob)
+/obj/machinery/autolathe/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
 	if(!O)
 		return
 	if (istype(O, /obj/item/weapon/screwdriver))
 		if (!opened)
 			src.opened = 1
-			src.icon_state = "autolathe_t"
+			src.icon_state = "autolathef"
 		else
 			src.opened = 0
 			src.icon_state = "autolathe"
@@ -20,14 +20,15 @@
 			m_amount += 50000
 		return
 */
-	if (istype(O, /obj/item/stack/sheet/metal))
+	if (istype(O, /obj/item/weapon/sheet/metal))
 		if (m_amount < m_max)
 			var/count = 0
+			var/sheet_amount = O:height * O:width * O:length * 100000.0
 			spawn(16)
 				if (O)
 					flick("autolathe_c",src)
-					while(m_amount < (150000 - 3500) && O:amount)
-						m_amount += 3500
+					while(m_amount < (150000 - sheet_amount) && O:amount)
+						m_amount += sheet_amount
 						O:amount--
 						count++
 
@@ -39,15 +40,15 @@
 		else
 			user << "The autolathe is full. Please remove metal from the autolathe in order to insert more."
 
-	else if (istype(O, /obj/item/stack/sheet/glass) || istype(O, /obj/item/stack/sheet/rglass))
+	else if (istype(O, /obj/item/weapon/sheet/glass) || istype(O, /obj/item/weapon/sheet/rglass))
 		if (g_amount < g_max)
 			var/count = 0
-			var/sheet_amount = 3500
+			var/sheet_amount = O:height * O:width * O:length * 100000.0
 			spawn(16)
 				if (O)
 					flick("autolathe_c",src)
 					while(g_amount < (g_max - sheet_amount) && O:amount)
-						g_amount += 3500
+						g_amount += sheet_amount
 						O:amount--
 						count++
 
@@ -99,7 +100,7 @@
 	if (src.temp)
 		dat = text("<TT>[]</TT><BR><BR><A href='?src=\ref[];temp=1'>Clear Screen</A>", src.temp, src)
 	else
-		dat = text("<B>Metal amount:</B> [m_amount] cm<sup>3</sup> (MAX: 150,000)<BR>\n<FONT color = blue><B>Glass amount:</B></FONT> [g_amount] cm<sup>3</sup> (MAX: 75,000)<HR>")
+		dat = text("<B>Metal Amount:</B> [m_amount] cm<sup>3</sup> (MAX: 150,000)<BR>\n<FONT color = blue><B>Glass Amount:</B></FONT> [g_amount] cm<sup>3</sup> (MAX: 75,000)<HR>")
 		var/list/objs = list()
 		objs += src.L
 		if (src.hacked)
@@ -124,10 +125,12 @@
 				m_amount = 0
 			if(g_amount < 0)
 				g_amount = 0
-			flick("autolathe_n",src)
 			spawn(16)
-				new template.type(src.loc)
-				src.icon_state = "autolathe"
+				flick("autolathe_c",src)
+				spawn(16)
+					flick("autolathe_o",src)
+					spawn(16)
+						new template.type(src.loc)
 	if(href_list["act"])
 		if(href_list["act"] == "pulse")
 			if (!istype(usr.equipped(), /obj/item/device/multitool))
@@ -183,24 +186,25 @@
 	src.L += new /obj/item/device/multitool(src)
 	src.L += new /obj/item/device/flashlight(src)
 	src.L += new /obj/item/weapon/extinguisher(src)
-	src.L += new /obj/item/stack/sheet/metal(src)
-	src.L += new /obj/item/stack/sheet/glass(src)
-	src.L += new /obj/item/stack/sheet/plasteel(src)
-	src.L += new /obj/item/stack/sheet/rglass(src)
-	src.L += new /obj/item/stack/rods(src)
+	src.L += new /obj/item/weapon/sheet/metal(src)
+	src.L += new /obj/item/weapon/sheet/glass(src)
+	src.L += new /obj/item/weapon/sheet/r_metal(src)
+	src.L += new /obj/item/weapon/sheet/rglass(src)
+	src.L += new /obj/item/weapon/rods(src)
 	src.L += new /obj/item/weapon/track(src)
 	src.L += new /obj/item/weapon/rcd_ammo(src)
 	src.L += new /obj/item/weapon/scalpel(src)
 	src.L += new /obj/item/weapon/circular_saw(src)
 	src.L += new /obj/item/device/t_scanner(src)
-	src.L += new /obj/item/weapon/circuitboard/circuitry(src)
+	src.L += new /obj/item/weapon/circuitry(src)
 	src.L += new /obj/item/weapon/voicedisk(src)
+	src.L += new /obj/item/weapon/ammo/a38
 	src.L += new /obj/item/weapon/recorder(src)
 	src.L += new /obj/item/weapon/reagent_containers/glass/bucket(src)
 	src.LL += new /obj/item/weapon/flamethrower(src)
-	src.L += new /obj/item/device/igniter(src)
-	src.L += new /obj/item/device/timer(src)
-	src.LL += new /obj/item/weapon/rcd(src)
+	src.LL += new /obj/item/device/igniter(src)
+	src.LL += new /obj/item/device/timer(src)
+	//src.LL += new /obj/item/weapon/rcd(src)
 	src.LL += new /obj/item/device/infra(src)
 	src.LL += new /obj/item/device/infra_sensor(src)
 	src.LL += new /obj/item/weapon/handcuffs(src)
@@ -226,4 +230,4 @@
 
 
 /obj/machinery/autolathe/proc/shock(M as mob)
-	return Electrocute(M)
+	return src.Electrocute(M)
