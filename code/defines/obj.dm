@@ -7,12 +7,6 @@
 	var/explosionstrength = 0
 	var/spawnchance = null 	//If this is defined, this is the percent chance that this object will spawn.  Checked in New().  Intended to be defined on the map, for some randomness in item placement.
 
-	var/origin_tech = null	//Used by R&D to determine what research bonuses it grants.
-	var/reliability = 100	//Used by SOME devices to determine how reliable they are.
-	var/crit_fail = 0
-	var/throwforce = 1
-	var/unacidable = 0
-
 	var/list/NetworkNumber = list( )
 	var/list/Networks = list( )
 
@@ -132,6 +126,15 @@
 	anchored = 1.0
 	flags = TABLEPASS
 
+
+/obj/bedsheetbin
+	name = "linen bin"
+	desc = "A bin for containing bedsheets."
+	icon = 'items.dmi'
+	icon_state = "bedbin"
+	var/amount = 23.0
+	anchored = 1.0
+
 /obj/begin
 	name = "begin"
 	icon = 'stationobjs.dmi'
@@ -188,6 +191,19 @@
 	name = "monkey"
 	var/mob/living/carbon/monkey/target = null
 
+/obj/grille
+	desc = "A piece of metal with evenly spaced gridlike holes in it. Blocks large object but lets small items, gas, or energy beams through."
+	name = "grille"
+	icon = 'structures.dmi'
+	icon_state = "grille"
+	density = 1
+	layer = 2.9
+	var/health = 10.0
+	var/destroyed = 0.0
+	anchored = 1.0
+	flags = FPRINT | CONDUCT
+	pressure_resistance = 5*ONE_ATMOSPHERE
+
 /obj/item
 	name = "item"
 	icon = 'items.dmi'
@@ -196,7 +212,7 @@
 	var/force = null
 	var/item_state = null
 	var/damtype = "brute"
-	throwforce = 10
+	var/throwforce = 10
 	var/r_speed = 1.0
 	var/health = null
 	var/burn_point = null
@@ -234,6 +250,17 @@
 	flags = FPRINT | TABLEPASS| CONDUCT
 	item_state = "electronic"
 	var/status = 1
+
+/obj/item/device/flashlight
+	name = "flashlight"
+	desc = "A hand-held emergency light."
+	icon_state = "flight0"
+	var/on = 0
+	w_class = 2
+	item_state = "flight"
+	flags = FPRINT | ONBELT | TABLEPASS | CONDUCT
+	m_amt = 50
+	g_amt = 20
 
 /obj/item/device/healthanalyzer
 	name = "Health Analyzer"
@@ -350,6 +377,8 @@
 	anchored = 1.0
 
 
+
+
 /*/obj/landmark/ptarget
 	name = "portal target"
 	icon = 'screen1.dmi'
@@ -383,6 +412,16 @@
 	icon = 'projectiles.dmi'
 	var/damage = 0.0
 	var/range = 10.0
+
+/obj/lattice
+	desc = "A lightweight support lattice."
+	name = "lattice"
+	icon = 'structures.dmi'
+	icon_state = "lattice"
+	density = 0
+	anchored = 1.0
+	layer = 2
+	//	flags = 64.0
 
 /obj/list_container
 	name = "list container"
@@ -479,6 +518,14 @@
 	name = "Projection"
 	anchored = 1.0
 
+/obj/rack
+	name = "rack"
+	icon = 'objects.dmi'
+	icon_state = "rack"
+	density = 1
+	flags = FPRINT
+	anchored = 1.0
+
 /obj/screen
 	name = "screen"
 	icon = 'screen1.dmi'
@@ -516,85 +563,77 @@
 	icon_state = "x"
 	anchored = 1.0
 
-/obj/structure/stool
+/obj/stool
 	name = "stool"
 	icon = 'objects.dmi'
 	icon_state = "stool"
 	flags = FPRINT
-	anchored = 1.0
+	anchored = 0
 	pressure_resistance = 3*ONE_ATMOSPHERE
 
-/obj/structure/stool/barstool
+/obj/stool/barstool
 	name = "barstool"
 	icon_state = "barstool"
+	anchored = 1.0
 
-/obj/structure/stool/bed
+/obj/stool/bed
 	name = "bed"
 	desc = "This is used to lie in, sleep in or strap on."
 	icon_state = "bed"
 	anchored = 1.0
 	var/list/buckled_mobs = list(  )
 
-/obj/structure/stool/bed/chair
+/obj/stool/chair
 	name = "chair"
 	desc = "You sit in this. Either by will or force."
 	icon_state = "chair"
 	var/status = 0.0
-	anchored = 1.0
-
-/obj/structure/stool/bed/chair/proc/handle_rotation()	//making this into a seperate proc so office chairs can call it on Move()
-	if(src.dir == NORTH)
-		src.layer = FLY_LAYER
-	else
-		src.layer = OBJ_LAYER
-
-	for(var/mob/M in src.buckled_mobs)
-		if(M.loc != src.loc)
-			M.buckled = null //Temporary, so Move() succeeds.
-			if(!M.Move(loc))
-				src:buckled_mobs -= M
-			else
-				M.buckled = src //Restoring
-		if(M)
-			M.dir = dir
-
-/obj/structure/stool/bed/chair/office
-	icon_state = "officechair_white"
 	anchored = 0
+	var/list/buckled_mobs = list(  )
 
-/obj/structure/stool/bed/chair/office/Move()
-	..()
-	handle_rotation()
-
-/obj/structure/stool/bed/chair/office/dark
-	icon_state = "officechair_dark"
-
-/obj/structure/stool/bed/chair/e_chair
+/obj/stool/chair/e_chair
 	name = "electrified chair"
-	icon_state = "echair0"
+	icon_state = "e_chair0"
 	var/atom/movable/overlay/overl = null
 	var/on = 0.0
 	var/obj/item/assembly/shock_kit/part1 = null
 	var/last_time = 1.0
 
-/obj/structure/stool/bed/chair/comfy
+/obj/stool/chair/comfy
 	name = "comfy chair"
 	desc = "It looks comfy."
+	anchored = 1.0
 
-/obj/structure/stool/bed/chair/comfy/brown
+/obj/stool/chair/comfy/brown
 	icon_state = "comfychair_brown"
 
-/obj/structure/stool/bed/chair/comfy/beige
+/obj/stool/chair/comfy/beige
 	icon_state = "comfychair_beige"
 
-/obj/structure/stool/bed/chair/comfy/teal
+/obj/stool/chair/comfy/teal
 	icon_state = "comfychair_teal"
 
-/obj/structure/stool/bed/chair/comfy/black
+/obj/stool/chair/comfy/black
 	icon_state = "comfychair_black"
 
-/obj/structure/stool/bed/chair/comfy/lime
+/obj/stool/chair/comfy/lime
 	icon_state = "comfychair_lime"
+
+/obj/table
+	name = "table"
+	icon = 'structures.dmi'
+	icon_state = "table"
+	density = 1
+	anchored = 1.0
+
+/obj/table/reinforced
+	name = "reinforced table"
+	icon_state = "reinf_table"
+	var/status = 2
+
+/obj/table/woodentable
+	name = "wooden table"
+	icon_state = "woodentable"
 
 /obj/mopbucket
 	desc = "Fill it with water, but don't forget a mop!"
@@ -606,7 +645,17 @@
 	pressure_resistance = ONE_ATMOSPHERE
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
 
-/obj/structure/displaycase
+/obj/kitchenspike
+	name = "a meat spike"
+	icon = 'kitchen.dmi'
+	icon_state = "spike"
+	desc = "A spike for collecting meat from animals"
+	density = 1
+	anchored = 1
+	var/meat = 0
+	var/occupied = 0
+
+/obj/displaycase
 	name = "Display Case"
 	icon = 'stationobjs.dmi'
 	icon_state = "glassbox1"
@@ -636,7 +685,7 @@ obj/item/brain
 		if(src.owner)
 			src.name = "[src.owner]'s brain"
 
-/obj/structure/noticeboard
+/obj/noticeboard
 	name = "Notice Board"
 	icon = 'stationobjs.dmi'
 	icon_state = "nboard00"
