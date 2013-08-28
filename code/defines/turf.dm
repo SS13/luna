@@ -36,14 +36,6 @@
 	heat_capacity = 700000
 	mouse_opacity = 2
 
-/turf/space/sand
-	name = "sand"
-	icon = 'sand.dmi'
-	icon_state = "placeholder"
-	sand = 1
-	temperature = T20C + 80
-
-
 /turf/space/New()
 	. = ..()
 	if(!sand)
@@ -379,118 +371,39 @@ turf/space/hull/New()
 /turf/unsimulated/wall/other
 	icon_state = "r_wall"
 
-/turf/proc
-	AdjacentTurfs()
+/turf/proc/AdjacentTurfs()
+	var/L[] = new()
+	for(var/turf/simulated/t in oview(src,1))
+		if(!t.density && !LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
+			L.Add(t)
+	return L
 
-		var/L[] = new()
-		for(var/turf/simulated/t in oview(src,1))
-			if(!t.density && !LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
+/turf/proc/Railturfs()
+	var/L[] = new()
+	for(var/turf/simulated/t in oview(src,1))
+		if(!t.density && !LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
+			if(locate(/obj/rail) in t)
 				L.Add(t)
+	return L
 
-		return L
-	Railturfs()
+/turf/proc/Distance(turf/t)
+	if(!src || !t)
+		return 1e31
+	t = get_turf(t)
+	if(get_dist(src, t) == 1 || src.z != t.z)
+		var/cost = (src.x - t.x) * (src.x - t.x) + (src.y - t.y) * (src.y - t.y) + (src.z - t.z) * (src.z - t.z) * 3
+		cost *= (pathweight+t.pathweight)/2
+		return cost
+	else
+		return max(get_dist(src,t), 1)
 
-		var/L[] = new()
-		for(var/turf/simulated/t in oview(src,1))
-			if(!t.density && !LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
-				if(locate(/obj/rail) in t)
-					L.Add(t)
+/turf/proc/AdjacentTurfsSpace()
+	var/L[] = new()
+	for(var/turf/t in oview(src,1))
+		if(!t.density)
+			if(!LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
+				L.Add(t)
+	return L
 
-		return L
-	Distance(turf/t)
-		if(!src || !t)
-			return 1e31
-		t = get_turf(t)
-		if(get_dist(src, t) == 1 || src.z != t.z)
-			var/cost = (src.x - t.x) * (src.x - t.x) + (src.y - t.y) * (src.y - t.y) + (src.z - t.z) * (src.z - t.z) * 3
-			cost *= (pathweight+t.pathweight)/2
-			return cost
-		else
-			return max(get_dist(src,t), 1)
-	AdjacentTurfsSpace()
-		var/L[] = new()
-		for(var/turf/t in oview(src,1))
-			if(!t.density)
-				if(!LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
-					L.Add(t)
-
-		return L
-	process()
-		return
-
-/turf/simulated/asteroid
-	oxygen = 0.01
-	nitrogen = 0.01
-	var/mapped = 0
-	name = "rocky floor"
-	icon = 'mining.dmi'
-	icon_state = "floor"
-
-/turf/simulated/asteroid/wall
-	var/health = 40
-	name = "rocky wall"
-	icon = 'mining.dmi'
-	icon_state = "wall"
-	oxygen = 0.01
-	nitrogen = 0.01
-	opacity = 1
-	density = 1
-	blocks_air = 1
-
-/turf/simulated/asteroid/wall/planet
-	mapped = 1
-	thermal_conductivity = 0
-
-/turf/simulated/asteroid/wall/New()
-	health+= rand(1)
-	..()
-
-/turf/simulated/asteroid/wall/attackby(obj/item/weapon/W, mob/user)
-	if(istype(W, /obj/item/weapon/pickaxe))
-		if(W:active)
-			src.health -= 20
-			user << "You use \the [W.name] to hack away part of the unwanted ore."
-		else
-			src.health -= 5
-			user << "The [W.name] wasn't very effective against the ore."
-		if(src.health < 1)
-			src.mine()
-
-/turf/simulated/asteroid/wall/laser_act(var/obj/beam/e_beam/b)
-	var/power = b.power
-	//Get the collective laser power
-	src.health-=power/100
-	if(src.health<1)
-		src.mine()
-
-/turf/simulated/asteroid/wall/proc/mine()
-	while(!rand(1))
-		if(rand(2))
-			new/obj/item/weapon/ore(locate(src.x,src.y,src.z))
-		else
-			new/obj/item/weapon/artifact(locate(src.x,src.y,src.z))
-	processing_turfs.Remove(src)
-	new/turf/simulated/asteroid/floor(locate(src.x,src.y,src.z))
-
-
-/turf/simulated/asteroid/floor
-	oxygen = 0.01
-	nitrogen = 0.01
-	level = 1
-	name = "rocky floor"
-	icon = 'mining.dmi'
-	icon_state = "floor"
-
-/turf/simulated/asteroid/floor/planet
-	mapped = 1
-	name = "sand"
-	icon = 'sand.dmi'
-	icon_state = "placeholder"
-	carbon_dioxide = 0.3 * ONE_ATMOSPHERE
-	toxins = 0.54 * ONE_ATMOSPHERE
-	nitrogen = 0.03 * ONE_ATMOSPHERE
-	temperature = 742
-
-/turf/simulated/asteroid/floor/planet/New()
-	icon_state = "sand[rand(1,3)]"
-	return ..()
+/turf/proc/process()
+	return

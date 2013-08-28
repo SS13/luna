@@ -1,4 +1,4 @@
-/obj/proc/Electrocute(mob/user)
+/proc/Electrocute(mob/user)
 	if(!user)
 		return 0
 
@@ -17,7 +17,7 @@
 	if(prot == 0)		// elec insulted gloves protect completely
 		return 0
 
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(5, 1, src)
 	s.start()
 
@@ -33,5 +33,5 @@
 	if(user.weakened < 20*prot)	user.weakened = 20*prot
 	for(var/mob/M in viewers(user))
 		if(M == user)	continue
-		M.show_message("\red [user.name] was shocked by the [name]!", 3, "\red You hear a heavy electrical crack", 2)
+		M.show_message("\red [user.name] was shocked!", 3, "\red You hear a heavy electrical crack", 2)
 	return 1

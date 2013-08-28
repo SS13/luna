@@ -101,4 +101,5 @@
 	new /obj/item/weapon/baton(src)
 	new /obj/item/clothing/gloves/black(src)
 	new /obj/item/weapon/storage/backpack/security(src)
+	new /obj/item/weapon/storage/flashbang_kit(src)
 	return

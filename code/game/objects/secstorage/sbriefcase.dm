@@ -16,7 +16,7 @@
 	new /obj/item/weapon/pen(src)
 
 /obj/item/weapon/secstorage/sbriefcase/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & 16) && prob(50))
+	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << "\red The [src] slips out of your hand and hits your head."
 		usr.bruteloss += 10
 		usr.paralysis += 2

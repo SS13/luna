@@ -25,7 +25,7 @@ obj/item/weapon/sparkler
 	icon = 'fireworks.dmi'
 	icon_state = "sparkler_0"
 	var/litzor = 0
-	var/datum/effects/system/spark_spread/S
+	var/datum/effect/effect/system/spark_spread/S
 obj/item/weapon/sparkler/attackby(obj/item/weapon/W,mob/user)
 	if(litzor)
 		return
@@ -43,9 +43,9 @@ obj/item/weapon/sparkler/attackby(obj/item/weapon/W,mob/user)
 			S.start()
 			sleep(10)
 		del(src)
-/obj/crate/fireworks
+/obj/structure/crate/fireworks
 	name = "Fireworks!"
-/obj/crate/fireworks/New()
+/obj/structure/crate/fireworks/New()
 	new /obj/item/weapon/sparkler(src)
 	new /obj/item/weapon/sparkler(src)
 	new /obj/item/weapon/sparkler(src)

@@ -3,13 +3,13 @@
 	config_tag = "traitor"
 
 	uplink_welcome = "Syndicate Uplink Console:"
-	uplink_items = {"/obj/item/weapon/storage/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
-/obj/item/weapon/storage/syndie_kit/imp_compress:5:Compressed matter implant, with injector;/obj/item/weapon/storage/syndie_kit/imp_vfac:5:Viral factory implant, with injector;
-/obj/item/weapon/storage/syndie_kit/imp_explosive:6:Explosive implant, with injector;/obj/item/device/hacktool:4:Hacktool;
+	uplink_items = {"/obj/item/weapon/storage/box/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
+/obj/item/weapon/storage/box/syndie_kit/imp_compress:5:Compressed matter implant, with injector;/obj/item/weapon/storage/box/syndie_kit/imp_vfac:5:Viral factory implant, with injector;
+/obj/item/weapon/storage/box/syndie_kit/imp_explosive:6:Explosive implant, with injector;/obj/item/device/hacktool:4:Hacktool;
 /obj/item/clothing/under/chameleon:2:Chameleon Jumpsuit;/obj/item/weapon/gun/revolver:7:Revolver;
 /obj/item/weapon/ammo/a357:3:Revolver Ammo;/obj/item/weapon/card/emag:3:Electromagnetic card;
 /obj/item/weapon/card/id/syndicate:4:Fake ID;/obj/item/clothing/glasses/thermal:4:Thermal Glasses;
-/obj/item/weapon/storage/emp_kit:4:Box of EMP grenades;/obj/item/device/powersink:5:Power sink;
+/obj/item/weapon/storage/box/emp:4:Box of EMP grenades;/obj/item/device/powersink:5:Power sink;
 /obj/item/weapon/cartridge/syndicate:3:Detomatix PDA cart;/obj/item/device/chameleon:4:Chameleon projector;
 /obj/item/weapon/sword:5:Energy sword;/obj/item/weapon/pen/sleepypen:4:Sleepy pen;
 /obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;/obj/item/clothing/mask/gas/voice:3:Voice changer;
@@ -185,7 +185,7 @@
 		for(var/datum/objective/objective in traitor.objectives)
 			traitor.current << "<B>Objective #[obj_count]</B>: [objective.explanation_text]"
 			obj_count++
-		traitor.current << "\red <B>You have 1 and 1/2 hours to complete your objective</B>"
+/*		traitor.current << "\red <B>You have 1 and 1/2 hours to complete your objective</B>"
 		traitor.current << "\red <B>If you do not complete your objective and return within the allotted time, we will be forced to reveal your identity</B>"
 		spawn(54000*tick_multiplier)
 			command_alert("Summary downloaded and printed out at all communications consoles.", "The traitor has been determined")
@@ -202,6 +202,7 @@
 			spawn(12000*tick_multiplier)
 				command_alert("Repeating the previous message over intercoms due to urgency. The station has a traitor onboard by the name of [traitor.current.real_name], please arrest them and bring them on the emergency shuttle at once", "The traitor has been determined")
 
+Я соснул с этой охуеннейшей фичи и мне горит. Кому это нужно? Только ограничивает триторов в действиях. Пусть СБ занимаются тритороловством. - ACCount*/
 
 	spawn (rand(waittime_l, waittime_h)*tick_multiplier)
 		send_intercept()

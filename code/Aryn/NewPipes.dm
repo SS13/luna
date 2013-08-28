@@ -9,7 +9,7 @@
 
 	ConnectableTypes = list( /obj/machinery/atmos_new )
 	NetworkControllerType = /datum/UnifiedNetworkController/FlexipipeNetworkController
-	DropCablePieceType = /obj/item/weapon/CableCoil/flexipipe
+	DropCablePieceType = /obj/item/weapon/cable_coil/flexipipe
 	EquivalentCableType = /obj/cabling/flexipipe
 	var/conductivity = WALL_HEAT_TRANSFER_COEFFICIENT
 
@@ -71,7 +71,7 @@
 					if(10) icon_state = "2-8"
 				. = ..()
 
-/obj/item/weapon/CableCoil/flexipipe
+/obj/item/weapon/cable_coil/flexipipe
 	icon_state = "pipecoil3"
 	CoilColour = "pipe"
 	BaseName  = "Tubing"

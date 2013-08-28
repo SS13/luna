@@ -132,7 +132,7 @@
 							usr.r_hand = cell
 
 						cell.add_fingerprint(usr)
-						cell.updateicon()
+						cell.update_icon()
 						cell = null
 
 						usr.visible_message("\blue [usr] removes the power cell from \the [src].", "\blue You remove the power cell from \the [src].")

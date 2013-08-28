@@ -84,7 +84,7 @@
 			user << "\blue The furnace is now full!"
 
 	MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
-		if (istype(O, /obj/crate/))
+		if (istype(O, /obj/structure/crate/))
 			if (src.fuel >= src.maxfuel)
 				user << "\red The furnace is already full!"
 				return

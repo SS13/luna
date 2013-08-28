@@ -385,17 +385,17 @@
 			else
 				for(var/mob/O in viewers(user, null)) O.show_message(text("\blue [] loads [] into the [].", user, W, src), 1)
 				load = 1
-		else if(istype(W, /obj/item/weapon/sheet/))
+		else if(istype(W, /obj/item/stack/sheet/))
 			for(var/mob/O in viewers(user, null)) O.show_message(text("\blue [] loads [] into the [].", user, W, src), 1)
-			if(istype(W, /obj/item/weapon/sheet/metal))
+			if(istype(W, /obj/item/stack/sheet/metal))
 				for (var/amt = W:amount, amt > 0, amt--) new /obj/item/weapon/ore/mauxite(src)
-			if(istype(W, /obj/item/weapon/sheet/r_metal))
+			if(istype(W, /obj/item/stack/sheet/plasteel))
 				for (var/amt = W:amount, amt > 0, amt--)
 					new /obj/item/weapon/ore/mauxite(src)
 					new /obj/item/weapon/ore/mauxite(src)
-			if(istype(W, /obj/item/weapon/sheet/glass))
+			if(istype(W, /obj/item/stack/sheet/glass))
 				for (var/amt = W:amount, amt > 0, amt--) new /obj/item/weapon/ore/molitz(src)
-			if(istype(W, /obj/item/weapon/sheet/rglass))
+			if(istype(W, /obj/item/stack/sheet/rglass))
 				for (var/amt = W:amount, amt > 0, amt--)
 					new /obj/item/weapon/ore/mauxite(src)
 					new /obj/item/weapon/ore/molitz(src)
@@ -416,7 +416,7 @@
 			if (prob(80)) new /obj/item/weapon/ore/molitz(src)
 			else new /obj/item/weapon/ore/plasmastone(src)
 			load = 2
-		else if(istype(W, /obj/item/weapon/rods))
+		else if(istype(W, /obj/item/stack/rods))
 			for (var/amt = W:amount, amt > 0, amt--) new /obj/item/weapon/ore/mauxite(src)
 			load = 2
 		else if(istype(W, /obj/item/clothing/))
@@ -490,7 +490,7 @@
 		src.updateUsrDialog()
 
 	MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
-		if (istype(O, /obj/crate/))
+		if (istype(O, /obj/structure/crate/))
 			for(var/mob/V in viewers(user, null)) V.show_message(text("\blue [] uses the []'s automatic ore loader on []!", user, src, O), 1)
 			var/amtload = 0
 			for (var/obj/item/weapon/ore/M in O.contents)
@@ -579,7 +579,7 @@
 			else
 				user << "\blue You feel electricity course through you harmlessly!"
 				return*/
-		var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 		s.set_up(5, 1, usr)
 		s.start()
 		user << "\red You are shocked by [src]!"
@@ -833,7 +833,7 @@
 
 /datum/manufacture/metal5
 	name = "Sheet Metal (x5)"
-	item = /obj/item/weapon/sheet/metal
+	item = /obj/item/stack/sheet/metal
 	cost1 = /obj/item/weapon/ore/mauxite
 	cname1 = "Mauxite"
 	amount1 = 5
@@ -842,7 +842,7 @@
 
 /datum/manufacture/metalR
 	name = "Reinforced Metal"
-	item = /obj/item/weapon/sheet/r_metal
+	item = /obj/item/stack/sheet/plasteel
 	cost1 = /obj/item/weapon/ore/mauxite
 	cname1 = "Mauxite"
 	amount1 = 2
@@ -851,7 +851,7 @@
 
 /datum/manufacture/glass5
 	name = "Glass Panel (x5)"
-	item = /obj/item/weapon/sheet/glass
+	item = /obj/item/stack/sheet/glass
 	cost1 = /obj/item/weapon/ore/molitz
 	cname1 = "Molitz"
 	amount1 = 5
@@ -860,7 +860,7 @@
 
 /datum/manufacture/glassR
 	name = "Reinforced Glass Panel"
-	item = /obj/item/weapon/sheet/rglass
+	item = /obj/item/stack/sheet/rglass
 	cost1 = /obj/item/weapon/ore/molitz
 	cname1 = "Molitz"
 	amount1 = 1

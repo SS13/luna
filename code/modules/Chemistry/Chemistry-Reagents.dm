@@ -12,13 +12,14 @@ datum
 		var/description = ""
 		var/datum/reagents/holder = null
 		var/reagent_state = SOLID
-		var/data = null
+		var/list/data = null
 		var/volume = 0
 		var/red = 255
 		var/green = 255
 		var/blue = 255
 		var/alpha = 255
-		var/nutriment_factor = null
+		var/nutriment_factor = 0
+		var/color = "#000000"
 		proc
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume) //By default we have a chance to transfer some
 				var/datum/reagent/self = src
@@ -50,6 +51,20 @@ datum
 				holder.remove_reagent(src.id, 0.4) //By default it slowly disappears.
 				return
 
+			on_move(var/mob/M)
+				return
+
+			// Called after add_reagents creates a new reagent.
+			on_new(var/data)
+				return
+
+			// Called when two reagents of the same are mixing.
+			on_merge(var/data)
+				return
+
+			on_update(var/atom/A)
+				return
+
 			getcolour()
 				return rgb(red,green,blue)
 
@@ -60,10 +75,8 @@ datum
 			id = "water"
 			description = "A ubiquitous chemical substance that is composed of hydrogen and oxygen."
 			reagent_state = LIQUID
-			red = 0
-			green = 150
-			blue = 255
-			alpha = 100
+			color = "#0064C8" // rgb: 0, 100, 200
+
 			reaction_turf(var/turf/T, var/volume)
 				src = null
 				if(istype(T, /turf/simulated) && volume >= 3)
@@ -104,83 +117,84 @@ datum
 				return
 
 		blood
+			data = new/list("donor"=null,"viruses"=null,"blood_DNA"=null,"blood_type"="A+","resistances"=null,"trace_chem"=null)
 			name = "Blood"
 			id = "blood"
-			description = "Carrier of oxygen and various other things essential for life."
 			reagent_state = LIQUID
-			red = 200
-			green = 0
-			blue = 0
-			var
-				blood_type = "A+"
-				blood_DNA = "unknown"
-				mob/taken_from
-				virus
-			var/datum/disease2/disease/virus2
+			color = "#C80000" // rgb: 200, 0, 0
+
+			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
+				var/datum/reagent/blood/self = src
+				src = null
+				if(self.data && self.data["viruses"])
+					for(var/datum/disease/D in self.data["viruses"])
+
+						if(D.spread_type == SPECIAL || D.spread_type == NON_CONTAGIOUS) continue
+
+						if(method == TOUCH)
+							M.contract_disease(D)
+						else //injected
+							M.contract_disease(D, 1, 0)
+
+			on_new(var/list/data)
+				if(istype(data))
+					SetViruses(src, data)
 
 			on_mob_life(mob/M)
-				if (ishuman(M) && blood_incompatible(blood_type,M:b_type))
-					M:toxloss += 1.5
-					M:oxyloss += 1.5
-					M:toxins_alert = max(1,M:toxins_alert)
-					..()
-				return
-
-			reaction_mob(mob/M,method)
-				if(virus) M.contract_disease(virus)
-				if(method == TOUCH)
-					var/mob/living/carbon/human/H = M
-					if(istype(H))
-						if(H.wear_suit)
-							H.wear_suit.add_blood(taken_from)
-						else if(H.w_uniform)
-							H.w_uniform.add_blood(taken_from)
-					else
-						H.add_blood(taken_from)
+				if (ishuman(M) && data && blood_incompatible(data["blood_type"],M:b_type))
+					M:toxloss += 1
+					M:oxyloss += 2
 				..()
 				return
-			reaction_turf(turf/T)
-				T.add_blood(taken_from)
-				return
-			reaction_obj(obj/O)
-				O.add_blood(taken_from)
+
+			on_merge(var/list/data)
+				if(src.data && data)
+					if(src.data["viruses"] || data["viruses"])
+
+						var/list/mix1 = src.data["viruses"]
+						var/list/mix2 = data["viruses"]
+
+						// Stop issues with the list changing during mixing.
+						var/list/to_mix = list()
+
+						for(var/datum/disease/advance/AD in mix1)
+							to_mix += AD
+						for(var/datum/disease/advance/AD in mix2)
+							to_mix += AD
+
+						var/datum/disease/advance/AD = Advance_Mix(to_mix)
+						if(AD)
+							var/list/preserve = list(AD)
+							for(var/D in src.data["viruses"])
+								if(!istype(D, /datum/disease/advance))
+									preserve += D
+							src.data["viruses"] = preserve
+				return 1
+
+		vaccine
+			//data must contain virus type
+			name = "Vaccine"
+			id = "vaccine"
+			reagent_state = LIQUID
+			color = "#C81040" // rgb: 200, 16, 64
+
+			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
+				var/datum/reagent/vaccine/self = src
+				src = null
+				if(islist(self.data) && method == INGEST)
+					for(var/datum/disease/D in M.viruses)
+						if(D.GetDiseaseID() in self.data)
+							D.cure()
+					M.resistances |= self.data
 				return
 
-			proc/copy_from(mob/living/carbon/human/M)
-				if(istype(M,/datum/reagent/blood))
-					var/datum/reagent/blood/other = M
-					blood_type = other.blood_type
-					blood_DNA = other.blood_DNA
-					id = other.id
-					taken_from = other.taken_from
-					virus = other.virus
-					if(other.virus2)
-						virus2 = other.virus2.getcopy()
-					description = other.description
-				if(!istype(M))
-					if(istype(M,/mob/living/carbon/monkey))
-						blood_type = "O+"
-						blood_DNA = M.dna.unique_enzymes
-						id = "blood-[M.dna.unique_enzymes]"
-						taken_from = M
-						virus = M.virus
-						description = "Type: [blood_type]<br>DNA: [blood_DNA]"
-						if(M.virus2)
-							virus2 = M.virus2.getcopy()
-					return 0
-				blood_type = M.b_type
-				blood_DNA = M.dna.unique_enzymes
-				id = "blood"
-				taken_from = M
-				virus = M.virus
-				description = "Type: [blood_type]<br>DNA: [blood_DNA]"
-				if(M.virus2)
-					virus2 = M.virus2.getcopy()
-				return 1
+			on_merge(var/list/data)
+				if(istype(data))
+					src.data |= data.Copy()
 
 		lube
 			name = "Space Lube"
-			id = "lube"
+			color = "#009CA8" // rgb: 0, 156, 168
 			description = "Lubricant is a substance introduced between two moving surfaces to reduce the friction and wear between them. Giggity."
 			reagent_state = LIQUID
 			alpha = 50
@@ -265,11 +279,11 @@ datum
 				if(!M) M = holder.my_atom
 				if(!data) data = 1
 				switch(data)
-					if(1 to 15)
+					if(1 to 20)
 						M.eye_blurry = max(M.eye_blurry, 10)
-					if(15 to 25)
+					if(20 to 35)
 						M:drowsyness  = max(M:drowsyness, 20)
-					if(25 to INFINITY)
+					if(35 to INFINITY)
 						M:paralysis = max(M:paralysis, 20)
 						M:drowsyness  = max(M:drowsyness, 30)
 				data++
@@ -296,19 +310,20 @@ datum
 					if(1 to 15)
 						M.eye_blurry = max(M.eye_blurry, 10)
 					if(15 to 25)
-						M:drowsyness  = max(M:drowsyness, 20)
+						M.drowsyness  = max(M.drowsyness, 20)
 					if(25 to INFINITY)
 						M.sleeping += 1
+						M.adjustOxyLoss(-M.getOxyLoss())
+						M.SetWeakened(0)
+						M.SetStunned(0)
+						M.SetParalysis(0)
 						M.dizziness = 0
 						M.drowsyness = 0
 						M.stuttering = 0
 						M.confused = 0
 						M.jitteriness = 0
-//					if(125 to INFINITY)
-//						M:adjustToxLoss(0.1)
 				..()
 				return
-
 
 		inaprovaline
 			name = "Inaprovaline"
@@ -328,6 +343,8 @@ datum
 			id = "space_drugs"
 			description = "An illegal chemical compound used as drug."
 			reagent_state = LIQUID
+			color = "#60A584" // rgb: 96, 165, 132
+
 			on_mob_life(var/mob/M)
 				if(!M) M = holder.my_atom
 				M.druggy = max(M.druggy, 15)
@@ -336,70 +353,81 @@ datum
 				holder.remove_reagent(src.id, 0.2)
 				return
 
+		serotrotium
+			name = "Serotrotium"
+			id = "serotrotium"
+			description = "A chemical compound that promotes concentrated production of the serotonin neurotransmitter in humans."
+			reagent_state = LIQUID
+			color = "#202040" // rgb: 20, 20, 40
+
+			on_mob_life(var/mob/living/M as mob)
+				if(ishuman(M))
+					if(prob(7)) M.emote(pick("twitch","drool","moan","gasp"))
+					holder.remove_reagent(src.id, 0.1)
+				return
+
 		silicate
 			name = "Silicate"
 			id = "silicate"
 			description = "A compound that can be used to reinforce glass."
 			reagent_state = LIQUID
+			color = "#C7FFFF" // rgb: 199, 255, 255
+
 			reaction_obj(var/obj/O, var/volume)
 				src = null
-				if(istype(O,/obj/window))
+				if(istype(O,/obj/structure/window))
 					O:health = O:health * 2
 					var/icon/I = icon(O.icon,O.icon_state,O.dir)
 					I.SetIntensity(1.15,1.50,1.75)
 					O.icon = I
 				return
 
-		copper
-			name = "Copper"
-			id = "copper"
-			description = "A highly ductile metal."
-			red = 110
-			green = 59
-			blue = 8
-
-
 		oxygen
 			name = "Oxygen"
 			id = "oxygen"
 			description = "A colorless, odorless gas."
 			reagent_state = GAS
-			red = 128
-			green = 128
-			blue = 128
+			color = "#808080" // rgb: 128, 128, 128
+
+		copper
+			name = "Copper"
+			id = "copper"
+			description = "A highly ductile metal."
+			color = "#6E3B08" // rgb: 110, 59, 8
 
 		nitrogen
 			name = "Nitrogen"
 			id = "nitrogen"
 			description = "A colorless, odorless, tasteless gas."
 			reagent_state = GAS
-			red = 128
-			green = 128
-			blue = 128
-
+			color = "#808080" // rgb: 128, 128, 128
 
 		hydrogen
 			name = "Hydrogen"
 			id = "hydrogen"
 			description = "A colorless, odorless, nonmetallic, tasteless, highly combustible diatomic gas."
 			reagent_state = GAS
+			color = "#808080" // rgb: 128, 128, 128
 
 		potassium
 			name = "Potassium"
 			id = "potassium"
 			description = "A soft, low-melting solid that can easily be cut with a knife. Reacts violently with water."
 			reagent_state = SOLID
+			color = "#A0A0A0" // rgb: 160, 160, 160
 
 		mercury
 			name = "Mercury"
 			id = "mercury"
 			description = "A chemical element."
 			reagent_state = LIQUID
+			color = "#484848" // rgb: 72, 72, 72
 
-			on_mob_life(var/mob/M)
+			on_mob_life(var/mob/living/M as mob)
 				if(!M) M = holder.my_atom
-				if(M.canmove) step(M, pick(cardinal))
-				if(prob(5)) M:emote(pick("twitch","drool","moan"))
+				if(M.canmove && istype(M.loc, /turf/space))
+					step(M, pick(cardinal))
+				if(prob(5)) M.emote(pick("twitch","drool","moan"))
 				..()
 				return
 
@@ -408,23 +436,27 @@ datum
 			id = "sulfur"
 			description = "A chemical element."
 			reagent_state = SOLID
+			color = "#BF8C00" // rgb: 191, 140, 0
 
 		carbon
 			name = "Carbon"
 			id = "carbon"
 			description = "A chemical element."
 			reagent_state = SOLID
+			color = "#1C1300" // rgb: 30, 20, 0
 
 			reaction_turf(var/turf/T, var/volume)
 				src = null
 				if(!istype(T, /turf/space))
-					new /obj/decal/cleanable/dirt(T)
+					new /obj/effect/decal/cleanable/dirt(T)
 
 		chlorine
 			name = "Chlorine"
 			id = "chlorine"
 			description = "A chemical element."
 			reagent_state = GAS
+			color = "#808080" // rgb: 128, 128, 128
+
 			on_mob_life(var/mob/M)
 				if(!M) M = holder.my_atom
 				M:toxloss++
@@ -436,6 +468,7 @@ datum
 			id = "fluorine"
 			description = "A highly-reactive chemical element."
 			reagent_state = GAS
+			color = "#808080" // rgb: 128, 128, 128
 			on_mob_life(var/mob.M)
 				if(!M) M = holder.my_atom
 				M:toxloss++
@@ -447,23 +480,27 @@ datum
 			id = "sodium"
 			description = "A chemical element."
 			reagent_state = SOLID
+			color = "#808080" // rgb: 128, 128, 128
 
 		phosphorus
 			name = "Phosphorus"
 			id = "phosphorus"
 			description = "A chemical element."
 			reagent_state = SOLID
+			color = "#832828" // rgb: 131, 40, 40
 
 		lithium
 			name = "Lithium"
 			id = "lithium"
 			description = "A chemical element."
 			reagent_state = SOLID
+			color = "#808080" // rgb: 128, 128, 128
 
-			on_mob_life(var/mob/M)
+			on_mob_life(var/mob/living/M as mob)
 				if(!M) M = holder.my_atom
-				if(M.canmove) step(M, pick(cardinal))
-				if(prob(5)) M:emote(pick("twitch","drool","moan"))
+				if(M.canmove && istype(M.loc, /turf/space))
+					step(M, pick(cardinal))
+				if(prob(5)) M.emote(pick("twitch","drool","moan"))
 				..()
 				return
 
@@ -472,6 +509,12 @@ datum
 			id = "sugar"
 			description = "The organic compound commonly known as table sugar and sometimes called saccharose. This white, odorless, crystalline powder has a pleasing, sweet taste."
 			reagent_state = SOLID
+			color = "#FFFFFF" // rgb: 255, 255, 255
+
+			on_mob_life(var/mob/living/M as mob)
+				M.nutrition += 1
+				..()
+				return
 
 		acid
 			name = "Sulphuric acid"
@@ -523,7 +566,7 @@ datum
 					O:acid(volume)
 					return
 				if(istype(O,/obj/item) && prob(40))
-					var/obj/decal/cleanable/molten_item/I = new/obj/decal/cleanable/molten_item(O.loc)
+					var/obj/effect/decal/cleanable/molten_item/I = new/obj/effect/decal/cleanable/molten_item(O.loc)
 					I.desc = "Looks like this was \an [O] some time ago."
 					for(var/mob/M in viewers(5, O))
 						M << "\red \the [O] melts."
@@ -581,7 +624,7 @@ datum
 					O:acid(volume)
 					return
 				if(istype(O,/obj/item))
-					var/obj/decal/cleanable/molten_item/I = new/obj/decal/cleanable/molten_item(O.loc)
+					var/obj/effect/decal/cleanable/molten_item/I = new/obj/effect/decal/cleanable/molten_item(O.loc)
 					I.desc = "Looks like this was \an [O] some time ago."
 					for(var/mob/M in viewers(5, O))
 						M << "\red \the [O] melts."
@@ -592,18 +635,22 @@ datum
 			id = "glycerol"
 			description = "Glycerol is a simple polyol compound. Glycerol is sweet-tasting and of low toxicity."
 			reagent_state = LIQUID
+			color = "#808080" // rgb: 128, 128, 128
 
 		nitroglycerin
 			name = "Nitroglycerin"
 			id = "nitroglycerin"
 			description = "Nitroglycerin is a heavy, colorless, oily, explosive liquid obtained by nitrating glycerol."
 			reagent_state = LIQUID
+			color = "#808080" // rgb: 128, 128, 128
 
 		radium
 			name = "Radium"
 			id = "radium"
 			description = "Radium is an alkaline earth metal. It is extremely radioactive."
 			reagent_state = SOLID
+			color = "#C7C7C7" // rgb: 199,199,199
+
 			on_mob_life(var/mob/M)
 				if(!M) M = holder.my_atom
 				M.radiation += 3
@@ -614,7 +661,7 @@ datum
 			reaction_turf(var/turf/T, var/volume)
 				src = null
 				if(!istype(T, /turf/space))
-					new /obj/decal/cleanable/greenglow(T)
+					new /obj/effect/decal/cleanable/greenglow(T)
 
 
 		ryetalyn
@@ -622,6 +669,8 @@ datum
 			id = "ryetalyn"
 			description = "Ryetalyn can cure all genetic abnomalities."
 			reagent_state = SOLID
+			color = "#C8A5DC" // rgb: 200, 165, 220
+
 			on_mob_life(var/mob/M)
 				if(!M) M = holder.my_atom
 				M.mutations = 0
@@ -635,6 +684,8 @@ datum
 			id = "thermite"
 			description = "Thermite produces an aluminothermic reaction known as a thermite reaction. Can be used to melt walls."
 			reagent_state = SOLID
+			color = "#673910" // rgb: 103, 57, 16
+
 			reaction_turf(var/turf/T, var/volume)
 				src = null
 				if(istype(T, /turf/simulated/wall))
@@ -673,76 +724,56 @@ datum
 			id = "iron"
 			description = "Pure iron is a metal."
 			reagent_state = SOLID
-			red = 200
-			green = 165
-			blue = 220
-			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
-				src = null
-				if ( (method==TOUCH && prob(33)) || method==INGEST)
-					randmuti(M)
-					if(prob(98))
-						randmutb(M)
-					else
-						randmutg(M)
-					domutcheck(M, null, 1)
-					updateappearance(M,M.dna.uni_identity)
-				return
-			on_mob_life(var/mob/M)
-				if(!M) M = holder.my_atom
-				M.radiation += 2
-				..()
-				return
+			color = "#C8A5DC" // rgb: 200, 165, 220
 
 		gold
 			name = "Gold"
 			id = "gold"
 			description = "Gold is a dense, soft, shiny metal and the most malleable and ductile metal known."
 			reagent_state = SOLID
-			red = 247
-			green = 196
-			blue = 48
+			color = "#F7C430" // rgb: 247, 196, 48
 
 		silver
 			name = "Silver"
 			id = "silver"
 			description = "A soft, white, lustrous transition metal, it has the highest electrical conductivity of any element and the highest thermal conductivity of any metal."
 			reagent_state = SOLID
-			red = 208
-			green = 208
-			blue = 208
+			color = "#D0D0D0" // rgb: 208, 208, 208
 
 		uranium
 			name ="Uranium"
 			id = "uranium"
 			description = "A silvery-white metallic chemical element in the actinide series, weakly radioactive."
 			reagent_state = SOLID
-			red = 184
-			green = 184
-			blue = 192
+			color = "#B8B8C0" // rgb: 184, 184, 192
+
+			on_mob_life(var/mob/M)
+				if(!M) M = holder.my_atom
+				M.radiation += 2
+				..()
+				return
 
 		aluminium
 			name = "Aluminium"
 			id = "aluminium"
 			description = "A silvery white and ductile member of the boron group of chemical elements."
 			reagent_state = SOLID
-			red = 168
-			green = 168
-			blue = 168
+			color = "#A8A8A8" // rgb: 168, 168, 168
 
 		silicon
 			name = "Silicon"
 			id = "silicon"
 			description = "A tetravalent metalloid, silicon is less reactive than its chemical analog carbon."
 			reagent_state = SOLID
-			red = 168
-			green = 168
-			blue = 168
+			color = "#A8A8A8" // rgb: 168, 168, 168
 
 		fuel
 			name = "Welding fuel"
 			id = "fuel"
 			description = "Required for welders. Flamable."
 			reagent_state = LIQUID
+			color = "#660000" // rgb: 102, 0, 0
+
 			reaction_obj(var/obj/O, var/volume)
 				src = null
 				var/turf/the_turf = get_turf(O)
@@ -758,6 +789,11 @@ datum
 				fuel.moles = 15
 				napalm.trace_gases += fuel
 				T.assume_air(napalm)
+				return
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M.adjustToxLoss(1)
+				..()
 				return
 
 		coffee
@@ -780,16 +816,18 @@ datum
 			id = "cleaner"
 			description = "A compound used to clean things. Now with 50% more sodium hypochlorite!"
 			reagent_state = LIQUID
+			color = "#A5F0EE" // rgb: 165, 240, 238
+
 			reaction_obj(var/obj/O, var/volume)
 				if(!O) return
-				if(istype(O,/obj/decal/cleanable))
+				if(istype(O,/obj/effect/decal/cleanable))
 					del(O)
 				else
 					O.clean_blood()
 			reaction_turf(var/turf/T, var/volume)
 				T.overlays = null
 				T.clean_blood()
-				for(var/obj/decal/cleanable/C in src)
+				for(var/obj/effect/decal/cleanable/C in src)
 					del(C)
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 				M.clean_blood()
@@ -810,6 +848,8 @@ datum
 							C:shoes.clean_blood()
 						if(C:gloves)
 							C:gloves.clean_blood()
+						if(C:glasses)
+							C:glasses.clean_blood()
 						if(C:head)
 							C:head.clean_blood()
 
@@ -848,6 +888,37 @@ datum
 						//if(prob(10))
 							//M.make_dizzy(1) doesn't seem to do anything
 
+		leporazine
+			name = "Leporazine"
+			id = "leporazine"
+			description = "Leporazine can be use to stabilize an individuals body temperature."
+			reagent_state = LIQUID
+			color = "#C8A5DC" // rgb: 200, 165, 220
+
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				if(M.bodytemperature > 310)
+					M.bodytemperature = max(310, M.bodytemperature - (40))
+				else if(M.bodytemperature < 311)
+					M.bodytemperature = min(310, M.bodytemperature + (40))
+				..()
+				return
+
+		cryptobiolin
+			name = "Cryptobiolin"
+			id = "cryptobiolin"
+			description = "Cryptobiolin causes confusion and dizzyness."
+			reagent_state = LIQUID
+			color = "#C8A5DC" // rgb: 200, 165, 220
+
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M.make_dizzy(1)
+				if(!M.confused) M.confused = 1
+				M.confused = max(M.confused, 20)
+				holder.remove_reagent(src.id, 0.2)
+				..()
+				return
 
 		space_cola
 			name = "Cola"

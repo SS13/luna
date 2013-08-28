@@ -595,7 +595,7 @@ datum
 							return 1
 					return 0
 		steal/AI
-			steal_target = /obj/machinery/aiconstruct
+			steal_target = /obj/structure/AIcore
 			explanation_text = "Steal a finished AI Construct (with brain)."
 			weight = 50
 
@@ -615,7 +615,7 @@ datum
 			check_completion()
 				if(steal_target)
 					for(var/datum/shuttle/s in shuttles)
-						for(var/obj/machinery/aiconstruct/objective in locate(s.centcom))
+						for(var/obj/structure/AIcore/objective in locate(s.centcom))
 							if (objective.buildstate == 6)
 								return 1
 					return 0

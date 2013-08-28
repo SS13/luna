@@ -55,7 +55,7 @@ obj/item/weapon/cane
 /obj/item/weapon/meltedglass/temperature_expose()
 	return
 /obj/item/weapon/handcuffs/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & 16) && prob(50))
+	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << "\red Uh ... how do those things work?!"
 		if (istype(M, /mob/living/carbon/human))
 			var/obj/equip_e/human/O = new /obj/equip_e/human(  )
@@ -119,7 +119,7 @@ obj/item/weapon/cane
 /obj/item/weapon/extinguisher/afterattack(atom/target, mob/user , flag)
 	//TODO; Add support for reagents in water.
 
-	if( istype(target, (/obj/reagent_dispensers/watertank || /obj/reagent_dispensers/hvwatertank)) && get_dist(src,target) <= 1)
+	if( istype(target, /obj/structure/reagent_dispensers/watertank) && get_dist(src,target) <= 1)
 		var/obj/o = target
 		o.reagents.trans_to(src, 50)
 		user << "\blue Extinguisher refilled"
@@ -184,31 +184,6 @@ obj/item/weapon/cane
 		src.desc = "The safety is on."
 		user << "The safety is on."
 		safety = 1
-	return
-
-/obj/item/weapon/pen/sleepypen/attack_paw(mob/user as mob)
-	return src.attack_hand(user)
-	return
-
-/obj/item/weapon/pen/sleepypen/New()
-	var/datum/reagents/R = new/datum/reagents(150)
-	reagents = R
-	R.my_atom = src
-	R.add_reagent("stoxin", 150)
-	..()
-	return
-
-/obj/item/weapon/pen/sleepypen/attack(mob/M as mob, mob/user as mob)
-	if (!( istype(M, /mob) ))
-		return
-	if (reagents.total_volume)
-		//for(var/mob/O in viewers(M, null))
-		//	O.show_message(text("\red [] has been stabbed with [] by [].", M, src, user), 1)
-		user << "\red You stab [M] with the pen."
-	//	if(prob(50)) // Is this the best solution? Feels a bit illogical not to feel something. //Googol: Makes the sleepy pen USELESS though
-	//		M << "\red You feel a tiny prick!"
-		spawn(500)
-			if(M.reagents) reagents.trans_to(M, 50)
 	return
 
 /obj/item/weapon/Bump(mob/M as mob)

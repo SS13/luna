@@ -121,7 +121,7 @@
 /obj/machinery/hologram_proj
 	name = "Hologram Projector"
 	icon = 'stationobjs.dmi'
-	icon_state = "hologram0"
+	icon_state = "holopad0"
 	var/id = null
 	var/atom/projection = null
 	anchored = 1.0
@@ -507,17 +507,6 @@
 	var/trackdir = 1		// 0 =CCW, 1=CW
 	var/nexttime = 0
 
-
-
-/obj/machinery/cell_charger
-	name = "Power Cell Charger"
-	desc = "A charging unit for Power Cells."
-	icon = 'power.dmi'
-	icon_state = "ccharger0"
-	var/obj/item/weapon/cell/charging = null
-	var/chargelevel = -1
-	anchored = 1
-
 /obj/machinery/light_switch
 	desc = "A light switch"
 	name = "Light Switch"
@@ -653,7 +642,7 @@
 	icon_deny = "sec-deny"
 	req_access_txt = "1"
 	points = 10
-	product_paths = "/obj/item/clothing/under/color/red;/obj/item/clothing/under/ftech;/obj/item/clothing/under/det;/obj/item/clothing/suit/storage/det_suit;/obj/item/clothing/head/det_hat;/obj/item/clothing/head/helmet;/obj/item/clothing/suit/armor/vest;/obj/item/clothing/suit/storage/gearharness;/obj/item/weapon/storage/belt/security;/obj/item/device/radio/headset/headset_sec;/obj/item/clothing/glasses/sunglasses;/obj/item/weapon/handcuffs;/obj/item/weapon/baton;/obj/item/weapon/gun/energy/taser_gun;/obj/item/weapon/flashbang;/obj/item/device/flash/*;/obj/item/weapon/storage/box/evidence*/"
+	product_paths = "/obj/item/clothing/under/color/red;/obj/item/clothing/under/ftech;/obj/item/clothing/under/det;/obj/item/clothing/suit/storage/det_suit;/obj/item/clothing/head/det_hat;/obj/item/clothing/head/helmet;/obj/item/clothing/suit/armor/vest;/obj/item/clothing/suit/storage/gearharness;/obj/item/weapon/storage/belt/security;/obj/item/device/radio/headset/headset_sec;/obj/item/clothing/glasses/sunglasses;/obj/item/weapon/handcuffs;/obj/item/weapon/baton;/obj/item/weapon/gun/energy/taser_gun;/obj/item/weapon/grenade/flashbang;/obj/item/device/flash/*;/obj/item/weapon/storage/box/evidence*/"
 	//product_amounts = "8;5;4"
 	product_prices = "1;1;1;1;1;3;3;3;2;1;1;1;4;4;3;3;2"
 	product_hidden = "/obj/item/kitchen/donut_box"
@@ -697,7 +686,7 @@
 	//icon_deny = "med-deny"
 	req_access_txt = "7"
 	points = 10
-	product_paths = "/obj/item/clothing/under/rank/scientist;/obj/item/clothing/suit/bio_suit;/obj/item/clothing/head/bio_hood;/obj/item/weapon/screwdriver;/obj/item/weapon/wrench;/obj/item/weapon/tank/oxygen;/obj/item/weapon/tank/plasma;/obj/item/device/transfer_valve;/obj/item/device/igniter;/obj/item/device/timer;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler;/obj/item/weapon/chem_grenade"
+	product_paths = "/obj/item/clothing/under/rank/scientist;/obj/item/clothing/suit/bio_suit;/obj/item/clothing/head/bio_hood;/obj/item/weapon/screwdriver;/obj/item/weapon/wrench;/obj/item/weapon/tank/oxygen;/obj/item/weapon/tank/plasma;/obj/item/device/transfer_valve;/obj/item/device/igniter;/obj/item/device/timer;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler;/obj/item/weapon/grenade/chem_grenade"
 	//product_amounts = "4;4;4;4;12"
 	product_prices = "1;2;2;1;1;1;2;3;2;2;2;2;2"
 	product_hidden = ""
@@ -711,7 +700,7 @@
 	icon_deny = "robotics-deny"
 	req_access_txt = "29"
 	points = 10
-	product_paths = "/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/under/rank/roboticist;/obj/item/weapon/CableCoil/power;/obj/item/weapon/optical_unit;/obj/item/weapon/circuitry;/obj/item/weapon/cell/supercharged;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler;/obj/item/device/healthanalyzer;/obj/item/weapon/scalpel;/obj/item/weapon/circular_saw;/obj/item/weapon/tank/anesthetic;/obj/item/clothing/mask/medical;/obj/item/weapon/screwdriver;/obj/item/weapon/crowbar"
+	product_paths = "/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/under/rank/roboticist;/obj/item/weapon/cable_coil/power;/obj/item/device/flash;/obj/item/weapon/circuitboard/circuitry;/obj/item/weapon/cell/supercharged;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler;/obj/item/device/healthanalyzer;/obj/item/weapon/scalpel;/obj/item/weapon/circular_saw;/obj/item/weapon/tank/anesthetic;/obj/item/clothing/mask/medical;/obj/item/weapon/screwdriver;/obj/item/weapon/crowbar"
 	//product_amounts = "4;4;4;4;12"
 	product_prices = "1;1;1;1;1;3;2;2;2;4;4;2;1;1;1"
 	product_hidden = ""
@@ -774,7 +763,7 @@
 	icon_deny = "engi-deny"
 	req_access_txt = "10"
 	points = 10
-	product_paths = "/obj/item/clothing/under/rank/chief_engineer;/obj/item/clothing/under/rank/engineer;/obj/item/clothing/shoes/orange;/obj/item/clothing/head/helmet/hardhat;/obj/item/weapon/storage/belt/utility;/obj/item/clothing/glasses/meson;/obj/item/clothing/gloves/yellow;/obj/item/weapon/screwdriver;/obj/item/weapon/crowbar;/obj/item/weapon/wirecutters;/obj/item/device/multitool;/obj/item/weapon/wrench;/obj/item/device/t_scanner;/obj/item/weapon/CableCoil/power;/obj/item/weapon/circuitry;/obj/item/weapon/cell;/obj/item/weapon/weldingtool;/obj/item/clothing/head/helmet/welding;/obj/item/weapon/light/tube;/obj/item/clothing/suit/fire"
+	product_paths = "/obj/item/clothing/under/rank/chief_engineer;/obj/item/clothing/under/rank/engineer;/obj/item/clothing/shoes/orange;/obj/item/clothing/head/helmet/hardhat;/obj/item/weapon/storage/belt/utility;/obj/item/clothing/glasses/meson;/obj/item/clothing/gloves/yellow;/obj/item/weapon/screwdriver;/obj/item/weapon/crowbar;/obj/item/weapon/wirecutters;/obj/item/device/multitool;/obj/item/weapon/wrench;/obj/item/device/t_scanner;/obj/item/weapon/cable_coil/power;/obj/item/weapon/circuitboard/circuitry;/obj/item/weapon/cell;/obj/item/weapon/weldingtool;/obj/item/clothing/head/helmet/welding;/obj/item/weapon/light/tube;/obj/item/clothing/suit/fire"
 	//product_amounts = "4;4;4;4;12"
 	product_prices = "1;1;1;2;2;1;2;1;1;2;2;1;1;1;2;2;1;1;1;2"
 	product_hidden = ""

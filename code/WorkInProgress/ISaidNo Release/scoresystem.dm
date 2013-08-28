@@ -154,14 +154,14 @@
 			if (C.charge < 2300) score_powerloss += 1 // 200 charge leeway
 
 	// Check how much uncleaned mess is on the station
-	for (var/obj/decal/cleanable/M in world)
+	for (var/obj/effect/decal/cleanable/M in world)
 		if (M.z != 1) continue
-		if (istype(M, /obj/decal/cleanable/blood/gibs/)) score_mess += 3
-		if (istype(M, /obj/decal/cleanable/blood/)) score_mess += 1
-		if (istype(M, /obj/decal/cleanable/greenpuke)) score_mess += 1
-		if (istype(M, /obj/decal/cleanable/poo)) score_mess += 1
-		if (istype(M, /obj/decal/cleanable/urine)) score_mess += 1
-		if (istype(M, /obj/decal/cleanable/vomit)) score_mess += 1
+		if (istype(M, /obj/effect/decal/cleanable/blood/gibs/)) score_mess += 3
+		if (istype(M, /obj/effect/decal/cleanable/blood/)) score_mess += 1
+		if (istype(M, /obj/effect/decal/cleanable/greenpuke)) score_mess += 1
+		if (istype(M, /obj/effect/decal/cleanable/poo)) score_mess += 1
+		if (istype(M, /obj/effect/decal/cleanable/urine)) score_mess += 1
+		if (istype(M, /obj/effect/decal/cleanable/vomit)) score_mess += 1
 
 	// Bonus Modifiers
 	//var/traitorwins = score_traitorswon

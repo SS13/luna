@@ -9,6 +9,7 @@ var/global
 	list/processing_items = list()
 	list/processing_others = list() // The few exceptions that don't fit in the other lists
 	list/processing_turfs = list()
+	list/active_diseases = list()
 		//items that ask to be called every cycle
 
 	defer_cables_rebuild = 0		// true if all unified networks will be rebuilt on post-event
@@ -105,7 +106,6 @@ var
 	list/bombers = list(  )
 	list/admin_log = list (  )
 	list/lastsignalers = list(	)	//keeps last 100 signals here in format: "[src] used \ref[src] @ location [src.loc]: [freq]/[code]"
-	list/admins = list(  )
 	list/reg_dna = list(  )
 //	list/traitobj = list(  )
 

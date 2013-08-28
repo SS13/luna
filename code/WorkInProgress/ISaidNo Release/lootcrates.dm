@@ -7,12 +7,12 @@
 			var/lootamt = rand(5,15)
 			while(lootamt > 0)
 				var/lootloc = pick(lootspawn)
-				if (prob(75)) new/obj/crate/loot(lootloc)
+				if (prob(75)) new/obj/structure/crate/loot(lootloc)
 				--lootamt
 
 // this can go anywhere, probably best in the crates file i guess
 
-/obj/crate/loot
+/obj/structure/crate/loot
 	desc = "What could be inside?"
 	name = "Abandoned Crate"
 	icon_state = "securecrate"

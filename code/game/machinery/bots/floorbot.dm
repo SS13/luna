@@ -1,5 +1,5 @@
 //Floorbot assemblies
-/obj/item/weapon/toolbox_tiles
+/obj/item/weapon/robot_assembly/toolbox_tiles
 	desc = "It's a toolbox with tiles sticking out the top"
 	name = "tiles and toolbox"
 	icon = 'aibots.dmi'
@@ -11,7 +11,7 @@
 	w_class = 3.0
 	flags = TABLEPASS
 
-/obj/item/weapon/toolbox_tiles_sensor
+/obj/item/weapon/robot_assembly/toolbox_tiles_sensor
 	desc = "It's a toolbox with tiles sticking out the top and a sensor attached"
 	name = "tiles, toolbox and sensor arrangement"
 	icon = 'aibots.dmi'
@@ -48,7 +48,7 @@
 
 /obj/machinery/bot/floorbot/New()
 	..()
-	src.updateicon()
+	src.update_icon()
 
 /obj/machinery/bot/floorbot/attack_hand(user as mob)
 	var/dat
@@ -72,8 +72,8 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 	return
 
 /obj/machinery/bot/floorbot/attackby(var/obj/item/weapon/W , mob/user as mob)
-	if(istype(W, /obj/item/weapon/tile))
-		var/obj/item/weapon/tile/T = W
+	if(istype(W, /obj/item/stack/tile/metal))
+		var/obj/item/stack/tile/metal/T = W
 		if(src.amount >= 50)
 			return
 		var/loaded = 0
@@ -87,7 +87,7 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 			loaded = T.amount
 			del(T)
 		user << "\red You load [loaded] tiles into the floorbot. He now contains [src.amount] tiles!"
-		src.updateicon()
+		src.update_icon()
 	if(istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
 		if(src.allowed(usr))
 			src.locked = !src.locked
@@ -108,7 +108,7 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 			src.target = null
 			src.oldtarget = null
 			src.oldloc = null
-			src.updateicon()
+			src.update_icon()
 			src.path = new()
 			src.updateUsrDialog()
 		if("improve")
@@ -125,14 +125,14 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 	src.target = null
 	src.oldtarget = null
 	src.oldloc = null
-	src.updateicon()
+	src.update_icon()
 	src.path = new()
 /obj/machinery/bot/floorbot/attack_ai()
 	src.on = !src.on
 	src.target = null
 	src.oldtarget = null
 	src.oldloc = null
-	src.updateicon()
+	src.update_icon()
 	src.path = new()
 
 /obj/machinery/bot/floorbot/process()
@@ -148,7 +148,7 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 				floorbottargets += bot.target
 	if(src.amount <= 0 && ((src.target == null) || !src.target))
 		if(src.eattiles)
-			for(var/obj/item/weapon/tile/T in view(7, src))
+			for(var/obj/item/stack/tile/metal/T in view(7, src))
 				if(T != src.oldtarget && !(target in floorbottargets))
 					src.oldtarget = T
 					src.target = T
@@ -156,7 +156,7 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 		if(src.target == null || !src.target)
 			if(src.maketiles)
 				if(src.target == null || !src.target)
-					for(var/obj/item/weapon/sheet/metal/M in view(7, src))
+					for(var/obj/item/stack/sheet/metal/M in view(7, src))
 						if(!(M in floorbottargets) && M != src.oldtarget && M.amount == 1 && !(istype(M.loc, /turf/simulated/wall)))
 							src.oldtarget = M
 							src.target = M
@@ -185,7 +185,7 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 					src.target = F
 					break
 		if((!src.target || src.target == null) && src.eattiles)
-			for(var/obj/item/weapon/tile/T in view(7, src))
+			for(var/obj/item/stack/tile/metal/T in view(7, src))
 				if(!(T in floorbottargets) && T != src.oldtarget)
 					src.oldtarget = T
 					src.target = T
@@ -220,9 +220,9 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 			repair(src.target)
 
 	if(src.loc == src.target || src.loc == src.target.loc)
-		if(istype(src.target, /obj/item/weapon/tile))
+		if(istype(src.target, /obj/item/stack/tile/metal))
 			src.eattile(src.target)
-		else if(istype(src.target, /obj/item/weapon/sheet/metal))
+		else if(istype(src.target, /obj/item/stack/sheet/metal))
 			src.maketile(src.target)
 		else if(istype(src.target, /turf/))
 			repair(src.target)
@@ -245,13 +245,13 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 	if(istype(target, /turf/space/) || istype(target,/turf/simulated/floor/open))
 		for(var/mob/O in viewers(src, null))
 			O.show_message(text("\red [src] begins to repair the hole"), 1)
-		var/obj/item/weapon/tile/T = new /obj/item/weapon/tile
+		var/obj/item/stack/tile/metal/T = new /obj/item/stack/tile/metal
 		src.repairing = 1
 		spawn(50)
 			T.build(src.loc)
 			src.repairing = 0
 			src.amount -= 1
-			src.updateicon()
+			src.update_icon()
 			src.anchored = 0
 			src.target = null
 	else
@@ -267,12 +267,12 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 			L.broken = 0
 			src.repairing = 0
 			src.amount -= 1
-			src.updateicon()
+			src.update_icon()
 			src.anchored = 0
 			src.target = null
 
-/obj/machinery/bot/floorbot/proc/eattile(var/obj/item/weapon/tile/T)
-	if(!istype(T, /obj/item/weapon/tile))
+/obj/machinery/bot/floorbot/proc/eattile(var/obj/item/stack/tile/metal/T)
+	if(!istype(T, /obj/item/stack/tile/metal))
 		return
 	for(var/mob/O in viewers(src, null))
 		O.show_message(text("\red [src] begins to collect tiles."), 1)
@@ -289,12 +289,12 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 		else
 			src.amount += T.amount
 			del(T)
-		src.updateicon()
+		src.update_icon()
 		src.target = null
 		src.repairing = 0
 
-/obj/machinery/bot/floorbot/proc/maketile(var/obj/item/weapon/sheet/metal/M)
-	if(!istype(M, /obj/item/weapon/sheet/metal))
+/obj/machinery/bot/floorbot/proc/maketile(var/obj/item/stack/sheet/metal/M)
+	if(!istype(M, /obj/item/stack/sheet/metal))
 		return
 	if(M.amount > 1)
 		return
@@ -306,14 +306,14 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 			src.target = null
 			src.repairing = 0
 			return
-		var/obj/item/weapon/tile/T = new /obj/item/weapon/tile
+		var/obj/item/stack/tile/metal/T = new /obj/item/stack/tile/metal
 		T.amount = 4
 		T.loc = M.loc
 		del(M)
 		src.target = null
 		src.repairing = 0
 
-/obj/machinery/bot/floorbot/proc/updateicon()
+/obj/machinery/bot/floorbot/proc/update_icon()
 	if(src.amount > 0)
 		src.icon_state = "floorbot[src.on]"
 	else
@@ -321,8 +321,8 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 
 
 
-/obj/item/weapon/storage/toolbox/mechanical/attackby(var/obj/item/weapon/tile/T, mob/user as mob)
-	if(!istype(T, /obj/item/weapon/tile))
+/obj/item/weapon/storage/toolbox/mechanical/attackby(var/obj/item/stack/tile/metal/T, mob/user as mob)
+	if(!istype(T, /obj/item/stack/tile/metal))
 		..()
 		return
 	if(src.contents.len >= 1)
@@ -330,7 +330,7 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 		return
 	if (user.s_active)
 		user.s_active.close(user)
-	var/obj/item/weapon/toolbox_tiles/B = new /obj/item/weapon/toolbox_tiles
+	var/obj/item/weapon/robot_assembly/toolbox_tiles/B = new /obj/item/weapon/robot_assembly/toolbox_tiles
 	B.loc = user
 	if (user.r_hand == T)
 		user.u_equip(T)
@@ -343,10 +343,10 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 	del(T)
 	del(src)
 
-/obj/item/weapon/toolbox_tiles/attackby(var/obj/item/device/prox_sensor/D, mob/user as mob)
+/obj/item/weapon/robot_assembly/toolbox_tiles/attackby(var/obj/item/device/prox_sensor/D, mob/user as mob)
 	if(!istype(D, /obj/item/device/prox_sensor))
 		return
-	var/obj/item/weapon/toolbox_tiles_sensor/B = new /obj/item/weapon/toolbox_tiles_sensor
+	var/obj/item/weapon/robot_assembly/toolbox_tiles_sensor/B = new /obj/item/weapon/robot_assembly/toolbox_tiles_sensor
 	B.loc = user
 	if (user.r_hand == D)
 		user.u_equip(D)
@@ -359,7 +359,7 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 	del(D)
 	del(src)
 
-/obj/item/weapon/toolbox_tiles_sensor/attackby(var/obj/item/W, mob/user as mob)
+/obj/item/weapon/robot_assembly/toolbox_tiles_sensor/attackby(var/obj/item/W, mob/user as mob)
 	if (istype(W, /obj/item/weapon/pen))
 		var/t = input(user, "Enter new robot name", src.name, src.created_name) as text
 		t = copytext(sanitize(t), 1, MAX_MESSAGE_LEN)

@@ -26,7 +26,7 @@ WELDINGTOOOL
 	if(!istype(M, /mob))
 		return
 
-	if((usr.mutations & 16) && prob(50))
+	if((usr.mutations & CLUMSY) && prob(50))
 		M << "\red You stab yourself in the eye."
 		M.sdisabilities |= 1
 		M.weakened += 4
@@ -92,8 +92,8 @@ WELDINGTOOOL
 	if (status == 0 && istype(W,/obj/item/weapon/screwdriver))
 		status = 1
 		user << "\blue The welder can now be attached and modified."
-	else if (status == 1 && istype(W,/obj/item/weapon/rods))
-		var/obj/item/weapon/rods/R = W
+	else if (status == 1 && istype(W,/obj/item/stack/rods))
+		var/obj/item/stack/rods/R = W
 		R.amount = R.amount - 1
 		if (R.amount == 0)
 			del(R)
@@ -137,9 +137,26 @@ WELDINGTOOOL
 	reagents.remove_reagent("fuel", amount)
 	return
 
+/obj/item/weapon/weldingtool/proc/remove_fuel(amount = 1, mob/M = null)
+	if(!welding)
+		return 0
+	if(get_fuel() >= amount)
+		reagents.remove_reagent("fuel", amount)
+		if(M)
+			eyecheck(M)
+		return 1
+	else
+		if(M)
+			M << "<span class='notice'>You need more welding fuel to complete this task.</span>"
+		return 0
+
+//Returns whether or not the welding tool is currently on.
+/obj/item/weapon/weldingtool/proc/isOn()
+	return welding
+
 /obj/item/weapon/weldingtool/afterattack(obj/O as obj, mob/user as mob)
 
-	if (istype(O, /obj/reagent_dispensers/fueltank) && get_dist(src,O) <= 1)
+	if (istype(O, /obj/structure/reagent_dispensers/fueltank) && get_dist(src,O) <= 1)
 		O.reagents.trans_to(src, 20)
 		user << "\blue Welder refueled"
 		playsound(src.loc, 'zzzt.ogg', 50, 1, -6)

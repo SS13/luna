@@ -39,7 +39,7 @@
 			a.ex_act(3)
 	world << "Smashing windows"
 	sleep(20*tick_multiplier)
-	for(var/obj/window/a in world)
+	for(var/obj/structure/window/a in world)
 		if(locate(/obj/landmark/derelict/nodamage) in get_turf(a))
 			continue
 		if(prob(35))
@@ -50,7 +50,7 @@
 			calc = 0
 	world << "Hacking airlocks"
 	sleep(20*tick_multiplier)
-	for(var/obj/window/a in world)
+	for(var/obj/structure/window/a in world)
 		if(locate(/obj/landmark/derelict/nodamage) in get_turf(a))
 			continue
 		if(prob(35))
@@ -93,12 +93,12 @@
 
 	for(var/obj/landmark/derelict/glass/glass in world)
 		if(prob(30))
-			var/obj/item/weapon/sheet/glass/g = new(glass.loc)
+			var/obj/item/stack/sheet/glass/g = new(glass.loc)
 			g.amount = rand(2, 30)
 
 	for(var/obj/landmark/derelict/metal/metal in world)
 		if(prob(30))
-			var/obj/item/weapon/sheet/metal/g = new(metal.loc)
+			var/obj/item/stack/sheet/metal/g = new(metal.loc)
 			g.amount = rand(2, 30)
 
 	for(var/obj/landmark/derelict/o2canister/o2 in world)
@@ -107,4 +107,4 @@
 
 	for(var/obj/landmark/derelict/o2crate/o2 in world)
 		if(prob(70))
-			new /obj/crate/internals(o2.loc)
+			new /obj/structure/crate/internals(o2.loc)

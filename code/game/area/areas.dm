@@ -58,7 +58,7 @@
 		return
 	if (!( src.fire ))
 		src.fire = 1
-		//src.updateicon()				//Commented by Strumpetplaya - Alarm Change, no longer necessary.
+		//src.update_icon()				//Commented by Strumpetplaya - Alarm Change, no longer necessary.
 		src.mouse_opacity = 0
 		//if(!alldoors)
 		//	alldoors = get_doors(src)
@@ -84,7 +84,7 @@
 	if (src.fire)
 		src.fire = 0
 		src.mouse_opacity = 0
-		src.updateicon()
+		src.update_icon()
 		for(var/obj/machinery/door/firedoor/D in src)
 			var/AName = src.name
 			var/turf/ANorth = locate(D.x,D.y+1,D.z)
@@ -169,7 +169,7 @@
 		return
 	if (!( src.party ))
 		src.party = 1
-		src.updateicon()
+		src.update_icon()
 		src.mouse_opacity = 0
 	return
 
@@ -177,7 +177,7 @@
 	if (src.party)
 		src.party = 0
 		src.mouse_opacity = 0
-		src.updateicon()
+		src.update_icon()
 		for(var/obj/machinery/door/firedoor/D in src)
 			if(!D.blocked)
 				if(D.operating)
@@ -196,7 +196,7 @@
 			spawn(stayclosed*10)
 				air_door_close_delay = 0
 		src.air_doors_activated = 1
-		//src.updateicon()					//Commented by Strumpetplaya - Alarm Change, not necessary.
+		//src.update_icon()					//Commented by Strumpetplaya - Alarm Change, not necessary.
 		src.mouse_opacity = 0
 	//	if(!alldoors)
 		//	alldoors = get_doors(src)
@@ -254,7 +254,7 @@
 				air_door_close_delay = 0
 		src.air_doors_activated = 0
 		src.mouse_opacity = 0
-		src.updateicon()
+		src.update_icon()
 	//	if(!alldoors)
 		//	alldoors = get_doors(src)
 		for(var/obj/machinery/door/airlock/D in src)
@@ -381,7 +381,7 @@
 				air_door_close_delay = 0
 		src.air_doors_activated = 0
 		src.mouse_opacity = 0
-		src.updateicon()
+		src.update_icon()
 	//	if(!alldoors)
 		//	alldoors = get_doors(src)
 		for(var/obj/machinery/door/airlock/D in alldoors)
@@ -411,7 +411,7 @@
 
 
 
-/area/proc/updateicon()
+/area/proc/update_icon()
 	if ((fire || eject || party) && power_environ)
 		if(fire && !eject && !party)
 			//icon_state = "blue"				//Commented by Strumpetplaya - Need to find out where this is still getting called from.  Disabling for now.
@@ -453,7 +453,7 @@
 		for(var/obj/machinery/M in RA)	// for each machine in the area
 			M.power_change()				// reverify power status (to update icons etc.)
 
-		RA.updateicon()
+		RA.update_icon()
 
 
 /area/proc/usage(var/chan)

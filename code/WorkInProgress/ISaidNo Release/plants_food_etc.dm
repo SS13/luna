@@ -600,7 +600,7 @@
 		M.brainloss -= src.heal_amt
 /* Strumpetplaya - commenting this out as it has components we don't support.
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if(istype(W,/obj/item/weapon/rods))
+		if(istype(W,/obj/item/stack/rods))
 			user << "\blue You create an apple on a stick..."
 			new/obj/item/weapon/reagent_containers/food/snacks/plant/apple/stick(get_turf(src))
 			W:amount--
@@ -626,7 +626,7 @@
 			del src
 	attack_self(var/mob/user as mob)
 		if (src.icon_state == "banana")
-			if(user.mutations & 16 && prob(50))
+			if(user.mutations & CLUMSY && prob(50))
 				for(var/mob/N in viewers(user, null))
 					if(N.client)
 						N.show_message(text("\red <B>[user] accidentally pokes their eye out with the banana."), 1)
@@ -1353,7 +1353,7 @@
 					M.nutrition -= 20
 					for(var/mob/O in viewers(M, null)) O.show_message(text("\red [] suddenly and violently vomits!", M), 1)
 					playsound(M.loc, 'splat.ogg', 50, 1)
-					new /obj/decal/cleanable/vomit(M.loc)
+					new /obj/effect/decal/cleanable/vomit(M.loc)
 				if(4)
 					M << "\red You bite down on a chunk of bone, hurting your teeth."
 					M.bruteloss += 2

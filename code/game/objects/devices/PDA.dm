@@ -1070,7 +1070,7 @@ Code:
 								dat += "Calculating navigation path"
 							if(7)
 								dat += "Unable to locate destination"
-						var/obj/crate/C = QC.botstatus["load"]
+						var/obj/structure/crate/C = QC.botstatus["load"]
 						dat += "<BR>Current Load: [ !C ? "<i>none</i>" : "[C.name] (<A href='byond://?src=\ref[QC];op=unload'><i>unload</i></A>)" ]<BR>"
 						dat += "Destination: [!QC.botstatus["dest"] ? "<i>none</i>" : QC.botstatus["dest"] ] (<A href='byond://?src=\ref[QC];op=setdest'><i>set</i></A>)<BR>"
 						dat += "Power: [QC.botstatus["powr"]]%<BR>"
@@ -1686,14 +1686,14 @@ Code:
 
 //Some spare PDAs in a box
 
-/obj/item/weapon/storage/PDAbox
+/obj/item/weapon/storage/box/PDA
 	name = "spare PDAs"
 	desc = "A box of spare PDA microcomputers."
 	icon = 'pda.dmi'
 	icon_state = "pdabox"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/PDAbox/New()
+/obj/item/weapon/storage/box/PDA/New()
 	..()
 	new /obj/item/device/pda(src)
 	new /obj/item/device/pda(src)

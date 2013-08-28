@@ -126,7 +126,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 
 	src.name = src.area.name + " APC"
 
-	updateicon()
+	update_icon()
 
 	// create a terminal object at the same position as original turf loc
 	// wires will attach to this
@@ -165,12 +165,12 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 	if (F.name == "breaker")
 		operating = !operating
 		src.update()
-		updateicon()
+		update_icon()
 	if(F.name == "charge")
 		chargemode = !chargemode
 		if(!chargemode)
 			charging = 0
-			updateicon()
+			update_icon()
 			update()
 	if(F.arg2)
 		if(F.name == "light")
@@ -185,7 +185,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 				if("autoon")
 					value = 3
 			lighting = value
-			updateicon()
+			update_icon()
 			update()
 		else if(F.name == "equip")
 			var/value = equipment
@@ -199,7 +199,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 				if("autoon")
 					value = 3
 			equipment = value
-			updateicon()
+			update_icon()
 			update()
 		else if(F.name == "environ")
 			var/value = environ
@@ -213,7 +213,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 				if("autoon")
 					value = 3
 			environ = value
-			updateicon()
+			update_icon()
 			update()
 	else if(F.name == "status")
 		var/datum/function/R = new()
@@ -243,7 +243,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 
 // update the APC icon to show the three base states
 // also add overlays for indicator lights
-/obj/machinery/power/apc/proc/updateicon()
+/obj/machinery/power/apc/proc/update_icon()
 	if(repair_state > 0)
 		icon_state = "apc_r[repair_state]"
 		src.overlays = null
@@ -281,39 +281,39 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 	if(stat & BROKEN)
 		if(repair_state == 0 && istype(W,/obj/item/weapon/screwdriver))
 			repair_state = 1
-			updateicon()
+			update_icon()
 			user << "\blue You remove the broken APC parts"
-		else if(repair_state == 1 && istype(W,/obj/item/weapon/circuitry))
+		else if(repair_state == 1 && istype(W,/obj/item/weapon/circuitboard/circuitry))
 			del(W)
 			repair_state = 2
-			updateicon()
+			update_icon()
 			user << "\blue You add a circuit board.  You need one more"
-		else if(repair_state == 2 && istype(W,/obj/item/weapon/circuitry))
+		else if(repair_state == 2 && istype(W,/obj/item/weapon/circuitboard/circuitry))
 			del(W)
 			repair_state = 3
-			updateicon()
+			update_icon()
 			user << "\blue You finish adding the APC circuits."
 		else if(repair_state == 3 && istype(W,/obj/item/weapon/wirecutters))
 			repair_state = 4
-			updateicon()
+			update_icon()
 			user << "\blue You detach the old wiring."
-		else if(repair_state == 4 && istype(W,/obj/item/weapon/CableCoil))
-			var/obj/item/weapon/CableCoil/S = W
+		else if(repair_state == 4 && istype(W,/obj/item/weapon/cable_coil))
+			var/obj/item/weapon/cable_coil/S = W
 			if(S.CableType != /obj/cabling/power)
 				user << "This is the wrong cable type!"
 				return
-			if(!S.UseCable(5))
+			if(!S.use(5))
 				user << "Not enough wiring"
 				return
 			repair_state = 5
-			updateicon()
+			update_icon()
 			user << "\blue You wire the APC."
 		else if(repair_state == 5 && istype(W,/obj/item/weapon/screwdriver))
 			repair_state = 0
 			stat -= BROKEN
 			user << "\blue You screw the APC closed."
 			terminal = locate(/obj/machinery/power/terminal) in loc
-			updateicon()
+			update_icon()
 
 		return
 
@@ -322,13 +322,13 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 	if (istype(W, /obj/item/weapon/crowbar))	// crowbar means open or close the cover
 		if(opened)
 			opened = 0
-			updateicon()
+			update_icon()
 		else
 			if(coverlocked)
 				user << "The cover is locked and cannot be opened."
 			else
 				opened = 1
-				updateicon()
+				update_icon()
 	else if	(istype(W, /obj/item/weapon/cell) && opened)	// trying to put a cell inside
 		if(cell)
 			user << "There is a power cell already installed."
@@ -338,7 +338,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 			cell = W
 			user << "You insert the power cell."
 			chargecount = 0
-		updateicon()
+		update_icon()
 	else if	(istype(W, /obj/item/weapon/screwdriver))	// haxing
 		if(opened)
 			user << "Close the APC first"
@@ -347,7 +347,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 		else
 			wiresexposed = !wiresexposed
 			user << "The wires have been [wiresexposed ? "exposed" : "unexposed"]"
-			updateicon()
+			update_icon()
 
 	else if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda)) // trying to unlock the interface with an ID card
 		if(emagged)
@@ -360,7 +360,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 			if(src.allowed(usr))
 				locked = !locked
 				user << "You [ locked ? "lock" : "unlock"] the APC interface."
-				updateicon()
+				update_icon()
 			else
 				user << "\red Access denied."
 	else if (istype(W, /obj/item/weapon/card/emag) && !emagged)		// trying to unlock with an emag card
@@ -375,7 +375,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 				emagged = 1
 				locked = 0
 				user << "You emag the APC interface."
-				updateicon()
+				update_icon()
 			else
 				user << "You fail to [ locked ? "unlock" : "lock"] the APC interface."
 	else
@@ -407,12 +407,12 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 				user.r_hand = cell
 
 			cell.add_fingerprint(user)
-			cell.updateicon()
+			cell.update_icon()
 
 			src.cell = null
 			user << "You remove the power cell."
 			charging = 0
-			src.updateicon()
+			src.update_icon()
 
 	else
 		// do APC interaction
@@ -626,7 +626,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 		//world << "PROTECTION"
 		return 0
 
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 
@@ -769,14 +769,14 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 		else if (href_list["breaker"])
 			operating = !operating
 			src.update()
-			updateicon()
+			update_icon()
 
 		else if (href_list["eqp"])
 			var/val = text2num(href_list["eqp"])
 
 			equipment = (val==1) ? 0 : val
 
-			updateicon()
+			update_icon()
 			update()
 
 		else if (href_list["lgt"])
@@ -784,14 +784,14 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 
 			lighting = (val==1) ? 0 : val
 
-			updateicon()
+			update_icon()
 			update()
 		else if (href_list["env"])
 			var/val = text2num(href_list["env"])
 
 			environ = (val==1) ? 0 :val
 
-			updateicon()
+			update_icon()
 			update()
 		else if( href_list["close"] )
 			usr << browse(null, "window=apc")
@@ -977,7 +977,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 	// update icon & area power if anything changed
 
 	if(last_lt != lighting || last_eq != equipment || last_en != environ || last_ch != charging)
-		updateicon()
+		update_icon()
 		update()
 
 	src.updateDialog()

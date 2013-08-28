@@ -226,6 +226,10 @@ datum/controller/game_controller
 			ticker_debug = "[O] [O.name] processing"
 			O:process()
 
+		for(var/datum/disease/Disease in active_diseases)
+			ticker_debug = Disease.type
+			Disease.process()
+
 		//tgrid.Tick(0) // Part of Alfie's travel code
 		sleep(-1)
 

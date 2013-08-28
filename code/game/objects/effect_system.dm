@@ -158,14 +158,14 @@ steam.start() -- spawns the effect
 		T.hotspot_expose(3000,100)
 	return
 
-/datum/effects/system/spark_spread
+/datum/effect/effect/system/spark_spread
 	var/number = 3
 	var/cardinals = 0
 	var/turf/location
 	var/atom/holder
 	var/total_sparks = 0 // To stop it being spammed and lagging!
 
-/datum/effects/system/spark_spread/proc/set_up(n = 3, c = 0, loca)
+/datum/effect/effect/system/spark_spread/proc/set_up(n = 3, c = 0, loca)
 	if(n > 10)
 		n = 10
 	number = n
@@ -175,10 +175,10 @@ steam.start() -- spawns the effect
 	else
 		location = get_turf(loca)
 
-/datum/effects/system/spark_spread/proc/attach(atom/atom)
+/datum/effect/effect/system/spark_spread/proc/attach(atom/atom)
 	holder = atom
 
-/datum/effects/system/spark_spread/proc/start()
+/datum/effect/effect/system/spark_spread/proc/start()
 	var/i = 0
 	for(i=0, i<src.number, i++)
 		if(src.total_sparks > 20)
@@ -709,9 +709,9 @@ steam.start() -- spawns the effect
 		sleep(30)
 
 		if(metal)
-			var/obj/foamedmetal/M = new(src.loc)
+			var/obj/structure/foamedmetal/M = new(src.loc)
 			M.metal = metal
-			M.updateicon()
+			M.update_icon()
 
 		flick("[icon_state]-disolve", src)
 		sleep(5)
@@ -833,7 +833,7 @@ steam.start() -- spawns the effect
 // wall formed by metal foams
 // dense and opaque, but easy to break
 
-/obj/foamedmetal
+/obj/structure/foamedmetal
 	icon = 'effects.dmi'
 	icon_state = "metalfoam"
 	density = 1
@@ -855,7 +855,7 @@ steam.start() -- spawns the effect
 		update_nearby_tiles(1)
 		..()
 
-	proc/updateicon()
+	proc/update_icon()
 		if(metal == 1)
 			icon_state = "metalfoam"
 		else
@@ -877,7 +877,7 @@ steam.start() -- spawns the effect
 		return
 
 	attack_hand(var/mob/user)
-		if (user.mutations & 8 || (prob(75 - metal*25)))
+		if (user.mutations & HULK || (prob(75 - metal*25)))
 			user << "\blue You smash through the metal foam wall."
 			for(var/mob/O in oviewers(user))
 				if ((O.client && !( O.blinded )))

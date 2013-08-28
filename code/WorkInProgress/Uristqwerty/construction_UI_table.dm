@@ -34,7 +34,7 @@
 		return ..()
 
 /datum/construction_UI/table/build(state, dir)
-	var/obj/table/T = new /obj/table(loc)
+	var/obj/structure/table/T = new /obj/structure/table(loc)
 	T.icon_state = state
 	T.dir = dir
 	T.add_fingerprint(user)
@@ -59,7 +59,7 @@
 	default_state = "reinf_table"
 
 /datum/construction_UI/table/reinforced/build(state, dir)
-	var/obj/table/reinforced/T = new /obj/table/reinforced(loc)
+	var/obj/structure/table/reinforced/T = new /obj/structure/table/reinforced(loc)
 	T.icon_state = state
 	T.dir = dir
 	T.add_fingerprint(user)

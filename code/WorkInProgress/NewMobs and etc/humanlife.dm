@@ -1,6 +1,6 @@
 /mob/living/carbon/human/handle_regular_hud_updates()
 
-	if (stat == 2 || mutations & 4)
+	if (stat == DEAD || mutations & XRAY)
 		sight |= SEE_TURFS
 		sight |= SEE_MOBS
 		sight |= SEE_OBJS
@@ -10,17 +10,15 @@
 		sight |= SEE_MOBS
 		see_in_dark = 4
 		see_invisible = 2
-	else if (istype(glasses, /obj/item/clothing/glasses/meson))
-		sight |= SEE_TURFS
-		see_in_dark = 3
-		see_invisible = 0
-	else if (istype(glasses, /obj/item/clothing/glasses/thermal))
-		sight |= SEE_MOBS
-		see_in_dark = 4
-		see_invisible = 2
+	else if(glasses)
+		if(glasses.see_turfs) sight |= SEE_TURFS
+		if(glasses.see_mobs) sight |= SEE_MOBS
+		if(glasses.see_objs) sight |= SEE_OBJS
+		see_in_dark = glasses.see_in_dark
+		see_invisible = glasses.see_invisible
 	else if (istype(head, /obj/item/clothing/head/helmet/welding))
 		see_in_dark = 1
-	else if (stat != 2)
+	else if (stat != DEAD)
 		sight &= ~SEE_TURFS
 		sight &= ~SEE_MOBS
 		sight &= ~SEE_OBJS
@@ -138,6 +136,7 @@
 
 
 	return 1
+
 /mob/living/carbon/human/proc/drip(var/amt as num)
 	if(!amt)
 		return
@@ -145,11 +144,11 @@
 	var/nums
 	var/amm = 0.1 * amt
 	vessel.remove_reagent("blood",amm)
-	for(var/obj/decal/cleanable/blood/drip/D in T)
+	for(var/obj/effect/decal/cleanable/blood/drip/D in T)
 		nums++
 		if(nums >= 3)
 			return
-	var/obj/decal/cleanable/blood/drip/this = new(T)
+	var/obj/effect/decal/cleanable/blood/drip/this = new(T)
 	var/hax = pick("1","2","3","4","5")
 	this.icon_state = hax
 	this.blood_DNA = src.dna.unique_enzymes
@@ -158,6 +157,7 @@
 	this.blood_owner = src
 	if(src.virus2)
 		this.virus2 = src.virus2.getcopy()
+
 /mob/living/carbon/human/handle_regular_status_updates()
 	for(var/datum/organ/external/E in GetOrgans())
 		E.process()
@@ -239,7 +239,7 @@
 	if (stuttering) stuttering--
 	if (intoxicated) intoxicated--
 	var/datum/organ/external/head/head = organs["head"]
-	if(head && src.real_name != "Unknown")
+	if(head && src.real_name != "Unknown" && !src.face_dmg)
 		if(head.brute_dam >= 45 || head.burn_dam >= 45)
 			src.face_dmg = 1
 			src << "\red Your face has become disfigured."
@@ -259,6 +259,9 @@
 	if(stat < 2)
 		var/amt = vessel.get_reagent_amount("blood")
 		var/lol = round(amt)
+
+		if(lol < 560) vessel.add_reagent("blood", 1)
+
 		if(bloodloss)
 			drip(bloodloss)
 		if(!lol)
@@ -467,12 +470,12 @@
 
 	if(hallucination > 0)
 
-		if(hallucinations.len == 0 && hallucination >= 20 && health > 0)
+		if(hallucinations.len == 0 && hallucination >= 40 && health > 0)
 			if(prob(5))
 				fake_attack(src)
 		//for(var/atom/a in hallucinations)
 		//	a.hallucinate(src)
-		hallucination -= 1
+		hallucination -= 2
 		if(health < 0)
 			for(var/obj/a in hallucinations)
 				del a
@@ -554,16 +557,6 @@
 	for(var/obj/item/I in src)
 		if(I.contaminated) toxloss += vsc.plc.CONTAMINATION_LOSS
 
-	/*if(nutrition > 400 && !(mutations & 32))
-		if(prob(5 + round((nutrition - 200) / 2)))
-			src << "\red You suddenly feel blubbery!"
-			mutations |= 32
-			update_body()*/
-	/*if (nutrition < 100 && mutations & 32)
-		if(prob(round((50 - nutrition) / 100)))
-			src << "\blue You feel fit again!"
-			mutations &= ~32
-			update_body()*/
 	if (nutrition > 0)
 		nutrition--
 
@@ -626,8 +619,8 @@
 
 /mob/living/carbon/human/breathe()
 	if(mutations & mNobreath)	return
-	if(reagents.has_reagent("lexorin")) return
 	if(istype(loc, /obj/machinery/atmospherics/unary/cryo_cell)) return
+	if(reagents.has_reagent("lexorin")) losebreath += 2
 
 	var/datum/gas_mixture/environment = loc.return_air(1)
 	var/datum/gas_mixture/breath
@@ -712,6 +705,20 @@
 			for(var/datum/organ/external/org in organs2)
 				org.brute_dam = max(0, org.brute_dam - 10)
 	return ..()
+
+/mob/living/carbon/human/Stun(amount)
+	if(HULK in mutations)	return
+	..()
+
+/mob/living/carbon/human/Weaken(amount)
+	if(HULK in mutations)	return
+	..()
+
+/mob/living/carbon/human/Paralyse(amount)
+	if(HULK in mutations)	return
+	..()
+
+
 
 /*
 snippets

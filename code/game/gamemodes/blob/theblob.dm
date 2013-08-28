@@ -163,9 +163,9 @@
 		if(O.z != 1)
 			continue
 
-		if(istype(O, /obj/window))
+		if(istype(O, /obj/structure/window))
 			src.window++
-		else if(istype(O, /obj/grille))
+		else if(istype(O, /obj/structure/grille))
 			if(!O:destroyed)
 				src.grille++
 		else if(istype(O, /obj/machinery/door))

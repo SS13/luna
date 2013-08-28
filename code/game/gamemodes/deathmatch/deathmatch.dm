@@ -48,7 +48,7 @@
 					M.equip_if_possible(new /obj/item/clothing/glasses/thermal(M), M.slot_glasses)
 					M.equip_if_possible(new /obj/item/weapon/gun/energy/pulse_rifle(M), M.slot_l_hand)
 					M.equip_if_possible(new /obj/item/weapon/m_pill/cyanide(M), M.slot_l_store)
-					M.equip_if_possible(new /obj/item/weapon/flashbang(M), M.slot_r_store)
+					M.equip_if_possible(new /obj/item/weapon/grenade/flashbang(M), M.slot_r_store)
 
 					var/obj/item/weapon/tank/air/O = new(M)
 					M.equip_if_possible(O, M.slot_back)

@@ -1,7 +1,7 @@
 /obj/machinery/power/solar/New()
 	..()
 	spawn(10)
-		updateicon()
+		update_icon()
 		update_solar_exposure()
 
 
@@ -35,7 +35,7 @@
 			return
 	return
 
-/obj/machinery/power/solar/proc/updateicon()
+/obj/machinery/power/solar/proc/update_icon()
 	overlays = null
 	if(stat & BROKEN)
 		overlays += image('power.dmi', icon_state = "solar_panel-b", layer = FLY_LAYER)
@@ -77,12 +77,12 @@
 	if(adir != ndir)
 		spawn(10+rand(0,15))
 			adir = (360+adir+dd_range(-10,10,ndir-adir))%360
-			updateicon()
+			update_icon()
 			update_solar_exposure()
 
 /obj/machinery/power/solar/proc/broken()
 	stat |= BROKEN
-	updateicon()
+	update_icon()
 	return
 
 /obj/machinery/power/solar/meteorhit()
@@ -125,9 +125,9 @@
 		for(var/obj/machinery/power/solar/S in Network.Nodes)
 			if(S.id != id) continue
 			cdir = S.adir
-			updateicon()
+			update_icon()
 
-/obj/machinery/power/solar_control/proc/updateicon()
+/obj/machinery/power/solar_control/proc/update_icon()
 	if(stat & BROKEN)
 		icon_state = "broken"
 		overlays = null
@@ -170,7 +170,7 @@
 		cdir = (cdir+trackrate/abs(trackrate)+360)%360
 
 		set_panels(cdir)
-		updateicon()
+		update_icon()
 
 	src.updateDialog()
 
@@ -181,7 +181,7 @@
 		return
 	cdir = angle
 	set_panels(cdir)
-	updateicon()
+	update_icon()
 
 	src.updateDialog()
 
@@ -232,14 +232,14 @@
 		cdir = text2num(href_list["dir"])
 		spawn(1)
 			set_panels(cdir)
-			updateicon()
+			update_icon()
 
 	if(href_list["rate control"])
 		if(href_list["cdir"])
 			src.cdir = dd_range(0,359,(360+src.cdir+text2num(href_list["cdir"]))%360)
 			spawn(1)
 				set_panels(cdir)
-				updateicon()
+				update_icon()
 		if(href_list["tdir"])
 			src.trackrate = dd_range(-7200,7200,src.trackrate+text2num(href_list["tdir"]))
 			if(src.trackrate) nexttime = world.timeofday + 3600/abs(trackrate)
@@ -266,15 +266,15 @@
 /obj/machinery/power/solar_control/power_change()
 	if(powered())
 		stat &= ~NOPOWER
-		updateicon()
+		update_icon()
 	else
 		spawn(rand(0, 15))
 			stat |= NOPOWER
-			updateicon()
+			update_icon()
 
 /obj/machinery/power/solar_control/proc/broken()
 	stat |= BROKEN
-	updateicon()
+	update_icon()
 
 /obj/machinery/power/solar_control/meteorhit()
 	broken()

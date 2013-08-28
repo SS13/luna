@@ -23,7 +23,7 @@ obj/structure
 		sleep(40)
 		if(get_turf(user) == T)
 			user << "\blue You dissasembled the girder!"
-			new /obj/item/weapon/sheet/metal(get_turf(src))
+			new /obj/item/stack/sheet/metal(get_turf(src))
 			del(src)
 
 	else if(istype(W, /obj/item/weapon/screwdriver) && state == 2 && istype(src,/obj/structure/girder/reinforced))
@@ -65,7 +65,7 @@ obj/structure
 			new/obj/structure/girder( src.loc )
 			del(src)
 
-	else if((istype(W, /obj/item/weapon/sheet/metal)) && (W:amount >= 2))
+	else if((istype(W, /obj/item/stack/sheet/metal)) && (W:amount >= 2))
 		var/turf/T = get_turf(user)
 		user << "\blue Now adding plating..."
 		sleep(40)
@@ -79,7 +79,7 @@ obj/structure
 			del(src)
 		return
 
-	else if (istype(W, /obj/item/weapon/sheet/r_metal))
+	else if (istype(W, /obj/item/stack/sheet/plasteel))
 		var/turf/T = get_turf(user)
 		if (src.icon_state == "reinforced") //Time to finalize!
 			user << "\blue Now finalising reinforced wall."

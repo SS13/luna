@@ -88,7 +88,7 @@
 		if(5.0)
 			t = "huge"
 		else
-	if ((usr.mutations & 16) && prob(50)) t = "funny-looking"
+	if ((usr.mutations & CLUMSY) && prob(50)) t = "funny-looking"
 	usr << text("This is a []\icon[][]. It is a [] item.", !src.blood_DNA ? "" : "bloody ",src, src.name, t)
 	usr << src.desc
 	return
@@ -241,7 +241,7 @@
 								user2.w_uniform.add_blood(H)
 				affecting.take_damage(b_dam, f_dam)
 			else if (def_zone == "chest")
-				if (b_dam && ((istype(H.wear_suit, /obj/item/clothing/suit/armor/)) && H.wear_suit.body_parts_covered & UPPER_TORSO) && prob(90 - src.force))
+				if (b_dam && ((istype(H.wear_suit, /obj/item/clothing/suit/armor/)) && H.wear_suit.body_parts_covered & CHEST) && prob(90 - src.force))
 					H.show_message("\red You have been protected from a hit to the chest.")
 					return
 				if ((b_dam && prob(src.force + affecting.brute_dam + affecting.burn_dam)))
@@ -283,7 +283,7 @@
 								user2.w_uniform.add_blood(H)
 				affecting.take_damage(b_dam, f_dam)
 			else if (def_zone == "groin")
-				if (b_dam && (istype(H.wear_suit, /obj/item/clothing/suit/armor/) && H.wear_suit.body_parts_covered & LOWER_TORSO) && prob(90 - src.force))
+				if (b_dam && (istype(H.wear_suit, /obj/item/clothing/suit/armor/) && H.wear_suit.body_parts_covered & GROIN) && prob(90 - src.force))
 					H.show_message("\red You have been protected from a hit to the groin (phew).")
 					return
 				if ((b_dam && prob(src.force + affecting.brute_dam + affecting.burn_dam)))

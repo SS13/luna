@@ -22,7 +22,7 @@ RCD
 	w_class = 3.0
 	m_amt = 75000
 	g_amt = 15000
-	var/datum/effects/system/spark_spread/spark_system
+	var/datum/effect/effect/system/spark_spread/spark_system
 
 /obj/item/weapon/rcd_fake
 	name = "rapid-construction-device (RCD)"
@@ -54,7 +54,7 @@ RCD
 
 /obj/item/weapon/rcd/New()
 	desc = "A RCD. It currently holds [matter]/30 matter-units."
-	src.spark_system = new /datum/effects/system/spark_spread
+	src.spark_system = new /datum/effect/effect/system/spark_spread
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
 	return

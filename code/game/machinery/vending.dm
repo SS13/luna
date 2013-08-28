@@ -478,5 +478,5 @@
 	if(stat & (BROKEN|NOPOWER))		// unpowered, no shock
 		return 0
 
-	return src.Electrocute(user, 1)
+	return Electrocute(user, 1)
 

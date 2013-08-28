@@ -9,23 +9,23 @@
 	var/unlocked = 0
 	var/open = 0
 
-/obj/machinery/floodlight/proc/updateicon()
+/obj/machinery/floodlight/proc/update_icon()
 	icon_state = "flood[open ? "o" : ""][open && cell ? "b" : ""]0[on]"
 
 /obj/machinery/floodlight/process()
 	if (!on)
 		if (luminosity)
-			updateicon()
+			update_icon()
 			ul_SetLuminosity(0)
 		return
 
 	if(!luminosity && cell && cell.charge > 0)
 		ul_SetLuminosity(10)
-		updateicon()
+		update_icon()
 
 	if(!cell && luminosity)
 		on = 0
-		updateicon()
+		update_icon()
 		ul_SetLuminosity(0)
 		return
 
@@ -33,7 +33,7 @@
 
 	if(cell.charge <= 0 && luminosity)
 		on = 0
-		updateicon()
+		update_icon()
 		ul_SetLuminosity(0)
 		return
 
@@ -47,10 +47,9 @@
 			user.r_hand = cell
 
 		cell.add_fingerprint(user)
-		updateicon()
-		cell.updateicon()
-
 		src.cell = null
+		update_icon()
+
 		user << "You remove the power cell"
 		return
 
@@ -65,7 +64,7 @@
 		on = 1
 		user << "You turn on the light"
 
-	updateicon()
+	update_icon()
 
 
 /obj/machinery/floodlight/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -98,11 +97,11 @@
 				W.loc = src
 				cell = W
 				user << "You insert the power cell."
-	updateicon()
+	update_icon()
 
 /obj/machinery/floodlight/New()
 	src.cell = new/obj/item/weapon/cell(src)
-	cell.maxcharge = 1000
-	cell.charge = 1000
+	cell.maxcharge = 2500
+	cell.charge = 2500
 	..()
 

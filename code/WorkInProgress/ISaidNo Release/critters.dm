@@ -280,7 +280,7 @@
 		randomturfs.Add(T)
 	src.loc = pick(randomturfs)
 	if (dospark)
-		var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 		s.set_up(5, 1, src)
 		s.start()
 	if (dosmoke)
@@ -534,7 +534,7 @@
 		src.visible_message("<b>[src]</b> messily splatters into a puddle of tomato sauce!")
 		src.alive = 0
 		playsound(src.loc, 'splat.ogg', 100, 1)
-		var/obj/decal/cleanable/blood/B = new(src.loc)
+		var/obj/effect/decal/cleanable/blood/B = new(src.loc)
 		B.name = "ruined tomato"
 		del src
 
@@ -722,7 +722,7 @@
 				//playsound(src.loc, 'lasermed.ogg', 100, 1)	Strumpetplaya - Not supported
 				if (prob(66))
 					C.fireloss += rand(3,5)
-					var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+					var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 					s.set_up(3, 1, C)
 					s.start()
 				else target << "\red The shot missed!"

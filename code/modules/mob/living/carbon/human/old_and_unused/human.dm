@@ -136,7 +136,7 @@
 				var/obj/item/weapon/baton/W = equipped()
 				if (world.time > lastDblClick+2)
 					lastDblClick = world.time
-					if(((prob(40)) || (prob(95) && mutations & 16)) && W.status)
+					if(((prob(40)) || (prob(95) && mutations & CLUMSY)) && W.status)
 						src << "\red You accidentally stun yourself with the [W.name]."
 						weakened = max(12, weakened)
 						playsound(loc, 'Egloves.ogg', 50, 1, -1)
@@ -509,7 +509,7 @@
 					O.show_message(text("\red <B>The blob has weakened []!</B>", src), 1, "\red You hear someone fall.", 2)
 			temp.take_damage(damage)
 		if ("chest")
-			if ((((wear_suit && wear_suit.body_parts_covered & UPPER_TORSO) || (w_uniform && w_uniform.body_parts_covered & UPPER_TORSO)) && prob(85)))
+			if ((((wear_suit && wear_suit.body_parts_covered & CHEST) || (w_uniform && w_uniform.body_parts_covered & CHEST)) && prob(85)))
 				show_message("\red You have been protected from a hit to the chest.")
 				return
 			if (damage > 4.9)
@@ -526,7 +526,7 @@
 				if(stat != 2)	stat = 1
 			temp.take_damage(damage)
 		if ("groin")
-			if ((((wear_suit && wear_suit.body_parts_covered & LOWER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(75)))
+			if ((((wear_suit && wear_suit.body_parts_covered & GROIN) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(75)))
 				show_message("\red You have been protected from a hit to the lower chest.")
 				return
 			else
@@ -818,7 +818,7 @@
 	overlays = null
 
 	// lol
-	if (mutations & 8)
+	if (mutations & HULK)
 		overlays += image("icon" = 'genetics.dmi', "icon_state" = "hulk[!lying ? "_s" : "_l"]")
 
 	if (mutations & 2)
@@ -844,7 +844,7 @@
 			update_body()
 
 	if(buckled)
-		if(istype(buckled, /obj/stool/bed))
+		if(istype(buckled, /obj/structure/stool/bed))
 			lying = 1
 		else
 			lying = 0
@@ -1168,6 +1168,8 @@
 	return
 
 /mob/living/carbon/human/attack_paw(mob/M as mob)
+	..()
+
 	if (M.a_intent == "help")
 		sleeping = 0
 		resting = 0
@@ -1284,7 +1286,7 @@
 						affecting.take_damage(damage)
 					else
 						if (def_zone == "chest")
-							if ((((wear_suit && wear_suit.body_parts_covered & UPPER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(85)))
+							if ((((wear_suit && wear_suit.body_parts_covered & CHEST) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(85)))
 								show_message("\red You have been protected from a hit to the chest.")
 								return
 							if (damage > 4.9)
@@ -1303,7 +1305,7 @@
 							affecting.take_damage(damage)
 						else
 							if (def_zone == "groin")
-								if ((((wear_suit && wear_suit.body_parts_covered & LOWER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(75)))
+								if ((((wear_suit && wear_suit.body_parts_covered & GROIN) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(75)))
 									show_message("\red You have been protected from a hit to the lower chest.")
 									return
 								if (damage > 4.9)
@@ -1350,32 +1352,28 @@
 	return
 
 /mob/living/carbon/human/attack_hand(mob/living/carbon/human/M as mob)
-	if (!ticker)
-		M << "You cannot attack people before the game has started."
-		return
+	..()
 
-	if (istype(loc, /turf) && istype(loc.loc, /area/start))
-		M << "No attacking people at spawn, you jackass."
-		return
+	if(M.gloves && istype(M.gloves,/obj/item/clothing/gloves))
+		var/obj/item/clothing/gloves/G = M.gloves
+		if(G.cell)
+			if(M.a_intent == "harm")//Stungloves.
+				if(G.cell.charge >= 2500)
+					G.cell.charge -= 2500
+					visible_message("<span class='danger'>[src] has been touched with the stun gloves by [M]!</span>")
+					M.attack_log += text("\[[time_stamp()]\] <font color='red'>Stungloved [src.name] ([src.ckey])</font>")
+					src.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been stungloved by [M.name] ([M.ckey])</font>")
 
-/*Removed stungloves as they are dodgy weapons :3. -CN
-	if ((M.gloves && M.gloves.elecgen == 1 && M.a_intent == "hurt") /*&& (!istype(src:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
-		if(M.gloves.uses > 0)
-			M.gloves.uses--
-			if (weakened < 5)
-				weakened = 5
-			if (stuttering < 5)
-				stuttering = 5
-			if (stunned < 5)
-				stunned = 5
-			for(var/mob/O in viewers(src, null))
-				if (O.client)
-					O.show_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>", 1, "\red You hear someone fall", 2)
-		else
-			M.gloves.elecgen = 0
-			M << "\red Not enough charge! "
-			return
-			*/
+					log_attack("<font color='red'>[M.name] ([M.ckey]) stungloved [src.name] ([src.ckey])</font>")
+
+					Stun(10)
+					Weaken(10)
+					Stutter(10)
+
+					return 1
+				else
+					M << "<span class='notice'>Not enough charge!</span>"
+				return
 
 	if (M.a_intent == "help")
 		if (M.zombie)
@@ -1428,7 +1426,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.elecgen == 1))
+			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.cell))
 				if (w_uniform)
 					w_uniform.add_fingerprint(M)
 				var/damage = rand(1, 9)
@@ -1463,7 +1461,7 @@
 				if (organs[text("[]", def_zone)])
 					affecting = organs[text("[]", def_zone)]
 				if ((istype(affecting, /datum/organ/external) && prob(90)))
-					if (M.mutations & 8)
+					if (M.mutations & HULK)
 						damage += 5
 						spawn(0)
 							paralysis += 1
@@ -1489,7 +1487,7 @@
 						affecting.take_damage(damage)
 					else
 						if (def_zone == "chest")
-							if ((((wear_suit && wear_suit.body_parts_covered & UPPER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(85)))
+							if ((((wear_suit && wear_suit.body_parts_covered & CHEST) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(85)))
 								show_message("\red You have been protected from a hit to the chest.")
 								return
 							if (damage > 4.9)
@@ -1508,7 +1506,7 @@
 							affecting.take_damage(damage)
 						else
 							if (def_zone == "groin")
-								if ((((wear_suit && wear_suit.body_parts_covered & LOWER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(75)))
+								if ((((wear_suit && wear_suit.body_parts_covered & GROIN) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(75)))
 									show_message("\red You have been protected from a hit to the lower chest.")
 									return
 								if (damage > 4.9)
@@ -1536,7 +1534,7 @@
 						O.show_message(text("\red <B>[] has attempted to punch []!</B>", M, src), 1)
 					return
 			else
-				if (!( lying ) && !(M.gloves && M.gloves.elecgen == 1))
+				if (!( lying ) && !(M.gloves && M.gloves.cell))
 					if (w_uniform)
 						w_uniform.add_fingerprint(M)
 					var/randn = rand(1, 100)

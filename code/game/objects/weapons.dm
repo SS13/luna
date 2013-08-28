@@ -1,5 +1,5 @@
 /obj/mine/proc/triggerrad(obj)
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	obj:radiation += 50
@@ -10,7 +10,7 @@
 
 /obj/mine/proc/triggerstun(obj)
 	obj:stunned += 30
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	spawn(0)
@@ -54,7 +54,7 @@
 		del(src)
 
 /obj/mine/proc/triggerkick(obj)
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	del(obj:client)
@@ -109,7 +109,7 @@
 	src.part2.ignite()
 	return
 
-/obj/decal/ash/attack_hand(mob/user as mob)
+/obj/effect/decal/cleanable/ash/attack_hand(mob/user as mob)
 	usr << "\blue The ashes slip through your fingers."
 	del(src)
 	return
@@ -959,7 +959,7 @@
 				if (M.anchored)
 					continue
 				if (istype(M, /atom/movable))
-					var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+					var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 					s.set_up(5, 1, M)
 					s.start()
 					if(prob(src.failchance)) //oh dear a problem, put em in deep space
@@ -1184,7 +1184,7 @@
 		user << "\blue You arm the mousetrap."
 	else
 		icon_state = "mousetrap"
-		if((user.brainloss >= 60 || user.mutations & 16) && prob(50))
+		if((user.brainloss >= 60 || user.mutations & CLUMSY) && prob(50))
 			var/which_hand = "l_hand"
 			if(!user.hand)
 				which_hand = "r_hand"
@@ -1201,7 +1201,7 @@
 
 /obj/item/weapon/mousetrap/attack_hand(mob/user as mob)
 	if(armed)
-		if((user.brainloss >= 60 || user.mutations & 16) && prob(50))
+		if((user.brainloss >= 60 || user.mutations & CLUMSY) && prob(50))
 			var/which_hand = "l_hand"
 			if(!user.hand)
 				which_hand = "r_hand"

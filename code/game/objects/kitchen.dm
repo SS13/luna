@@ -1,7 +1,17 @@
-/obj/kitchenspike/attack_paw(mob/user as mob)
+/obj/structure/kitchenspike
+	name = "a meat spike"
+	icon = 'kitchen.dmi'
+	icon_state = "spike"
+	desc = "A spike for collecting meat from animals"
+	density = 1
+	anchored = 1
+	var/meat = 0
+	var/occupied = 0
+
+/obj/structure/kitchenspike/attack_paw(mob/user as mob)
 	return src.attack_hand(usr)
 
-/obj/kitchenspike/attackby(obj/item/weapon/grab/G as obj, mob/user as mob)
+/obj/structure/kitchenspike/attackby(obj/item/weapon/grab/G as obj, mob/user as mob)
 	if(!istype(G, /obj/item/weapon/grab))
 		return
 	if(!istype(G.affecting, /mob/living/carbon/monkey))
@@ -25,7 +35,7 @@
 	else
 		user << "\red The spike already has a monkey on it, finish collecting his meat first!"
 
-/obj/kitchenspike/attack_hand(mob/user as mob)
+/obj/structure/kitchenspike/attack_hand(mob/user as mob)
 	if(..())
 		return
 	if(src.occupied)

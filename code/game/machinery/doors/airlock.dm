@@ -10,8 +10,7 @@
 #define AIRLOCK_WIRE_CRUSH 10
 #define AIRLOCK_WIRE_LIGHT 11
 
-/*
-	New methods:
+/*	New methods:
 	pulse - sends a pulse into a wire for hacking purposes
 	cut - cuts a wire and makes any necessary state changes
 	mend - mends a wire and makes any necessary state changes
@@ -340,7 +339,7 @@ About the new airlock wires panel:
 		if(AIRLOCK_WIRE_MAIN_POWER1 || AIRLOCK_WIRE_MAIN_POWER2)
 			//Cutting either one disables the main door power, but unless backup power is also cut, the backup power re-powers the door in 10 seconds. While unpowered, the door may be crowbarred open, but bolts-raising will not work. Cutting these wires may electocute the user.
 			src.loseMainPower()
-			src.shock(usr, 50)
+			shock(usr, 50)
 			src.updateUsrDialog()
 		if (AIRLOCK_WIRE_DOOR_BOLTS)
 			//Cutting this wire also drops the door bolts, and mending it does not raise them. (This is what happens now, except there are a lot more wires going to door bolts at present)
@@ -351,7 +350,7 @@ About the new airlock wires panel:
 		if (AIRLOCK_WIRE_BACKUP_POWER1 || AIRLOCK_WIRE_BACKUP_POWER2)
 			//Cutting either one disables the backup door power (allowing it to be crowbarred open, but disabling bolts-raising), but may electocute the user.
 			src.loseBackupPower()
-			src.shock(usr, 50)
+			shock(usr, 50)
 			src.updateUsrDialog()
 		if (AIRLOCK_WIRE_AI_CONTROL)
 			//one wire for AI control. Cutting this prevents the AI from controlling the door unless it has hacked the door through the power connection (which takes about a minute). If both main and backup power are cut, as well as this wire, then the AI cannot operate or hack the door at all.
@@ -375,12 +374,12 @@ About the new airlock wires panel:
 		if(AIRLOCK_WIRE_MAIN_POWER1 || AIRLOCK_WIRE_MAIN_POWER2)
 			if ((!src.isWireCut(AIRLOCK_WIRE_MAIN_POWER1)) && (!src.isWireCut(AIRLOCK_WIRE_MAIN_POWER2)))
 				src.regainMainPower()
-				src.shock(usr, 50)
+				shock(usr, 50)
 				src.updateUsrDialog()
 		if (AIRLOCK_WIRE_BACKUP_POWER1 || AIRLOCK_WIRE_BACKUP_POWER2)
 			if ((!src.isWireCut(AIRLOCK_WIRE_BACKUP_POWER1)) && (!src.isWireCut(AIRLOCK_WIRE_BACKUP_POWER2)))
 				src.regainBackupPower()
-				src.shock(usr, 50)
+				shock(usr, 50)
 				src.updateUsrDialog()
 		if (AIRLOCK_WIRE_AI_CONTROL)
 			//one wire for AI control. Cutting this prevents the AI from controlling the door unless it has hacked the door through the power connection (which takes about a minute). If both main and backup power are cut, as well as this wire, then the AI cannot operate or hack the door at all.
@@ -487,7 +486,7 @@ About the new airlock wires panel:
 // shock user with probability prb (if all connections & power are working)
 // returns 1 if shocked, 0 otherwise
 // The preceding comment was borrowed from the grille's shock script
-/obj/machinery/door/airlock/proc/shock(mob/user, prb)
+proc/shock(mob/user, prb)
 	if(!prob(prb))
 		return 0 //you lucked out, no shock for you
 	if(!user)
@@ -1039,7 +1038,7 @@ About the new airlock wires panel:
 /obj/machinery/door/airlock/attack_hand(mob/user as mob)
 	if (!istype(usr, /mob/living/silicon))
 		if (src.isElectrified())
-			if(src.shock(user, 100))
+			if(shock(user, 100))
 				return
 
 	if (ishuman(user) && prob(40) && src.density)
@@ -1107,7 +1106,7 @@ About the new airlock wires panel:
 /obj/machinery/door/airlock/attackby(C as obj, mob/user as mob)
 	if (!istype(usr, /mob/living/silicon))
 		if (src.isElectrified())
-			if(src.shock(user, 75))
+			if(shock(user, 75))
 				return
 
 	src.add_fingerprint(user)
@@ -1253,67 +1252,3 @@ About the new airlock wires panel:
 			src.synHacking = 0
 			I.in_use = 0
 			src.attack_hack(user, I)
-
-
-
-// ***************************************
-// Networking Support
-// ***************************************
-/*
-/obj/machinery/door/airlock/NetworkIdentInfo()
-	return "AIRLOCK [!src.density ? "OPEN" : "CLOSED"]"
-
-/obj/machinery/door/airlock/ReceiveNetworkPacket(message,sender)
-	if(..())
-		return 1
-	var/list/PacketParts = GetPacketContentUppercased(message)
-	if(PacketParts.len < 2)
-		return 0
-
-	if(check_password(PacketParts[1]) && PacketParts.len >= 3)
-		switch(PacketParts[2])
-			if("ELEC")
-				switch(PacketParts[3])
-					if("ON")
-						src.secondsElectrified = -1
-						return 1
-					if("30")
-						src.secondsElectrified = 30
-						spawn(10)
-							while (src.secondsElectrified>0)
-								src.secondsElectrified-=1
-								if (src.secondsElectrified<0)
-									src.secondsElectrified = 0
-								sleep(10)
-						return 1
-					if("OFF")
-						src.secondsElectrified = 0
-						return 1
-			if("BOLTS")
-				switch(PacketParts[3])
-					if("UP")
-						if(src.arePowerSystemsOn())
-							src.locked = 0
-							update_icon()
-						return 1
-					if("DOWN")
-						src.locked = 1
-						update_icon()
-						return 1
-			if("ACCESS")
-				switch(PacketParts[3])
-					if("ON")
-						src.aiDisabledIdScanner = 0
-						return 1
-					if("OFF")
-						src.aiDisabledIdScanner = 1
-						return 1
-			if("DISRUPT")
-				switch(PacketParts[3])
-					if("MAIN")
-						src.loseMainPower()
-						return 1
-					if("BACKUP")
-						src.loseBackupPower()
-						return 1
-*/

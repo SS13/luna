@@ -18,7 +18,7 @@ STUN BATON
 
 
 /obj/item/weapon/sword/attack_self(mob/user as mob)
-	if ((user.mutations & 16) && prob(50))
+	if ((user.mutations & CLUMSY) && prob(50))
 		user << "\red You accidentally cut yourself with the Sword."
 		user.bruteloss += 5
 		user.fireloss +=5
@@ -127,7 +127,7 @@ STUN BATON
 		src.icon = I
 /obj/item/weapon/baton/attack_self(mob/user as mob)
 	src.status = !( src.status )
-	if ((usr.mutations & 16) && prob(50))
+	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << "\red You grab the stunbaton on the wrong side."
 		usr.paralysis += 60
 		return
@@ -143,7 +143,7 @@ STUN BATON
 	return
 
 /obj/item/weapon/baton/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & 16) && prob(50))
+	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << "\red You grab the stunbaton on the wrong side."
 		usr.weakened += 30
 		return
@@ -156,7 +156,7 @@ STUN BATON
 		return
 	if (status == 0 || (status == 1 && charges == 0))
 		if(user.a_intent == "hurt")
-			if (M.weakened < 5 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.weakened < 5 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.weakened = 5
 				..()
 			for(var/mob/O in viewers(M))
@@ -179,12 +179,12 @@ STUN BATON
 				R.cell.charge -= 20
 			else
 				charges--
-			if (M.weakened < 1 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.weakened < 1 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.weakened = 1
-			if (M.stuttering < 1 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.stuttering < 1 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.stuttering = 1
 			..()
-			if (M.stunned < 1 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.stunned < 1 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.stunned = 1
 		else
 			playsound(src.loc, 'Egloves.ogg', 50, 1, -1)
@@ -193,11 +193,11 @@ STUN BATON
 				R.cell.charge -= 20
 			else
 				charges--
-			if (M.weakened < 10 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.weakened < 10 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.weakened = 10
-			if (M.stuttering < 10 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.stuttering < 10 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.stuttering = 10
-			if (M.stunned < 10 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.stunned < 10 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.stunned = 10
 			user.lastattacked = M
 			M.lastattacker = user
@@ -212,12 +212,12 @@ STUN BATON
 				R.cell.charge -= 20
 			else
 				charges--
-			if (M.weakened < 1 && (!(M.mutations & 8)) )
+			if (M.weakened < 1 && (!(M.mutations & HULK)) )
 				M.weakened = 1
-			if (M.stuttering < 1 && (!(M.mutations & 8)) )
+			if (M.stuttering < 1 && (!(M.mutations & HULK)) )
 				M.stuttering = 1
 			..()
-			if (M.stunned < 1 && (!(M.mutations & 8)) )
+			if (M.stunned < 1 && (!(M.mutations & HULK)) )
 				M.stunned = 1
 		else
 			playsound(src.loc, 'Egloves.ogg', 50, 1, -1)
@@ -226,11 +226,11 @@ STUN BATON
 				R.cell.charge -= 20
 			else
 				charges--
-			if (M.weakened < 10 && (!(M.mutations & 8)) )
+			if (M.weakened < 10 && (!(M.mutations & HULK)) )
 				M.weakened = 10
-			if (M.stuttering < 10 && (!(M.mutations & 8)) )
+			if (M.stuttering < 10 && (!(M.mutations & HULK)) )
 				M.stuttering = 10
-			if (M.stunned < 10 && (!(M.mutations & 8)) )
+			if (M.stunned < 10 && (!(M.mutations & HULK)) )
 				M.stunned = 10
 			user.lastattacked = M
 			M.lastattacker = user
@@ -238,7 +238,7 @@ STUN BATON
 			if (O.client)	O.show_message("\red <B>[M] has been stunned with the stun baton by [user]!</B>", 1, "\red You hear someone fall", 2)
 
 /obj/item/weapon/classic_baton/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & 16) && prob(50))
+	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << "\red You club yourself over the head."
 		usr.weakened = max(3 * force, usr.weakened)
 		if(ishuman(usr))
@@ -251,20 +251,20 @@ STUN BATON
 
 	if (user.a_intent == "hurt")
 		playsound(src.loc, "swing_hit", 50, 1, -1)
-		if (M.weakened < 8 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.weakened < 8 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.weakened = 8
-		if (M.stuttering < 8 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.stuttering < 8 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.stuttering = 8
 		..()
-		if (M.stunned < 8 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.stunned < 8 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.stunned = 8
 		for(var/mob/O in viewers(M))
 			if (O.client)	O.show_message("\red <B>[M] has been beaten with the police baton by [user]!</B>", 1, "\red You hear someone fall", 2)
 	else
 		playsound(src.loc, 'Genhit.ogg', 50, 1, -1)
-		if (M.weakened < 5 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.weakened < 5 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.weakened = 5
-		if (M.stunned < 5 && (!(M.mutations & 8))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.stunned < 5 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.stunned = 5
 		for(var/mob/O in viewers(M))
 			if (O.client)	O.show_message("\red <B>[M] has been stunned with the police baton by [user]!</B>", 1, "\red You hear someone fall", 2)

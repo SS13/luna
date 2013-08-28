@@ -2,8 +2,20 @@
 CONTAINS:
 SPACE CLEANER
 MOP
-
 */
+/obj/item/weapon/cleaner
+	desc = "Space Cleaner!"
+	icon = 'janitor.dmi'
+	name = "space cleaner"
+	icon_state = "cleaner"
+	item_state = "cleaner"
+	var/saftey = 1
+	flags = ONBELT|TABLEPASS|OPENCONTAINER|FPRINT|USEDELAY
+	throwforce = 3
+	w_class = 2.0
+	throw_speed = 2
+	throw_range = 10
+
 /obj/item/weapon/cleaner/New()
 	var/datum/reagents/R = new/datum/reagents(100)
 	reagents = R
@@ -29,7 +41,7 @@ MOP
 		user << "\blue Its empty!"
 		return
 
-	var/obj/decal/D = new/obj/decal(get_turf(src))
+	var/obj/effect/decal/D = new/obj/effect/decal(get_turf(src))
 	D.name = "chemicals"
 	D.icon = 'chemical.dmi'
 	D.icon_state = "chempuff"
@@ -55,6 +67,19 @@ MOP
 	return
 
 // MOP
+/obj/item/weapon/mop
+	desc = "The world of janitalia wouldn't be complete without a mop."
+	name = "mop"
+	icon = 'janitor.dmi'
+	icon_state = "mop"
+	var/mopping = 0
+	var/mopcount = 0
+	force = 3.0
+	throwforce = 10.0
+	throw_speed = 5
+	throw_range = 10
+	w_class = 3.0
+	flags = FPRINT | TABLEPASS
 
 /obj/item/weapon/mop/New()
 	var/datum/reagents/R = new/datum/reagents(5)
@@ -73,10 +98,10 @@ MOP
 		user << "\blue You have finished mopping!"
 		src.reagents.reaction(A,1,10)
 		A.clean_blood()
-		for(var/obj/decal/cleanable/C in A)
+		for(var/obj/effect/decal/cleanable/C in A)
 			del(C)
 		mopcount++
-	else if (istype(A, /obj/decal/cleanable) || istype(A, /obj/overlay))
+	else if (istype(A, /obj/effect/decal/cleanable) || istype(A, /obj/overlay))
 		for(var/mob/O in viewers(user, null))
 			O.show_message(text("\red <B>[user] begins to clean [A]</B>"), 1)
 		sleep(20)

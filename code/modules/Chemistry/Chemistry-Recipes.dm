@@ -35,7 +35,7 @@ datum
 			result_amount = null
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
-				var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(2, 1, location)
 				s.start()
 				for(var/mob/M in viewers(5, location))
@@ -49,7 +49,7 @@ datum
 			name = "Silicate"
 			id = "silicate"
 			result = "silicate"
-			required_reagents = list("aluminum" = 1, "silicon" = 1, "oxygen" = 1)
+			required_reagents = list("aluminium" = 1, "silicon" = 1, "oxygen" = 1)
 			result_amount = 3
 
 		ethanol
@@ -126,7 +126,7 @@ datum
 			name = "Thermite"
 			id = "thermite"
 			result = "thermite"
-			required_reagents = list("aluminum" = 1, "iron" = 1, "oxygen" = 1)
+			required_reagents = list("aluminium" = 1, "iron" = 1, "oxygen" = 1)
 			result_amount = 3
 
 		lexorin
@@ -433,7 +433,7 @@ datum
 			result_amount = null
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
-				var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(2, 1, location)
 				s.start()
 				for(var/mob/living/carbon/M in viewers(world.view, location))
