@@ -98,16 +98,15 @@
 		return
 	icon_state = "bloba0"
 
-/obj/blob/bullet_act(flag)
-
-	if (flag == PROJECTILE_BULLET)
-		health -= 10
-		update()
-	else if (flag == PROJECTILE_BOLT)
-		poisoned(1)
-	else
-		health -= 20
-		update()
+/obj/blob/bullet_act(var/obj/item/projectile/Proj)
+	..()
+	switch(Proj.damage_type)
+	 if(BRUTE)
+		 health -= (Proj.damage)
+	 if(BURN)
+		 health -= (Proj.damage * 2)
+	update_icon()
+	return 0
 
 
 /obj/blob/attackby(var/obj/item/weapon/W, var/mob/user)
@@ -163,9 +162,9 @@
 		if(O.z != 1)
 			continue
 
-		if(istype(O, /obj/window))
+		if(istype(O, /obj/structure/window))
 			src.window++
-		else if(istype(O, /obj/grille))
+		else if(istype(O, /obj/structure/grille))
 			if(!O:destroyed)
 				src.grille++
 		else if(istype(O, /obj/machinery/door))

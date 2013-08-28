@@ -3,14 +3,25 @@
 	var/m_amt = 0	// metal
 	var/g_amt = 0	// glass
 	var/w_amt = 0	// waster amounts
+
+	var/origin_tech = null	//Used by R&D to determine what research bonuses it grants.
+	var/reliability = 100	//Used by SOME devices to determine how reliable they are.
+	var/crit_fail = 0
+	var/unacidable = 0 //universal "unacidabliness" var, here so you can use it in any obj.
+	animate_movement = 2
+
+	var/throwforce = 1
+	var/list/attack_verb = list() //Used in attackby() to say how something was attacked "[x] has been [z.attack_verb] by [y] with [z]"
+	var/in_use = 0 // If we have a user using us, this will be set on. We will check if the user has stopped using us, and thus stop updating and LAGGING EVERYTHING!
+	var/damtype = "brute"
+	var/force = 0
+
 	var/global/tagcnum = 0
 	var/explosionstrength = 0
 	var/spawnchance = null 	//If this is defined, this is the percent chance that this object will spawn.  Checked in New().  Intended to be defined on the map, for some randomness in item placement.
 
 	var/list/NetworkNumber = list( )
 	var/list/Networks = list( )
-
-	animate_movement = 2
 
 	proc
 		handle_internal_lifeform(mob/lifeform_inside_me, breath_request)
@@ -31,14 +42,18 @@
 			if(prob(100-spawnchance))
 				del src
 
+/obj/proc/interact(mob/user)
+	return
 
+/obj/proc/update_icon()
+	return
 
 
 
 /obj/item/policetaperoll
 	name = "police tape roll"
 	desc = "A roll of police tape used to block off crime scenes from the public."
-	icon = 'policetape.dmi'
+	icon = 'icons/policetape.dmi'
 	icon_state = "rollstart"
 	flags = FPRINT
 	var/tapestartx = 0
@@ -51,7 +66,7 @@
 /obj/item/policetape
 	name = "police tape"
 	desc = "A length of police tape.  Do not cross."
-	icon = 'policetape.dmi'
+	icon = 'icons/policetape.dmi'
 	anchored = 1
 	density = 1
 	throwpass = 1
@@ -94,7 +109,7 @@
 	opacity = 0
 	density = 0
 	anchored = 1
-	var/datum/effects/system/harmless_smoke_spread/smoke
+	var/datum/effect/system/harmless_smoke_spread/smoke
 
 
 
@@ -125,15 +140,6 @@
 	var/left = null
 	anchored = 1.0
 	flags = TABLEPASS
-
-
-/obj/bedsheetbin
-	name = "linen bin"
-	desc = "A bin for containing bedsheets."
-	icon = 'items.dmi'
-	icon_state = "bedbin"
-	var/amount = 23.0
-	anchored = 1.0
 
 /obj/begin
 	name = "begin"
@@ -191,28 +197,13 @@
 	name = "monkey"
 	var/mob/living/carbon/monkey/target = null
 
-/obj/grille
-	desc = "A piece of metal with evenly spaced gridlike holes in it. Blocks large object but lets small items, gas, or energy beams through."
-	name = "grille"
-	icon = 'structures.dmi'
-	icon_state = "grille"
-	density = 1
-	layer = 2.9
-	var/health = 10.0
-	var/destroyed = 0.0
-	anchored = 1.0
-	flags = FPRINT | CONDUCT
-	pressure_resistance = 5*ONE_ATMOSPHERE
-
 /obj/item
 	name = "item"
 	icon = 'items.dmi'
 	var/icon_old = null
 	var/abstract = 0.0
-	var/force = null
 	var/item_state = null
-	var/damtype = "brute"
-	var/throwforce = 10
+	throwforce = 10
 	var/r_speed = 1.0
 	var/health = null
 	var/burn_point = null
@@ -222,7 +213,14 @@
 	var/captured_by_securitron = 0
 	flags = FPRINT | TABLEPASS
 	pressure_resistance = 50
+	var/slowdown = 0
+	var/canremove = 1
+	var/armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	var/list/allowed = null //suit storage stuff.
 	var/obj/item/master = null
+
+/obj/item/proc/IsShield()
+	return 0
 
 /obj/item/device
 	icon = 'device.dmi'
@@ -250,29 +248,7 @@
 	flags = FPRINT | TABLEPASS| CONDUCT
 	item_state = "electronic"
 	var/status = 1
-
-/obj/item/device/flashlight
-	name = "flashlight"
-	desc = "A hand-held emergency light."
-	icon_state = "flight0"
-	var/on = 0
-	w_class = 2
-	item_state = "flight"
-	flags = FPRINT | ONBELT | TABLEPASS | CONDUCT
-	m_amt = 50
-	g_amt = 20
-
-/obj/item/device/healthanalyzer
-	name = "Health Analyzer"
-	icon_state = "health"
-	item_state = "analyzer"
-	desc = "A hand-held body scanner able to distinguish vital signs of the subject."
-	flags = FPRINT | ONBELT | TABLEPASS | CONDUCT
-	throwforce = 3
-	w_class = 1.0
-	throw_speed = 5
-	throw_range = 10
-	m_amt = 200
+	origin_tech = "magnets=2;combat=1"
 
 /obj/item/device/igniter
 	name = "igniter"
@@ -317,6 +293,7 @@
 	flags = FPRINT|ONBELT|TABLEPASS
 	w_class = 2
 	item_state = "electronic"
+	origin_tech = "magnets=2;engineering=2"
 	m_amt = 150
 
 /obj/item/device/multitool
@@ -328,6 +305,7 @@
 	throwforce = 5.0
 	throw_range = 15
 	throw_speed = 3
+	origin_tech = "magnets=1;engineering=1"
 	desc = "You can use this on airlocks or APCs to try to hack them without cutting wires."
 	m_amt = 50
 	g_amt = 20
@@ -337,7 +315,6 @@
 	name = "hacktool"
 	icon_state = "hacktool"
 	flags = FPRINT | TABLEPASS | CONDUCT
-	var/in_use = 0
 	force = 5.0
 	w_class = 2.0
 	throwforce = 5.0
@@ -370,23 +347,13 @@
 	m_amt = 100
 
 
-/obj/landmark
+/obj/effect/landmark
 	name = "landmark"
 	icon = 'screen1.dmi'
 	icon_state = "x2"
 	anchored = 1.0
 
-
-
-
-/*/obj/landmark/ptarget
-	name = "portal target"
-	icon = 'screen1.dmi'
-	icon_state = "x2"
-	anchored = 1.0
-	var/t_id*/
-
-/obj/landmark/derelict
+/obj/effect/landmark/derelict
 	name = "Derelict Info Node"
 
 	nodamage
@@ -401,27 +368,11 @@
 	glass
 
 
-/obj/landmark/alterations
+/obj/effect/landmark/alterations
 	name = "alterations"
 	nopath
 		invisibility = 101
 		name = "Bot No-Path"
-
-/obj/laser
-	name = "laser"
-	icon = 'projectiles.dmi'
-	var/damage = 0.0
-	var/range = 10.0
-
-/obj/lattice
-	desc = "A lightweight support lattice."
-	name = "lattice"
-	icon = 'structures.dmi'
-	icon_state = "lattice"
-	density = 0
-	anchored = 1.0
-	layer = 2
-	//	flags = 64.0
 
 /obj/list_container
 	name = "list container"
@@ -432,48 +383,10 @@
 
 	var/list/container = list(  )
 
-/obj/m_tray
-	name = "morgue tray"
-	icon = 'stationobjs.dmi'
-	icon_state = "morguet"
-	density = 1
-	layer = 2.0
-	var/obj/morgue/connected = null
-	anchored = 1.0
-
-/obj/c_tray
-	name = "crematorium tray"
-	icon = 'stationobjs.dmi'
-	icon_state = "cremat"
-	density = 1
-	layer = 2.0
-	var/obj/crematorium/connected = null
-	anchored = 1.0
-
 /obj/manifest
 	name = "manifest"
 	icon = 'screen1.dmi'
 	icon_state = "x"
-
-/obj/morgue
-	name = "morgue"
-	icon = 'stationobjs.dmi'
-	icon_state = "morgue1"
-	density = 1
-	var/obj/m_tray/connected = null
-	anchored = 1.0
-
-/obj/crematorium
-	name = "crematorium"
-	desc = "A human incinerator."
-	icon = 'stationobjs.dmi'
-	icon_state = "crema1"
-	density = 1
-	var/obj/c_tray/connected = null
-	anchored = 1.0
-	var/cremating = 0
-	var/id = 1
-	var/locked = 0
 
 /obj/mine
 	name = "Mine"
@@ -518,14 +431,6 @@
 	name = "Projection"
 	anchored = 1.0
 
-/obj/rack
-	name = "rack"
-	icon = 'objects.dmi'
-	icon_state = "rack"
-	density = 1
-	flags = FPRINT
-	anchored = 1.0
-
 /obj/screen
 	name = "screen"
 	icon = 'screen1.dmi'
@@ -557,115 +462,15 @@
 	var/moving = null
 	var/list/parts = list(  )
 
-/obj/landmark/start
+/obj/effect/landmark/start
 	name = "start"
 	icon = 'screen1.dmi'
 	icon_state = "x"
 	anchored = 1.0
 
-/obj/stool
-	name = "stool"
-	icon = 'objects.dmi'
-	icon_state = "stool"
-	flags = FPRINT
-	anchored = 1.0
-	pressure_resistance = 3*ONE_ATMOSPHERE
-
-/obj/stool/barstool
-	name = "barstool"
-	icon_state = "barstool"
-
-/obj/stool/bed
-	name = "bed"
-	desc = "This is used to lie in, sleep in or strap on."
-	icon_state = "bed"
-	anchored = 1.0
-	var/list/buckled_mobs = list(  )
-
-/obj/stool/chair
-	name = "chair"
-	desc = "You sit in this. Either by will or force."
-	icon_state = "chair"
-	var/status = 0.0
-	anchored = 1.0
-	var/list/buckled_mobs = list(  )
-
-/obj/stool/chair/e_chair
-	name = "electrified chair"
-	icon_state = "e_chair0"
-	var/atom/movable/overlay/overl = null
-	var/on = 0.0
-	var/obj/item/assembly/shock_kit/part1 = null
-	var/last_time = 1.0
-
-/obj/stool/chair/comfy
-	name = "comfy chair"
-	desc = "It looks comfy."
-
-/obj/stool/chair/comfy/brown
-	icon_state = "comfychair_brown"
-
-/obj/stool/chair/comfy/beige
-	icon_state = "comfychair_beige"
-
-/obj/stool/chair/comfy/teal
-	icon_state = "comfychair_teal"
-
-/obj/stool/chair/comfy/black
-	icon_state = "comfychair_black"
-
-/obj/stool/chair/comfy/lime
-	icon_state = "comfychair_lime"
-
-/obj/table
-	name = "table"
-	icon = 'structures.dmi'
-	icon_state = "table"
-	density = 1
-	anchored = 1.0
-
-/obj/table/reinforced
-	name = "reinforced table"
-	icon_state = "reinf_table"
-	var/status = 2
-
-/obj/table/woodentable
-	name = "wooden table"
-	icon_state = "woodentable"
-
-/obj/mopbucket
-	desc = "Fill it with water, but don't forget a mop!"
-	name = "mop bucket"
-	icon = 'janitor.dmi'
-	icon_state = "mopbucket"
-	density = 1
-	flags = FPRINT
-	pressure_resistance = ONE_ATMOSPHERE
-	flags = FPRINT | TABLEPASS | OPENCONTAINER
-
-/obj/kitchenspike
-	name = "a meat spike"
-	icon = 'kitchen.dmi'
-	icon_state = "spike"
-	desc = "A spike for collecting meat from animals"
-	density = 1
-	anchored = 1
-	var/meat = 0
-	var/occupied = 0
-
-/obj/displaycase
-	name = "Display Case"
-	icon = 'stationobjs.dmi'
-	icon_state = "glassbox1"
-	desc = "A display case for prized possessions."
-	density = 1
-	anchored = 1
-	var/health = 30
-	var/occupied = 1
-	var/destroyed = 0
-
-obj/item/brain
+/obj/item/brain
 	name = "brain"
+	desc = "A piece of juicy meat found in a person's head."
 	icon = 'surgery.dmi'
 	icon_state = "brain2"
 	flags = TABLEPASS
@@ -674,6 +479,7 @@ obj/item/brain
 	throwforce = 1.0
 	throw_speed = 3
 	throw_range = 5
+	origin_tech = "biotech=3"
 
 	var/mob/living/carbon/human/owner = null
 
@@ -683,16 +489,6 @@ obj/item/brain
 		if(src.owner)
 			src.name = "[src.owner]'s brain"
 
-/obj/noticeboard
-	name = "Notice Board"
-	icon = 'stationobjs.dmi'
-	icon_state = "nboard00"
-	flags = FPRINT
-	desc = "A board for pinning important notices upon."
-	density = 0
-	anchored = 1
-	var/notices = 0
-
 /obj/deskclutter
 	name = "desk clutter"
 	icon = 'items.dmi'
@@ -700,16 +496,4 @@ obj/item/brain
 	desc = "Some clutter that has accumalated over the years..."
 	anchored = 1
 
-
-
 /obj/item/mouse_drag_pointer = MOUSE_ACTIVE_POINTER
-
-
-/obj/item/weapon/ore
-	name = "Rock"
-	icon = 'rubble.dmi'
-	icon_state = "ore"
-	var/amt = 1
-	var/cook = 0
-	var/cook_temp = 1000
-	var/cook_time = 30

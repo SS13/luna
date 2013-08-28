@@ -21,7 +21,7 @@ Atmos alert computer
 	interact(user)
 
 
-/obj/machinery/computer/atmosphere/alerts/proc/interact(mob/user)
+/obj/machinery/computer/atmosphere/alerts/interact(mob/user)
 	usr.machine = src
 	var/dat = "<HEAD><TITLE>Current Ship Alerts</TITLE><META HTTP-EQUIV='Refresh' CONTENT='10'></HEAD><BODY>\n"
 	dat += "<A HREF='?src=\ref[user];mach_close=alerts'>Close</A><br><br>"

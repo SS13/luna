@@ -35,7 +35,7 @@
 			var/obj/item/I = user.equipped()
 			if(I && I.force)
 				var/d = rand(round(I.force / 4), I.force)
-				bruteloss += d
+				adjustBruteLoss(d)
 				for(var/mob/M in viewers(user, null))
 					if(M.client)
 						M.show_message(text("\red <B>[user] attacks [src]'s stomach wall with the [I.name]!"), 2)
@@ -54,66 +54,47 @@
 				N.show_message(text("\red <B>[M] bursts out of [src]!</B>"), 2)
 	. = ..(give_medal)
 
+/mob/living/carbon/proc/get_temperature(var/datum/gas_mixture/environment)
+	var/loc_temp = T0C
+	if(istype(loc, /obj/mecha))
+		var/obj/mecha/M = loc
+		loc_temp =  M.return_temperature()
+
+	else if(istype(get_turf(src), /turf/space))
+		var/turf/heat_turf = get_turf(src)
+		loc_temp = heat_turf.temperature
+
+	else if(istype(loc, /obj/machinery/atmospherics/unary/cryo_cell))
+		var/obj/machinery/atmospherics/unary/cryo_cell/C = loc
+
+		if(C.air_contents.total_moles() < 10)
+			loc_temp = environment.temperature
+		else
+			loc_temp = C.air_contents.temperature
+
+	else
+		loc_temp = environment.temperature
+
+	return loc_temp
+
 /mob/living/carbon/Stat()
 	..()
 	statpanel("Status")
 	stat(null, "Intent: [a_intent]")
 	stat(null, "Move Mode: [m_intent]")
 
-/mob/living/carbon/bullet_act(flag, A as obj)
-	if (locate(/obj/item/weapon/grab, src))
-		var/mob/safe = null
-		if (istype(l_hand, /obj/item/weapon/grab))
-			var/obj/item/weapon/grab/G = l_hand
-			if ((G.state == 3 && get_dir(src, A) == dir))
-				safe = G.affecting
-		if (istype(r_hand, /obj/item/weapon/grab))
-			var/obj/item/weapon.grab/G = r_hand
-			if ((G.state == 3 && get_dir(src, A) == dir))
-				safe = G.affecting
-		if (safe)
-			return safe.bullet_act(flag, A)
-	if (flag == PROJECTILE_BULLET)
-		var/d = 51
-		if (stat != 2)
-			bruteloss += d
-			updatehealth()
-			if (prob(50))
-				if(weakened <= 5)	weakened = 5
-		return
-	else if (flag == PROJECTILE_TASER)
-		if (prob(75) && stunned <= 10)
-			stunned = 10
+/mob/living/carbon/clean_blood()
+	. = ..()
+	if(ishuman(src))
+		var/mob/living/carbon/human/H = src
+		if(H.gloves)
+			H.gloves.clean_blood()
 		else
-			weakened = 10
-		if (stuttering < 10)
-			stuttering = 10
-	else if(flag == PROJECTILE_LASER)
-		var/d = 20
-
-		if (!eye_blurry) eye_blurry = 4 //This stuff makes no sense but lasers need a buff.
-		if (prob(25)) stunned++
-
-		if (stat != 2)
-			bruteloss += d
-			updatehealth()
-			if (prob(25))
-				stunned = 1
-	else if(flag == PROJECTILE_PULSE)
-		var/d = 40
-
-		if (stat != 2)
-			bruteloss += d
-			updatehealth()
-			if (prob(50))
-				stunned = min(stunned, 5)
-	else if(flag == PROJECTILE_BOLT)
-		toxloss += 3
-		radiation += 100
-		updatehealth()
-		stuttering += 5
-		drowsyness += 5
-	return
+			H.bloody_hands = initial(bloody_hands)
+			H.bloody_hands_mob = null
+			H.blood_DNA = initial(blood_DNA)
+			H.blood_type = initial(blood_type)
+	update_clothing()
 
 /mob/living/carbon/Move()
 	if (buckled)
@@ -183,7 +164,13 @@
 		. = ..()
 	if ((s_active && !( s_active in contents ) ))
 		s_active.close(src)
+
+	if(update_slimes)
+		for(var/mob/living/carbon/slime/M in view(1,src))
+			M.UpdateFeed(src)
 	return
+
+
 
 /mob/living/carbon/proc/TakeDamage(zone, brute, burn)
 	var/datum/organ/external/E = organs[text("[]", zone)]
@@ -219,4 +206,55 @@
 	return L
 
 /mob/living/carbon/proc/UpdateDamageIcon()
+	return
+
+
+/mob/living/carbon/attack_hand(mob/user)
+	if (!ticker)
+		user << "You cannot attack people before the game has started."
+		return
+
+	if (istype(loc, /turf) && istype(loc.loc, /area/start))
+		user << "No attacking people at spawn, you jackass."
+		return
+
+	if(!iscarbon(user)) return
+
+	for(var/datum/disease/D in viruses)
+		if(D.spread_by_touch())
+			user.contract_disease(D, 0, 1, CONTACT_HANDS)
+
+	for(var/datum/disease/D in user.viruses)
+		if(D.spread_by_touch())
+			contract_disease(D, 0, 1, CONTACT_HANDS)
+
+/*	if(lying || isslime(src))
+		if(user.a_intent == "help")
+			if(surgeries.len)
+				for(var/datum/surgery/S in surgeries)
+					if(S.next_step(user, src))
+						return 1
+	return 0*/
+
+
+/mob/living/carbon/attack_paw(mob/M as mob)
+	if (!ticker)
+		M << "You cannot attack people before the game has started."
+		return
+
+	if (istype(loc, /turf) && istype(loc.loc, /area/start))
+		M << "No attacking people at spawn, you jackass."
+		return
+
+	if(!istype(M, /mob/living/carbon)) return
+
+
+	for(var/datum/disease/D in viruses)
+		if(D.spread_by_touch())
+			M.contract_disease(D, 0, 1, CONTACT_HANDS)
+
+	for(var/datum/disease/D in M.viruses)
+		if(D.spread_by_touch())
+			contract_disease(D, 0, 1, CONTACT_HANDS)
+
 	return

@@ -34,12 +34,6 @@
 		usr.fireloss += 10
 		return
 
-	if ((usr.mutations & 16) && prob(50))
-		usr << "\red The [src] slips out of your hand and hits your head."
-		usr.bruteloss += 10
-		usr.paralysis += 20
-		return
-
 //	if(..() == BLOCKED)
 //		return
 

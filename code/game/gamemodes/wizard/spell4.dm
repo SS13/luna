@@ -1,4 +1,4 @@
-/client/proc/fireball(mob/T as mob in oview())
+/client/proc/fireball(mob/living/T as mob in oview())
 	set category = "Spells"
 	set name = "Fireball"
 	set desc="Fireball target:"
@@ -28,8 +28,8 @@
 	for(i=0, i<100, i++)
 		step_to(A,T,0)
 		if (get_dist(A,T) <= 1)
-			T.bruteloss += 20
-			T.fireloss += 25
+			T.adjustBruteLoss(10)
+			T.adjustFireLoss(35)
 
 			explosion(T.loc, -1, -1, 2, 2, 1)
 			del(A)

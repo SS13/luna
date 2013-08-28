@@ -95,7 +95,7 @@
 		else
 			do_teleport(M, com.locked, 0) //dead-on precision
 	else
-		var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 		s.set_up(5, 1, src)
 		s.start()
 		for(var/mob/B in hearers(src, null))
@@ -119,7 +119,7 @@
 	else
 		tmploc = locate(tx, ty, destination.z)
 
-	if(tx == destturf.x && ty == destturf.y && (istype(destination.loc, /obj/closet) || istype(destination.loc, /obj/secure_closet)))
+	if(tx == destturf.x && ty == destturf.y && (istype(destination.loc, /obj/structure/closet) || istype(destination.loc, /obj/secure_closet)))
 		tmploc = destination.loc
 
 	if(tmploc==null)
@@ -128,7 +128,7 @@
 	M.loc = tmploc
 	sleep(2)
 
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(5, 1, M)
 	s.start()
 	return
@@ -208,14 +208,6 @@
 	else
 		icon_state = "controller"
 
-
-/obj/laser/Bump()
-	src.range--
-	return
-
-/obj/laser/Move()
-	src.range--
-	return
 
 /atom/proc/laserhit(L as obj)
 	return 1

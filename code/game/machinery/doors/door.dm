@@ -1,22 +1,7 @@
-/obj/machinery/door/Bumped(atom/AM)
-	if(p_open || operating || !density || !autoopen) return
-	if(ismob(AM))
-		var/mob/M = AM
-		if(world.timeofday - AM.last_bumped <= 5) return
-		if(M.client && !M:handcuffed) attack_hand(M)
-	else if(istype(AM, /obj/machinery/bot))
-		var/obj/machinery/bot/bot = AM
-		if(src.check_access(bot.botcard))
-			if(density)
-				open()
-	else if(istype(AM, /obj/alien/facehugger))
-		if(src.check_access(null))
-			if(density)
-				open()
 // beepDERP
 /obj/machinery/door/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group) return 0
-	if(istype(mover, /obj/beam))
+	if(istype(mover) && mover.checkpass(PASSGLASS))
 		return !opacity
 	return !density
 
@@ -158,7 +143,7 @@
 			else
 				src.forceopen()
 				src.operating = -1
-				var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(2, 1, src)
 				s.start()
 				flick("door_spark", src)
@@ -167,12 +152,12 @@
 			if(prob(50))
 				src.forceopen()
 				src.operating = -1
-				var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(2, 1, src)
 				s.start()
 				flick("door_spark", src)
 
-/obj/machinery/door/proc/update_icon()
+/obj/machinery/door/update_icon()
 	if(density)
 		icon_state = "door1"
 	else
@@ -310,6 +295,14 @@
 			close()
 	return
 
+/obj/machinery/door/unpowered/Bumped(atom/AM)
+	if(istype(AM, /obj/mecha))
+		var/obj/mecha/mecha = AM
+		if(density)
+			if(mecha.occupant && src.allowed(mecha.occupant))
+				open()
+	return
+
 /obj/machinery/door/unpowered/shuttle
 	icon = 'shuttle.dmi'
 	name = "door"
@@ -330,10 +323,7 @@
 			if(A.name == "Escape Pod A" || A.name == "Escape Pod B" || A.name == "Space")
 				user.show_viewers(text("\blue [] opens the shuttle door.", user))
 				src.add_fingerprint(user)
-				open()
-				spawn(100)
-					if(!LaunchControl.online && !src.density)
-						close()
+			open()
 		else
 			src.add_fingerprint(user)
 			close()

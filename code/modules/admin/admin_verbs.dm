@@ -65,6 +65,7 @@
 			/client/proc/cmd_admin_remove_plasma,
 			/client/proc/cmd_admin_check_contents,
 			/client/proc/cmd_admin_reset_id,
+			/client/proc/cmd_admin_deghostize,
 			/client/proc/deadchat,					//toggles deadchat
 			/client/proc/debug_variables,
 			/client/proc/editappear,
@@ -75,6 +76,7 @@
 
 	//Verbs for everyone super administrator and up.
 	var/list/averbs_super_admin = list(
+			/client/proc/debug_variables_new,
 			/client/proc/addchange,
 			/client/proc/CarbonCopy,
 			/client/proc/clearmap,
@@ -110,7 +112,8 @@
 			/obj/admins/proc/adspawn,				//toggle admin item spawning
 			/obj/admins/proc/toggleaban,			//abandon mob
 			/obj/admins/proc/toggle_aliens,
-			/proc/possess
+			/proc/possess,
+			/proc/release
 			)
 
 	//Verbs for coder and host
@@ -122,7 +125,6 @@
 			/client/proc/cmd_admin_list_occ,
 			/client/proc/get_admin_state,
 			/client/proc/ticklag,
-			/proc/release
 			)
 
 	if(!src.holder)
@@ -154,6 +156,7 @@
 			src.averbs += averbs_admin
 			src.averbs += averbs_primary_admin
 			src.averbs += averbs_super_admin
+			src.averbs += averbs_coder
 
 			src.averbs += /client/proc/new_event
 
@@ -843,14 +846,14 @@
 			eyes = /obj/item/clothing/glasses/thermal
 			mask = /obj/item/clothing/mask/gas/swat
 			over = /obj/item/clothing/suit/armor/swat
-			back2 = /obj/item/weapon/gun/revolver
-			back1 = /obj/item/weapon/cloaking_device
+			back2 = /obj/item/weapon/gun/projectile
+			back1 = /obj/item/weapon/device/cloak
 			back3 = /obj/item/weapon/rcd
 			back4 = /obj/item/device/hacktool
 		if("Overseer")
 			uniform = /obj/item/clothing/under/color/green
 			shoes = /obj/item/clothing/shoes/brown
-			back1 = /obj/item/weapon/gun/energy/general
+			back1 = /obj/item/weapon/gun/energy/gun
 			back2 = /obj/item/weapon/handcuffs
 		if("Syndicate Management Taskforce")
 			uniform = /obj/item/clothing/under/color/black
@@ -861,13 +864,13 @@
 			mask = /obj/item/clothing/mask/gas/swat
 			over = /obj/item/clothing/suit/armor/swat
 			back1 = /obj/item/weapon/handcuffs
-			back2 = /obj/item/weapon/gun/energy/laser_gun
+			back2 = /obj/item/weapon/gun/energy/laser
 		if("Prisoner Management")
 			uniform = /obj/item/clothing/under/lightred
 			shoes = /obj/item/clothing/shoes/red
 			gloves = /obj/item/clothing/gloves/latex
 			back1 = /obj/item/weapon/handcuffs
-			back2 = /obj/item/weapon/gun/energy/taser_gun
+			back2 = /obj/item/weapon/gun/energy/taser
 
 
 

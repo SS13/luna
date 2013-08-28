@@ -277,7 +277,7 @@ datum/mind
 					current_mode:add_revolutionary(src)
 
 				if ("syndicate")
-					var/obj/landmark/synd_spawn = locate("landmark*Syndicate-Spawn")
+					var/obj/effect/landmark/synd_spawn = locate("landmark*Syndicate-Spawn")
 					current.loc = get_turf(synd_spawn)
 					current_mode:equip_syndicate(current)
 					current_mode:syndicates += src

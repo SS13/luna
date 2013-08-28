@@ -15,13 +15,14 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 	throw_speed = 1
 	throw_range = 5
 	w_class = 3.0
+	origin_tech = "combat=1;plasmatech=1"
 	var/processing = 0
 	var/operating = 0
 	var/throw_amount = 100
 	var/lit = 0	//on or off
 	var/turf/previousturf = null
 	var/obj/item/weapon/weldingtool/part1 = null
-	var/obj/item/weapon/rods/part2 = null
+	var/obj/item/stack/rods/part2 = null
 	var/obj/item/device/igniter/part3 = null
 	var/obj/item/weapon/tank/plasma/part4 = null
 	m_amt = 500
@@ -297,7 +298,7 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 	if (!src.part4)
 		user << "\red Attach a plasma tank first!"
 		return
-	var/dat = text("<TT><B>Flamethrower (<A HREF='?src=\ref[src];light=1'>[lit ? "<font color='red'>Lit</font>" : "Unlit"]</a>)</B><BR>\n Tank Pressure: [src.part4.air_contents.return_pressure()]<BR>\nAmount to throw: <A HREF='?src=\ref[src];amount=-100'>-</A> <A HREF='?src=\ref[src];amount=-10'>-</A> <A HREF='?src=\ref[src];amount=-1'>-</A> [src.throw_amount] <A HREF='?src=\ref[src];amount=1'>+</A> <A HREF='?src=\ref[src];amount=10'>+</A> <A HREF='?src=\ref[src];amount=100'>+</A><BR>\n<A HREF='?src=\ref[src];remove=1'>Remove plasmatank</A> - <A HREF='?src=\ref[src];close=1'>Close</A></TT>")
+	var/dat = text("<TT><B>Flamethrower (<A HREF='?src=\ref[src];light=1'>[lit ? "<font color='red'>Lit</font>" : "Unlit"]</a>)</B><BR>\n Tank Pressure: [src.part4.air_contents.return_pressure()]<BR>\namount to throw: <A HREF='?src=\ref[src];amount=-100'>-</A> <A HREF='?src=\ref[src];amount=-10'>-</A> <A HREF='?src=\ref[src];amount=-1'>-</A> [src.throw_amount] <A HREF='?src=\ref[src];amount=1'>+</A> <A HREF='?src=\ref[src];amount=10'>+</A> <A HREF='?src=\ref[src];amount=100'>+</A><BR>\n<A HREF='?src=\ref[src];remove=1'>Remove plasmatank</A> - <A HREF='?src=\ref[src];close=1'>Close</A></TT>")
 	user << browse(dat, "window=flamethrower;size=600x300")
 	onclose(user, "flamethrower")
 	return

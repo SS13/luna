@@ -65,10 +65,10 @@
 /obj/cabling/hide(var/intact)
 	if(!istype(loc, /turf/space) && level == 1)
 		invisibility = intact ? 101 : 0
-	UpdateIcon()
+	update_icon()
 
 
-/obj/cabling/proc/UpdateIcon()
+/obj/cabling/update_icon()
 	icon_state = "[Direction1]-[Direction2][invisibility?"-f":""]"
 	return
 
@@ -152,8 +152,8 @@
 
 		del src
 
-	else if(istype(W, /obj/item/weapon/CableCoil))
-		var/obj/item/weapon/CableCoil/Coil = W
+	else if(istype(W, /obj/item/weapon/cable_coil))
+		var/obj/item/weapon/cable_coil/Coil = W
 
 		Coil.JoinCable(src, User)
 

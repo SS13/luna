@@ -22,17 +22,5 @@
 	new /obj/item/clothing/shoes/brown( src )
 	new /obj/item/clothing/glasses/regular( src )
 	new /obj/item/clothing/suit/storage/labcoat( src )
-	new /obj/item/weapon/storage/backpack/medic(src)
-	return
-
-/obj/secure_closet/chem/New()
-	..()
-	sleep(2)
-	new /obj/item/device/radio/headset/headset_medsci(src)
-	new /obj/item/device/pda/chem(src)
-	new /obj/item/clothing/under/rank/chemist( src )
-	new /obj/item/clothing/shoes/brown( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/suit/storage/labcoat/chem( src )
-	new /obj/item/weapon/storage/backpack/medic(src)
+	new /obj/item/weapon/storage/backpack(src)
 	return

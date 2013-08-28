@@ -23,6 +23,15 @@
 	power = 2
 	size = "large"
 
+/obj/item/weapon/syndie/c4explosive/heavy/New()
+	var/K = rand(1,2000)
+	K = md5(num2text(K)+name)
+	K = copytext(K,1,7)
+	src.desc += "\n You see [K] engraved on \the [src]"
+	var/obj/item/weapon/syndie/c4detonator/heavy/detonator = new(src.loc)
+	detonator.desc += "\n You see [K] engraved on \the [src]"
+	detonator.bomb = src
+
 /obj/item/weapon/syndie/c4explosive/New()
 	var/K = rand(1,2000)
 	K = md5(num2text(K)+name)
@@ -52,9 +61,9 @@
 
 /obj/item/weapon/syndie/c4detonator
 	icon_state = "c-4detonator_0"
-	item_state = "c-4detonator"
-	name = "lighter"  /*Sneaky, thanks Dreyfus.*/
-	desc = "A disposable lighter, it's quite heavy."
+	item_state = "zippo"
+	name = "Zippo lighter"
+	desc = "The zippo, it's quite heavy."
 	w_class = 1
 
 	var/obj/item/weapon/syndie/c4explosive/bomb
@@ -80,5 +89,34 @@
 
 					if("Close the lighter.")
 						src.icon_state = "c-4detonator_0"
+						user << "You close the lighter."
+				pr_open = 0
+
+/obj/item/weapon/syndie/c4detonator/heavy
+	icon_state = "OLDc-4detonator_0"
+	item_state = "c-4detonator"
+	name = "lighter"  /*Sneaky, thanks Dreyfus.*/
+	desc = "A disposable lighter, it's quite heavy."
+
+/obj/item/weapon/syndie/c4detonator/heavy/attack_self(mob/user as mob)
+	switch(src.icon_state)
+		if("OLDc-4detonator_0")
+			src.icon_state = "OLDc-4detonator_1"
+			user << "You flick open the lighter."
+
+		if("OLDc-4detonator_1")
+			if(!pr_open)
+				pr_open = 1
+				switch(alert(user, "What would you like to do?", "Lighter", "Press the button.", "Close the lighter."))
+					if("Press the button.")
+						user << "\red You press the button."
+						flick("OLDc-4detonator_click", src)
+						if(src.bomb)
+							src.bomb.detonate()
+							log_admin("[user.real_name]([user.ckey]) has triggered [src.bomb] with [src].")
+							message_admins("\red [user.real_name]([user.ckey]) has triggered [src.bomb] with [src].")
+
+					if("Close the lighter.")
+						src.icon_state = "OLDc-4detonator_0"
 						user << "You close the lighter."
 				pr_open = 0

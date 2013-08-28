@@ -67,7 +67,7 @@ Pod/Blast Doors computer
 	for(var/x in src.verbs)
 		src.verbs -= x
 	set_broken()
-	var/datum/effects/system/harmless_smoke_spread/smoke = new /datum/effects/system/harmless_smoke_spread()
+	var/datum/effect/system/harmless_smoke_spread/smoke = new /datum/effect/system/harmless_smoke_spread()
 	smoke.set_up(5, 0, src)
 	smoke.start()
 	return
@@ -134,8 +134,8 @@ Pod/Blast Doors computer
 	if(istype(I, /obj/item/weapon/screwdriver) && circuit)
 		playsound(src.loc, 'Screwdriver.ogg', 50, 1)
 		if(do_after(user, 20))
-			var/obj/computerframe/A = new /obj/computerframe( src.loc )
-			var/obj/item/weapon/circuitboard/M = new circuit( A )
+			var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
+			var/obj/item/weapon/circuitboard/computer/M = new circuit( A )
 			A.circuit = M
 			A.anchored = 1
 			for (var/obj/C in src)
@@ -153,24 +153,6 @@ Pod/Blast Doors computer
 	else
 		src.attack_hand(user)
 	return
-
-
-/obj/machinery/computer/security/New()
-	..()
-	verbs -= /obj/machinery/computer/security/verb/station_map
-
-/obj/machinery/computer/security/attack_ai(var/mob/user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/computer/security/attack_paw(var/mob/user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/computer/security/check_eye(var/mob/user as mob)
-	if ((get_dist(user, src) > 1 || !( user.canmove ) || user.blinded || !( src.current ) || !( src.current.status )) && (!istype(user, /mob/living/silicon)))
-		return null
-	user.reset_view(src.current)
-	return 1
-
 
 
 /obj/machinery/computer/card/attack_ai(var/mob/user as mob)
@@ -470,19 +452,19 @@ Pod/Blast Doors computer
 		if(do_after(user, 20))
 			if (src.stat & BROKEN)
 				user << "\blue The broken glass falls out."
-				var/obj/computerframe/A = new /obj/computerframe( src.loc )
+				var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
 				new /obj/item/weapon/shard( src.loc )
 
 				//generate appropriate circuitboard. Accounts for /pod/old computer types
-				var/obj/item/weapon/circuitboard/pod/M = null
+				var/obj/item/weapon/circuitboard/computer/pod/M = null
 				if(istype(src, /obj/machinery/computer/pod/old))
-					M = new /obj/item/weapon/circuitboard/olddoor( A )
+					M = new /obj/item/weapon/circuitboard/computer/olddoor( A )
 					if(istype(src, /obj/machinery/computer/pod/old/syndicate))
-						M = new /obj/item/weapon/circuitboard/syndicatedoor( A )
+						M = new /obj/item/weapon/circuitboard/computer/syndicatedoor( A )
 					if(istype(src, /obj/machinery/computer/pod/old/swf))
-						M = new /obj/item/weapon/circuitboard/swfdoor( A )
+						M = new /obj/item/weapon/circuitboard/computer/swfdoor( A )
 				else //it's not an old computer. Generate standard pod circuitboard.
-					M = new /obj/item/weapon/circuitboard/pod( A )
+					M = new /obj/item/weapon/circuitboard/computer/pod( A )
 
 				for (var/obj/C in src)
 					C.loc = src.loc
@@ -494,18 +476,18 @@ Pod/Blast Doors computer
 				del(src)
 			else
 				user << "\blue You disconnect the monitor."
-				var/obj/computerframe/A = new /obj/computerframe( src.loc )
+				var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
 
 				//generate appropriate circuitboard. Accounts for /pod/old computer types
-				var/obj/item/weapon/circuitboard/pod/M = null
+				var/obj/item/weapon/circuitboard/computer/pod/M = null
 				if(istype(src, /obj/machinery/computer/pod/old))
-					M = new /obj/item/weapon/circuitboard/olddoor( A )
+					M = new /obj/item/weapon/circuitboard/computer/olddoor( A )
 					if(istype(src, /obj/machinery/computer/pod/old/syndicate))
-						M = new /obj/item/weapon/circuitboard/syndicatedoor( A )
+						M = new /obj/item/weapon/circuitboard/computer/syndicatedoor( A )
 					if(istype(src, /obj/machinery/computer/pod/old/swf))
-						M = new /obj/item/weapon/circuitboard/swfdoor( A )
+						M = new /obj/item/weapon/circuitboard/computer/swfdoor( A )
 				else //it's not an old computer. Generate standard pod circuitboard.
-					M = new /obj/item/weapon/circuitboard/pod( A )
+					M = new /obj/item/weapon/circuitboard/computer/pod( A )
 
 				for (var/obj/C in src)
 					C.loc = src.loc

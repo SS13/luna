@@ -9,7 +9,7 @@
 	var/on = 0
 	var/temperature_archived
 	var/obj/overlay/O1 = null
-	var/mob/occupant = null
+	var/mob/living/occupant = null
 	var/beaker = null
 	var/next_trans = 0
 
@@ -82,7 +82,7 @@
 			<B>Current cell temperature:</B> [temp_text]K<BR>
 			<B>Cryo status:</B> [ src.on ? "<A href='?src=\ref[src];start=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];start=1'>On</A>"]<BR>
 			[beaker_text]<BR><BR>
-			<B>Current occupant:</B> [src.occupant ? "<BR>Name: [src.occupant]<BR>Health: [health_text]<BR>Oxygen deprivation: [src.occupant.oxyloss]<BR>Brute damage: [src.occupant.bruteloss]<BR>Fire damage: [src.occupant.fireloss]<BR>Toxin damage: [src.occupant.toxloss]<BR>Body temperature: [src.occupant.bodytemperature]" : "<FONT color=red>None</FONT>"]<BR>
+			<B>Current occupant:</B> [src.occupant ? "<BR>Name: [src.occupant]<BR>Health: [health_text]<BR>Oxygen deprivation: [src.occupant.oxyloss]<BR>Brute damage: [src.occupant.getBruteLoss()]<BR>Fire damage: [src.occupant.getFireLoss()]<BR>Toxin damage: [src.occupant.toxloss]<BR>Body temperature: [src.occupant.bodytemperature]" : "<FONT color=red>None</FONT>"]<BR>
 
 		"}
 
@@ -174,7 +174,7 @@
 						occupant.oxyloss -= 1
 					if(occupant.bodytemperature < 225)
 						if(ishuman(occupant))
-							for(var/datum/organ/external/O in occupant:organs2)
+							for(var/datum/organ/external/O in occupant:organs)
 								if(!O.destroyed)//FIND BACK
 									if(occupant.bruteloss) O.heal_damage(1,0,0)
 									if(occupant.fireloss) O.heal_damage(0,1,0)

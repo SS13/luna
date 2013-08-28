@@ -11,7 +11,7 @@ mob/var/next_pain_time = 0
 // partname is the name of a body part
 // amount is a num from 1 to 100
 mob/proc/pain(var/partname, var/amount, var/force)
-	if(stat != STAT_ALIVE) return
+	if(stat != CONSCIOUS) return
 	if(world.time < next_pain_time && !force)
 		return
 	if(amount > 10 && istype(src,/mob/living/carbon/human))
@@ -37,11 +37,13 @@ mob/proc/pain(var/partname, var/amount, var/force)
 
 mob/living/carbon/proc/handle_pain()
 	// not when sleeping
-	if(stat != STAT_ALIVE) return
+	if(stat != CONSCIOUS) return
 	if(istype(src,/mob/living/carbon/human))
 		var/maxdam = 0
 		var/datum/organ/external/damaged_organ = null
-		for(var/datum/organ/external/E in src:organs2)
+		for(var/datum/organ/external/E in src:organs)
+			if(E.robotic || E.destroyed)
+				continue
 			var/dam = E.get_damage()
 			// make the choice of the organ depend on damage,
 			// but also sometimes use one of the less damaged ones

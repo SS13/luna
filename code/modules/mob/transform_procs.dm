@@ -161,7 +161,7 @@
 
 //human -> robot
 
-/mob/living/carbon/human/proc/Robotize()
+/mob/living/carbon/human/proc/Robotize(var/showintro = 1)
 	if (monkeyizing)
 		return
 	for(var/obj/item/weapon/W in src)
@@ -180,12 +180,12 @@
 	invisibility = 101
 	for(var/t in organs)
 		del(organs[text("[t]")])
-	//client.screen -= main_hud1.contents
-	client.screen -= hud_used.contents
-	client.screen -= hud_used.adding
-	client.screen -= hud_used.mon_blo
-	client.screen -= list( oxygen, throw_icon, i_select, m_select, toxin, internals, fire, hands, healths, pullin, blind, flash, rest, sleep, mach )
-	client.screen -= list( zone_sel, oxygen, throw_icon, i_select, m_select, toxin, internals, fire, hands, healths, pullin, blind, flash, rest, sleep, mach )
+	if(client)
+		client.screen -= hud_used.contents
+		client.screen -= hud_used.adding
+		client.screen -= hud_used.mon_blo
+		client.screen -= list( oxygen, throw_icon, i_select, m_select, toxin, internals, fire, hands, healths, pullin, blind, flash, rest, sleep, mach )
+		client.screen -= list( zone_sel, oxygen, throw_icon, i_select, m_select, toxin, internals, fire, hands, healths, pullin, blind, flash, rest, sleep, mach )
 	var/mob/living/silicon/robot/O = new /mob/living/silicon/robot( loc )
 
 	// cyborgs produced by Robotize get an automatic power cell
@@ -206,10 +206,11 @@
 		client.mob = O
 	mind.transfer_to(O)		//Added to fix robot gibbing disconnecting the player. - Strumpetplaya
 	O.loc = loc
-	O << "<B>You are playing a Robot. A Robot can interact with most electronic objects in its view point.</B>"
-	O << "<B>You must follow the laws that the AI has. You are the AI's assistant to the station basically.</B>"
-	O << "To use something, simply double-click it."
-	O << {"Use say ":s to speak to fellow cyborgs and the AI through binary."}
+	if(showintro)
+		O << "<B>You are playing a Robot. A Robot can interact with most electronic objects in its view point.</B>"
+		O << "<B>You must follow the laws that the AI has. You are the AI's assistant to the station basically.</B>"
+		O << "To use something, simply double-click it."
+		O << {"Use say ":s to speak to fellow cyborgs and the AI through binary."}
 
 	O.job = "Cyborg"
 
@@ -237,13 +238,6 @@
 	invisibility = 101
 	for(var/t in organs)
 		del(organs[t])
-//	var/atom/movable/overlay/animation = new /atom/movable/overlay( loc )
-//	animation.icon_state = "blank"
-//	animation.icon = 'mob.dmi'
-//	animation.master = src
-//	flick("h2alien", animation)
-//	sleep(48 * tick_multiplier)
-//	del(animation)
 	var/mob/living/carbon/alien/humanoid/O = new /mob/living/carbon/alien/humanoid( loc )
 	O.name = "alien"
 	O.dna = dna

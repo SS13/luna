@@ -6,6 +6,7 @@
 	var/unique_enzymes = null
 	var/struc_enzymes = null
 	var/uni_identity = null
+	var/mutantrace = null
 
 /datum/dna/proc/check_integrity()
 	//Lazy.

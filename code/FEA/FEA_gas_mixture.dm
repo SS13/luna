@@ -13,23 +13,25 @@ What are the archived variables for?
 #define MINIMUM_HEAT_CAPACITY	0.0003
 #define QUANTIZE(variable)		(round(variable,0.0001))
 
+
+
+
+datum/gas
+	sleeping_agent
+		specific_heat = 40
+
+	oxygen_agent_b
+		specific_heat = 300
+
+	volatile_fuel
+		specific_heat = 30
+
+	var/moles = 0
+	var/specific_heat = 0
+
+	var/moles_archived = 0
+
 datum
-	gas
-		sleeping_agent
-			specific_heat = 40
-
-		oxygen_agent_b
-			specific_heat = 300
-
-		volatile_fuel
-			specific_heat = 30
-
-		var
-			moles = 0
-			specific_heat = 0
-
-			moles_archived = 0
-
 	gas_mixture
 		var
 			oxygen = 0
@@ -95,6 +97,12 @@ datum
 
 			return_pressure()
 				return total_moles()*R_IDEAL_GAS_EQUATION*temperature/volume
+
+			return_temperature()
+				return temperature
+
+			return_volume()
+				return max(0, volume)
 
 			thermal_energy()
 				return temperature*heat_capacity()
@@ -356,7 +364,7 @@ datum
 						trace_gases += corresponding
 					corresponding.moles += trace_gas.moles*giver.group_multiplier/group_multiplier
 
-			del(giver)
+			//del(giver)
 			return 1
 
 		remove(amount)

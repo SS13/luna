@@ -9,7 +9,7 @@
 	var/on = 0
 	var/temperature_archived
 	var/obj/overlay/O1 = null
-	var/mob/occupant = null
+	var/mob/living/occupant = null
 	var/beaker = null
 	var/next_trans = 0
 
@@ -91,7 +91,7 @@
 			<B>Current cell temperature:</B> [temp_text]K<BR>
 			<B>Cryo status:</B> [ src.on ? "<A href='?src=\ref[src];start=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];start=1'>On</A>"]<BR>
 			[beaker_text]<BR><BR>
-			<B>Current occupant:</B> [src.occupant ? "<BR>Name: [src.occupant]<BR>Health: [health_text]<BR>Oxygen deprivation: [src.occupant.oxyloss]<BR>Brute damage: [src.occupant.bruteloss]<BR>Fire damage: [src.occupant.fireloss]<BR>Toxin damage: [src.occupant.toxloss]<BR>Body temperature: [src.occupant.bodytemperature]" : "<FONT color=red>None</FONT>"]<BR>
+			<B>Current occupant:</B> [src.occupant ? "<BR>Name: [src.occupant]<BR>Health: [health_text]<BR>Oxygen deprivation: [src.occupant.oxyloss]<BR>Brute damage: [src.occupant.getBruteLoss()]<BR>Fire damage: [src.occupant.getFireLoss()]<BR>Toxin damage: [src.occupant.toxloss]<BR>Body temperature: [src.occupant.bodytemperature]" : "<FONT color=red>None</FONT>"]<BR>
 
 		"}
 
@@ -182,20 +182,20 @@
 						occupant.oxyloss -= 1
 					if(occupant.bodytemperature < 225)
 						if(ishuman(occupant))
-							for(var/datum/organ/external/O in occupant:organs2)
-								if(!O.destroyed)//FIND BACK
-									if(occupant.bruteloss) O.heal_damage(1,0,0)
-									if(occupant.fireloss) O.heal_damage(0,1,0)
-							if(occupant.toxloss) occupant.toxloss = max(0, occupant.toxloss - 1)
+							for(var/datum/organ/external/O in occupant:organs)
+								if(!O.destroyed && !O.robotic)//FIND BACK
+									if(occupant.bruteloss && prob(25)) O.heal_damage(1,0,0)
+									if(occupant.fireloss && prob(25)) O.heal_damage(0,1,0)
 						else
-							if(occupant.bruteloss) occupant.bruteloss = max(0, occupant.bruteloss - 1)
-							if(occupant.fireloss) occupant.fireloss = max(0, occupant.fireloss - 1)
-							if(occupant.toxloss) occupant.toxloss = max(0, occupant.toxloss - 1)
+							if(occupant.bruteloss && prob(25)) occupant.bruteloss = max(0, occupant.bruteloss - 1)
+							if(occupant.fireloss && prob(25)) occupant.fireloss = max(0, occupant.fireloss - 1)
+						if(occupant.toxloss && prob(25)) occupant.toxloss = max(0, occupant.toxloss - 1)
+
 				if(beaker && (next_trans == 0))
 					beaker:reagents.trans_to(occupant, 1, 10)
 					beaker:reagents.reaction(occupant)
 			next_trans++
-			if(next_trans == 10)
+			if(next_trans == 12)
 				next_trans = 0
 
 		heat_gas_contents()
@@ -267,7 +267,7 @@
 
 
 /mob/living/carbon/human/abiotic()
-	if ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || (src.back || src.wear_mask || src.head || src.shoes || src.w_uniform || src.wear_suit || src.glasses || src.ears || src.gloves || src.handcuffed))
+	if ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || src.handcuffed)
 		return 1
 	else
 		return 0

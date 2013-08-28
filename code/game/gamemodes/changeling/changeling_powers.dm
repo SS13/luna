@@ -79,7 +79,7 @@
 	usr << "\blue We stab [T] with the proboscis."
 	usr.visible_message(text("\red <B>[usr] stabs [T] with the proboscis!</B>"))
 	T << "\red <B>You feel a sharp stabbing pain!</B>"
-	T.bruteloss += 40
+	T.adjustBruteLoss(40)
 
 	if (!do_mob(usr, T, 200))
 		usr << "\red Our absorption of [T] has been interrupted!"

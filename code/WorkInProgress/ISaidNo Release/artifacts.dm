@@ -1,6 +1,6 @@
 // this goes in gameticker.dm's setup() proc and works in conjuction with landmarks manually placed on the map
 		var/list/artispawn = list()
-		for(var/obj/landmark/S in world)
+		for(var/obj/effect/landmark/S in world)
 			if (S.name == "Artifact spawn")
 				artispawn.Add(S.loc)
 		if(artispawn.len)
@@ -260,7 +260,7 @@
 				if("hydrogen")
 					if (W.reagents.has_reagent("hydrogen") || W.reagents.has_reagent("water")) src.Artifact_Activate()
 				if("corrosive")
-					if (W.reagents.has_reagent("acid") || W.reagents.has_reagent("pacid") || W.reagents.has_reagent("diethylamine")) src.Artifact_Activate()
+					if (W.reagents.has_reagent("sacid") || W.reagents.has_reagent("pacid") || W.reagents.has_reagent("diethylamine")) src.Artifact_Activate()
 				if("volatile")
 					if (W.reagents.has_reagent("plasma") || W.reagents.has_reagent("thermite")) src.Artifact_Activate()
 				if("toxic")
@@ -275,7 +275,7 @@
 		if (src.trigger == "heat")
 			if (istype(W,/obj/item/device/igniter)) src.Artifact_Activate()
 			if (istype(W, /obj/item/weapon/weldingtool) && W:welding) src.Artifact_Activate()
-			if (istype(W, /obj/item/weapon/zippo) && W:lit) src.Artifact_Activate()
+			if (istype(W, /obj/item/weapon/lighter) && W:lit) src.Artifact_Activate()
 
 	//Bump(atom/A)
 
@@ -470,7 +470,7 @@
 						if(randomturfs.len > 0)
 							M << "\red You are displaced by a strange force!"
 							M.loc = pick(randomturfs)
-							var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+							var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 							s.set_up(5, 1, M)
 							s.start()
 					src.charged = 0
@@ -559,7 +559,7 @@
 						if(randomturfs.len > 0)
 							M << "\red You are displaced by a strange force!"
 							M.loc = pick(randomturfs)
-							var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+							var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 							s.set_up(5, 1, M)
 							s.start()
 					src.charged = 0
@@ -664,7 +664,7 @@
 				if(randomturfs.len > 0)
 					user << "\red You are suddenly zapped away elsewhere!"
 					user.loc = pick(randomturfs)
-					var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+					var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 					s.set_up(5, 1, user)
 					s.start()
 

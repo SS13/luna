@@ -19,7 +19,7 @@
 	interact(user)
 
 
-/obj/machinery/computer/operating/proc/interact(mob/user)
+/obj/machinery/computer/operating/interact(mob/user)
 	if ( (get_dist(src, user) > 1 ) || (stat & (BROKEN|NOPOWER)) )
 		if (!istype(user, /mob/living/silicon))
 			user.machine = null
@@ -39,9 +39,9 @@
 <B>Blood Type:</B> [src.victim.b_type]<BR>
 <BR>
 <B>Health:</B> [src.victim.health]<BR>
-<B>Brute Damage:</B> [src.victim.bruteloss]<BR>
+<B>Brute Damage:</B> [src.victim.getBruteLoss()]<BR>
 <B>Toxins Damage:</B> [src.victim.toxloss]<BR>
-<B>Fire Damage:</B> [src.victim.fireloss]<BR>
+<B>Fire Damage:</B> [src.victim.getFireLoss()]<BR>
 <B>Suffocation Damage:</B> [src.victim.oxyloss]<BR>
 <B>Patient Status:</B> [src.victim.stat ? "Non-responsive" : "Stable"]<BR>
 "}

@@ -37,7 +37,7 @@ obj/item/weapon/laptop/proc/receive_packet(var/obj/machinery/sender, var/datum/f
 		R.destination_id = P.source_id
 		receive_packet(src, R)
 
-obj/item/weapon/laptop/proc/updateicon()
+obj/item/weapon/laptop/update_icon()
 	icon_state = "laptop_[on]"
 obj/item/weapon/laptop/attack_self(mob/user as mob)
 	if(!on)

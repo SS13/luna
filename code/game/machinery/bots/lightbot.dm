@@ -23,7 +23,7 @@
 				targets += T
 		target = locate() in targets
 		if(target && target != oldtarget)
-			src.path = AStar(src.loc, src.target.loc, /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 120, id=botcard, exclude=list(/obj/landmark/alterations/nopath))
+			src.path = AStar(src.loc, src.target.loc, /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 120, id=botcard, exclude=list(/obj/effect/landmark/alterations/nopath))
 			world << "found light"
 		else
 			return // This should happen...

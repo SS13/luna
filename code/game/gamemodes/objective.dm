@@ -121,7 +121,7 @@ datum
 					if("captain's antique laser gun")
 						steal_target = /obj/item/weapon/gun/energy/laser_gun/captain
 					if("hand teleporter")
-						steal_target = /obj/item/weapon/hand_tele
+						steal_target = /obj/item/weapon/device/hand_tele
 					if("RCD")
 						steal_target = /obj/item/weapon/rcd
 					if("jetpack")
@@ -131,13 +131,13 @@ datum
 					if("small plasma tank")
 						steal_target = /obj/item/weapon/tank/plasma
 					if("Medical Records circuitboard")
-						steal_target = /obj/item/weapon/circuitboard/med_data
+						steal_target = /obj/item/weapon/circuitboard/computer/med_data
 					if("Security Records circuitboard")
-						steal_target = /obj/item/weapon/circuitboard/secure_data
+						steal_target = /obj/item/weapon/circuitboard/computer/secure_data
 					if("Communications circuitboard")
-						steal_target = /obj/item/weapon/circuitboard/communications
+						steal_target = /obj/item/weapon/circuitboard/computer/communications
 					if("zippo lighter")
-						steal_target = /obj/item/weapon/zippo
+						steal_target = /obj/item/weapon/lighter/zippo
 
 
 				explanation_text = "Steal a [target_name]."
@@ -161,7 +161,7 @@ datum
 				target_name = pick(items)
 				switch(target_name)
 					if("Sulphuric acid")
-						steal_reagent = /datum/reagent/acid
+						steal_reagent = /datum/reagent/sacid
 					if("Polytrinic acid")
 						steal_reagent = /datum/reagent/pacid
 					if("Space Lube")

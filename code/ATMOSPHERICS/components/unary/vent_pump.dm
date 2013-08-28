@@ -1,7 +1,7 @@
 /obj/machinery/atmospherics/unary/vent_pump
 	icon = 'vent_pump.dmi'
 	icon_state = "off"
-
+	layer = 2.1
 	name = "Air Vent"
 	desc = "Has a valve and pump attached to it"
 
@@ -300,7 +300,7 @@
 					used_temperature = environment.temperature
 				var/transfer_moles = used_pressure*air_contents.volume/(max(used_temperature,TCMB) * R_IDEAL_GAS_EQUATION)
 
-				if(debug_info) world << "Transfer Amount [transfer_moles] Moles"
+				if(debug_info) world << "Transfer amount [transfer_moles] Moles"
 
 				var/datum/gas_mixture/intake = T.remove_air(transfer_moles)
 				var/datum/gas_mixture/env = air_contents.remove(transfer_moles)
@@ -413,14 +413,14 @@
 /obj/machinery/atmospherics/unary/vent_filter
 	icon = 'pipe_vent.dmi'
 	icon_state = "intact"
-
+	layer = 2.1
 	name = "Vent"
 	desc = "A large air vent"
 	level = 1
 	initialize_directions = 2
 	New()
 		..()
-		layer = 2
+		layer = 2.1
 		air_contents.volume = 500
 
 	high_volume

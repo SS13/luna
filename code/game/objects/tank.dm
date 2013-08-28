@@ -1,3 +1,19 @@
+/obj/item/weapon/tank
+	name = "tank"
+	icon = 'tank.dmi'
+
+	var/datum/gas_mixture/air_contents = null
+	var/distribute_pressure = ONE_ATMOSPHERE
+	flags = FPRINT | TABLEPASS | CONDUCT | ONBACK
+
+	pressure_resistance = ONE_ATMOSPHERE*5
+
+	force = 5.0
+	throwforce = 10.0
+	throw_speed = 1
+	throw_range = 4
+
+
 /obj/item/weapon/tank/blob_act()
 	if(prob(25))
 		var/turf/location = src.loc
@@ -112,13 +128,13 @@
 			pressure = air_contents.return_pressure()
 
 			var/range = (pressure-TANK_FRAGMENT_PRESSURE)/TANK_FRAGMENT_SCALE
-			range = min(range, 12)		// was 8
+			range = min(range, 14)		// was 8
 			var/turf/epicenter = get_turf(loc)
 
 
 			//world << "\blue Exploding Pressure: [pressure] kPa, intensity: [range]"
 			if(epicenter)
-				explosion(epicenter, round(range*0.25), round(range*0.5), round(range), round(range*1.5), 1)
+				explosion(epicenter, round(range*0.24), round(range*0.5), round(range), round(range*1.5), 1)
 				del(src)
 				return
 			else
@@ -226,11 +242,12 @@
 	..()
 
 /obj/item/weapon/tank/examine()
+	..()
 	var/obj/item/weapon/icon = src
 	if (istype(src.loc, /obj/item/assembly))
 		icon = src.loc
 		if (!in_range(src, usr))
-			if (icon == src) usr << "\blue It's a \icon[icon]! If you want any more information you'll need to get closer."
+			if (icon == src) usr << "\blue If you want any more information you'll need to get closer."
 			return
 
 		var/celsius_temperature = src.air_contents.temperature-T0C
@@ -253,23 +270,82 @@
 
 	return
 
+
+/obj/item/weapon/tank/air
+	name = "air tank"
+	desc = "Mixed anyone?"
+	icon_state = "oxygen"
+
 /obj/item/weapon/tank/air/New()
 	..()
 	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C) * O2STANDARD
 	src.air_contents.nitrogen = (6*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C) * N2STANDARD
 	return
 
+
+/obj/item/weapon/tank/oxygen
+	name = "oxygen tank"
+	desc = "A tank of oxygen."
+	icon_state = "oxygen"
+
 /obj/item/weapon/tank/oxygen/New()
 	..()
 	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
 
+/obj/item/weapon/tank/oxygen/yellow
+	desc = "A tank of oxygen, this one is yellow."
+	icon_state = "oxygen_f"
+
+/obj/item/weapon/tank/oxygen/red
+	desc = "A tank of oxygen, this one is red."
+	icon_state = "oxygen_fr"
+
+
+/obj/item/weapon/tank/emergency_oxygen
+	name = "emergency oxygentank"
+	icon_state = "emergency"
+	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
+	w_class = 2.5
+	force = 4.0
 /obj/item/weapon/tank/emergency_oxygen/New()
 	..()
-	src.air_contents.volume = 20 //liters
+	src.air_contents.volume = 15 //liters
 	src.air_contents.oxygen = (1*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
 
+/obj/item/weapon/tank/emergency_oxygen/engi
+	icon_state = "emergency_engi"
+/obj/item/weapon/tank/emergency_oxygen/engi/New()
+	..()
+	src.air_contents.volume = 25 //liters
+	src.air_contents.oxygen = (1*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
+	return
+
+/obj/item/weapon/tank/emergency_double
+	name = "double emergency oxygentank"
+	icon_state = "emergency_double"
+	item_state = "emergency"
+	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
+	w_class = 2.5
+	force = 6.0
+/obj/item/weapon/tank/emergency_double/New()
+	..()
+	src.air_contents.volume = 30 //liters
+	return
+
+/obj/item/weapon/tank/emergency_double/engi
+	icon_state = "emergency_double_engi"
+/obj/item/weapon/tank/emergency_double/engi/New()
+	..()
+	src.air_contents.volume = 50 //liters
+	return
+
+
+/obj/item/weapon/tank/anesthetic
+	name = "anesthetic tank"
+	desc = "A tank with an N2O/O2 gas mix."
+	icon_state = "anesthetic"
 
 /obj/item/weapon/tank/anesthetic/New()
 	..()
@@ -281,6 +357,12 @@
 
 	src.air_contents.trace_gases += trace_gas
 	return
+
+
+/obj/item/weapon/tank/plasma
+	name = "plasma tank"
+	desc = "Contains dangerous plasma. Do not inhale. Warning: extremely flammable."
+	icon_state = "plasma"
 
 /obj/item/weapon/tank/plasma/New()
 	..()
@@ -302,17 +384,17 @@
 	loc = null
 
 	if(air_contents.temperature > (T0C + 400))
-		strength = fuel_moles/15
+		strength = fuel_moles/10
 
 		explosion(ground_zero, strength, strength*2, strength*3, strength*4, 1)
 
 	else if(air_contents.temperature > (T0C + 250))
-		strength = fuel_moles/20
+		strength = fuel_moles/15
 
 		explosion(ground_zero, 0, strength, strength*2, strength*3, 1)
 
 	else if(air_contents.temperature > (T0C + 100))
-		strength = fuel_moles/25
+		strength = fuel_moles/20
 
 		explosion(ground_zero, 0, 0, strength, strength*3, 1)
 

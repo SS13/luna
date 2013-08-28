@@ -3,17 +3,28 @@
 	icon_state = "jetpack0"
 	var/on = 0.0
 	w_class = 4.0
-	item_state = "jetpack"
-	var/datum/effects/system/ion_trail_follow/ion_trail
+	item_state = "jetpack0"
+	var/jettype = ""
+	var/datum/effect/system/ion_trail_follow/ion_trail
 
 /obj/item/weapon/tank/jetpack/syndie
+	jettype = "_s"
 	icon_state = "jetpack0_s"
-	item_state = "jetpack_s"
+	item_state = "jetpack0_s"
 
+/obj/item/weapon/tank/jetpack/ce
+	jettype = "_ce"
+	icon_state = "jetpack0_ce"
+	item_state = "jetpack0_ce"
+
+/obj/item/weapon/tank/jetpack/void
+	jettype = "_void"
+	icon_state = "jetpack0_void"
+	item_state = "jetpack0_void"
 
 /obj/item/weapon/tank/jetpack/New()
 	..()
-	src.ion_trail = new /datum/effects/system/ion_trail_follow()
+	src.ion_trail = new /datum/effect/system/ion_trail_follow()
 	src.ion_trail.set_up(src)
 	src.air_contents.oxygen = (6*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
@@ -102,19 +113,12 @@
 
 /obj/item/weapon/tank/jetpack/verb/toggle()
 	src.on = !( src.on )
-	src.icon_state = text("jetpack[]", src.on)
+	src.icon_state = "jetpack[on][jettype]"
+	src.item_state = "jetpack[on][jettype]"
 	if(src.on)
 		src.ion_trail.start()
 	else
 		src.ion_trail.stop()
-	return
-
-
-/obj/item/weapon/tank/jetpack/syndie/toggle()
-	src.on = !( src.on )
-	src.icon_state = text("jetpack[]_s", src.on)
-	if(src.on)
-		src.ion_trail.start()
-	else
-		src.ion_trail.stop()
+	if(ishuman(loc))
+		loc:update_clothing()
 	return

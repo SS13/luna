@@ -330,7 +330,8 @@
 /client/Topic(href,href_list[],hsrc)
 	if(href_list["SDQL_select"])
 		debug_variables(locate(href_list["SDQL_select"]))
-
+	if(view_var_Topic(href,href_list,hsrc))	//Until viewvars can be rewritten as datum/admins/Topic()
+		return
 	..()
 
 

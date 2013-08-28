@@ -16,17 +16,17 @@
 	..()
 	return
 
-/datum/effects/system/expl_particles
+/datum/effect/system/expl_particles
 	var/number = 10
 	var/turf/location
 	var/total_particles = 0
 
-/datum/effects/system/expl_particles/proc/set_up(n = 10, loca)
+/datum/effect/system/expl_particles/proc/set_up(n = 10, loca)
 	number = n
 	if(istype(loca, /turf/)) location = loca
 	else location = get_turf(loca)
 
-/datum/effects/system/expl_particles/proc/start()
+/datum/effect/system/expl_particles/proc/start()
 	var/i = 0
 	for(i=0, i<src.number, i++)
 		spawn(0)
@@ -52,19 +52,19 @@
 		del(src)
 	return
 
-/datum/effects/system/explosion
+/datum/effect/system/explosion
 	var/turf/location
 
-/datum/effects/system/explosion/proc/set_up(loca)
+/datum/effect/system/explosion/proc/set_up(loca)
 	if(istype(loca, /turf/)) location = loca
 	else location = get_turf(loca)
 
-/datum/effects/system/explosion/proc/start()
+/datum/effect/system/explosion/proc/start()
 	new/obj/effects/explosion( location )
-	var/datum/effects/system/expl_particles/P = new/datum/effects/system/expl_particles()
+	var/datum/effect/system/expl_particles/P = new/datum/effect/system/expl_particles()
 	P.set_up(10,location)
 	P.start()
 	spawn(5)
-		var/datum/effects/system/harmless_smoke_spread/S = new/datum/effects/system/harmless_smoke_spread()
+		var/datum/effect/system/harmless_smoke_spread/S = new/datum/effect/system/harmless_smoke_spread()
 		S.set_up(5,0,location,null)
 		S.start()

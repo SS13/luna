@@ -53,7 +53,7 @@
 	// this is called when the target is within one tile
 	// of distance from the zombie
 	proc/attack_target()
-		if(target.stat != STAT_ALIVE && prob(70))
+		if(target.stat != CONSCIOUS && prob(70))
 			return
 		var/direct = get_dir(src, target)
 		if ( (direct - 1) & direct)
@@ -88,8 +88,8 @@
 					target.attack_hand(src)
 					return
 				else
-					var/obj/window/W = locate() in target.loc
-					var/obj/window/WW = locate() in src.loc
+					var/obj/structure/window/W = locate() in target.loc
+					var/obj/structure/window/WW = locate() in src.loc
 					if(W)
 						W.attack_hand(src)
 						return 1
@@ -103,8 +103,8 @@
 				step(src,direct)
 			return 1
 		else
-			var/obj/window/W = locate() in target.loc
-			var/obj/window/WW = locate() in src.loc
+			var/obj/structure/window/W = locate() in target.loc
+			var/obj/structure/window/WW = locate() in src.loc
 			if(W)
 				W.attack_hand(src)
 				return 1

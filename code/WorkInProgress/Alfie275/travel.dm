@@ -1,7 +1,7 @@
 #define trgrdsz 20
 #define trgrdvw 5
 
-/obj/landmark/mapload/travel
+/obj/effect/landmark/mapload/travel
 
 /datum/travgrid
 	var/list/list/datum/travloc/grid[trgrdsz][trgrdsz]

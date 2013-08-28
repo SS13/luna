@@ -16,4 +16,6 @@
 	drop_item()
 	hand = h
 
+	if(!gibbed)
+		visible_message("<b>[src]</b> lets out a faint chimper as it collapses and stops moving...")	//ded -- Urist
 	return ..(gibbed)

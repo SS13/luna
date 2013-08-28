@@ -7,7 +7,7 @@ datum
 		var/list/required_reagents = new/list()
 		var/list/required_catalysts = new/list()
 
-		// Both of these variables are mostly going to be used with Metroid cores - but if you want to, you can use them for other things
+		// Both of these variables are mostly going to be used with slime extracts - but if you want to, you can use them for other things
 		var/atom/required_container = null // the container required for the reaction to happen
 		var/required_other = 0 // an integer required for the reaction to happen
 
@@ -32,32 +32,37 @@ datum
 			id = "explosion_potassium"
 			result = null
 			required_reagents = list("water" = 1, "potassium" = 1)
-			result_amount = null
+			result_amount = 2
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
-				var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
-				s.set_up(2, 1, location)
-				s.start()
-				for(var/mob/M in viewers(5, location))
-					M << "\red The solution violently explodes."
-				for(var/mob/M in viewers(1, location))
-					M << "\red The explosion knocks you down."
-					M:weakened += 3
+				var/datum/effect/effect/system/reagents_explosion/e = new()
+				e.set_up(round (created_volume/10, 1), location, 0, 0)
+				e.start()
+				holder.clear_reagents()
 				return
+
+/*		emp_pulse
+			name = "EMP Pulse"
+			id = "emp_pulse"
+			result = null
+			required_reagents = list("uranium" = 1, "iron" = 1) // Yes, laugh, it's the best recipe I could think of that makes a little bit of sense
+			result_amount = 2
+
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+				// 100 created volume = 4 heavy range & 7 light range. A few tiles smaller than traitor EMP grandes.
+				// 200 created volume = 8 heavy range & 14 light range. 4 tiles larger than traitor EMP grenades.
+				empulse(location, round(created_volume / 24), round(created_volume / 14), 1)
+				holder.clear_reagents()
+				return*/
+
 
 		silicate
 			name = "Silicate"
 			id = "silicate"
 			result = "silicate"
-			required_reagents = list("aluminum" = 1, "silicon" = 1, "oxygen" = 1)
+			required_reagents = list("aluminium" = 1, "silicon" = 1, "oxygen" = 1)
 			result_amount = 3
-
-		ethanol
-			name = "Ethanol"
-			id = "ethanol"
-			result = "ethanol"
-			required_reagents = list("oxygen" = 2, "nitrogen" = 2)
-			result_amount = 4
 
 		stoxin
 			name = "Sleep Toxin"
@@ -65,20 +70,6 @@ datum
 			result = "stoxin"
 			required_reagents = list("chloralhydrate" = 1, "sugar" = 4)
 			result_amount = 5
-
-		mutagen
-			name = "Unstable mutagen"
-			id = "mutagen"
-			result = "mutagen"
-			required_reagents = list("radium" = 1, "phosphorus" = 1, "chlorine" = 1)
-			result_amount = 3
-
-		thermite
-			name = "Thermite"
-			id = "thermite"
-			result = "thermite"
-			required_reagents = list("aluminium" = 1, "iron" = 1, "oxygen" = 1)
-			result_amount = 3
 
 		sterilizine
 			name = "Sterilizine"
@@ -108,25 +99,11 @@ datum
 			required_reagents = list("radium" = 1, "phosphorus" = 1, "chlorine" = 1)
 			result_amount = 3
 
-		tramadol
-			name = "Tramadol"
-			id = "tramadol"
-			result = "tramadol"
-			required_reagents = list("inaprovaline" = 1, "ethanol" = 1, "oxygen" = 1)
-			result_amount = 3
-
-		//cyanide
-		//	name = "Cyanide"
-		//	id = "cyanide"
-		//	result = "cyanide"
-		//	required_reagents = list("hydrogen" = 1, "carbon" = 1, "nitrogen" = 1)
-		//	result_amount = 1
-
 		thermite
 			name = "Thermite"
 			id = "thermite"
 			result = "thermite"
-			required_reagents = list("aluminum" = 1, "iron" = 1, "oxygen" = 1)
+			required_reagents = list("aluminium" = 1, "iron" = 1, "oxygen" = 1)
 			result_amount = 3
 
 		lexorin
@@ -154,7 +131,7 @@ datum
 			name = "Polytrinic acid"
 			id = "pacid"
 			result = "pacid"
-			required_reagents = list("acid" = 1, "chlorine" = 1, "potassium" = 1)
+			required_reagents = list("sacid" = 1, "chlorine" = 1, "potassium" = 1)
 			result_amount = 3
 
 		synaptizine
@@ -191,13 +168,6 @@ datum
 			result = "kelotane"
 			required_reagents = list("silicon" = 1, "carbon" = 1)
 			result_amount = 2
-
-		virus_food
-			name = "Virus Food"
-			id = "virusfood"
-			result = "virusfood"
-			required_reagents = list("water" = 1, "milk" = 1)
-			result_amount = 5
 
 		leporazine
 			name = "Leporazine"
@@ -318,8 +288,23 @@ datum
 			name = "Glycerol"
 			id = "glycerol"
 			result = "glycerol"
-			required_reagents = list("cornoil" = 3, "acid" = 1)
+			required_reagents = list("cornoil" = 3, "sacid" = 1)
 			result_amount = 1
+
+		nitroglycerin
+			name = "Nitroglycerin"
+			id = "nitroglycerin"
+			result = "nitroglycerin"
+			required_reagents = list("glycerol" = 1, "pacid" = 1, "sacid" = 1)
+			result_amount = 2
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+				var/datum/effect/effect/system/reagents_explosion/e = new()
+				e.set_up(round (created_volume/2, 1), location, 0, 0)
+				e.start()
+
+				holder.clear_reagents()
+				return
 
 		sodiumchloride
 			name = "Sodium Chloride"
@@ -328,102 +313,25 @@ datum
 			required_reagents = list("sodium" = 1, "chlorine" = 1)
 			result_amount = 2
 
-		chloralhydrate
-			name = "Chloral Hydrate"
-			id = "chloralhydrate"
-			result = "chloralhydrate"
-			required_reagents = list("ethanol" = 1, "chlorine" = 3, "water" = 1)
-			result_amount = 1
-
-		zombiepowder
-			name = "Zombie Powder"
-			id = "zombiepowder"
-			result = "zombiepowder"
-			required_reagents = list("carpotoxin" = 5, "stoxin" = 5, "copper" = 5)
-			result_amount = 2
-
-		LSD
-			name = "LSD"
-			id = "LSD"
-			result = "LSD"
-			required_reagents = list("silicon" = 1, "hydrogen" = 1, "anti_toxin" = 1)
-			result_amount = 5
-		leporazine
-			name = "Leporazine"
-			id = "leporazine"
-			result = "leporazine"
-			required_reagents = list("silicon" = 1, "plasma" = 1, )
-			result_amount = 2
-
-		cryptobiolin
-			name = "Cryptobiolin"
-			id = "cryptobiolin"
-			result = "cryptobiolin"
-			required_reagents = list("potassium" = 1, "oxygen" = 1, "sugar" = 1)
-			result_amount = 3
-
-		tricordrazine
-			name = "Tricordrazine"
-			id = "tricordrazine"
-			result = "tricordrazine"
-			required_reagents = list("inaprovaline" = 1, "anti_toxin" = 1)
-			result_amount = 2
-
-		alkysine
-			name = "Alkysine"
-			id = "alkysine"
-			result = "alkysine"
-			required_reagents = list("chlorine" = 1, "nitrogen" = 1, "anti_toxin" = 1)
-			result_amount = 2
-
-		dexalin
-			name = "Dexalin"
-			id = "dexalin"
-			result = "dexalin"
-			required_reagents = list("plasma" = 1, "oxygen" = 1)
-			result_amount = 2
-
-		dexalinp
-			name = "Dexalin Plus"
-			id = "dexalinp"
-			result = "dexalinp"
-			required_reagents = list("dexalin" = 1, "carbon" = 1, "iron" = 1)
-			result_amount = 3
-
-		bicaridine
-			name = "Bicaridine"
-			id = "bicaridine"
-			result = "bicaridine"
-			required_reagents = list("inaprovaline" = 1, "carbon" = 1)
-			result_amount = 2
-
-		hyperzine
-			name = "Hyperzine"
-			id = "hyperzine"
-			result = "hyperzine"
-			required_reagents = list("sugar" = 1, "phosphorus" = 1, "sulfur" = 1,)
-			result_amount = 3
-
-		ryetalyn
-			name = "Ryetalyn"
-			id = "ryetalyn"
-			result = "ryetalyn"
-			required_reagents = list("arithrazine" = 1, "carbon" = 1)
-			result_amount = 2
-
-		cryoxadone
-			name = "Cryoxadone"
-			id = "cryoxadone"
-			result = "cryoxadone"
-			required_reagents = list("dexalin" = 1, "water" = 1, "oxygen" = 1)
-			result_amount = 10
-
-		spaceacillin
-			name = "spaceacillin"
-			id = "spaceacillin"
-			result = "spaceacillin"
-			required_reagents = list("cryptobiolin" = 1, "inaprovaline" = 1)
-			result_amount = 2
+		chemsmoke
+			name = "Chemsmoke"
+			id = "chemsmoke"
+			result = null
+			required_reagents = list("potassium" = 1, "sugar" = 1, "phosphorus" = 1)
+			result_amount = null
+			secondary = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+				var/datum/effect/effect/system/chem_smoke_spread/S = new /datum/effect/effect/system/chem_smoke_spread
+				S.attach(location)
+				S.set_up(holder, 10, 0, location)
+				playsound(location, 'sound/effects/smoke.ogg', 50, 1, -3)
+				holder.clear_reagents()
+				spawn(0)
+					S.start()
+					sleep(10)
+					S.start()
+				return
 
 		flash_powder
 			name = "Flash powder"
@@ -433,7 +341,7 @@ datum
 			result_amount = null
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
-				var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(2, 1, location)
 				s.start()
 				for(var/mob/living/carbon/M in viewers(world.view, location))
@@ -458,7 +366,7 @@ datum
 			name = "Napalm"
 			id = "napalm"
 			result = null
-			required_reagents = list("aluminium" = 1, "plasma" = 1, "acid" = 1 )
+			required_reagents = list("aluminium" = 1, "plasma" = 1, "sacid" = 1 )
 			result_amount = null
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
@@ -478,29 +386,103 @@ datum
 
 				return
 
-		smoke
-			name = "Smoke"
-			id = "smoke"
+		chloralhydrate
+			name = "Chloral Hydrate"
+			id = "chloralhydrate"
+			result = "chloralhydrate"
+			required_reagents = list("ethanol" = 1, "chlorine" = 3, "water" = 1)
+			result_amount = 2
+
+		zombiepowder
+			name = "Zombie Powder"
+			id = "zombiepowder"
+			result = "zombiepowder"
+			required_reagents = list("carpotoxin" = 5, "stoxin" = 5, "copper" = 5)
+			result_amount = 2
+
+		LSD
+			name = "LSD"
+			id = "LSD"
+			result = "LSD"
+			required_reagents = list("silicon" = 1, "hydrogen" = 1, "anti_toxin" = 1)
+			result_amount = 5
+
+		lipozine
+			name = "Lipozine"
+			id = "Lipozine"
+			result = "lipozine"
+			required_reagents = list("sodiumchloride" = 1, "ethanol" = 1, "radium" = 1)
+			result_amount = 3
+
+		plasmasolidification
+			name = "Solid Plasma"
+			id = "solidplasma"
 			result = null
-			required_reagents = list("potassium" = 1, "sugar" = 1, "phosphorus" = 1 )
-			result_amount = null
+			required_reagents = list("iron" = 5, "frostoil" = 5, "plasma" = 20)
+			result_amount = 1
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
-				var/datum/effects/system/bad_smoke_spread/S = new /datum/effects/system/bad_smoke_spread
-				S.attach(location)
-				S.set_up(10, 0, location)
-				playsound(location, 'smoke.ogg', 50, 1, -3)
-				spawn(0)
-					S.start()
-					sleep(10)
-					S.start()
-					sleep(10)
-					S.start()
-					sleep(10)
-					S.start()
-					sleep(10)
-					S.start()
+				new /obj/item/stack/sheet/mineral/plasma(location)
 				return
+
+		capsaicincondensation
+			name = "Capsaicincondensation"
+			id = "capsaicincondensation"
+			result = "condensedcapsaicin"
+			required_reagents = list("capsaicin" = 1, "ethanol" = 5)
+			result_amount = 5
+
+		virus_food
+			name = "Virus Food"
+			id = "virusfood"
+			result = "virusfood"
+			required_reagents = list("water" = 1, "milk" = 1)
+			result_amount = 5
+
+		mix_virus
+			name = "Mix Virus"
+			id = "mixvirus"
+			result = "blood"
+			required_reagents = list("virusfood" = 5)
+			required_catalysts = list("blood")
+			var/level = 2
+
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+
+				var/datum/reagent/blood/B = locate(/datum/reagent/blood) in holder.reagent_list
+				if(B && B.data)
+					var/datum/disease/advance/D = locate(/datum/disease/advance) in B.data["viruses"]
+					if(D)
+						D.Evolve(level - rand(0, 1))
+
+
+			mix_virus_2
+
+				name = "Mix Virus 2"
+				id = "mixvirus2"
+				required_reagents = list("mutagen" = 5)
+				level = 4
+
+			mix_virus_3
+
+				name = "Mix Virus 3"
+				id = "mixvirus3"
+				required_reagents = list("plasma" = 5)
+				level = 6
+
+			rem_virus
+
+				name = "Devolve Virus"
+				id = "remvirus"
+				required_reagents = list("spaceacillin" = 5)
+
+				on_reaction(var/datum/reagents/holder, var/created_volume)
+					var/datum/reagent/blood/B = locate(/datum/reagent/blood) in holder.reagent_list
+					if(B && B.data)
+						var/datum/disease/advance/D = locate(/datum/disease/advance) in B.data["viruses"]
+						if(D)
+							D.Devolve()
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -510,7 +492,7 @@ datum
 			name = "Foam surfactant"
 			id = "foam surfactant"
 			result = "fluorosurfactant"
-			required_reagents = list("fluorine" = 2, "carbon" = 2, "acid" = 1)
+			required_reagents = list("fluorine" = 2, "carbon" = 2, "sacid" = 1)
 			result_amount = 5
 
 
@@ -537,18 +519,17 @@ datum
 				//for(var/datum/reagent/R in holder.reagent_list)
 				//	world << "[R.name] = [R.volume]"
 
-				var/datum/effects/system/foam_spread/s = new()
+				var/datum/effect/effect/system/foam_spread/s = new()
 				s.set_up(created_volume, location, holder, 0)
 				s.start()
 				holder.clear_reagents()
 				return
 
-
 		metalfoam
 			name = "Metal Foam"
 			id = "metalfoam"
 			result = null
-			required_reagents = list("aluminium" = 3, "foaming_agent" = 1, "pacid" = 1)
+			required_reagents = list("aluminum" = 3, "foaming_agent" = 1, "pacid" = 1)
 			result_amount = 5
 
 			on_reaction(var/datum/reagents/holder, var/created_volume)
@@ -559,8 +540,8 @@ datum
 				for(var/mob/M in viewers(5, location))
 					M << "\red The solution spews out a metalic foam!"
 
-				var/datum/effects/system/foam_spread/s = new()
-				s.set_up(created_volume/2, location, holder, 1)
+				var/datum/effect/effect/system/foam_spread/s = new()
+				s.set_up(created_volume, location, holder, 1)
 				s.start()
 				return
 
@@ -579,8 +560,8 @@ datum
 				for(var/mob/M in viewers(5, location))
 					M << "\red The solution spews out a metalic foam!"
 
-				var/datum/effects/system/foam_spread/s = new()
-				s.set_up(created_volume/2, location, holder, 2)
+				var/datum/effect/effect/system/foam_spread/s = new()
+				s.set_up(created_volume, location, holder, 2)
 				s.start()
 				return
 
@@ -593,7 +574,8 @@ datum
 			required_reagents = list("lithium" = 1, "hydrogen" = 1)
 			result_amount = 1
 
-		// Synthesizing these three chemicals is pretty complex in real life, but fuck it, it's just a game!
+
+// Synthesizing these three chemicals is pretty complex in real life, but fuck it, it's just a game!
 		ammonia
 			name = "Ammonia"
 			id = "ammonia"
@@ -601,29 +583,659 @@ datum
 			required_reagents = list("hydrogen" = 3, "nitrogen" = 1)
 			result_amount = 3
 
+		diethylamine
+			name = "Diethylamine"
+			id = "diethylamine"
+			result = "diethylamine"
+			required_reagents = list ("ammonia" = 1, "ethanol" = 1)
+			result_amount = 2
+
 		space_cleaner
 			name = "Space cleaner"
 			id = "cleaner"
 			result = "cleaner"
 			required_reagents = list("ammonia" = 1, "water" = 1)
+			result_amount = 2
+
+		plantbgone
+			name = "Plant-B-Gone"
+			id = "plantbgone"
+			result = "plantbgone"
+			required_reagents = list("toxin" = 1, "water" = 4)
+			result_amount = 5
+
+/////////////////////////////////////////////NEW SLIME CORE REACTIONS/////////////////////////////////////////////
+
+//Grey
+		slimespawn
+			name = "Slime Spawn"
+			id = "m_spawn"
+			result = null
+			required_reagents = list("plasma" = 5)
 			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/grey
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/mob/O in viewers(get_turf_loc(holder.my_atom), null))
+					O.show_message(text("\red Infused with plasma, the core begins to quiver and grow, and soon a new baby slime emerges from it!"), 1)
+				var/mob/living/carbon/slime/S = new /mob/living/carbon/slime
+				S.loc = get_turf_loc(holder.my_atom)
+
+/*
+		slimemonkey
+			name = "Slime Monkey"
+			id = "m_monkey"
+			result = null
+			required_reagents = list("blood" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/grey
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/i = 1, i <= 3, i++)
+					var /obj/item/weapon/reagent_containers/food/snacks/monkeycube/M = new /obj/item/weapon/reagent_containers/food/snacks/monkeycube
+					M.loc = get_turf_loc(holder.my_atom)
+*/
+//Green
+		slimemutate
+			name = "Mutation Toxin"
+			id = "mutationtoxin"
+			result = "mutationtoxin"
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_other = 1
+			required_container = /obj/item/weapon/slime_extract/green
+
+//Metal
+		slimemetal
+			name = "Slime Metal"
+			id = "m_metal"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/metal
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				var/obj/item/stack/sheet/metal/M = new /obj/item/stack/sheet/metal
+				M.amount = 15
+				M.loc = get_turf_loc(holder.my_atom)
+				var/obj/item/stack/sheet/plasteel/P = new /obj/item/stack/sheet/plasteel
+				P.amount = 5
+				P.loc = get_turf_loc(holder.my_atom)
+/*
+//Gold
+		slimecrit
+			name = "Slime Crit"
+			id = "m_tele"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/gold
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/mob/O in viewers(get_turf_loc(holder.my_atom), null))
+					O.show_message(text("\red The slime extract begins to vibrate violently !"), 1)
+				sleep(50)
+
+				var/blocked = list(/mob/living/simple_animal/hostile,
+					/mob/living/simple_animal/hostile/pirate,
+					/mob/living/simple_animal/hostile/pirate/ranged,
+					/mob/living/simple_animal/hostile/russian,
+					/mob/living/simple_animal/hostile/russian/ranged,
+					/mob/living/simple_animal/hostile/syndicate,
+					/mob/living/simple_animal/hostile/syndicate/melee,
+					/mob/living/simple_animal/hostile/syndicate/melee/space,
+					/mob/living/simple_animal/hostile/syndicate/ranged,
+					/mob/living/simple_animal/hostile/syndicate/ranged/space,
+					/mob/living/simple_animal/hostile/alien/queen/large,
+					/mob/living/simple_animal/hostile/retaliate,
+					/mob/living/simple_animal/hostile/retaliate/clown
+					)//exclusion list for things you don't want the reaction to create.
+				var/list/critters = typesof(/mob/living/simple_animal/hostile) - blocked // list of possible hostile mobs
+
+				var/message = "A gold slime reaction has occured"
+
+				var/atom/A = holder.my_atom
+				if(A)
+					var/turf/T = get_turf(A)
+					var/area/my_area = get_area(T)
+					message += " in [my_area.name]. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[T.x];Y=[T.y];Z=[T.z]'>JMP</A>)"
+					message += " (<A HREF='?_src_=vars;Vars=\ref[A]'>VV</A>)"
+
+					var/mob/M = get(A, /mob)
+					if(M)
+						message += " - Carried By: [M.real_name] ([M.key]) (<A HREF='?_src_=holder;adminplayeropts=\ref[M]'>PP</A>) (<A HREF='?_src_=holder;adminmoreinfo=\ref[M]'>?</A>)"
+					else
+						message += " - Last Fingerprint: [(A.fingerprintslast ? A.fingerprintslast : "N/A")]"
+				else
+					message += "."
+
+				message_admins(message, 0, 1)
+
+				playsound(get_turf_loc(holder.my_atom), 'sound/effects/phasein.ogg', 100, 1)
+
+				for(var/mob/living/carbon/human/M in viewers(get_turf_loc(holder.my_atom), null))
+					if(M:eyecheck() <= 0)
+						flick("e_flash", M.flash)
+
+				for(var/i = 1, i <= 5, i++)
+					var/chosen = pick(critters)
+					var/mob/living/simple_animal/hostile/C = new chosen
+					C.faction = "slimesummon"
+					C.loc = get_turf_loc(holder.my_atom)
+					if(prob(50))
+						for(var/j = 1, j <= rand(1, 3), j++)
+							step(C, pick(NORTH,SOUTH,EAST,WEST))
+
+		slimecritlesser
+			name = "Slime Crit Lesser"
+			id = "m_tele3"
+			result = null
+			required_reagents = list("blood" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/gold
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/mob/O in viewers(get_turf_loc(holder.my_atom), null))
+					O.show_message(text("\red The slime extract begins to vibrate violently !"), 1)
+				sleep(50)
+
+				var/blocked = list(/mob/living/simple_animal/hostile,
+					/mob/living/simple_animal/hostile/pirate,
+					/mob/living/simple_animal/hostile/pirate/ranged,
+					/mob/living/simple_animal/hostile/russian,
+					/mob/living/simple_animal/hostile/russian/ranged,
+					/mob/living/simple_animal/hostile/syndicate,
+					/mob/living/simple_animal/hostile/syndicate/melee,
+					/mob/living/simple_animal/hostile/syndicate/melee/space,
+					/mob/living/simple_animal/hostile/syndicate/ranged,
+					/mob/living/simple_animal/hostile/syndicate/ranged/space,
+					/mob/living/simple_animal/hostile/alien/queen/large,
+					/mob/living/simple_animal/hostile/retaliate,
+					/mob/living/simple_animal/hostile/retaliate/clown
+					)//exclusion list for things you don't want the reaction to create.
+				var/list/critters = typesof(/mob/living/simple_animal/hostile) - blocked // list of possible hostile mobs
+
+				var/message = "A gold slime reaction has occured"
+
+				var/atom/A = holder.my_atom
+				if(A)
+					var/turf/T = get_turf(A)
+					var/area/my_area = get_area(T)
+					message += " in [my_area.name]. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[T.x];Y=[T.y];Z=[T.z]'>JMP</A>)"
+					message += " (<A HREF='?_src_=vars;Vars=\ref[A]'>VV</A>)"
+
+					var/mob/M = get(A, /mob)
+					if(M)
+						message += " - Carried By: [M.real_name] ([M.key]) (<A HREF='?_src_=holder;adminplayeropts=\ref[M]'>PP</A>) (<A HREF='?_src_=holder;adminmoreinfo=\ref[M]'>?</A>)"
+					else
+						message += " - Last Fingerprint: [(A.fingerprintslast ? A.fingerprintslast : "N/A")]"
+				else
+					message += "."
+
+				message_admins(message, 0, 1)
+
+				playsound(get_turf_loc(holder.my_atom), 'sound/effects/phasein.ogg', 100, 1)
+
+				for(var/mob/living/carbon/human/M in viewers(get_turf_loc(holder.my_atom), null))
+					if(M:eyecheck() <= 0)
+						flick("e_flash", M.flash)
+
+				var/chosen = pick(critters)
+				var/mob/living/simple_animal/hostile/C = new chosen
+				C.faction = "neutral"
+				C.loc = get_turf_loc(holder.my_atom)
+
+//Silver
+		slimebork
+			name = "Slime Bork"
+			id = "m_tele2"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/silver
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				var/list/borks = typesof(/obj/item/weapon/reagent_containers/food/snacks) - /obj/item/weapon/reagent_containers/food/snacks
+				// BORK BORK BORK
+
+				playsound(get_turf_loc(holder.my_atom), 'sound/effects/phasein.ogg', 100, 1)
+
+				for(var/mob/living/carbon/human/M in viewers(get_turf_loc(holder.my_atom), null))
+					if(M:eyecheck() <= 0)
+						flick("e_flash", M.flash)
+
+				for(var/i = 1, i <= 4 + rand(1,2), i++)
+					var/chosen = pick(borks)
+					var/obj/B = new chosen
+					if(B)
+						B.loc = get_turf_loc(holder.my_atom)
+						if(prob(50))
+							for(var/j = 1, j <= rand(1, 3), j++)
+								step(B, pick(NORTH,SOUTH,EAST,WEST))
 
 
-		virusfood
-			name = "Virus food"
-			id = "virusfood"
-			result = "virusfood"
-			required_reagents = list("water" = 1, "milk" = 1)
+		slimebork2
+			name = "Slime Bork 2"
+			id = "m_tele4"
+			result = null
+			required_reagents = list("water" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/silver
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+
+				var/list/borks = typesof(/obj/item/weapon/reagent_containers/food/drinks) - /obj/item/weapon/reagent_containers/food/drinks
+				// BORK BORK BORK
+
+				playsound(get_turf_loc(holder.my_atom), 'sound/effects/phasein.ogg', 100, 1)
+
+				for(var/mob/living/carbon/human/M in viewers(get_turf_loc(holder.my_atom), null))
+					if(M:eyecheck() <= 0)
+						flick("e_flash", M.flash)
+
+				for(var/i = 1, i <= 4 + rand(1,2), i++)
+					var/chosen = pick(borks)
+					var/obj/B = new chosen
+					if(B)
+						B.loc = get_turf_loc(holder.my_atom)
+						if(prob(50))
+							for(var/j = 1, j <= rand(1, 3), j++)
+								step(B, pick(NORTH,SOUTH,EAST,WEST))
+*/
+
+//Blue
+		slimefrost
+			name = "Slime Frost Oil"
+			id = "m_frostoil"
+			result = "frostoil"
+			required_reagents = list("plasma" = 5)
+			result_amount = 10
+			required_container = /obj/item/weapon/slime_extract/blue
+			required_other = 1
+
+//Dark Blue
+		slimefreeze
+			name = "Slime Freeze"
+			id = "m_freeze"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/darkblue
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/mob/O in viewers(get_turf_loc(holder.my_atom), null))
+					O.show_message(text("\red The slime extract begins to vibrate violently !"), 1)
+				sleep(50)
+				playsound(get_turf_loc(holder.my_atom), 'sound/effects/phasein.ogg', 100, 1)
+				for(var/mob/living/M in range (get_turf_loc(holder.my_atom), 7))
+					M.bodytemperature -= 240
+					M << "\blue You feel a chill!"
+
+//Orange
+		slimecasp
+			name = "Slime Capsaicin Oil"
+			id = "m_capsaicinoil"
+			result = "capsaicin"
+			required_reagents = list("blood" = 5)
+			result_amount = 10
+			required_container = /obj/item/weapon/slime_extract/orange
+			required_other = 1
+/*
+		slimefire
+			name = "Slime fire"
+			id = "m_fire"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/orange
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/mob/O in viewers(get_turf_loc(holder.my_atom), null))
+					O.show_message(text("\red The slime extract begins to vibrate violently !"), 1)
+				sleep(50)
+				var/turf/location = get_turf(holder.my_atom.loc)
+				for(var/turf/simulated/floor/target_tile in range(0,location))
+					if(target_tile.parent && target_tile.parent.group_processing)
+						target_tile.parent.suspend_group_processing()
+
+					var/datum/gas_mixture/napalm = new
+
+					napalm.toxins = 50
+					napalm.temperature = 2400
+
+					target_tile.assume_air(napalm)
+					spawn (0) target_tile.hotspot_expose(700, 400)
+
+//Yellow
+		slimeoverload
+			name = "Slime EMP"
+			id = "m_emp"
+			result = null
+			required_reagents = list("blood" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/yellow
+			required_other = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				empulse(get_turf_loc(holder.my_atom), 3, 7)
+*/
+
+		slimecell
+			name = "Slime Powercell"
+			id = "m_cell"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/yellow
+			required_other = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/obj/item/weapon/cell/slime/P = new /obj/item/weapon/cell/slime
+				P.loc = get_turf_loc(holder.my_atom)
+
+		slimeglow
+			name = "Slime Glow"
+			id = "m_glow"
+			result = null
+			required_reagents = list("water" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/yellow
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/mob/O in viewers(get_turf_loc(holder.my_atom), null))
+					O.show_message(text("\red The slime begins to emit a soft light. Squeezing it will cause it to grow brightly."), 1)
+				var/obj/item/device/flashlight/slime/F = new /obj/item/device/flashlight/slime
+				F.loc = get_turf_loc(holder.my_atom)
+
+//Purple
+/*
+		slimepsteroid
+			name = "Slime Steroid"
+			id = "m_steroid"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/purple
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				var/obj/item/weapon/slimesteroid/P = new /obj/item/weapon/slimesteroid
+				P.loc = get_turf_loc(holder.my_atom)
+
+		slimejam
+			name = "Slime Jam"
+			id = "m_jam"
+			result = "slimejelly"
+			required_reagents = list("sugar" = 5)
+			result_amount = 10
+			required_container = /obj/item/weapon/slime_extract/purple
+			required_other = 1
+*/
+
+//Dark Purple
+		slimeplasma
+			name = "Slime Plasma"
+			id = "m_plasma"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/darkpurple
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				var/obj/item/stack/sheet/mineral/plasma/P = new /obj/item/stack/sheet/mineral/plasma
+				P.amount = 10
+				P.loc = get_turf_loc(holder.my_atom)
+
+//Red
+		slimeglycerol
+			name = "Slime Glycerol"
+			id = "m_glycerol"
+			result = "glycerol"
+			required_reagents = list("plasma" = 5)
+			result_amount = 8
+			required_container = /obj/item/weapon/slime_extract/red
+			required_other = 1
+
+		slimebloodlust
+			name = "Bloodlust"
+			id = "m_bloodlust"
+			result = null
+			required_reagents = list("blood" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/red
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/mob/living/carbon/slime/slime in viewers(get_turf_loc(holder.my_atom), null))
+					slime.tame = 0
+					slime.rabid = 1
+					for(var/mob/O in viewers(get_turf_loc(holder.my_atom), null))
+						O.show_message(text("\red The [slime] is driven into a frenzy!."), 1)
+/*
+//Pink
+		slimeppotion
+			name = "Slime Potion"
+			id = "m_potion"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/pink
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				var/obj/item/weapon/slimepotion/P = new /obj/item/weapon/slimepotion
+				P.loc = get_turf_loc(holder.my_atom)
+*/
+
+//Black
+		slimemutate2
+			name = "Advanced Mutation Toxin"
+			id = "mutationtoxin2"
+			result = "amutationtoxin"
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_other = 1
+			required_container = /obj/item/weapon/slime_extract/black
+
+//Oil
+		slimeexplosion
+			name = "Slime Explosion"
+			id = "m_explosion"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/oil
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				for(var/mob/O in viewers(get_turf_loc(holder.my_atom), null))
+					O.show_message(text("\red The slime extract begins to vibrate violently !"), 1)
+				sleep(50)
+				explosion(get_turf_loc(holder.my_atom), 1 ,3, 6)
+/*
+//Light Pink
+		slimepotion2
+			name = "Slime Potion 2"
+			id = "m_potion2"
+			result = null
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/lightpink
+			required_reagents = list("plasma" = 5)
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				var/obj/item/weapon/slimepotion2/P = new /obj/item/weapon/slimepotion2
+				P.loc = get_turf_loc(holder.my_atom)
+//Adamantine
+		slimegolem
+			name = "Slime Golem"
+			id = "m_golem"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/adamantine
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				var/obj/effect/golemrune/Z = new /obj/effect/golemrune
+				Z.loc = get_turf_loc(holder.my_atom)
+				Z.announce_to_ghosts()*/
+
+
+//Bluespace
+/*		slimeteleport
+			name = "Slime Teleport"
+			id = "m_tele"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/bluespace
+			required_other = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				// Calculate new position (searches through beacons in world)
+				var/obj/item/device/radio/beacon/chosen
+				var/list/possible = list()
+				for(var/obj/item/device/radio/beacon/W in world)
+					possible += W
+
+				if(possible.len > 0)
+					chosen = pick(possible)
+
+				if(chosen)
+				// Calculate previous position for transition
+
+					var/turf/FROM = get_turf_loc(holder.my_atom) // the turf of origin we're travelling FROM
+					var/turf/TO = get_turf_loc(chosen)			 // the turf of origin we're travelling TO
+
+					playsound(TO, 'sound/effects/phasein.ogg', 100, 1)
+
+					var/list/flashers = list()
+					for(var/mob/living/carbon/human/M in viewers(TO, null))
+						if(M:eyecheck() <= 0)
+							flick("e_flash", M.flash) // flash dose faggots
+							flashers += M
+
+					var/y_distance = TO.y - FROM.y
+					var/x_distance = TO.x - FROM.x
+					for (var/atom/movable/A in range(4, FROM )) // iterate thru list of mobs in the area
+						if(istype(A, /obj/item/device/radio/beacon)) continue // don't teleport beacons because that's just insanely stupid
+						if(A.anchored) continue
+						if(istype(A, /obj/structure/cable )) continue
+
+						var/turf/newloc = locate(A.x + x_distance, A.y + y_distance, TO.z) // calculate the new place
+						if(!A.Move(newloc)) // if the atom, for some reason, can't move, FORCE them to move! :) We try Move() first to invoke any movement-related checks the atom needs to perform after moving
+							A.loc = locate(A.x + x_distance, A.y + y_distance, TO.z)
+
+						spawn()
+							if(ismob(A) && !(A in flashers)) // don't flash if we're already doing an effect
+								var/mob/M = A
+								if(M.client)
+									var/obj/blueeffect = new /obj(src)
+									blueeffect.screen_loc = "WEST,SOUTH to EAST,NORTH"
+									blueeffect.icon = 'icons/effects/effects.dmi'
+									blueeffect.icon_state = "shieldsparkles"
+									blueeffect.layer = 17
+									blueeffect.mouse_opacity = 0
+									M.client.screen += blueeffect
+									sleep(20)
+									M.client.screen -= blueeffect
+									del(blueeffect)*/
+
+//Cerulean
+		slimepsteroid2
+			name = "Slime Steroid 2"
+			id = "m_steroid2"
+			result = null
+			required_reagents = list("plasma" = 5)
+			result_amount = 1
+			required_container = /obj/item/weapon/slime_extract/cerulean
+			required_other = 1
+			on_reaction(var/datum/reagents/holder)
+				var/obj/item/weapon/slimesteroid2/P = new /obj/item/weapon/slimesteroid2
+				P.loc = get_turf_loc(holder.my_atom)
+
+
+//////////////////////////////////////////FOOD MIXTURES////////////////////////////////////
+
+		tofu
+			name = "Tofu"
+			id = "tofu"
+			result = null
+			required_reagents = list("soymilk" = 10)
+			required_catalysts = list("enzyme" = 5)
+			result_amount = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+				for(var/i = 1, i <= created_volume, i++)
+					new /obj/item/weapon/reagent_containers/food/snacks/tofu(location)
+				return
+
+		chocolate_bar
+			name = "Chocolate Bar"
+			id = "chocolate_bar"
+			result = null
+			required_reagents = list("soymilk" = 2, "coco" = 2, "sugar" = 2)
+			result_amount = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+				for(var/i = 1, i <= created_volume, i++)
+					new /obj/item/weapon/reagent_containers/food/snacks/chocolatebar(location)
+				return
+
+		chocolate_bar2
+			name = "Chocolate Bar"
+			id = "chocolate_bar"
+			result = null
+			required_reagents = list("milk" = 2, "coco" = 2, "sugar" = 2)
+			result_amount = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+				for(var/i = 1, i <= created_volume, i++)
+					new /obj/item/weapon/reagent_containers/food/snacks/chocolatebar(location)
+				return
+
+		hot_coco
+			name = "Hot Coco"
+			id = "hot_coco"
+			result = "hot_coco"
+			required_reagents = list("water" = 5, "coco" = 1)
 			result_amount = 5
 
-		weedkiller
-			name = "Atrazine"
-			id = "weedkiller"
-			result = "weedkiller"
-			required_reagents = list("chlorine" = 1, "ethanol" = 1, "ammonia" =1)
+		soysauce
+			name = "Soy Sauce"
+			id = "soysauce"
+			result = "soysauce"
+			required_reagents = list("soymilk" = 4, "sacid" = 1)
 			result_amount = 5
 
+/*		cheesewheel
+			name = "Cheesewheel"
+			id = "cheesewheel"
+			result = null
+			required_reagents = list("milk" = 40)
+			required_catalysts = list("enzyme" = 5)
+			result_amount = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+				new /obj/item/weapon/reagent_containers/food/snacks/sliceable/cheesewheel(location)
+				return
 
+		syntiflesh
+			name = "Syntiflesh"
+			id = "syntiflesh"
+			result = null
+			required_reagents = list("blood" = 5, "clonexadone" = 1)
+			result_amount = 1
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+				new /obj/item/weapon/reagent_containers/food/snacks/meat/syntiflesh(location)
+				return*/
+
+		hot_ramen
+			name = "Hot Ramen"
+			id = "hot_ramen"
+			result = "hot_ramen"
+			required_reagents = list("water" = 1, "dry_ramen" = 3)
+			result_amount = 3
+
+		hell_ramen
+			name = "Hell Ramen"
+			id = "hell_ramen"
+			result = "hell_ramen"
+			required_reagents = list("capsaicin" = 1, "hot_ramen" = 6)
+			result_amount = 6
 
 	////////////////////////////////////////// COCKTAILS //////////////////////////////////////
 
@@ -1000,7 +1612,7 @@ datum
 			name = "Acid Spit"
 			id = "acidspit"
 			result = "acidspit"
-			required_reagents = list("acid" = 1, "wine" = 5)
+			required_reagents = list("sacid" = 1, "wine" = 5)
 			result_amount = 6
 
 		amasec
@@ -1100,18 +1712,3 @@ datum
 			result = "driestmartini"
 			required_reagents = list("nothing" = 1, "gin" = 1)
 			result_amount = 2
-
-
-		metabolic
-			name = "Metabolic"
-			id = "metabolic"
-			result = "metabolic"
-			required_reagents = list("leporazine" = 1, "lithium" = 1, "oxygen" = 1)
-			result_amount = 2
-
-		freezer
-			name = "Liquid vacuum"
-			id = "freezer"
-			result = "freezer"
-			required_reagents = list("ice" = 1, "cryoxadone" = 1, "frostoil" = 1)
-			result_amount = 1

@@ -170,9 +170,6 @@
 	anchored = 1
 	layer = 4
 
-/obj/item/lasermachine/New()
-	..()
-
 /obj/machinery/party/lasermachine/proc/turnon()
 	var/wall = 0
 	var/cycle = 1

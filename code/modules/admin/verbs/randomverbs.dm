@@ -23,7 +23,7 @@ proc/remove_virus2(mob/by)
 			A.virus2 = null
 	for(var/obj/virus/A in world)
 		del(A)
-	for(var/obj/decal/cleanable/blood/A in world)
+	for(var/obj/effect/decal/cleanable/blood/A in world)
 		if(A.virus2)
 			A.virus2 = null
 	log_admin("[key_name(by)] removed all infections.")

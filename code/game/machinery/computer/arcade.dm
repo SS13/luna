@@ -113,7 +113,7 @@
 				prize.name = "electronic blink toy game"
 				prize.desc = "Blink.  Blink.  Blink."
 //			if(3)
-//				prize = new /obj/item/weapon/zippo(src.loc)
+//				prize = new /obj/item/weapon/lighter/zippo(src.loc)
 //				prize.name = "Burno Lighter"
 //				prize.desc = "Almost like a decent lighter!"
 			if(4)

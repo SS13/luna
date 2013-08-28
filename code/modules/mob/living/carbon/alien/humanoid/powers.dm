@@ -76,7 +76,7 @@
 		for(var/mob/O in viewers(src, null))
 			O.show_message(text("\green <B>[src] has planted some alien weeds!</B>"), 1)
 		var/obj/item/alien/weeds/W = new /obj/item/alien/weeds(loc)
-		W.updateicon()
+		W.update_icon()
 		W.Life()
 	else
 		src << "\green Not enough plasma stored"
@@ -140,7 +140,7 @@
 		src << "You don't have any plasma."
 		return
 
-	var/amount = input("Amount:", "Transfer Plasma to [M]") as num
+	var/amount = input("amount:", "Transfer Plasma to [M]") as num
 
 	if (!amount)
 		return

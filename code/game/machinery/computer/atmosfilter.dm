@@ -18,7 +18,7 @@
 	name = "Filter Adjuster"
 	icon = 'computer.dmi'
 	icon_state = "gas"
-/obj/machinery/computer/atmosphere/monitor/proc/interact(mob/user)
+/obj/machinery/computer/atmosphere/monitor/interact(mob/user)
 
 	if ( (get_dist(src, user) > 1 ) || (stat & (BROKEN|NOPOWER)) )
 		if (!istype(user, /mob/living/silicon))

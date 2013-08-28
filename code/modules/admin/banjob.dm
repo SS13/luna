@@ -1,7 +1,4 @@
 /proc/jobban_fullban(mob/M, rank,mob/bywho)
-	if(M == bywho)
-		bywho << "Adding job bans for yourself isn't possible."
-		return
 	var/input = input(usr, "Please enter the reason for the job ban", "Job banning", "")
 	if(!input)
 		bywho << "Job ban not added. Please retry and complete the reason field."

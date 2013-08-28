@@ -13,6 +13,15 @@
 
 
 /area
+	var/obj/machinery/alarm/master_air_alarm
+	var/list/air_vent_names = list()
+	var/list/air_scrub_names = list()
+	var/list/air_vent_info = list()
+	var/list/air_scrub_info = list()
+
+	var/global/global_uid = 0
+	var/uid
+
 	var/fire = null
 	var/atmos = 1
 	var/poweralm = 1
@@ -637,7 +646,7 @@
 
 
 /area/crew_quarters/hor
-	name = "Head of Research's Office"
+	name = "Research Director's Office"
 	icon_state = "head_quarters"
 
 
@@ -1031,6 +1040,14 @@
 	name = "Counselor's Office"
 	icon_state = "chapeloffice"
 
+/area/rnd/hall
+	name = "Research hallway"
+
+/area/rnd/server
+	name = "Server room"
+
+/area/rnd/rnd
+	name = "Research and Development"
 
 /area/storage/tools
 	name = "Tool Storage"
@@ -1253,70 +1270,6 @@
 	name = "AI Sat Ext"
 	icon_state = "storage"
 	applyalertstatus = 0
-
-
-/area/asteroid
-	name = "Asteroid"
-	icon_state = "asteroid"
-	applyalertstatus = 0
-
-/area/asteroid/abase
-	name = "Strange Base"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-
-/area/asteroid/base
-	name = "Mining base"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-/area/asteroid/base/arrivalhall
-	name = "Mining Arrival Hall"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-/area/asteroid/base/hallway
-	name = "Mining Hallway"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-/area/asteroid/base/dormitory
-	name = "Mining Dormitory"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-/area/asteroid/base/exitroom
-	name = "Mining Exit Room"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-/area/asteroid/base/bar
-	name = "Mining Bar"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-/area/asteroid/base/factory
-	name = "Mining Factory"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-/area/asteroid/base/storage
-	name = "Mining Storage"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-/area/asteroid/base/medbay
-	name = "Mining Medbay"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
-
-/area/asteroid/base/Refinery
-	name = "Refinery"
-	icon_state = "asbase"
-	applyalertstatus = 0
-
 
 /area/dockingbay/admin
 	name = "Docking Bay D"

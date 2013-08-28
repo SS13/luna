@@ -54,7 +54,7 @@
 /obj/item/weapon/money/attack_self(var/mob/user)
 	interact(user)
 
-/obj/item/weapon/money/proc/interact(var/mob/user)
+/obj/item/weapon/money/interact(var/mob/user)
 
 
 	user.machine = src
