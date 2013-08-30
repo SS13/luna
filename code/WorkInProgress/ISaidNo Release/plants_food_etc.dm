@@ -507,7 +507,7 @@
 				explosion(T, -1, -1, 1, 1)
 			if(2)
 				M << "\red So juicy!"
-				M.reagents.add_reagent(pick("capsaicin","psilocybin","LSD","THC","ethanol","poo","tricordrazine","hyperzine","impedrezene","mutagen","radium","acid","mercury","space_drugs","stoxin"), rand(10,40))
+				M.reagents.add_reagent(pick("capsaicin","psilocybin","LSD","THC","ethanol","poo","tricordrazine","hyperzine","impedrezene","mutagen","radium","sacid","mercury","space_drugs","stoxin"), rand(10,40))
 			if(3)
 				M << "\blue How refreshing!"
 				M.bruteloss -= 30
@@ -600,7 +600,7 @@
 		M.brainloss -= src.heal_amt
 /* Strumpetplaya - commenting this out as it has components we don't support.
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if(istype(W,/obj/item/weapon/rods))
+		if(istype(W,/obj/item/stack/rods))
 			user << "\blue You create an apple on a stick..."
 			new/obj/item/weapon/reagent_containers/food/snacks/plant/apple/stick(get_turf(src))
 			W:amount--
@@ -626,7 +626,7 @@
 			del src
 	attack_self(var/mob/user as mob)
 		if (src.icon_state == "banana")
-			if(user.mutations & 16 && prob(50))
+			if(user.mutations & CLUMSY && prob(50))
 				for(var/mob/N in viewers(user, null))
 					if(N.client)
 						N.show_message(text("\red <B>[user] accidentally pokes their eye out with the banana."), 1)
@@ -1353,7 +1353,7 @@
 					M.nutrition -= 20
 					for(var/mob/O in viewers(M, null)) O.show_message(text("\red [] suddenly and violently vomits!", M), 1)
 					playsound(M.loc, 'splat.ogg', 50, 1)
-					new /obj/decal/cleanable/vomit(M.loc)
+					new /obj/effect/decal/cleanable/vomit(M.loc)
 				if(4)
 					M << "\red You bite down on a chunk of bone, hurting your teeth."
 					M.bruteloss += 2
@@ -1808,51 +1808,6 @@
 		*/
 // Misc Shit
 
-/obj/item/clothing/mask/cigarette/weed/
-	name = "joint"
-	desc = "420 smoke weed errday"
-
-	New()
-		var/datum/reagents/R = new/datum/reagents(600)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("space_drugs", 300)
-		//R.add_reagent("THC", 300)
-
-/obj/item/clothing/mask/cigarette/weed/mega
-	name = "joint"
-	desc = "This thing smells weird even unlit."
-
-	New()
-		var/datum/reagents/R = new/datum/reagents(600)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("space_drugs", 300)
-		//R.add_reagent("LSD", 300)
-
-/obj/item/clothing/mask/cigarette/weed/black
-	name = "joint"
-	desc = "There's a really strong odor coming from this..."
-
-	New()
-		var/datum/reagents/R = new/datum/reagents(600)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("cyanide", 300)
-
-/obj/item/clothing/mask/cigarette/weed/white
-	name = "joint"
-	desc = "It has an unusual minty scent."
-
-	New()
-		var/datum/reagents/R = new/datum/reagents(600)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("THC", 100)
-		R.add_reagent("bicaridine", 25)
-		R.add_reagent("kelotane", 25)
-		R.add_reagent("anti_toxin", 25)
-		R.add_reagent("hyronalin", 25)
 /* Strumpetplaya - commenting this out as it has components we don't support.
 /obj/item/clothing/head/pumpkin
 	name = "carved pumpkin"

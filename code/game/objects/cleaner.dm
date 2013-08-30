@@ -1,15 +1,25 @@
-/obj/mopbucket/New()
+/obj/structure/mopbucket
+	desc = "Fill it with water, but don't forget a mop!"
+	name = "mop bucket"
+	icon = 'janitor.dmi'
+	icon_state = "mopbucket"
+	density = 1
+	flags = FPRINT
+	pressure_resistance = ONE_ATMOSPHERE
+	flags = FPRINT | TABLEPASS | OPENCONTAINER
+
+/obj/structure/mopbucket/New()
 	var/datum/reagents/R = new/datum/reagents(50)
 	reagents = R
 	R.my_atom = src
 
 
-/obj/mopbucket/examine()
+/obj/structure/mopbucket/examine()
 	set src in usr
 	usr << text("\icon[] [] contains [] units of water left!", src, src.name, src.reagents.total_volume)
 	..()
 
-/obj/mopbucket/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/structure/mopbucket/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/mop))
 		if (src.reagents.total_volume >= 2)
 			src.reagents.trans_to(W, 2)
@@ -19,7 +29,7 @@
 			user << "\blue Out of water!"
 	return
 
-/obj/mopbucket/ex_act(severity)
+/obj/structure/mopbucket/ex_act(severity)
 	switch(severity)
 		if(1.0)
 			del(src)

@@ -60,6 +60,7 @@
 			alt_name = " (as [tempPda.owner])"
 		else
 			alt_name = " (as Unknown)"
+
 	var/italics = 0
 	var/message_range = null
 	var/message_mode = null
@@ -91,7 +92,7 @@
 			  ":a" = "alientalk",
 			  ":t" = "Syndicate",
 			  ":d" = "Mining",
-			  ":q" = "Cargo",
+			  ":q" = "Supply",
 
 			  //kinda localization -- rastaf0
 			  //same keys as above, but on russian keyboard layout. This file uses cp1251 as encoding.
@@ -109,7 +110,7 @@
 			  ":ô" = "alientalk",
 			  ":å" = "Syndicate",
 			  ":â" = "Mining",
-			  ":é" = "Cargo",
+			  ":é" = "Supply",
 		)
 
 		message_mode = keys[channel_prefix]

@@ -372,7 +372,7 @@ datum
 
 
 		steal/captainslaser
-			steal_target = /obj/item/weapon/gun/energy/laser_gun/captain
+			steal_target = /obj/item/weapon/gun/energy/laser/captain
 			explanation_text = "Steal the captain's antique laser gun."
 			weight = 20
 
@@ -425,7 +425,7 @@ datum
 		*/
 
 		steal/handtele
-			steal_target = /obj/item/weapon/hand_tele
+			steal_target = /obj/item/weapon/device/hand_tele
 			explanation_text = "Steal a hand teleporter."
 			weight = 20
 
@@ -462,7 +462,7 @@ datum
 
 		steal/jetpack
 			steal_target = /obj/item/weapon/tank/jetpack
-			explanation_text = "Steal a blue oxygen jetpack."
+			explanation_text = "Steal a jetpack."
 			weight = 20
 
 			get_points(var/job)
@@ -496,7 +496,7 @@ datum
 					if(4)
 						return 30
 
-		steal/nukedisk
+/*		steal/nukedisk
 			steal_target = /obj/item/weapon/disk/nuclear
 			explanation_text = "Steal the station's nuclear authentication disk."
 			weight = 20
@@ -512,7 +512,7 @@ datum
 					if(3)
 						return 40
 					if(4)
-						return 25
+						return 25*/
 
 		steal/RCD
 			steal_target = /obj/item/weapon/rcd
@@ -595,8 +595,8 @@ datum
 							return 1
 					return 0
 		steal/AI
-			steal_target = /obj/machinery/aiconstruct
-			explanation_text = "Steal a finished AI Construct (with brain)."
+			steal_target = /obj/structure/AIcore
+			explanation_text = "Steal a finished (but not booted up) AI Construct with brain."
 			weight = 50
 
 			get_points(var/job)
@@ -615,8 +615,8 @@ datum
 			check_completion()
 				if(steal_target)
 					for(var/datum/shuttle/s in shuttles)
-						for(var/obj/machinery/aiconstruct/objective in locate(s.centcom))
-							if (objective.buildstate == 6)
+						for(var/obj/structure/AIcore/objective in locate(s.centcom))
+							if (objective.buildstate == 5)
 								return 1
 					return 0
 
@@ -670,6 +670,7 @@ datum
 						return 1
 					else
 						return 0
+
 
 /*
 

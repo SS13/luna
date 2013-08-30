@@ -1,13 +1,10 @@
 /*
 CONTAINS:
 PAPER
-PAPER BIN
 WRAPPING PAPER
 GIFTS
 BEDSHEET BIN
 PHOTOGRAPHS
-CLIPBOARDS
-
 */
 
 
@@ -42,9 +39,9 @@ CLIPBOARDS
 	return
 
 /obj/item/weapon/paper/attack_self(mob/user as mob)
-	if ((usr.mutations & 16) && prob(50))
+	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << text("\red You cut yourself on the paper.")
-		usr.bruteloss += 3
+		usr:adjustBruteLoss(1)
 		return
 	var/n_name = input(user, "What would you like to label the paper?", "Paper Labelling", null)  as text
 	n_name = copytext(n_name, 1, 32)
@@ -82,17 +79,8 @@ CLIPBOARDS
 		while(lentext(t) > MAX_PAPER_MESSAGE_LEN)
 
 
-		//t = copytext(sanitize(t),1,MAX_PAPER_MESSAGE_LEN)
 		t = copytext(t,1,MAX_PAPER_MESSAGE_LEN)			//Allow line breaks on paper
-		//t = dd_replacetext(t, "\n", "<BR>")		//Moved all this crap up to the display rather than the input.
-		//t = dd_replacetext(t, "\[b\]", "<B>")
-		//t = dd_replacetext(t, "\[/b\]", "</B>")
-		//t = dd_replacetext(t, "\[i\]", "<I>")
-		//t = dd_replacetext(t, "\[/i\]", "</I>")
-		//t = dd_replacetext(t, "\[u\]", "<U>")
-		//t = dd_replacetext(t, "\[/u\]", "</U>")
-		//t = dd_replacetext(t, "\[sign\]", text("<font face=vivaldi>[]</font>", user.real_name))
-		//t = text("<font face=calligrapher>[]</font>", t)
+
 		src.info = t
 	else
 		if(istype(P, /obj/item/weapon/stamp))
@@ -102,136 +90,10 @@ CLIPBOARDS
 			src.icon_state = "paper_stamped"
 			src.stamped = 1
 			user << "\blue You stamp the paper with your rubber stamp."
-	/*
-	else
-		if (istype(P, /obj/item/weapon/weldingtool))
-			var/obj/item/weapon/weldingtool/W = P
-			if ((W.welding && W.weldfuel > 0))
-				for(var/mob/O in viewers(user, null))
-					O.show_message(text("\red [] burns [] with the welding tool!", user, src), 1, "\red You hear a small burning noise", 2)
-					//Foreach goto(323)
-				spawn( 0 )
-					src.burn(1800000.0)
-					return
-		else
-			if (istype(P, /obj/item/device/igniter))
-				for(var/mob/O in viewers(user, null))
-					O.show_message(text("\red [] burns [] with the igniter!", user, src), 1, "\red You hear a small burning noise", 2)
-					//Foreach goto(406)
-				spawn( 0 )
-					src.burn(1800000.0)
-					return
-			else
-				if (istype(P, /obj/item/weapon/wirecutters))
-					for(var/mob/O in viewers(user, null))
-						O.show_message(text("\red [] starts cutting []!", user, src), 1)
-						//Foreach goto(489)
-					sleep(50)
-					if (((src.loc == src || get_dist(src, user) <= 1) && (!( user.stat ) && !( user.restrained() ))))
-						for(var/mob/O in viewers(user, null))
-							O.show_message(text("\red [] cuts [] to pieces!", user, src), 1)
-							//Foreach goto(580)
-						//SN src = null
-						del(src)
-						return
-	*/ //TODO: FIX
+
 	src.add_fingerprint(user)
 	return
 
-
-
-
-
-//PAPER BIN
-
-/obj/item/weapon/paper_bin/proc/update()
-	src.icon_state = text("paper_bin[]", ((src.amount || locate(/obj/item/weapon/paper, src)) ? "1" : null))
-	return
-
-
-/obj/item/weapon/paper_bin/MouseDrop(mob/user as mob)
-	if ((user == usr && (!( usr.restrained() ) && (!( usr.stat ) && (usr.contents.Find(src) || in_range(src, usr))))))
-		if (usr.hand)
-			if (!( usr.l_hand ))
-				spawn( 0 )
-					src.attack_hand(usr, 1, 1)
-					return
-		else
-			if (!( usr.r_hand ))
-				spawn( 0 )
-					src.attack_hand(usr, 0, 1)
-					return
-	return
-
-/obj/item/weapon/paper_bin/attack_paw(mob/user as mob)
-	return src.attack_hand(user)
-
-/obj/item/weapon/paper_bin/attack_hand(mob/user as mob, unused, flag)
-	if (flag)
-		return ..()
-	src.add_fingerprint(user)
-	if (locate(/obj/item/weapon/paper, src))
-		for(var/obj/item/weapon/paper/P in src)
-			if ((usr.hand && !( usr.l_hand )))
-				usr.l_hand = P
-				P.loc = usr
-				P.layer = 20
-				P = null
-				usr.update_clothing()
-				break
-			else if (!usr.r_hand)
-				usr.r_hand = P
-				P.loc = usr
-				P.layer = 20
-				P = null
-				usr.update_clothing()
-				break
-	else
-		if (src.amount >= 1)
-			src.amount--
-			new /obj/item/weapon/paper( usr.loc )
-	src.update()
-	return
-
-/obj/item/weapon/paper_bin/examine()
-	set src in oview(1)
-
-	src.amount = round(src.amount)
-	var/n = src.amount
-	for(var/obj/item/weapon/paper/P in src)
-		n++
-	if (n <= 0)
-		n = 0
-		usr << "There are no papers in the bin."
-	else
-		if (n == 1)
-			usr << "There is one paper in the bin."
-		else
-			usr << text("There are [] papers in the bin.", n)
-	return
-
-/*
-/obj/item/weapon/paper_bin/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/paper))
-		user.drop_item()
-		W.loc = src
-	else
-		if (istype(W, /obj/item/weapon/weldingtool))
-			var/obj/item/weapon/weldingtool/T = W
-			if ((T.welding && T.weldfuel > 0))
-				viewers(user, null) << text("[] burns the paper with the welding tool!", user)
-				spawn( 0 )
-					src.burn(1800000.0)
-					return
-		else
-			if (istype(W, /obj/item/device/igniter))
-				viewers(user, null) << text("[] burns the paper with the igniter!", user)
-				spawn( 0 )
-					src.burn(1800000.0)
-					return
-	src.update()
-	return
-*/ //TODO: FIX
 
 
 
@@ -240,7 +102,7 @@ CLIPBOARDS
 // WRAPPING PAPER
 
 /obj/item/weapon/wrapping_paper/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (!( locate(/obj/table, src.loc) ))
+	if (!( locate(/obj/structure/table, src.loc) ))
 		user << "\blue You MUST put the paper on a table!"
 	if (W.w_class < 4)
 		if ((istype(user.l_hand, /obj/item/weapon/wirecutters) || istype(user.r_hand, /obj/item/weapon/wirecutters)))
@@ -357,7 +219,7 @@ CLIPBOARDS
 			del(src)
 			return
 		if("l_gun")
-			var/obj/item/weapon/gun/energy/laser_gun/W = new /obj/item/weapon/gun/energy/laser_gun( M )
+			var/obj/item/weapon/gun/energy/laser/W = new /obj/item/weapon/gun/energy/laser( M )
 			if (M.hand)
 				M.l_hand = W
 			else
@@ -368,7 +230,7 @@ CLIPBOARDS
 			del(src)
 			return
 		if("t_gun")
-			var/obj/item/weapon/gun/energy/taser_gun/W = new /obj/item/weapon/gun/energy/taser_gun( M )
+			var/obj/item/weapon/gun/energy/taser/W = new /obj/item/weapon/gun/energy/taser( M )
 			if (M.hand)
 				M.l_hand = W
 			else
@@ -413,161 +275,6 @@ CLIPBOARDS
 			return
 		else
 	return
-
-
-
-
-
-
-
-// BEDSHEET BIN
-
-/obj/bedsheetbin/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/bedsheet))
-		//W = null
-		del(W)
-		src.amount++
-	return
-
-/obj/bedsheetbin/attack_paw(mob/user as mob)
-	return src.attack_hand(user)
-
-/obj/bedsheetbin/attack_hand(mob/user as mob)
-	if (src.amount >= 1)
-		src.amount--
-		new /obj/item/weapon/bedsheet( src.loc )
-		add_fingerprint(user)
-
-/obj/bedsheetbin/examine()
-	set src in oview(1)
-
-	src.amount = round(src.amount)
-	if (src.amount <= 0)
-		src.amount = 0
-		usr << "There are no bed sheets in the bin."
-	else
-		if (src.amount == 1)
-			usr << "There is one bed sheet in the bin."
-		else
-			usr << text("There are [] bed sheets in the bin.", src.amount)
-	return
-
-
-
-
-
-
-// CLIPBOARD
-/obj/item/weapon/clipboard/attack_self(mob/user as mob)
-	var/dat = "<B>Clipboard</B><BR>"
-	if (src.pen)
-		dat += text("<A href='?src=\ref[];pen=1'>Remove Pen</A><BR><HR>", src)
-	for(var/obj/item/weapon/paper/P in src)
-		dat += text("<A href='?src=\ref[];read=\ref[]'>[]</A> <A href='?src=\ref[];write=\ref[]'>Write</A> <A href='?src=\ref[];remove=\ref[]'>Remove</A><BR>", src, P, P.name, src, P, src, P)
-	user << browse(dat, "window=clipboard")
-	onclose(user, "clipboard")
-	return
-
-/obj/item/weapon/clipboard/Topic(href, href_list)
-	..()
-	if ((usr.stat || usr.restrained()))
-		return
-	if (usr.contents.Find(src))
-		usr.machine = src
-		if (href_list["pen"])
-			if (src.pen)
-				if ((usr.hand && !( usr.l_hand )))
-					usr.l_hand = src.pen
-					src.pen.loc = usr
-					src.pen.layer = 20
-					src.pen = null
-					usr.update_clothing()
-				else
-					if (!( usr.r_hand ))
-						usr.r_hand = src.pen
-						src.pen.loc = usr
-						src.pen.layer = 20
-						src.pen = null
-						usr.update_clothing()
-				if (src.pen)
-					src.pen.add_fingerprint(usr)
-				src.add_fingerprint(usr)
-		if (href_list["remove"])
-			var/obj/item/P = locate(href_list["remove"])
-			if ((P && P.loc == src))
-				if ((usr.hand && !( usr.l_hand )))
-					usr.l_hand = P
-					P.loc = usr
-					P.layer = 20
-					usr.update_clothing()
-				else
-					if (!( usr.r_hand ))
-						usr.r_hand = P
-						P.loc = usr
-						P.layer = 20
-						usr.update_clothing()
-				P.add_fingerprint(usr)
-				src.add_fingerprint(usr)
-		if (href_list["write"])
-			var/obj/item/P = locate(href_list["write"])
-			if ((P && P.loc == src))
-				if (istype(usr.r_hand, /obj/item/weapon/pen))
-					P.attackby(usr.r_hand, usr)
-				else
-					if (istype(usr.l_hand, /obj/item/weapon/pen))
-						P.attackby(usr.l_hand, usr)
-					else
-						if (istype(src.pen, /obj/item/weapon/pen))
-							P.attackby(src.pen, usr)
-			src.add_fingerprint(usr)
-		if (href_list["read"])
-			var/obj/item/weapon/paper/P = locate(href_list["read"])
-			if ((P && P.loc == src))
-				if (!( istype(usr, /mob/living/carbon/human) ))
-					usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, Ellipsis(P.info)), text("window=[]", P.name))
-					onclose(usr, "[P.name]")
-				else
-					usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, P.info), text("window=[]", P.name))
-					onclose(usr, "[P.name]")
-		if (ismob(src.loc))
-			var/mob/M = src.loc
-			if (M.machine == src)
-				spawn( 0 )
-					src.attack_self(M)
-					return
-	return
-
-/obj/item/weapon/clipboard/attack_paw(mob/user as mob)
-	return src.attack_hand(user)
-
-/obj/item/weapon/clipboard/attackby(obj/item/weapon/P as obj, mob/user as mob)
-
-	if (istype(P, /obj/item/weapon/paper))
-		if (src.contents.len < 15)
-			user.drop_item()
-			P.loc = src
-		else
-			user << "\blue Not enough space!!!"
-	else
-		if (istype(P, /obj/item/weapon/pen))
-			if (!src.pen)
-				user.drop_item()
-				P.loc = src
-				src.pen = P
-		else
-			return
-	src.update()
-	spawn(0)
-		attack_self(user)
-		return
-	return
-
-/obj/item/weapon/clipboard/proc/update()
-	src.icon_state = text("clipboard[][]", (locate(/obj/item/weapon/paper, src) ? "1" : "0"), (locate(/obj/item/weapon/pen, src) ? "1" : "0"))
-	return
-
-
-
 
 
 // PHOTOGRAPH

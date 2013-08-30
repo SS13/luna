@@ -22,7 +22,8 @@ var/list/occupations = list(
 	"Clown",
 	"Mime",
 	"Quartermaster",
-	"Cargo","Cargo")
+	"Shaft Miner","Shaft Miner",
+	"Cargo Technician","Cargo Technician")
 
 var/list/assistant_occupations = list(
 	"Unassigned")
@@ -90,8 +91,10 @@ var/list/assistant_occupations = list(
 			return 2
 		if("Quartermaster")
 			return 2
-		if("Cargo")
+		if("Cargo Technician")
 			return 0
+		if("Shaft Miner")
+			return 1
 		if("Captain")
 			return 4
 		else

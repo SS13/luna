@@ -3,11 +3,11 @@ obj/item/weapon/firework
 	icon = 'fireworks.dmi'
 	icon_state = "rocket_0"
 	var/litzor = 0
-	var/datum/effects/system/sparkel_spread/S
+	var/datum/effect/system/sparkel_spread/S
 obj/item/weapon/firework/attackby(obj/item/weapon/W,mob/user)
 	if(litzor)
 		return
-	if (istype(W, /obj/item/weapon/weldingtool) && W:welding || istype(W,/obj/item/weapon/zippo) && W:lit)
+	if (istype(W, /obj/item/weapon/weldingtool) && W:welding || istype(W,/obj/item/weapon/lighter) && W:lit)
 		for(var/mob/M in viewers(user))
 			M << "[user] lits \the [src]"
 		litzor = 1
@@ -25,11 +25,11 @@ obj/item/weapon/sparkler
 	icon = 'fireworks.dmi'
 	icon_state = "sparkler_0"
 	var/litzor = 0
-	var/datum/effects/system/spark_spread/S
+	var/datum/effect/effect/system/spark_spread/S
 obj/item/weapon/sparkler/attackby(obj/item/weapon/W,mob/user)
 	if(litzor)
 		return
-	if (istype(W, /obj/item/weapon/weldingtool) && W:welding || istype(W,/obj/item/weapon/zippo) && W:lit)
+	if (istype(W, /obj/item/weapon/weldingtool) && W:welding || istype(W,/obj/item/weapon/lighter) && W:lit)
 		for(var/mob/M in viewers(user))
 			M << "[user] lits \the [src]"
 		litzor = 1
@@ -43,9 +43,9 @@ obj/item/weapon/sparkler/attackby(obj/item/weapon/W,mob/user)
 			S.start()
 			sleep(10)
 		del(src)
-/obj/crate/fireworks
+/obj/structure/crate/fireworks
 	name = "Fireworks!"
-/obj/crate/fireworks/New()
+/obj/structure/crate/fireworks/New()
 	new /obj/item/weapon/sparkler(src)
 	new /obj/item/weapon/sparkler(src)
 	new /obj/item/weapon/sparkler(src)

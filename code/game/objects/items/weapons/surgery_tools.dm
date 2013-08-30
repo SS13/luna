@@ -9,11 +9,12 @@ CIRCULAR SAW
 	if(!istype(M, /mob) || istype(M, /mob/living/carbon/monkey)) //Adding basic organs to monkeys for implants.
 		return													 //TO DO: Remove the monkey check once you're sure monkey organs are safe to cut. - Abi79
 
-	if((usr.mutations & 16) && prob(50))
+	if((user.mutations & CLUMSY) && prob(50))
 		M << "\red You stab yourself in the eye."
-		M.sdisabilities |= 1
+		M.eye_stat += 3
 		M.weakened += 4
-		M.bruteloss += 10
+		var/datum/organ/external/affecting = M.organs["head"]
+		affecting.take_damage(10)
 
 	src.add_fingerprint(user)
 
@@ -50,7 +51,7 @@ CIRCULAR SAW
 					var/datum/organ/external/affecting = M.organs["head"]
 					affecting.take_damage(7)
 				else
-					M.bruteloss += 7
+					M.adjustBruteLoss(7)
 
 				M.updatehealth()
 				M:brain_op_stage = 1.0
@@ -70,13 +71,13 @@ CIRCULAR SAW
 					user << "\red You begin to delicately remove the connections to the brain with [src]!"
 					if(prob(25))
 						user << "\red You nick an artery!"
-						M.bruteloss += 75
+						M.adjustBruteLoss(75)
 
 				if(istype(M, /mob/living/carbon/human))
 					var/datum/organ/external/affecting = M.organs["head"]
 					affecting.take_damage(7)
 				else
-					M.bruteloss += 7
+					M.adjustBruteLoss(7)
 
 				M.updatehealth()
 				M:brain_op_stage = 3.0
@@ -91,20 +92,18 @@ CIRCULAR SAW
 
 
 
-
-
-
 // CIRCULAR SAW
 
 /obj/item/weapon/circular_saw/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	if(!istype(M, /mob) || istype(M, /mob/living/carbon/monkey)) //Adding basic organs to monkeys for implants.
 		return													 //TO DO: Remove the monkey check once you're sure monkey organs are safe to cut. - Abi79
 
-	if((usr.mutations & 16) && prob(50))
-		M << "\red You cut out your eyes."
-		M.sdisabilities |= 1
+	if((usr.mutations & CLUMSY) && prob(50))
+		M << "\red You stab your eye."
+		M.eye_stat += 3
 		M.weakened += 4
-		M.bruteloss += 10
+		var/datum/organ/external/affecting = M.organs["head"]
+		affecting.take_damage(10)
 
 	src.add_fingerprint(user)
 
@@ -136,13 +135,13 @@ CIRCULAR SAW
 					user << "\red You begin to saw open your head with [src]!"
 					if(prob(25))
 						user << "\red You mess up!"
-						M.bruteloss += 40
+						M.adjustBruteLoss(40)
 
 				if(istype(M, /mob/living/carbon/human))
 					var/datum/organ/external/affecting = M.organs["head"]
 					affecting.take_damage(7)
 				else
-					M.bruteloss += 7
+					M.adjustBruteLoss(7)
 
 				M.updatehealth()
 				M:brain_op_stage = 2.0
@@ -193,7 +192,7 @@ CIRCULAR SAW
 	if(!istype(M, /mob))
 		return
 //	world << "Start"
-	if((usr.mutations & 16) && prob(50))
+	if((usr.mutations & CLUMSY) && prob(50))
 		M << "\red You stab yourself in the eye."
 		M.sdisabilities |= 1
 		M.weakened += 4
@@ -271,12 +270,6 @@ and then you have (1-3sec to respond to this eg by applying cotton.
 	if(!istype(M, /mob))
 		return
 //	world << "Start"
-	if((usr.mutations & 16) && prob(50))
-		M << "\red You stab yourself in the eye."
-		M.sdisabilities |= 1
-		M.weakened += 4
-		M.bruteloss += 10
-
 	src.add_fingerprint(user)
 
 	if(!(locate(/obj/machinery/optable, M.loc) && M.resting))
@@ -357,11 +350,6 @@ and then you have (1-3sec to respond to this eg by applying cotton.
 	if(!istype(M, /mob))
 		return
 //	world << "Start"
-	if((usr.mutations & 16) && prob(50))
-		M << "\red You stab yourself in the eye."
-		M.sdisabilities |= 1
-		M.weakened += 4
-		M.bruteloss += 10
 
 	src.add_fingerprint(user)
 

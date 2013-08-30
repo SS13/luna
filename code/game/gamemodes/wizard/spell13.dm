@@ -22,7 +22,7 @@
 		if(T.y>world.maxy-4 || T.y<4)	continue
 		turfs += T
 	if(!turfs.len) turfs += pick(/turf in orange(6))
-	var/datum/effects/system/harmless_smoke_spread/smoke = new /datum/effects/system/harmless_smoke_spread()
+	var/datum/effect/system/harmless_smoke_spread/smoke = new /datum/effect/system/harmless_smoke_spread()
 	smoke.set_up(10, 0, usr.loc)
 	smoke.start()
 	var/turf/picked = pick(turfs)

@@ -99,64 +99,65 @@
 
 	process()
 
-	proc
-		update_icon()
-			src.overlays = new/list()
-			src.underlays = new/list()
-			if(!tank_one && !tank_two && !attached_device)
-				icon_state = "valve_1"
-				return
-			icon_state = "valve"
-			var/tank_one_icon = ""
-			var/tank_two_icon = ""
-			if(tank_one)
-				tank_one_icon = tank_one.icon_state
-			if(tank_two)
-				tank_two_icon = tank_two.icon_state
-			if(tank_one)
-				var/icon/I = new(src.icon, icon_state = "[tank_one_icon]")
-				//var/obj/overlay/tank_one_overlay = new
-				//tank_one_overlay.icon = src.icon
-				//tank_one_overlay.icon_state = tank_one_icon
-				src.underlays += I
-			if(tank_two)
-				var/icon/J = new(src.icon, icon_state = "[tank_two_icon]")
-				//I.Flip(EAST) this breaks the perspective!
-				J.Shift(WEST, 13)
-				//var/obj/underlay/tank_two_overlay = new
-				//tank_two_overlay.icon = I
-				src.underlays += J
-			if(attached_device)
-				var/icon/K = new(src.icon, icon_state = "device")
-				//var/obj/overlay/device_overlay = new
-				//device_overlay.icon = src.icon
-				//device_overlay.icon_state = device_icon
-				src.overlays += K
-
-		/*
-		Exadv1: I know this isn't how it's going to work, but this was just to check
-		it explodes properly when it gets a signal (and it does).
-		*/
-
-		toggle_valve()
-			src.valve_open = !valve_open
-			if(valve_open && (tank_one && tank_two))
-				var/turf/bombturf = get_turf(src)
-				var/bombarea = bombturf.loc.name
-
-				bombers += "Bomb valve opened in [bombarea] with device attacher: [attacher]. Last touched by: [src.fingerprintslast]"
-				message_admins("Bomb valve opened in [bombarea] with device attacher: [attacher]. Last touched by: [src.fingerprintslast]")
-
-				var/datum/gas_mixture/temp
-				temp = tank_one.air_contents.remove_ratio(1)
-
-				tank_two.air_contents.volume = tank_two.air_contents.volume + tank_one.air_contents.volume
-				tank_two.air_contents.merge(temp)
-				spawn(20) // In case one tank bursts
-					src.update_icon()
-
-
-		// this doesn't do anything but the timer etc. expects it to be here
-		// eventually maybe have it update icon to show state (timer, prox etc.) like old bombs
-		c_state()
+	update_icon()
+		src.overlays = new/list()
+		src.underlays = new/list()
+		if(!tank_one && !tank_two && !attached_device)
+			icon_state = "valve_1"
 			return
+		icon_state = "valve"
+		var/tank_one_icon = ""
+		var/tank_two_icon = ""
+		if(tank_one)
+			tank_one_icon = tank_one.icon_state
+		if(tank_two)
+			tank_two_icon = tank_two.icon_state
+		if(tank_one)
+			var/icon/I = new(src.icon, icon_state = "[tank_one_icon]")
+			src.underlays += I
+		if(tank_two)
+			var/icon/J = new(src.icon, icon_state = "[tank_two_icon]")
+			J.Shift(WEST, 13)
+			src.underlays += J
+		if(attached_device)
+			var/icon/K = new(src.icon, icon_state = "device")
+			src.overlays += K
+
+	/*
+	Exadv1: I know this isn't how it's going to work, but this was just to check
+	it explodes properly when it gets a signal (and it does).
+	*/
+	proc/toggle_valve()
+		src.valve_open = !valve_open
+		if(valve_open && (tank_one && tank_two))
+			var/turf/bombturf = get_turf(src)
+			var/bombarea = bombturf.loc.name
+
+			bombers += "Bomb valve opened in [bombarea] with device attacher: [attacher]. Last touched by: [src.fingerprintslast]"
+			message_admins("Bomb valve opened in [bombarea] with device attacher: [attacher]. Last touched by: [src.fingerprintslast]")
+			merge_gases()
+			spawn(20) // In case one tank bursts
+				src.update_icon()
+		else if(!valve_open && (tank_one && tank_two))
+			split_gases()
+			src.update_icon()
+
+	// this doesn't do anything but the timer etc. expects it to be here
+	// eventually maybe have it update icon to show state (timer, prox etc.) like old bombs
+	proc/c_state()
+		return
+
+/obj/item/device/transfer_valve/proc/merge_gases()
+	tank_two.air_contents.volume += tank_one.air_contents.volume
+	var/datum/gas_mixture/temp
+	temp = tank_one.air_contents.remove_ratio(1)
+	tank_two.air_contents.merge(temp)
+
+/obj/item/device/transfer_valve/proc/split_gases()
+	if (!valve_open || !tank_one || !tank_two)
+		return
+	var/ratio1 = tank_one.air_contents.volume/tank_two.air_contents.volume
+	var/datum/gas_mixture/temp
+	temp = tank_two.air_contents.remove_ratio(ratio1)
+	tank_one.air_contents.merge(temp)
+	tank_two.air_contents.volume -=  tank_one.air_contents.volume

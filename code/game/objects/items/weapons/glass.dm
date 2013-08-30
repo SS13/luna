@@ -1,202 +1,17 @@
 /*
 CONTAINS:
-GLASS SHEET
-REINFORCED GLASS SHEET
 SHARDS
-
 */
-
-/obj/item/weapon/sheet/glass/attack_hand(mob/user as mob)
-	if ((user.r_hand == src || user.l_hand == src))
-		src.add_fingerprint(user)
-		var/obj/item/weapon/sheet/glass/F = new /obj/item/weapon/sheet/glass( user )
-		F.amount = 1
-		src.amount--
-		if (user.hand)
-			user.l_hand = F
-		else
-			user.r_hand = F
-		F.layer = 20
-		F.add_fingerprint(user)
-		if (src.amount < 1)
-			//SN src = null
-			del(src)
-			return
-	else
-		..()
-	src.force = 5
-	return
-
-/obj/item/weapon/sheet/glass/attackby(obj/item/weapon/W, mob/user)
-	if ( istype(W, /obj/item/weapon/sheet/glass) )
-		var/obj/item/weapon/sheet/glass/G = W
-		if (G.amount >= 5)
-			return
-		if (G.amount + src.amount > 5)
-			src.amount = G.amount + src.amount - 5
-			G.amount = 5
-		else
-			G.amount += src.amount
-			//SN src = null
-			del(src)
-			return
-		return
-	else if( istype(W, /obj/item/weapon/rods) )
-
-		var/obj/item/weapon/rods/V  = W
-		var/obj/item/weapon/sheet/rglass/R = new /obj/item/weapon/sheet/rglass(user.loc)
-		R.loc = user.loc
-		R.add_fingerprint(user)
-
-
-		if(V.amount == 1)
-
-			if(user.client)
-				user.client.screen -= V
-
-			user.u_equip(W)
-			del(W)
-		else
-			V.amount--
-
-
-		if(src.amount == 1)
-
-			if(user.client)
-				user.client.screen -= src
-
-			user.u_equip(src)
-			del(src)
-		else
-			src.amount--
-			return
-
-
-
-/obj/item/weapon/sheet/glass/examine()
-	set src in view(1)
-
-	..()
-	usr << text("There are [] glass sheet\s on the stack.", src.amount)
-	return
-
-/obj/item/weapon/sheet/glass/attack_self(mob/user as mob)
-
-	if (!( istype(usr.loc, /turf/simulated) ))
-		return
-	if (!(istype(usr, /mob/living/carbon/human) || ticker) && ticker.mode.name != "monkey")
-		usr << "\red You don't have the dexterity to do this!"
-		return
-	switch(alert("Sheet-Glass", "Would you like full tile glass or one direction?", "one direct", "full (2 sheets)", "cancel", null))
-		if("one direct")
-			var/obj/window/W = new /obj/window( usr.loc )
-			W.anchored = 0
-			if (src.amount < 1)
-				return
-			src.amount--
-		if("full (2 sheets)")
-			if (src.amount < 2)
-				return
-			src.amount -= 2
-			var/obj/window/W = new /obj/window( usr.loc )
-			W.dir = SOUTHWEST
-			W.ini_dir = SOUTHWEST
-			W.anchored = 0
-		else
-	if (src.amount <= 0)
-		user.u_equip(src)
-		del(src)
-		return
-	return
-
-
-
-
-
-
-// REINFORCED GLASS
-
-/obj/item/weapon/sheet/rglass/attack_hand(mob/user as mob)
-	if ((user.r_hand == src || user.l_hand == src))
-		src.add_fingerprint(user)
-		var/obj/item/weapon/sheet/rglass/F = new /obj/item/weapon/sheet/rglass( user )
-		F.amount = 1
-		src.amount--
-		if (user.hand)
-			user.l_hand = F
-		else
-			user.r_hand = F
-		F.layer = 20
-		F.add_fingerprint(user)
-		if (src.amount < 1)
-			//SN src = null
-			del(src)
-			return
-	else
-		..()
-	src.force = 5
-	return
-
-/obj/item/weapon/sheet/rglass/attackby(obj/item/weapon/sheet/rglass/W as obj, mob/user as mob)
-	if (!( istype(W, /obj/item/weapon/sheet/rglass) ))
-		return
-	if (W.amount >= 5)
-		return
-	if (W.amount + src.amount > 5)
-		src.amount = W.amount + src.amount - 5
-		W.amount = 5
-	else
-		W.amount += src.amount
-		del(src)
-		return
-	return
-
-/obj/item/weapon/sheet/rglass/examine()
-	set src in view(1)
-
-	..()
-	usr << text("There are [] reinforced glass sheet\s on the stack.", src.amount)
-	return
-
-/obj/item/weapon/sheet/rglass/attack_self(mob/user as mob)
-	if (!istype(usr.loc, /turf/simulated))
-		return
-	if (!(istype(usr, /mob/living/carbon/human) || ticker) && ticker.mode.name != "monkey")
-		usr << "\red You don't have the dexterity to do this!"
-		return
-	switch(alert("Sheet Reinf. Glass", "Would you like full tile glass or one direction?", "one direct", "full (2 sheets)", "cancel", null))
-		if("one direct")
-			var/obj/window/W = new /obj/window( usr.loc, 1 )
-			W.anchored = 0
-			W.state = 0
-			if (src.amount < 1)
-				return
-			src.amount--
-		if("full (2 sheets)")
-			if (src.amount < 2)
-				return
-			src.amount -= 2
-			var/obj/window/W = new /obj/window( usr.loc, 1 )
-			W.dir = SOUTHWEST
-			W.ini_dir = SOUTHWEST
-			W.anchored = 0
-			W.state = 0
-		else
-	if (src.amount <= 0)
-		user.u_equip(src)
-		//SN src = null
-		del(src)
-		return
-	return
-
-
-
-
-
-
-
-
-// SHARDS
+obj/item/weapon/shard
+	name = "shard"
+	icon = 'shards.dmi'
+	icon_state = "large"
+	desc = "Could probably be used as ... a throwing weapon?"
+	w_class = 3.0
+	force = 5.0
+	slash = 1
+	throwforce = 15.0
+	item_state = "shard-glass"
 
 /obj/item/weapon/shard/Bump()
 
@@ -210,9 +25,6 @@ SHARDS
 	return
 
 /obj/item/weapon/shard/New()
-
-	//****RM
-	//world<<"New shard at [x],[y],[z]"
 
 	src.icon_state = pick("large", "medium", "small")
 	switch(src.icon_state)
@@ -233,7 +45,7 @@ SHARDS
 	if (!( istype(W, /obj/item/weapon/weldingtool) && W:welding ))
 		return
 	W:eyecheck(user)
-	new /obj/item/weapon/sheet/glass( user.loc )
+	new /obj/item/stack/sheet/glass( user.loc )
 	//SN src = null
 	del(src)
 	return

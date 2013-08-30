@@ -8,15 +8,15 @@
 	var/operating = 0
 	var/obj/item/robot_parts/being_built = null
 
-/obj/machinery/robotic_fabricator/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
-	if (istype(O, /obj/item/weapon/sheet/metal))
+/obj/machinery/robotic_fabricator/attackby(var/obj/item/O as obj, var/mob/user as mob)
+	if (istype(O, /obj/item/stack/sheet/metal))
 		if (src.metal_amount < 150000.0)
 			var/count = 0
 			spawn(15)
 				if(!O)
 					return
 				while(metal_amount < 150000 && O:amount)
-					src.metal_amount += O:height * O:width * O:length * 100000.0
+					src.metal_amount += 3500
 					O:amount--
 					count++
 
@@ -57,7 +57,7 @@ Please wait until completion...</TT><BR>
 "}
 	else
 		dat = {"
-<B>Metal Amount:</B> [min(150000, src.metal_amount)] cm<sup>3</sup> (MAX: 150,000)<BR><HR>
+<B>Metal amount:</B> [min(150000, src.metal_amount)] cm<sup>3</sup> (MAX: 150,000)<BR><HR>
 <BR>
 <A href='?src=\ref[src];make=1'>Left Arm (25,000 cc metal.)<BR>
 <A href='?src=\ref[src];make=2'>Right Arm (25,000 cc metal.)<BR>
@@ -125,7 +125,7 @@ Please wait until completion...</TT><BR>
 					build_cost = 75000
 
 				if (8)
-					build_type = "/obj/machinery/aiconstruct"
+					build_type = "/obj/structure/AIcore"
 					build_time = 1000
 					build_cost = 100000
 

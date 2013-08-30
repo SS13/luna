@@ -91,9 +91,9 @@
 		if(!wiregold)
 			spawn while(active)
 				sleep(10)
-				for(var/mob/M in src)
-					M.oxyloss += rand(1,10)
-					M.bruteloss += rand(1,10)
+				for(var/mob/living/M in src)
+					M.oxyloss += rand(1,20)
+					M.adjustBruteLoss(rand(1,5))
 				if(locate(/mob) in src)
 					for(var/mob/M in viewers())
 						M.show_message("\red *THUMP*")
@@ -121,8 +121,8 @@
 			O.fingerprints = null
 			O:contaminated = 0
 			if(ismob(O))
-				O:oxyloss += rand(1,50)
-				O:bruteloss += rand(10,50)
+				O:oxyloss += rand(20,60)
+				O:adjustBruteLoss(rand(10,40))
 				var/list/items = O:get_all_possessed_items()
 				for(var/obj/OB in items)
 					OB.clean_blood()

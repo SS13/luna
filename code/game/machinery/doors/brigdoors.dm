@@ -205,7 +205,7 @@
 		src.update_icon()
 	return
 
-/obj/machinery/door_timer/proc/update_icon()
+/obj/machinery/door_timer/update_icon()
 	if(stat & (NOPOWER))
 		icon_state = "doortimer-p"
 		return

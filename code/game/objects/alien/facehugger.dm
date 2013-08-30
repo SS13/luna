@@ -21,7 +21,6 @@
 /obj/alien/facehugger
 	name = "alien"
 	desc = "A small alien. Looks pretty scary!"
-	icon = 'alien.dmi'
 	icon_state = "facehugger"
 	layer = 5.0
 	density = 1
@@ -86,14 +85,8 @@
 				src.state = 1
 		..()
 
-	bullet_act(flag, A as obj)
-		if (flag == PROJECTILE_BULLET)
-			src.health -= 20
-		else if (flag == PROJECTILE_WEAKBULLET)
-			src.health -= 4
-		else if (flag == PROJECTILE_LASER)
-			src.health -= 10
-		healthcheck()
+	bullet_act()
+		src.death()
 
 	ex_act(severity)
 		switch(severity)
@@ -226,7 +219,7 @@
 				if(distance <= 1)
 					for(var/mob/O in viewers(world.view,src))
 						O.show_message("\red <B>[src.target] has been leapt on by the alien!</B>", 1, "\red You hear someone fall.", 2)
-					target:bruteloss += 10
+					target:adjustBruteLoss(10)
 					target:paralysis = max(target:paralysis, 10)
 					src.loc = target.loc
 
@@ -281,7 +274,7 @@
 
 		if(state != 2 || !alive || target) return
 
-		if(locate(/obj/item/alien/weeds) in src.loc && health < maxhealth)
+		if(locate(/obj/alien/weeds) in src.loc && health < maxhealth)
 			health++
 			spawn(cycle_pause) idle()
 			return
@@ -299,12 +292,12 @@
 						spawn(cycle_pause) src.idle()
 						return
 			else
-				var/obj/item/alien/weeds/W = null
+				var/obj/alien/weeds/W = null
 				if(health < maxhealth)
 					var/list/the_weeds = new/list()
 
 					find_weeds:
-						for(var/obj/item/alien/weeds/weed in range(viewrange,src.loc))
+						for(var/obj/alien/weeds/weed in range(viewrange,src.loc))
 							if(!can_see(src,weed,viewrange)) continue
 							for(var/atom/A in get_turf(weed))
 								if(A.density) continue find_weeds
@@ -328,7 +321,7 @@
 			if(can_see(src,trg_idle,viewrange))
 				switch(get_dist(src, trg_idle))
 					if(1)
-						if(istype(trg_idle,/obj/item/alien/weeds))
+						if(istype(trg_idle,/obj/alien/weeds))
 							step_towards_3d(src,get_step_towards_3d2(src , trg_idle))
 					if(2 to INFINITY)
 						step_towards_3d(src,get_step_towards_3d2(src , trg_idle))

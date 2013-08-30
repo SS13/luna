@@ -12,8 +12,10 @@ RCD
 	density = 0
 	anchored = 0.0
 	var/matter = 0
+	var/max_matter = 30
 	var/working = 0
 	var/mode = 1
+	origin_tech = "engineering=4;materials=2"
 	flags = FPRINT | TABLEPASS| CONDUCT
 	force = 10.0
 	throwforce = 10.0
@@ -22,7 +24,7 @@ RCD
 	w_class = 3.0
 	m_amt = 75000
 	g_amt = 15000
-	var/datum/effects/system/spark_spread/spark_system
+	var/datum/effect/effect/system/spark_spread/spark_system
 
 /obj/item/weapon/rcd_fake
 	name = "rapid-construction-device (RCD)"
@@ -38,6 +40,7 @@ RCD
 	throw_speed = 1
 	throw_range = 5
 	w_class = 3.0
+	origin_tech = "engineering=4;materials=2"
 
 /obj/item/weapon/rcd_ammo
 	name = "Compressed matter cartridge"
@@ -49,26 +52,28 @@ RCD
 	opacity = 0
 	density = 0
 	anchored = 0.0
+	var/matter = 10
 	m_amt = 30000
 	g_amt = 15000
+	origin_tech = "materials=2"
 
 /obj/item/weapon/rcd/New()
-	desc = "A RCD. It currently holds [matter]/30 matter-units."
-	src.spark_system = new /datum/effects/system/spark_spread
+	desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
+	src.spark_system = new /datum/effect/effect/system/spark_spread
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
 	return
 
 /obj/item/weapon/rcd/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/rcd_ammo))
-		if ((matter + 10) > 30)
+		if ((matter + W:matter) > max_matter)
 			user << "The RCD can't hold any more matter."
 			return
+		matter += W:matter
 		del(W)
-		matter += 10
 		playsound(src.loc, 'click.ogg', 50, 1)
-		user << "The RCD now holds [matter]/30 matter-units."
-		desc = "A RCD. It currently holds [matter]/30 matter-units."
+		user << "The RCD now holds [matter]/[max_matter] matter-units."
+		desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 		return
 
 /obj/item/weapon/rcd/attack_self(mob/user as mob)
@@ -102,8 +107,8 @@ RCD
 			src.spark_system.start()
 			A:ReplaceWithFloor()
 			matter--
-			user << "The RCD now holds [matter]/30 matter-units."
-			desc = "A RCD. It currently holds [matter]/30 matter-units."
+			user << "The RCD now holds [matter]/[max_matter] matter-units."
+			desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 			return
 		if (istype(A, /turf/simulated/floor/open) && matter >= 1)
 			user << "Building Floor (1)..."
@@ -112,8 +117,8 @@ RCD
 			src.spark_system.start()
 			A:ReplaceWithFloor()
 			matter--
-			user << "The RCD now holds [matter]/30 matter-units."
-			desc = "A RCD. It currently holds [matter]/30 matter-units."
+			user << "The RCD now holds [matter]/[max_matter] matter-units."
+			desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 			return
 		if (istype(A, /turf/simulated/floor) && matter >= 3)
 			user << "Building Wall (3)..."
@@ -124,8 +129,8 @@ RCD
 				A:ReplaceWithWall()
 				playsound(src.loc, 'Deconstruct.ogg', 50, 1)
 				matter -= 3
-				user << "The RCD now holds [matter]/30 matter-units."
-				desc = "A RCD. It currently holds [matter]/30 matter-units."
+				user << "The RCD now holds [matter]/[max_matter] matter-units."
+				desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 			return
 	else if (istype(A, /turf/simulated/floor) && mode == 2 && matter >= 10)
 		user << "Building Airlock (10)..."
@@ -137,8 +142,8 @@ RCD
 			matter -= 10
 			T.autoclose = 1
 			playsound(src.loc, 'Deconstruct.ogg', 50, 1)
-			user << "The RCD now holds [matter]/30 matter-units."
-			desc = "A RCD. It currently holds [matter]/30 matter-units."
+			user << "The RCD now holds [matter]/[max_matter] matter-units."
+			desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 			playsound(src.loc, 'sparks2.ogg', 50, 1)
 		return
 	else if (mode == 3 && (istype(A, /turf) || istype(A, /obj/machinery/door/airlock) ) )
@@ -151,8 +156,8 @@ RCD
 				matter -= 5
 				A:ReplaceWithFloor()
 				playsound(src.loc, 'Deconstruct.ogg', 50, 1)
-				user << "The RCD now holds [matter]/30 matter-units."
-				desc = "A RCD. It currently holds [matter]/30 matter-units."
+				user << "The RCD now holds [matter]/[max_matter] matter-units."
+				desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 			return
 		if (istype(A, /turf/simulated/wall/r_wall) && matter >= 5)
 			user << "Deconstructing RWall (5)..."
@@ -163,8 +168,8 @@ RCD
 				matter -= 5
 				A:ReplaceWithWall()
 				playsound(src.loc, 'Deconstruct.ogg', 50, 1)
-				user << "The RCD now holds [matter]/30 matter-units."
-				desc = "A RCD. It currently holds [matter]/30 matter-units."
+				user << "The RCD now holds [matter]/[max_matter] matter-units."
+				desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 			return
 		if (istype(A, /turf/simulated/floor) && matter >= 5)
 			user << "Deconstructing Floor (5)..."
@@ -175,8 +180,8 @@ RCD
 				matter -= 5
 				A:ReplaceWithOpen()
 				playsound(src.loc, 'Deconstruct.ogg', 50, 1)
-				user << "The RCD now holds [matter]/30 matter-units."
-				desc = "A RCD. It currently holds [matter]/30 matter-units."
+				user << "The RCD now holds [matter]/[max_matter] matter-units."
+				desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 			return
 		if (istype(A, /obj/machinery/door/airlock) && matter >= 10)
 			user << "Deconstructing Airlock (10)..."
@@ -187,20 +192,20 @@ RCD
 				matter -= 10
 				del(A)
 				playsound(src.loc, 'Deconstruct.ogg', 50, 1)
-				user << "The RCD now holds [matter]/30 matter-units."
-				desc = "A RCD. It currently holds [matter]/30 matter-units."
+				user << "The RCD now holds [matter]/[max_matter] matter-units."
+				desc = "A RCD. It currently holds [matter]/[max_matter] matter-units."
 			return
 
 /obj/item/weapon/rcd_ammo/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(user, /mob/living/silicon/robot))
 		if (istype(W, /obj/item/weapon/rcd))
 			var/obj/item/weapon/rcd/N = W
-			if ((N.matter + 10) > 30)
+			if ((N.matter + matter) > N.max_matter)
 				user << "The RCD can't hold any more matter."
 				return
-			N.matter += 10
+			N.matter += matter
 			playsound(src.loc, 'click.ogg', 50, 1)
-			user << "The RCD now holds [N.matter]/30 matter-units."
-			desc = "A RCD. It currently holds [N.matter]/30 matter-units."
+			user << "The RCD now holds [N.matter]/[N.max_matter] matter-units."
+			desc = "A RCD. It currently holds [N.matter]/[N.max_matter] matter-units."
 			del(src)
 			return

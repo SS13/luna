@@ -159,7 +159,7 @@
 
 	interact(user)
 
-/obj/machinery/power/turbine/proc/interact(mob/user)
+/obj/machinery/power/turbine/interact(mob/user)
 
 	if ( (get_dist(src, user) > 1 ) || (stat & (NOPOWER|BROKEN)) && (!istype(user, /mob/living/silicon/ai)) )
 		user.machine = null
@@ -243,9 +243,9 @@
 		if(do_after(user, 20))
 			if (src.stat & BROKEN)
 				user << "\blue The broken glass falls out."
-				var/obj/computerframe/A = new /obj/computerframe( src.loc )
+				var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
 				new /obj/item/weapon/shard( src.loc )
-				var/obj/item/weapon/circuitboard/turbine_control/M = new /obj/item/weapon/circuitboard/turbine_control( A )
+				var/obj/item/weapon/circuitboard/computer/turbine_control/M = new /obj/item/weapon/circuitboard/computer/turbine_control( A )
 				for (var/obj/C in src)
 					C.loc = src.loc
 				M.id = src.id
@@ -256,8 +256,8 @@
 				del(src)
 			else
 				user << "\blue You disconnect the monitor."
-				var/obj/computerframe/A = new /obj/computerframe( src.loc )
-				var/obj/item/weapon/circuitboard/turbine_control/M = new /obj/item/weapon/circuitboard/turbine_control( A )
+				var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
+				var/obj/item/weapon/circuitboard/computer/turbine_control/M = new /obj/item/weapon/circuitboard/computer/turbine_control( A )
 				for (var/obj/C in src)
 					C.loc = src.loc
 				M.id = src.id

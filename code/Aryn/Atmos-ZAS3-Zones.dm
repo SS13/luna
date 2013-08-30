@@ -225,7 +225,7 @@ zone
 			//merge_with.len = 0
 			//if(pressure > 225)
 			//	for(var/turf/T in edges)
-			//		for(var/obj/window/W in T)
+			//		for(var/obj/structure/window/W in T)
 			//			if(prob(25))
 			//				W.ex_act(pick(2,3))
 			//				W.visible_message("\red A window bursts from the pressure!",1,"\red You hear glass breaking.")

@@ -1,11 +1,3 @@
-//affected_mob.contract_disease(new /datum/disease/alien_embryo)
-
-
-
-
-
-
-
 /datum/disease/alien_embryo
 	name = "Unidentified Foreign Body"
 	max_stages = 5
@@ -42,7 +34,7 @@
 			if(prob(2))
 				affected_mob << "\red Your muscles ache."
 				if(prob(20))
-					affected_mob.bruteloss += 1
+					affected_mob.adjustBruteLoss(1)
 					affected_mob.updatehealth()
 			if(prob(2))
 				affected_mob << "\red Your stomach hurts."
@@ -51,7 +43,8 @@
 					affected_mob.updatehealth()
 		if(5)
 			affected_mob << "\red You feel something tearing its way out of your stomach..."
-			affected_mob.toxloss += 10
+			affected_mob.adjustBruteLoss(10)
+			affected_mob.toxloss += 5
 			affected_mob.updatehealth()
 			if(prob(40))
 				if(affected_mob.client)
@@ -60,4 +53,3 @@
 					new/mob/living/carbon/alien/larva(affected_mob.loc)
 				affected_mob:gib()
 				return
-

@@ -1,3 +1,13 @@
+/obj/item/weapon/storage
+	icon = 'storage.dmi'
+	name = "storage"
+	var/list/can_hold = new/list()
+	var/obj/screen/storage/boxes = null
+	var/obj/screen/close/closer = null
+	w_class = 3.0
+	flags = FPRINT|TABLEPASS
+	var/foldable = null	// BubbleWrap - if set, can be folded (when empty) into a sheet of cardboard
+
 /obj/screen/storage/attackby(W, mob/user as mob)
 	src.master.attackby(W, user)
 	return
@@ -22,6 +32,27 @@
 
 	return
 
+// BubbleWrap - A box can be folded up to make card
+/obj/item/weapon/storage/attack_self(mob/user as mob)
+	if ( contents.len )
+		return
+	if ( !ispath(src.foldable) )
+		return
+	var/found = 0
+	// Close any open UI windows first
+	for(var/mob/M in range(1))
+		if (M.s_active == src)
+			src.close(M)
+		if ( M == user )
+			found = 1
+	if ( !found )	// User is too far away
+		return
+	// Now make the cardboard
+	user << "\blue You fold \the [src] flat."
+	new src.foldable(get_turf(src))
+	del(src)
+//BubbleWrap END
+
 /obj/item/weapon/storage/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(can_hold.len)
 		var/ok = 0
@@ -34,8 +65,12 @@
 	if (src.contents.len >= 7)
 		return
 
-	if ((W.w_class >= 3 || istype(W, /obj/item/weapon/storage) || src.loc == W))
+	if (W.w_class >= w_class && !istype(src, /obj/item/weapon/storage/backpack/holding) || src.loc == W)
 		return
+
+//	if(W.w_class >= src.w_class && (istype(W, /obj/item/weapon/storage)))
+//		if(!istype(src, /obj/item/weapon/storage/backpack/holding))	//bohs should be able to hold backpacks again. The override for putting a boh in a boh is in backpack.dm.
+//			return //To prevent the stacking of the same sized items.
 
 	user.u_equip(W)
 	W.loc = src
@@ -51,8 +86,9 @@
 
 	for(var/mob/O in viewers(user, null))
 		O.show_message(text("\blue [] has added [] to []!", user, W, src), 1)
-
 	return
+
+
 
 /obj/item/weapon/storage/dropped(mob/user as mob)
 	src.orient_objs(7, 8, 10, 7)
@@ -165,20 +201,4 @@
 				src.orient_objs(4, 10, 4, 3)
 			else
 				src.orient_objs(4, 10, 4, 3)
-	return
-
-/obj/item/weapon/storage/box/New()
-//	new /obj/item/clothing/mask/breath( src )
-//	new /obj/item/weapon/tank/emergency_oxygen( src )
-	..()
-	return
-
-/obj/item/weapon/storage/mousetraps/New()
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	..()
 	return

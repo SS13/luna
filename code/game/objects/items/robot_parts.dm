@@ -1,13 +1,5 @@
-/obj/item/weapon/optical_unit
-	name = "optical sensor unit"
-	icon = 'items.dmi'
-	icon_state = "optical_unit"
-	item_state = "electronic"
-	throwforce = 5
-	w_class = 1.0
-	throw_speed = 4
-	throw_range = 10
-	flags = FPRINT | TABLEPASS| CONDUCT
+/obj/item/var/construction_time = null
+/obj/item/var/list/construction_cost = list()
 
 /obj/item/robot_parts
 	name = "robot parts"
@@ -17,36 +9,57 @@
 	flags = FPRINT | ONBELT | TABLEPASS | CONDUCT
 
 /obj/item/robot_parts/l_arm
-	name = "robot left arm"
+	name = "cyborg left arm"
 	icon_state = "l_arm"
+	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
+	construction_time = 200
+	construction_cost = list("metal"=18000)
 
 /obj/item/robot_parts/r_arm
-	name = "robot right arm"
+	name = "cyborg right arm"
+	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
 	icon_state = "r_arm"
+	construction_time = 200
+	construction_cost = list("metal"=18000)
 
 /obj/item/robot_parts/l_leg
-	name = "robot left leg"
+	name = "cyborg left leg"
 	icon_state = "l_leg"
+	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
+	construction_time = 200
+	construction_cost = list("metal"=15000)
 
 /obj/item/robot_parts/r_leg
-	name = "robot right leg"
+	name = "cyborg right leg"
 	icon_state = "r_leg"
+	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
+	construction_time = 200
+	construction_cost = list("metal"=15000)
 
 /obj/item/robot_parts/chest
-	name = "robot chest"
+	name = "cyborg chest"
+	desc = "A heavily reinforced case containing cyborg logic boards, with space for a standard power cell."
 	icon_state = "chest"
+	construction_time = 350
+	construction_cost = list("metal"=40000)
 	var/wires = 0.0
 	var/obj/item/weapon/cell/cell = null
 
 /obj/item/robot_parts/head
-	name = "robot head"
+	name = "cyborg head"
+	desc = "A standard reinforced braincase, with spine-plugged neural socket and sensor gimbals."
 	icon_state = "head"
-	var/obj/item/weapon/optical_unit/opt1 = null
-	var/obj/item/weapon/optical_unit/opt2 = null
+	construction_time = 350
+	construction_cost = list("metal"=25000)
+	var/obj/item/device/flash/opt1 = null
+	var/obj/item/device/flash/opt2 = null
 
 /obj/item/robot_parts/robot_suit
-	name = "robot suit"
+	name = "cyborg endoskeleton"
+	desc = "A complex metal backbone with standard limb sockets and pseudomuscle anchors."
 	icon_state = "robo_suit"
+	construction_time = 500
+	construction_cost = list("metal"=50000)
 	var/obj/item/robot_parts/l_arm/l_arm = null
 	var/obj/item/robot_parts/r_arm/r_arm = null
 	var/obj/item/robot_parts/l_leg/l_leg = null
@@ -57,9 +70,9 @@
 
 /obj/item/robot_parts/robot_suit/New()
 	..()
-	src.updateicon()
+	src.update_icon()
 
-/obj/item/robot_parts/robot_suit/proc/updateicon()
+/obj/item/robot_parts/robot_suit/update_icon()
 	src.overlays = null
 	if(src.l_arm)
 		src.overlays += "l_arm+o"
@@ -89,7 +102,7 @@
 		user.drop_item()
 		W.loc = src
 		src.l_leg = W
-		src.updateicon()
+		src.update_icon()
 
 	if(istype(W, /obj/item/robot_parts/r_leg))
 		if(src.r_leg)
@@ -97,7 +110,7 @@
 		user.drop_item()
 		W.loc = src
 		src.r_leg = W
-		src.updateicon()
+		src.update_icon()
 
 	if(istype(W, /obj/item/robot_parts/l_arm))
 		if(src.l_arm)
@@ -105,7 +118,7 @@
 		user.drop_item()
 		W.loc = src
 		src.l_arm = W
-		src.updateicon()
+		src.update_icon()
 
 	if(istype(W, /obj/item/robot_parts/r_arm))
 		if(src.r_arm)
@@ -113,7 +126,7 @@
 		user.drop_item()
 		W.loc = src
 		src.r_arm = W
-		src.updateicon()
+		src.update_icon()
 
 	if(istype(W, /obj/item/robot_parts/chest))
 		if(src.chest)
@@ -122,7 +135,7 @@
 			user.drop_item()
 			W.loc = src
 			src.chest = W
-			src.updateicon()
+			src.update_icon()
 		else if(!W:wires)
 			user << "\blue You need to attach wires to it first!"
 		else
@@ -135,9 +148,9 @@
 			user.drop_item()
 			W.loc = src
 			src.head = W
-			src.updateicon()
+			src.update_icon()
 		else
-			user << "\blue You need to attach an optical sensor to it first!"
+			user << "\blue You need to attach an flash to it first!"
 
 	if(istype(W, /obj/item/brain))
 		if(src.check_completion())
@@ -224,8 +237,8 @@
 			W.loc = src
 			src.cell = W
 			user << "\blue You insert the cell!"
-	if(istype(W, /obj/item/weapon/CableCoil))
-		var/obj/item/weapon/CableCoil/coil = W
+	if(istype(W, /obj/item/weapon/cable_coil))
+		var/obj/item/weapon/cable_coil/coil = W
 		if(src.wires)
 			user << "\blue You have already inserted wire!"
 			return
@@ -233,25 +246,20 @@
 			if (coil.CableType != /obj/cabling/power)
 				user << "This is the wrong cable type, you need electrical cable!"
 				return
-			coil.UseCable(1)
+			coil.use(1)
 			src.wires = 1.0
 			user << "\blue You insert the wire!"
 	return
 
 /obj/item/robot_parts/head/attackby(obj/item/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/optical_unit))
+	if(istype(W, /obj/item/device/flash))
 		if(src.opt1 && src.opt2)
 			user << "\blue You have already inserted the eyes!"
 			return
-		else if(src.opt1)
-			user.drop_item()
-			W.loc = src
-			src.opt2 = W
-			user << "\blue You insert the optical sensor into the eye socket!"
-		else
-			user.drop_item()
-			W.loc = src
-			src.opt1 = W
-			user << "\blue You insert the optical sensor into the eye socket!"
+		user << "\blue You insert the flash into the eye socket!"
+		user.drop_item()
+		W.loc = src
+		if(src.opt1) src.opt2 = W
+		else 		 src.opt1 = W
 	return
 

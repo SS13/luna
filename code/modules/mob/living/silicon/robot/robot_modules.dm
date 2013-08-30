@@ -43,7 +43,7 @@
 	modules += new /obj/item/device/multitool(src)
 
 	var/obj/item/weapon/rcd/R = new /obj/item/weapon/rcd(src)
-	R.matter = 30
+	R.matter = 40
 	modules += R
 
 	modules += new /obj/item/device/t_scanner(src)
@@ -52,20 +52,20 @@
 
 /obj/item/weapon/robot_module/medical/New()
 	modules += new /obj/item/device/healthanalyzer(src)
-	modules += new /obj/item/weapon/medical/ointment( src )
-	modules += new /obj/item/weapon/medical/bruise_pack(src)
+	modules += new /obj/item/stack/medical/ointment( src )
+	modules += new /obj/item/stack/medical/bruise_pack(src)
 	modules += new /obj/item/weapon/reagent_containers/syringe/robot( src )
 	modules += new /obj/item/device/flashlight(src)
 
 /obj/item/weapon/robot_module/security/New()
 	modules += new /obj/item/weapon/baton(src)
 	modules += new /obj/item/weapon/handcuffs(src)
-	modules += new /obj/item/weapon/gun/energy/taser_gun(src)
+	modules += new /obj/item/weapon/gun/energy/taser(src)
 	modules += new /obj/item/device/flash(src)
 	modules += new /obj/item/device/flashlight(src)
 
 /obj/item/weapon/robot_module/janitor/New()
-	modules += new /obj/item/weapon/cleaner(src)
+	modules += new /obj/item/weapon/reagent_containers/spray/cleaner(src)
 	modules += new /obj/item/weapon/mop(src)
 	modules += new /obj/item/weapon/reagent_containers/glass/bucket
 	modules += new /obj/item/device/flashlight(src)
@@ -85,3 +85,10 @@
 	. = ..()
 	if(istype(newLoc,/obj/item/weapon/robot_module))
 		is_module = 1
+
+/obj/item/weapon/robot_module/strike/New()
+	modules += new /obj/item/weapon/baton(src)
+	modules += new /obj/item/weapon/handcuffs(src)
+	modules += new /obj/item/weapon/gun/energy/gun(src)
+	modules += new /obj/item/device/flash(src)
+	modules += new /obj/item/device/flashlight(src)

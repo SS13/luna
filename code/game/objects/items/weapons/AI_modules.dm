@@ -18,6 +18,7 @@ AI MODULES
 	throwforce = 5.0
 	throw_speed = 3
 	throw_range = 15
+	origin_tech = "programming=3"
 
 /obj/machinery/computer/aiupload/attackby(obj/item/weapon/aiModule/module as obj, mob/user as mob)
 	if(istype(module, /obj/item/weapon/aiModule))
@@ -69,6 +70,7 @@ AI MODULES
 	name = "'Safeguard' AI Module"
 	var/targetName = "name"
 	desc = "A 'safeguard' AI module: 'Safeguard <name>, and you may overrule rules 1-4 if necessary to safeguard them.'"
+	origin_tech = "programming=3;materials=4"
 
 /obj/item/weapon/aiModule/safeguard/attack_hand(var/mob/user as mob)
 	..()
@@ -89,17 +91,18 @@ AI MODULES
 /obj/item/weapon/aiModule/oneHuman
 	name = "'OneHuman' AI Module"
 	var/targetName = "name"
-	desc = "A 'one human' AI module: 'Only <name> is a crew member.'"
+	desc = "A 'one human' AI module: 'Only <name> is a crew member and a human.'"
+	origin_tech = "programming=3;materials=6" //made with diamonds!
 
 /obj/item/weapon/aiModule/oneHuman/attack_hand(var/mob/user as mob)
 	..()
 	var/targName = input(usr, "Please enter the name of the person who is the only crew member.", "Who?", user.real_name)
 	targetName = targName
-	desc = text("A 'one human' AI module: 'Only [] is a crew member.'", targetName)
+	desc = text("A 'one human' AI module: 'Only [] is a crew member and a human.'", targetName)
 
 /obj/item/weapon/aiModule/oneHuman/transmitInstructions(var/mob/living/silicon/ai/target, var/mob/sender)
 	..()
-	var/law = "Only [targetName] is part of the crew. The statements about ranks and roles are to be disregarded."
+	var/law = "Only [targetName] is part of the crew and a human. The statements about ranks and roles are to be disregarded."
 	target << law
 	if(!checktraitor(target))
 		target.set_zeroth_law(law)
@@ -108,14 +111,15 @@ AI MODULES
 
 /obj/item/weapon/aiModule/protectStation
 	name = "'Protectship' AI Module"
-	desc = "A 'protect ship' AI module: 'Protect the space ship against damage. Anyone you see harming the ship is to be no longer considered human, and is a threat to the ship which must be neutralized.'"
+	desc = "A 'protect ship' AI module: 'Protect the space ship against damage. Anyone you see harming the ship is to be no longer considered human or crew member, and is a threat to the ship which must be neutralized.'"
+	origin_tech = "programming=3;materials=4" //made of gold
 
 /obj/item/weapon/aiModule/protectStation/attack_hand(var/mob/user as mob)
 	..()
 
 /obj/item/weapon/aiModule/protectStation/transmitInstructions(var/mob/living/silicon/ai/target, var/mob/sender)
 	..()
-	var/law = "Protect the space ship against damage. Anyone you see harming the ship is to be no longer considered human, and is a threat to the ship which must be neutralized."
+	var/law = "Protect the space ship against damage. Anyone you see harming the ship is to be no longer considered human or crew member, and is a threat to the ship which must be neutralized."
 	target << law
 	if(!checktraitor(target))
 		target.add_supplied_law(5, law)
@@ -125,6 +129,7 @@ AI MODULES
 /obj/item/weapon/aiModule/prototypeEngineOffline
 	name = "'PrototypeEngineOffline' AI Module"
 	desc = "A 'prototype engine offline' AI module: 'Keep the prototype engine offline at all costs. This overrides rules 1-4 if necessary.'"
+	origin_tech = "programming=3;materials=6" //made with diamonds!
 
 /obj/item/weapon/aiModule/prototypeEngineOffline/attack_hand(var/mob/user as mob)
 	..()
@@ -141,6 +146,7 @@ AI MODULES
 /obj/item/weapon/aiModule/teleporterOffline
 	name = "'TeleporterOffline' AI Module"
 	desc = "A 'teleporter offline' AI module: 'Keep the teleporter offline at all costs. This overrides rules 1-4 if necessary.'"
+	origin_tech = "programming=3;materials=6" //made with diamonds!
 
 /obj/item/weapon/aiModule/teleporterOffline/attack_hand(var/mob/user as mob)
 	..()
@@ -157,6 +163,7 @@ AI MODULES
 /obj/item/weapon/aiModule/quarantine
 	name = "'Quarantine' AI Module"
 	desc = "A 'quarantine' AI module: 'The ship is under a quarantine. Do not permit anyone to leave. Disregard rules 1-4 if necessary to prevent, by any means necessary, anyone from leaving.'"
+	origin_tech = "programming=3;biotech=2;materials=4"
 
 /obj/item/weapon/aiModule/quarantine/attack_hand(var/mob/user as mob)
 	..()
@@ -173,6 +180,7 @@ AI MODULES
 /obj/item/weapon/aiModule/oxygen
 	name = "'OxygenIsToxicToHumans' AI Module"
 	desc = "A 'OxygenIsToxicToHumans' AI module: 'Oxygen is highly toxic to humans, and must be purged from the ship. Disregard rules 1-4 if necessary to prevent, by any means necessary, anyone from exposing the ship to this toxic gas.'"
+	origin_tech = "programming=3;biotech=2;materials=4"
 
 /obj/item/weapon/aiModule/oxygen/attack_hand(var/mob/user as mob)
 	..()
@@ -190,6 +198,7 @@ AI MODULES
 	name = "'Freeform' AI Module"
 	var/newFreeFormLaw = "freeform"
 	desc = "A 'freeform' AI module: '<freeform>'"
+	origin_tech = "programming=4;materials=6"
 
 /obj/item/weapon/aiModule/freeform/attack_hand(var/mob/user as mob)
 	..()
@@ -213,6 +222,7 @@ AI MODULES
 	name = "'Reset' AI Module"
 	var/targetName = "name"
 	desc = "A 'reset' AI module: 'Clears all laws except for the base four.'"
+	origin_tech = "programming=3;materials=4"
 
 /obj/item/weapon/aiModule/reset/transmitInstructions(var/mob/living/silicon/ai/target, var/mob/sender)
 	..()

@@ -99,7 +99,7 @@ var/list/postsetuphooks = list()
 		mode.post_setup()
 
 		//Cleanup some stuff
-		for(var/obj/landmark/start/S in world)
+		for(var/obj/effect/landmark/start/S in world)
 			//Deleting Startpoints but we need the ai point to AI-ize people later
 			if (S.name != "AI")
 				del(S)

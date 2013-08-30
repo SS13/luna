@@ -1,100 +1,101 @@
-/obj/machinery/dispenser/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			//SN src = null
-			del(src)
-			return
-		if(2.0)
-			if (prob(50))
-				//SN src = null
-				del(src)
-				return
-		if(3.0)
-			if (prob(25))
-				while(src.o2tanks > 0)
-					new /obj/item/weapon/tank/oxygen( src.loc )
-					src.o2tanks--
-				while(src.pltanks > 0)
-					new /obj/item/weapon/tank/plasma( src.loc )
-					src.pltanks--
-		else
-	return
+/obj/structure/dispenser
+	name = "tank storage unit"
+	desc = "A simple yet bulky storage device for gas tanks. Has room for up to ten oxygen tanks, and ten plasma tanks."
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "dispenser"
+	density = 1
+	anchored = 1.0
+	var/oxygentanks = 10
+	var/plasmatanks = 10
+	var/list/oxytanks = list()	//sorry for the similar var names
+	var/list/platanks = list()
 
-/obj/machinery/dispenser/blob_act()
-	if (prob(25))
-		while(src.o2tanks > 0)
-			new /obj/item/weapon/tank/oxygen( src.loc )
-			src.o2tanks--
-		while(src.pltanks > 0)
-			new /obj/item/weapon/tank/plasma( src.loc )
-			src.pltanks--
-		del(src)
 
-/obj/machinery/dispenser/meteorhit()
-	while(src.o2tanks > 0)
-		new /obj/item/weapon/tank/oxygen( src.loc )
-		src.o2tanks--
-	while(src.pltanks > 0)
-		new /obj/item/weapon/tank/plasma( src.loc )
-		src.pltanks--
-	del(src)
-	return
+/obj/structure/dispenser/oxygen
+	plasmatanks = 0
 
-/obj/machinery/dispenser/process()
-	return
+/obj/structure/dispenser/plasma
+	oxygentanks = 0
 
-/obj/machinery/dispenser/attack_ai(mob/user as mob)
-	return src.attack_hand(user)
 
-/obj/machinery/dispenser/attack_paw(mob/user as mob)
-	return src.attack_hand(user)
+/obj/structure/dispenser/New()
+	update_icon()
 
-/obj/machinery/dispenser/attack_hand(mob/user as mob)
-	if(stat & BROKEN)
-		return
-	user.machine = src
-	var/dat = text("<TT><B>Loaded Tank Dispensing Unit</B><BR>\n<FONT color = 'blue'><B>Oxygen</B>: []</FONT> []<BR>\n<FONT color = 'orange'><B>Plasma</B>: []</FONT> []<BR>\n</TT>", src.o2tanks, (src.o2tanks ? text("<A href='?src=\ref[];oxygen=1'>Dispense</A>", src) : "empty"), src.pltanks, (src.pltanks ? text("<A href='?src=\ref[];plasma=1'>Dispense</A>", src) : "empty"))
+
+/obj/structure/dispenser/update_icon()
+	overlays.Cut()
+
+	if(oxygentanks)
+		if(oxygentanks == 10)	overlays += "oxygen-5"
+		else 					overlays += "oxygen-[round(oxygentanks/2) + 1]"
+	if(plasmatanks)
+		if(oxygentanks == 10)	overlays += "plasma-5"
+		else 					overlays += "plasma-[round(plasmatanks/2) + 1]"
+
+/obj/structure/dispenser/attack_hand(mob/user as mob)
+	user.set_machine(src)
+	var/dat = "[src]<br><br>"
+	dat += "Oxygen tanks: [oxygentanks] - [oxygentanks ? "<A href='?src=\ref[src];oxygen=1'>Dispense</A>" : "empty"]<br>"
+	dat += "Plasma tanks: [plasmatanks] - [plasmatanks ? "<A href='?src=\ref[src];plasma=1'>Dispense</A>" : "empty"]"
 	user << browse(dat, "window=dispenser")
 	onclose(user, "dispenser")
 	return
 
-/obj/machinery/dispenser/Topic(href, href_list)
-	if(stat & BROKEN)
-		return
+
+/obj/structure/dispenser/attackby(obj/item/I as obj, mob/user as mob)
+	if(istype(I, /obj/item/weapon/tank/oxygen) || istype(I, /obj/item/weapon/tank/air) || istype(I, /obj/item/weapon/tank/anesthetic))
+		if(oxygentanks < 8)
+			user.drop_item()
+			I.loc = src
+			oxytanks.Add(I)
+			oxygentanks++
+			user << "<span class='notice'>You put [I] in [src].</span>"
+		else
+			user << "<span class='notice'>[src] is full.</span>"
+	if(istype(I, /obj/item/weapon/tank/plasma))
+		if(plasmatanks < 10)
+			user.drop_item()
+			I.loc = src
+			platanks.Add(I)
+			plasmatanks++
+			user << "<span class='notice'>You put [I] in [src].</span>"
+		else
+			user << "<span class='notice'>[src] is full.</span>"
+	updateUsrDialog()
+
+
+/obj/structure/dispenser/Topic(href, href_list)
 	if(usr.stat || usr.restrained())
 		return
-	if (!(istype(usr, /mob/living/carbon/human) || ticker))
-		if (!istype(usr, /mob/living/silicon/ai))
-			usr << "\red You don't have the dexterity to do this!"
-		else
-			usr << "\red You are unable to dispense anything, since the controls are physical levers which don't go through any other kind of input."
-		return
-
-	if ((usr.contents.Find(src) || ((get_dist(src, usr) <= 1) && istype(src.loc, /turf))))
-		usr.machine = src
-		if (href_list["oxygen"])
-			if (text2num(href_list["oxygen"]))
-				if (src.o2tanks > 0)
-					use_power(5)
-					new /obj/item/weapon/tank/oxygen( src.loc )
-					src.o2tanks--
-			if (istype(src.loc, /mob))
-				attack_hand(src.loc)
-		else
-			if (href_list["plasma"])
-				if (text2num(href_list["plasma"]))
-					if (src.pltanks > 0)
-						use_power(5)
-						new /obj/item/weapon/tank/plasma( src.loc )
-						src.pltanks--
-				if (istype(src.loc, /mob))
-					attack_hand(src.loc)
-		src.add_fingerprint(usr)
-		for(var/mob/M in viewers(1, src))
-			if ((M.client && M.machine == src))
-				src.attack_hand(M)
+	if(get_dist(src, usr) <= 1)
+		usr.set_machine(src)
+		if(href_list["oxygen"])
+			if(oxygentanks > 0)
+				var/obj/item/weapon/tank/oxygen/O
+				if(oxytanks.len == oxygentanks)
+					O = oxytanks[1]
+					oxytanks.Remove(O)
+				else
+					O = new /obj/item/weapon/tank/oxygen(loc)
+				O.loc = loc
+				usr << "<span class='notice'>You take [O] out of [src].</span>"
+				oxygentanks--
+				update_icon()
+		if(href_list["plasma"])
+			if(plasmatanks > 0)
+				var/obj/item/weapon/tank/plasma/P
+				if(platanks.len == plasmatanks)
+					P = platanks[1]
+					platanks.Remove(P)
+				else
+					P = new /obj/item/weapon/tank/plasma(loc)
+				P.loc = loc
+				usr << "<span class='notice'>You take [P] out of [src].</span>"
+				plasmatanks--
+				update_icon()
+		add_fingerprint(usr)
+		updateUsrDialog()
 	else
 		usr << browse(null, "window=dispenser")
 		return
 	return
-

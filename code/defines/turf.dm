@@ -36,14 +36,6 @@
 	heat_capacity = 700000
 	mouse_opacity = 2
 
-/turf/space/sand
-	name = "sand"
-	icon = 'sand.dmi'
-	icon_state = "placeholder"
-	sand = 1
-	temperature = T20C + 80
-
-
 /turf/space/New()
 	. = ..()
 	if(!sand)
@@ -161,6 +153,10 @@ turf/space/hull/New()
 
 		New()
 			..()
+			if(z > 4)
+				new/turf/space(src)
+				return
+
 			spawn(1)
 				if(!istype(src, /turf/simulated/floor/open)) //This should not be needed but is.
 					return
@@ -212,15 +208,44 @@ turf/space/hull/New()
 			if (..()) //TODO make this check if gravity is active (future use) - Sukasa
 				spawn(1)
 					if(AM)
-						AM.Move(locate(x, y, z + 1))
-						if (istype(AM, /mob))
-							AM:bruteloss += 20 //You were totally doin it wrong. 5 damage? Really? - Aryn
-							AM:weakened = max(AM:weakened,5)
-							AM:updatehealth()
+						if(AM.Move(locate(x, y, z + 1)))
+							if (istype(AM, /mob))
+								AM:adjustBruteLoss(10)
+								AM:weakened = max(AM:weakened,5)
+								AM:updatehealth()
 			return ..()
 
 
-		attackby()
+		attackby(obj/item/C as obj, mob/user as mob)
+			if (istype(C, /obj/item/stack/rods))
+				if(locate(/obj/structure/lattice, src)) return
+				user << "\blue Constructing support lattice ..."
+				playsound(src.loc, 'Genhit.ogg', 50, 1)
+				new /obj/structure/lattice(loc)
+				C:amount--
+
+				if (C:amount < 1)
+					user.u_equip(C)
+					del(C)
+					return
+				return
+
+			if (istype(C, /obj/item/stack/tile/metal))
+				if(locate(/obj/structure/lattice, src))
+					var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
+					del(L)
+					playsound(src.loc, 'Genhit.ogg', 50, 1)
+					C:build(src)
+					C:amount--
+
+					if (C:amount < 1)
+						user.u_equip(C)
+						del(C)
+						return
+					return
+				else
+					user << "\red The plating is going to need some support."
+			return
 
 
 		proc
@@ -304,6 +329,10 @@ turf/space/hull/New()
 	thermal_conductivity = WALL_HEAT_TRANSFER_COEFFICIENT
 	heat_capacity = 312500 //a little over 5 cm thick , 312500 for 1 m by 2.5 m by 0.25 m steel wall
 	var/Zombiedamage
+
+	var/mineral = "metal"
+	var/walltype = "metal"
+
 /turf/simulated/wall/r_wall
 	name = "Reinforced Wall"
 	icon = 'walls.dmi'
@@ -311,7 +340,79 @@ turf/space/hull/New()
 	opacity = 1
 	density = 1
 	var/d_state = 0
+	walltype = "rwall"
 	explosionstrength = 4
+
+
+/turf/simulated/wall/mineral
+	name = "mineral wall"
+	desc = "This shouldn't exist"
+	icon_state = ""
+	var/last_event = 0
+	var/active = null
+
+/turf/simulated/wall/mineral/gold
+	name = "gold wall"
+	desc = "A wall with gold plating. Swag!"
+	icon_state = "gold0"
+	walltype = "gold"
+	mineral = "gold"
+	//var/electro = 1
+	//var/shocked = null
+
+/turf/simulated/wall/mineral/silver
+	name = "silver wall"
+	desc = "A wall with silver plating. Shiny!"
+	icon_state = "silver0"
+	walltype = "silver"
+	mineral = "silver"
+	//var/electro = 0.75
+	//var/shocked = null
+
+/turf/simulated/wall/mineral/diamond
+	name = "diamond wall"
+	desc = "A wall with diamond plating. You monster."
+	icon_state = "diamond0"
+	walltype = "diamond"
+	mineral = "diamond"
+
+/turf/simulated/wall/mineral/clown
+	name = "bananium wall"
+	desc = "A wall with bananium plating. Honk!"
+	icon_state = "clown0"
+	walltype = "clown"
+	mineral = "clown"
+
+/turf/simulated/wall/mineral/sandstone
+	name = "sandstone wall"
+	desc = "A wall with sandstone plating."
+	icon_state = "sandstone0"
+	walltype = "sandstone"
+	mineral = "sandstone"
+
+/turf/simulated/wall/mineral/uranium
+	name = "uranium wall"
+	desc = "A wall with uranium plating. This is probably a bad idea."
+	icon_state = "uranium0"
+	walltype = "uranium"
+	mineral = "uranium"
+
+/turf/simulated/wall/mineral/plasma
+	name = "plasma wall"
+	desc = "A wall with plasma plating. This is definately a bad idea."
+	icon_state = "plasma0"
+	walltype = "plasma"
+	mineral = "plasma"
+
+
+
+
+/turf/simulated/wall/cult
+	name = "wall"
+	desc = "The patterns engraved on the wall seem to shift as you try to focus on them. You feel sick"
+	icon_state = "cult"
+	walltype = "cult"
+
 
 
 /turf/simulated/wall/heatshield
@@ -379,118 +480,39 @@ turf/space/hull/New()
 /turf/unsimulated/wall/other
 	icon_state = "r_wall"
 
-/turf/proc
-	AdjacentTurfs()
+/turf/proc/AdjacentTurfs()
+	var/L[] = new()
+	for(var/turf/simulated/t in oview(src,1))
+		if(!t.density && !LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
+			L.Add(t)
+	return L
 
-		var/L[] = new()
-		for(var/turf/simulated/t in oview(src,1))
-			if(!t.density && !LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
+/turf/proc/Railturfs()
+	var/L[] = new()
+	for(var/turf/simulated/t in oview(src,1))
+		if(!t.density && !LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
+			if(locate(/obj/rail) in t)
 				L.Add(t)
+	return L
 
-		return L
-	Railturfs()
+/turf/proc/Distance(turf/t)
+	if(!src || !t)
+		return 1e31
+	t = get_turf(t)
+	if(get_dist(src, t) == 1 || src.z != t.z)
+		var/cost = (src.x - t.x) * (src.x - t.x) + (src.y - t.y) * (src.y - t.y) + (src.z - t.z) * (src.z - t.z) * 3
+		cost *= (pathweight+t.pathweight)/2
+		return cost
+	else
+		return max(get_dist(src,t), 1)
 
-		var/L[] = new()
-		for(var/turf/simulated/t in oview(src,1))
-			if(!t.density && !LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
-				if(locate(/obj/rail) in t)
-					L.Add(t)
+/turf/proc/AdjacentTurfsSpace()
+	var/L[] = new()
+	for(var/turf/t in oview(src,1))
+		if(!t.density)
+			if(!LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
+				L.Add(t)
+	return L
 
-		return L
-	Distance(turf/t)
-		if(!src || !t)
-			return 1e31
-		t = get_turf(t)
-		if(get_dist(src, t) == 1 || src.z != t.z)
-			var/cost = (src.x - t.x) * (src.x - t.x) + (src.y - t.y) * (src.y - t.y) + (src.z - t.z) * (src.z - t.z) * 3
-			cost *= (pathweight+t.pathweight)/2
-			return cost
-		else
-			return max(get_dist(src,t), 1)
-	AdjacentTurfsSpace()
-		var/L[] = new()
-		for(var/turf/t in oview(src,1))
-			if(!t.density)
-				if(!LinkBlocked(src, t) && !TurfBlockedNonWindow(t))
-					L.Add(t)
-
-		return L
-	process()
-		return
-
-/turf/simulated/asteroid
-	oxygen = 0.01
-	nitrogen = 0.01
-	var/mapped = 0
-	name = "rocky floor"
-	icon = 'mining.dmi'
-	icon_state = "floor"
-
-/turf/simulated/asteroid/wall
-	var/health = 40
-	name = "rocky wall"
-	icon = 'mining.dmi'
-	icon_state = "wall"
-	oxygen = 0.01
-	nitrogen = 0.01
-	opacity = 1
-	density = 1
-	blocks_air = 1
-
-/turf/simulated/asteroid/wall/planet
-	mapped = 1
-	thermal_conductivity = 0
-
-/turf/simulated/asteroid/wall/New()
-	health+= rand(1)
-	..()
-
-/turf/simulated/asteroid/wall/attackby(obj/item/weapon/W, mob/user)
-	if(istype(W, /obj/item/weapon/pickaxe))
-		if(W:active)
-			src.health -= 20
-			user << "You use \the [W.name] to hack away part of the unwanted ore."
-		else
-			src.health -= 5
-			user << "The [W.name] wasn't very effective against the ore."
-		if(src.health < 1)
-			src.mine()
-
-/turf/simulated/asteroid/wall/laser_act(var/obj/beam/e_beam/b)
-	var/power = b.power
-	//Get the collective laser power
-	src.health-=power/100
-	if(src.health<1)
-		src.mine()
-
-/turf/simulated/asteroid/wall/proc/mine()
-	while(!rand(1))
-		if(rand(2))
-			new/obj/item/weapon/ore(locate(src.x,src.y,src.z))
-		else
-			new/obj/item/weapon/artifact(locate(src.x,src.y,src.z))
-	processing_turfs.Remove(src)
-	new/turf/simulated/asteroid/floor(locate(src.x,src.y,src.z))
-
-
-/turf/simulated/asteroid/floor
-	oxygen = 0.01
-	nitrogen = 0.01
-	level = 1
-	name = "rocky floor"
-	icon = 'mining.dmi'
-	icon_state = "floor"
-
-/turf/simulated/asteroid/floor/planet
-	mapped = 1
-	name = "sand"
-	icon = 'sand.dmi'
-	icon_state = "placeholder"
-	carbon_dioxide = 0.3 * ONE_ATMOSPHERE
-	toxins = 0.54 * ONE_ATMOSPHERE
-	nitrogen = 0.03 * ONE_ATMOSPHERE
-	temperature = 742
-
-/turf/simulated/asteroid/floor/planet/New()
-	icon_state = "sand[rand(1,3)]"
-	return ..()
+/turf/proc/process()
+	return

@@ -152,6 +152,43 @@
 					L.Swap(j, j + 1)
 	return L
 
+/obj/machinery/computer/security
+	name = "Security Cameras"
+	icon_state = "seccam"
+	circuit = "/obj/item/weapon/circuitboard/computer/security"
+	var/obj/machinery/camera/current = null
+	var/last_pic = 1.0
+	var/network = "Luna"
+	var/maplevel = 1
+
+/obj/machinery/computer/security/wooden_tv
+	name = "Security Cameras"
+	icon_state = "security_det"
+
+
+/obj/machinery/computer/security/telescreen
+	name = "Telescreen"
+	icon = 'stationobjs.dmi'
+	icon_state = "telescreen"
+	network = "thunder"
+	density = 0
+
+/obj/machinery/computer/security/New()
+	..()
+	verbs -= /obj/machinery/computer/security/verb/station_map
+
+/obj/machinery/computer/security/attack_ai(var/mob/user as mob)
+	return src.attack_hand(user)
+
+/obj/machinery/computer/security/attack_paw(var/mob/user as mob)
+	return src.attack_hand(user)
+
+/obj/machinery/computer/security/check_eye(var/mob/user as mob)
+	if ((get_dist(user, src) > 1 || !( user.canmove ) || user.blinded || !( src.current ) || !( src.current.status )) && (!istype(user, /mob/living/silicon)))
+		return null
+	user.reset_view(src.current)
+	return 1
+
 /obj/machinery/computer/security/attack_hand(var/mob/user as mob)
 	if (stat & (NOPOWER|BROKEN))
 		return
@@ -279,7 +316,7 @@
 				if (S.current == src)
 					O << "[user] holds a paper up to one of the cameras ..."
 					O << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", X.name, X.info), text("window=[]", X.name))
-	else if (istype(W, /obj/item/weapon/camera_bug))
+	else if (istype(W, /obj/item/device/camera_bug))
 		if (!src.status)
 			user << "\blue Camera non-functional"
 			return

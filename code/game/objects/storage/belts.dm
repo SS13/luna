@@ -4,7 +4,7 @@
 /obj/item/weapon/storage/belt/utility
 	name = "utility belt"
 	desc = "Can hold various tools."
-	icon = 'items.dmi'
+	icon = 'icons/obj/clothing/belts.dmi'
 	icon_state = "utilitybelt"
 	item_state = "burger"
 	can_hold = list(
@@ -20,13 +20,28 @@
 	"/obj/item/weapon/wrench",
 	"/obj/item/device/multitool",
 	"/obj/item/device/flashlight",
-	"/obj/item/weapon/CableCoil/power",
+	"/obj/item/device/hacktool", // WHY NOT?
+	"/obj/item/weapon/cable_coil",
 	"/obj/item/device/t_scanner")
+
+/obj/item/weapon/storage/belt/utility/loaded/New()
+	..()
+	new /obj/item/weapon/screwdriver(src)
+	new /obj/item/weapon/wrench(src)
+	new /obj/item/weapon/weldingtool(src)
+	new /obj/item/weapon/crowbar(src)
+	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/cable_coil(src,30)
+
+/obj/item/weapon/storage/belt/utility/loaded/full/New()
+	..()
+	new /obj/item/device/multitool(src)
+
 
 /obj/item/weapon/storage/belt/security
 	name = "security belt"
 	desc = "Can hold various security items."
-	icon = 'items.dmi'
+	icon = 'icons/obj/clothing/belts.dmi'
 	icon_state = "securitybelt"
 	item_state = "burger"
 	can_hold = list(
@@ -34,16 +49,15 @@
 	"/obj/item/device/detective_scanner",
 	"/obj/item/device/ammo",
 	"/obj/item/device/pda",
-	"/obj/item/weapon/gun/revolver",
-	"/obj/item/weapon/gun/detectiverevolver/",
-	"/obj/item/weapon/gun/energy/general",
+	"/obj/item/weapon/gun/projectile",
+	"/obj/item/weapon/gun/detectiverevolver",
+	"/obj/item/weapon/gun/energy",
 	"/obj/item/weapon/handcuffs",
 	"/obj/item/device/flash",
 	"/obj/item/weapon/baton",
 	"/obj/item/weapon/classic_baton",
-	"/obj/item/weapon/gun/energy/taser_gun",
-	"/obj/item/weapon/flashbang",
-	"/obj/item/weapon/empgrenade",
+	"/obj/item/weapon/grenade/flashbang",
+	"/obj/item/weapon/grenade/emp",
 	"/obj/item/weapon/camera_test",
 	"/obj/item/weapon/recorder")
 
@@ -52,16 +66,16 @@
 	new /obj/item/weapon/handcuffs(src)
 	new /obj/item/weapon/handcuffs(src)
 	new /obj/item/weapon/baton(src)
-	new /obj/item/weapon/gun/energy/taser_gun(src)
-	new /obj/item/weapon/flashbang(src)
-	new /obj/item/weapon/flashbang(src)
+	new /obj/item/weapon/gun/energy(src)
+	new /obj/item/weapon/grenade/flashbang(src)
+	new /obj/item/weapon/grenade/flashbang(src)
 	new /obj/item/device/flash(src)
 
 /obj/item/weapon/storage/belt/medical
 	name = "medical belt"
 	desc = "Can hold various medical items."
-	icon = 'items.dmi'
-	icon_state = "medbelt"
+	icon = 'icons/obj/clothing/belts.dmi'
+	icon_state = "medicalbelt"
 	item_state = "burger"
 	can_hold = list(
 	"/obj/item/device/radio",
@@ -76,19 +90,13 @@
 	"/obj/item/weapon/reagent_containers/glass/bloodpack",
 	"/obj/item/weapon/reagent_containers/pill")
 
-/obj/item/weapon/storage/belt/dropped(mob/user as mob)
-	..()
-
 /obj/item/weapon/storage/belt/MouseDrop(obj/over_object as obj, src_location, over_location)
 	var/mob/M = usr
 	if (!istype(over_object, /obj/screen))
-		if(can_use())
-			return ..()
-		else
-			M << "\red I need to wear the belt for that."
-			return
+		return ..()
+
 	playsound(src.loc, "rustle", 50, 1, -5)
-	if (!M.restrained() && !M.stat && can_use())
+	if (!M.restrained() && !M.stat)
 		if (over_object.name == "r_hand")
 			if (!( M.r_hand ))
 				M.u_equip(src)
@@ -107,14 +115,11 @@
 
 /obj/item/weapon/storage/belt/attack_hand(mob/user as mob)
 	if (src.loc == user)
-		if(can_use())
-			playsound(src.loc, "rustle", 50, 1, -5)
-			if (user.s_active)
-				user.s_active.close(user)
-			src.show_to(user)
-		else
-			user << "\red I need to wear the belt for that."
-			return
+		playsound(src.loc, "rustle", 50, 1, -5)
+		if (user.s_active)
+			user.s_active.close(user)
+		src.show_to(user)
+
 	else
 		return ..()
 
@@ -122,13 +127,6 @@
 
 /obj/item/weapon/storage/belt/attackby(obj/item/weapon/W as obj, mob/user as mob)
 // Copy pasted from /storage, but removed the wclass check. In time, this could be made to define how many items of the same kind could go on a belt - Abi79
-	if(!can_use())
-		user << "\red I need to wear the belt for that."
-		return
-
-	if(istype(W, /obj/item/weapon/pickaxe) && W:active == 1)
-		user << "\red I can't place the activated pickaxe on the belt."
-		return
 
 	if(can_hold.len)
 		var/ok = 0
@@ -158,12 +156,3 @@
 		O.show_message(text("\blue [] has added [] to []!", user, W, src), 1)
 
 	return
-
-/obj/item/weapon/storage/belt/proc/can_use()
-	if(!ismob(loc)) return 0
-	return 1
-	//var/mob/M = loc
-	//if(src in M.get_equipped_items())
-	//	return 1
-	//else
-	//	return 0

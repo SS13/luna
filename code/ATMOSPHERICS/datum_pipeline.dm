@@ -18,7 +18,7 @@ datum/pipeline
 
 		..()
 
-	proc/process()
+	proc/process()//This use to be called called from the pipe networks
 
 		//Check to see if pressure is within acceptable limits
 		var/pressure = air.return_pressure()
@@ -139,14 +139,15 @@ datum/pipeline
 
 			if(target.parent.air.compare(turf_copy))
 				//The new turf would be an acceptable group member so permit the integration
+
 				turf_copy.subtract(target.parent.air)
+
 				target.parent.air.merge(turf_copy)
 
 			else
 				//Comparison failure so dissemble group and copy turf
 
-				// TODO: check if we need to suspend group processing
-				// target.parent.suspend_group_processing()
+				target.parent.suspend_group_processing()
 				target.air.copy_from(turf_copy)
 
 		else
@@ -160,9 +161,8 @@ datum/pipeline
 			if(target.air)
 				if(target.air.check_tile_graphic())
 					target.update_visuals(target.air)
-
-		var/datum/pipe_network/net = return_network()
-		net.update = 1
+		if(network)
+			network.update = 1
 
 	proc/temperature_interact(turf/target, share_volume, thermal_conductivity)
 		var/total_heat_capacity = air.heat_capacity()
@@ -186,7 +186,7 @@ datum/pipeline
 				var/delta_temperature = 0
 				var/sharer_heat_capacity = 0
 
-				if(modeled_location.parent)// && modeled_location.parent.group_processing)
+				if(modeled_location.parent && modeled_location.parent.group_processing)
 					delta_temperature = (air.temperature - modeled_location.parent.air.temperature)
 					sharer_heat_capacity = modeled_location.parent.air.heat_capacity()
 				else
@@ -207,9 +207,9 @@ datum/pipeline
 
 				air.temperature += self_temperature_delta
 
-				if(modeled_location.parent)// && modeled_location.parent.group_processing)
+				if(modeled_location.parent && modeled_location.parent.group_processing)
 					if((abs(sharer_temperature_delta) > MINIMUM_TEMPERATURE_DELTA_TO_SUSPEND) && (abs(sharer_temperature_delta) > MINIMUM_TEMPERATURE_RATIO_TO_SUSPEND*modeled_location.parent.air.temperature))
-						//modeled_location.parent.suspend_group_processing()
+						modeled_location.parent.suspend_group_processing()
 
 						modeled_location.air.temperature += sharer_temperature_delta
 
@@ -227,6 +227,5 @@ datum/pipeline
 					(partial_heat_capacity*target.heat_capacity/(partial_heat_capacity+target.heat_capacity))
 
 				air.temperature -= heat/total_heat_capacity
-
-		var/datum/pipe_network/net = return_network()
-		net.update = 1
+		if(network)
+			network.update = 1

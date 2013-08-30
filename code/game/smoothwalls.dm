@@ -1,63 +1,3 @@
-// Credit to TG Station for the more elegant solution to SmoothWalls.
-// Need to modify it to correct seeing junctions where there shouldn't be any.
-
-//Separate dm because it relates to two types of atoms + ease of removal in case it's needed.
-//Also assemblies.dm for falsewall checking for this when used.
-
-/atom/proc/relativewall() //atom because it should be useable both for walls and false walls
-	if(istype(src, /turf/simulated/wall/asteroid))
-		return
-	var/junction = 0 //will be used to determine from which side the wall is connected to other walls
-
-	for(var/turf/simulated/wall/W in orange(src,1))
-		if(abs(src.x-W.x)-abs(src.y-W.y)) //doesn't count diagonal walls
-			junction |= get_dir(src,W)
-/*
-	for(var/obj/falsewall/W in orange(src,1))
-		if(abs(src.x-W.x)-abs(src.y-W.y)) //doesn't count diagonal walls
-			junction |= get_dir(src,W)
-*/
-	if(istype(src, /turf/simulated/wall/heatshield))
-		return
-	else if(istype(src, /turf/simulated/wall/r_wall))
-		src.icon_state = "rwall[junction]"
-	else
-		src.icon_state = "wall[junction]"
-
-/* When we have animations for different directions of falsewalls, then it'd be needed. Not now.
-	if(istype(src,/obj/falsewall)) //saving the junctions for the falsewall because it changes icon_state often instead of once
-		var/obj/falsewall/F = src
-		F.junctions = junction
-*/
-	return
-
-
-/turf/simulated/wall/New()
-
-	update_nearby_tiles(1)
-	for(var/turf/simulated/wall/W in range(src,1))
-		if(!istype(src, /turf/simulated/wall/asteroid))
-			W.relativewall()
-/*
-	for(var/obj/falsewall/W in range(src,1))
-		W.relativewall()
-*/
-	..()
-
-
-/turf/simulated/wall/Del()
-	var/temploc = src.loc
-
-	spawn(10)
-		for(var/turf/simulated/wall/W in range(temploc,1))
-			W.relativewall()
-	update_nearby_tiles(0)
-/*
-		for(var/obj/falsewall/W in range(temploc,1))
-			W.relativewall()
-*/
-	..()
-
 turf/proc/update_nearby_tiles(need_rebuild)
 	if(!air_master) return 0
 
@@ -115,3 +55,90 @@ turf/proc/update_nearby_tiles(need_rebuild)
 		if(istype(down)) air_master.tiles_to_update += down
 
 	return 1
+
+
+//Separate dm because it relates to two types of atoms + ease of removal in case it's needed.
+//Also assemblies.dm for falsewall checking for this when used.
+//I should really make the shuttle wall check run every time it's moved, but centcom uses unsimulated floors so !effort
+
+/atom/proc/relativewall() //atom because it should be useable both for walls and false walls
+//	if(istype(src,/turf/simulated/floor/vault)||istype(src,/turf/simulated/wall/vault)) //HACK!!!
+	if(istype(src,/turf/simulated/wall/heatshield))
+		return
+
+	var/junction = 0 //will be used to determine from which side the wall is connected to other walls
+
+	if(!istype(src,/turf/simulated/shuttle/wall)) //or else we'd have wacky shuttle merging with walls action
+		for(var/turf/simulated/wall/W in orange(src,1))
+			if(abs(src.x-W.x)-abs(src.y-W.y)) //doesn't count diagonal walls
+				junction |= get_dir(src,W)
+		for(var/obj/structure/falsewall/W in orange(src,1))
+			if(abs(src.x-W.x)-abs(src.y-W.y)) //doesn't count diagonal walls
+				junction |= get_dir(src,W)
+		for(var/obj/structure/falserwall/W in orange(src,1))
+			if(abs(src.x-W.x)-abs(src.y-W.y)) //doesn't count diagonal walls
+				junction |= get_dir(src,W)
+
+	if(istype(src,/turf/simulated/wall))
+		var/turf/simulated/wall/wall = src
+		wall.icon_state = "[wall.walltype][junction]"
+	else if (istype(src,/obj/structure/falserwall))
+		src.icon_state = "rwall[junction]"
+	else if (istype(src,/obj/structure/falsewall))
+		var/obj/structure/falsewall/fwall = src
+		fwall.icon_state = "[fwall.mineral][junction]"
+	return
+
+/atom/proc/relativewall_neighbours()
+	for(var/turf/simulated/wall/W in range(src,1))
+		W.relativewall()
+	for(var/obj/structure/falsewall/W in range(src,1))
+		W.relativewall()
+		W.update_icon()//Refreshes the wall to make sure the icons don't desync
+	for(var/obj/structure/falserwall/W in range(src,1))
+		W.relativewall()
+	return
+
+
+
+/turf/simulated/wall/New()
+	update_nearby_tiles(0)
+	relativewall_neighbours()
+	..()
+
+/turf/simulated/wall/Del()
+	update_nearby_tiles(0)
+
+	var/temploc = src.loc
+
+	spawn(10)
+		for(var/turf/simulated/wall/W in range(temploc,1))
+			W.relativewall()
+
+		for(var/obj/structure/falsewall/W in range(temploc,1))
+			W.relativewall()
+	..()
+
+
+/turf/simulated/wall/relativewall()
+//	if(istype(src,/turf/simulated/wall/vault)) //HACK!!!
+	if(istype(src,/turf/simulated/wall/heatshield))
+		return
+
+	var/junction = 0 //will be used to determine from which side the wall is connected to other walls
+
+	for(var/turf/simulated/wall/W in orange(src,1))
+		if(abs(src.x-W.x)-abs(src.y-W.y)) //doesn't count diagonal walls
+			if(src.mineral == W.mineral)//Only 'like' walls connect -Sieve
+				junction |= get_dir(src,W)
+	for(var/obj/structure/falsewall/W in orange(src,1))
+		if(abs(src.x-W.x)-abs(src.y-W.y)) //doesn't count diagonal walls
+			if(src.mineral == W.mineral)
+				junction |= get_dir(src,W)
+	for(var/obj/structure/falserwall/W in orange(src,1))
+		if(abs(src.x-W.x)-abs(src.y-W.y)) //doesn't count diagonal walls
+			if(src.mineral == W.mineral)
+				junction |= get_dir(src,W)
+	var/turf/simulated/wall/wall = src
+	wall.icon_state = "[wall.walltype][junction]"
+	return

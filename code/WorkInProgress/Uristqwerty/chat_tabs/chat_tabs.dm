@@ -210,6 +210,7 @@
 
 
 
+
 /client/proc/ctab_update_edit_tab_window(var/tab)
 	var/tabl = lowertext(tab)
 	var/contents = "Edit tab settings for [tab]<br><br>"

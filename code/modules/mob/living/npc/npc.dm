@@ -115,7 +115,7 @@ mob/living/npc/proc/Attack(mob/M,brute=0,fire=0,o2=0)
 	var/render2 = "\red [src] [attackmessage] you!"
 	if(M in view(1,src))
 		if(istype(M,/mob/living/carbon/human))
-			var/datum/organ/external/org = pick(M:organs2)
+			var/datum/organ/external/org = pick(M:organs)
 			if(org)
 				render = "\red [src] [attackmessage] [M]\s [org.display_name]"
 				render2 = "\red [src] [attackmessage] your [org.display_name]"

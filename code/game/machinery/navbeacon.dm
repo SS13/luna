@@ -55,10 +55,10 @@
 	// hide the object if turf is intact
 	hide(var/intact)
 		invisibility = intact ? 101 : 0
-		updateicon()
+		update_icon()
 
 	// update the icon_state
-	proc/updateicon()
+	update_icon()
 		var/state="navbeacon[open]"
 
 		if(invisibility)
@@ -109,7 +109,7 @@
 
 			user.visible_message("[user] [open ? "opens" : "closes"] the beacon's cover.", "You [open ? "open" : "close"] the beacon's cover.")
 
-			updateicon()
+			update_icon()
 
 		else if (istype(I, /obj/item/weapon/card/id))
 			if(open)
@@ -132,7 +132,7 @@
 	attack_hand(var/mob/user)
 		interact(user, 0)
 
-	proc/interact(var/mob/user, var/ai = 0)
+	interact(var/mob/user, var/ai = 0)
 		var/turf/T = loc
 		if(T.intact)
 			return		// prevent intraction when T-scanner revealed

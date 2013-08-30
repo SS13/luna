@@ -13,7 +13,7 @@
 	new /obj/item/clothing/suit/storage/apron(src)
 	new /obj/item/clothing/suit/storage/apron(src)
 	new /obj/item/clothing/suit/storage/apron(src)
-	new /obj/item/weapon/storage/lglo_kit(src)
+	new /obj/item/weapon/storage/box/lglo(src)
 	new /obj/item/weapon/kitchen/utensil/knife(src)
 	new /obj/item/weapon/kitchen/utensil/knife(src)
 	new /obj/item/weapon/kitchen/utensil/knife(src)

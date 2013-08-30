@@ -24,6 +24,7 @@
 		real_name = corpse.real_name
 		name = corpse.real_name
 		verbs += /mob/dead/observer/proc/reenter_corpse
+
 /mob/proc/ghostize()
 	set name = "Ghost"
 	set desc = "You cannot be revived as a ghost"
@@ -38,6 +39,16 @@
 			client.mob = new/mob/dead/observer(object.loc,src)
 			client.eye = client.mob
 	return
+
+
+/mob/dead/observer/Login()
+	..()
+	client.screen = null
+
+	if (!isturf(loc))
+		client.eye = loc
+		client.perspective = EYE_PERSPECTIVE
+
 
 /mob/dead/observer/Move(NewLoc, direct)
 	if(NewLoc)

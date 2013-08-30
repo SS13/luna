@@ -33,11 +33,12 @@ SPOON
 	if(!istype(M, /mob))
 		return
 
-	if((usr.mutations & 16) && prob(50))
+	if((usr.mutations & CLUMSY) && prob(50))
 		M << "\red You stab yourself in the eye."
-		M.sdisabilities |= 1
+		M.eye_stat += 3
 		M.weakened += 4
-		M.bruteloss += 10
+		var/datum/organ/external/affecting = M.organs["head"]
+		affecting.take_damage(10)
 
 	src.add_fingerprint(user)
 	if(!(user.zone_sel.selecting == ("eyes" || "head")))
@@ -60,7 +61,7 @@ SPOON
 		var/datum/organ/external/affecting = M.organs["head"]
 		affecting.take_damage(7)
 	else
-		M.bruteloss += 7
+		M.adjustBruteLoss(7)
 	M.eye_blurry += rand(3,4)
 	M.eye_stat += rand(2,4)
 	if (M.eye_stat >= 10)
@@ -94,9 +95,10 @@ SPOON
 	w_class = 3.0
 
 /obj/item/weapon/kitchen/rollingpin/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & 16) && prob(50))
+	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << "\red The [src] slips out of your hand and hits your head."
-		usr.bruteloss += 10
+		var/datum/organ/external/affecting = M.organs["head"]
+		affecting.take_damage(10)
 		usr.paralysis += 2
 		return
 	if (M.stat < 2 && M.health < 50 && prob(90))
@@ -107,10 +109,10 @@ SPOON
 			return
 		var/time = rand(2, 6)
 		if (prob(75))
-			if (M.paralysis < time && (!(M.mutations & 8)) )
+			if (M.paralysis < time && (!(M.mutations & HULK)) )
 				M.paralysis = time
 		else
-			if (M.stunned < time && (!(M.mutations & 8)) )
+			if (M.stunned < time && (!(M.mutations & HULK)) )
 				M.stunned = time
 		if(M.stat != 2)	M.stat = 1
 		for(var/mob/O in viewers(M, null))
@@ -134,10 +136,10 @@ SPOON
 	var/butter = 0
 	throwforce = 6.0
 
-/obj/item/weapon/kitchen/utensil/knife/attack(target as mob, mob/user as mob)
-	if ((usr.mutations & 16) && prob(50))
-		usr << "\red You accidentally cut yourself with the [src]."
-		usr.bruteloss += 20
+/obj/item/weapon/kitchen/utensil/knife/attack(target as mob, mob/living/user as mob)
+	if ((user.mutations & CLUMSY) && prob(50))
+		user << "\red You accidentally cut yourself with the [src]."
+		user.adjustBruteLoss(20)
 		return
 
 

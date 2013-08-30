@@ -1,3 +1,13 @@
+/obj/machinery/computer/atmosphere/mixer
+	//Controller for a single gas mixer.
+	icon_state = "mixer"
+	name = "Gas Mixer Control Computer"
+	var/frequency = "1437"
+	var/list/rates = list(50, 50)
+	var/obj/machinery/atmospherics/trinary/mixer/mixer = null
+	var/targettag = ""
+
+
 /obj/machinery/computer/atmosphere/mixer/process()
 	..()
 	updateDialog()
@@ -5,7 +15,7 @@
 /obj/machinery/computer/atmosphere/mixer/New()
 	..()
 	spawn(2)
-		for(var/obj/machinery/atmospherics/mixer/M in world)
+		for(var/obj/machinery/atmospherics/trinary/mixer/M in world)
 			if (M.id == targettag)
 				mixer = M
 				rates[1] = M.node1_concentration * 100

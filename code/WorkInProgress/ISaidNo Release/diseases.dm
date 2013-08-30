@@ -120,13 +120,13 @@
 				for(var/mob/O in viewers(affected_mob, null))
 					O.show_message(text("\red [] farts, leaking diarrhea down their legs!", affected_mob), 1)
 				playsound(affected_mob.loc, 'poo2.ogg', 50, 1)
-				new /obj/decal/cleanable/poo(affected_mob.loc)
+				new /obj/effect/decal/cleanable/poo(affected_mob.loc)
 			if(prob(5))
 				if (affected_mob.nutrition > 10)
 					for(var/mob/O in viewers(affected_mob, null))
 						O.show_message(text("\red [] vomits on the floor profusely!", affected_mob), 1)
 					playsound(affected_mob.loc, 'splat.ogg', 50, 1)
-					new /obj/decal/cleanable/vomit(affected_mob.loc)
+					new /obj/effect/decal/cleanable/vomit(affected_mob.loc)
 					affected_mob.nutrition -= rand(3,5)
 				else
 					affected_mob << "\red Your stomach lurches painfully!"

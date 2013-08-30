@@ -17,7 +17,6 @@
 	req_access = list(15)
 	var/icon_vend //Icon_state when vending!
 	var/icon_deny //Icon_state when vending!
-	var/emagged = 0
 	var/locked = 1
 	var/seconds_electrified = 0 //Shock customers like an airlock.
 	var/shoot_inventory = 0 //Fire items at customers! We're broken!
@@ -305,8 +304,8 @@
 
 /obj/machinery/vendingm/cigarette/SetPrice()
 	prices["/obj/item/weapon/cigpacket"] = 0.5
-	prices["/obj/item/weapon/zippo/lighter"] = 1
-	prices["/obj/item/weapon/zippo"] = 2
+	prices["/obj/item/weapon/lighter/random"] = 1
+	prices["/obj/item/weapon/lighter/zippo"] = 2
 
 /obj/machinery/vendingm/cigarette/Restock()
 	contents+=new/obj/item/weapon/cigpacket()

@@ -60,7 +60,7 @@ proc/LinkBlockedWithAccess(turf/A, turf/B, obj/item/weapon/card/id/ID)
 // Returns true if direction is blocked from loc
 // Checks doors against access with given ID
 proc/DirBlockedWithAccess(turf/loc,var/dir,var/obj/item/weapon/card/id/ID)
-	for(var/obj/window/D in loc)
+	for(var/obj/structure/window/D in loc)
 		if(!D.density)			continue
 		if(D.dir == SOUTHWEST)	return 1
 		if(D.dir == SOUTHEAST)	return 1 //Added these to fix pathing-through-windows issue

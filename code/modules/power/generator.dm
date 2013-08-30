@@ -16,9 +16,9 @@
 		if(!circ1 || !circ2)
 			stat |= BROKEN
 
-		updateicon()
+		update_icon()
 
-/obj/machinery/power/generator/proc/updateicon()
+/obj/machinery/power/generator/update_icon()
 
 	if(stat & (NOPOWER|BROKEN))
 		overlays = null
@@ -74,7 +74,7 @@
 	var/genlev = max(0, min( round(11*lastgen / 100000), 11))
 	if(genlev != lastgenlev)
 		lastgenlev = genlev
-		updateicon()
+		update_icon()
 
 	src.updateDialog()
 
@@ -91,7 +91,7 @@
 
 	interact(user)
 
-/obj/machinery/power/generator/proc/interact(mob/user)
+/obj/machinery/power/generator/interact(mob/user)
 	if ( (get_dist(src, user) > 1 ) && (!istype(user, /mob/living/silicon/ai)))
 		user.machine = null
 		user << browse(null, "window=teg")
@@ -130,5 +130,5 @@
 
 /obj/machinery/power/generator/power_change()
 	..()
-	updateicon()
+	update_icon()
 

@@ -30,18 +30,18 @@
 	var/list/synd_spawns = list()
 
 	uplink_welcome = "Syndicate Uplink Console:"
-	uplink_items = {"/obj/item/weapon/storage/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
-/obj/item/weapon/storage/syndie_kit/imp_compress:5:Compressed matter implant, with injector;/obj/item/weapon/storage/syndie_kit/imp_vfac:5:Viral factory implant, with injector;
-/obj/item/weapon/storage/syndie_kit/imp_explosive:6:Explosive implant, with injector;/obj/item/device/hacktool:4:Hacktool;
+	uplink_items = {"/obj/item/weapon/storage/box/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
+/obj/item/weapon/storage/box/syndie_kit/imp_compress:5:Compressed matter implant, with injector;/obj/item/weapon/storage/box/syndie_kit/imp_vfac:5:Viral factory implant, with injector;
+/obj/item/weapon/storage/box/syndie_kit/imp_explosive:6:Explosive implant, with injector;/obj/item/device/hacktool:4:Hacktool;
 /obj/item/clothing/under/chameleon:2:Chameleon Jumpsuit;/obj/item/weapon/gun/revolver:7:Revolver;
-/obj/item/weapon/ammo/a357:3:Revolver Ammo;/obj/item/weapon/card/emag:3:Electromagnetic card;
-/obj/item/weapon/card/id/syndicate:4:Fake ID;/obj/item/weapon/cloaking_device:5:Cloaking device;
+/obj/item/ammo_magazine/a357:3:Revolver Ammo;/obj/item/weapon/card/emag:3:Cryptographic Sequencer;
+/obj/item/weapon/card/id/syndicate:4:Fake ID;/obj/item/weapon/device/cloak:5:Cloaking device;
 /obj/item/weapon/storage/emp_kit:4:Box of EMP grenades;/obj/item/device/powersink:5:Power sink;
 /obj/item/weapon/cartridge/syndicate:3:Detomatix PDA cart;/obj/item/device/chameleon:4:Chameleon projector;
 /obj/item/weapon/sword:5:Energy sword;/obj/item/weapon/pen/sleepypen:4:Sleepy pen;
 /obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;/obj/item/clothing/mask/gas/voice:3:Voice changer;
 /obj/item/weapon/aiModule/freeform:3:Freeform AI module;/obj/item/weapon/syndie/c4explosive:4:Low power explosive charge, with detonator);
-/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge, with detonator;/obj/item/weapon/reagent_containers/pill/tox:2:Toxin Pill"}
+/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge, with detonator;/obj/item/weapon/reagent_containers/pill/cyanide:4:Cyanide Pill"}
 
 	uplink_uses = 0
 
@@ -126,10 +126,10 @@
 			if(role == "Captain")
 				player << "One of our ships was recently stolen, and the crew held at ransom. We believe the same hijackers are targetting your ship."
 
-	for(var/obj/landmark/synd_spawn/S in world)
+	for(var/obj/effect/landmark/synd_spawn/S in world)
 		synd_spawns += S.loc
 
-	var/obj/landmark/closet_spawn = locate("landmark*Nuclear-Closet")
+	var/obj/effect/landmark/closet_spawn = locate("landmark*Nuclear-Closet")
 
 
 	var/leader_title = pick("Czar", "Boss", "Commander", "Chief", "Kingpin", "Director", "Overlord")
@@ -158,11 +158,11 @@
 
 
 	if(closet_spawn)
-		new /obj/closet/syndicate/nuclear(closet_spawn.loc)
+		new /obj/structure/closet/syndicate/nuclear(closet_spawn.loc)
 
-	for (var/obj/landmark/A in world)
+	for (var/obj/effect/landmark/A in world)
 		if (A.name == "Syndicate-Gear-Closet")
-			new /obj/closet/syndicate/personal(A.loc)
+			new /obj/structure/closet/syndicate/personal(A.loc)
 			del(A)
 			continue
 
@@ -279,7 +279,7 @@ datum/game_mode/hijack/proc/equip_syndicate(mob/living/carbon/human/synd_mob, ra
 	synd_mob.equip_if_possible(new /obj/item/clothing/head/helmet/swat(synd_mob), synd_mob.slot_head)
 
 	synd_mob.equip_if_possible(new /obj/item/weapon/storage/backpack(synd_mob), synd_mob.slot_back)
-	synd_mob.equip_if_possible(new /obj/item/weapon/reagent_containers/pill/tox(synd_mob), synd_mob.slot_in_backpack)
+	synd_mob.equip_if_possible(new /obj/item/weapon/reagent_containers/pill/cyanide(synd_mob), synd_mob.slot_in_backpack)
 
 
 

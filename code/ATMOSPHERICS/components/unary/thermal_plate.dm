@@ -7,9 +7,10 @@
 
 	icon = 'cold_sink.dmi'
 	icon_state = "intact_off"
-
 	name = "Thermal Transfer Plate"
 	desc = "Transfers heat to and from an area"
+	density = 1
+	anchored = 1
 
 	update_icon()
 		if(node)

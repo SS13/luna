@@ -234,6 +234,12 @@
 				dat += text("<font color='green'>Radiation Level: []%</FONT><BR><BR>", occupant.radiation)
 				if(occupant:zombie == 1)
 					dat += text("<font color='red'>Unknown infectious agent detected.</FONT><BR><BR>",)
+				for(var/datum/disease/D in occupant:viruses)
+					dat += "<font color='red'><b>Warning: [D.form] Detected</b></FONT><BR>"
+					dat += "Name: [D.name].<BR>"
+					dat += "Type: [D.spread].<BR>"
+					dat += "Stage: [D.stage]/[D.max_stages].<BR>"
+					dat += "Possible Cure: [D.cure].<BR>"
 				dat += "<table border='1'>"
 				dat += "<tr>"
 				dat += "<th>Organ</th>"

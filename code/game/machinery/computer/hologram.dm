@@ -51,14 +51,14 @@
 		flick("holo_console1", src)
 		if (href_list["power"])
 			if (src.projector.projection)
-				src.projector.icon_state = "hologram0"
+				src.projector.icon_state = "holopad0"
 				//src.projector.projection = null
 				del(src.projector.projection)
 			else
 				src.projector.projection = new /obj/projection(src.projector.loc)
 				src.projector.projection.icon = 'human.dmi'
 				src.projector.projection.icon_state = "body_m_s"
-				src.projector.icon_state = "hologram1"
+				src.projector.icon_state = "holopad1"
 				src.render()
 		else
 			if (href_list["h_r"])

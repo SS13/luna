@@ -15,7 +15,7 @@
 	var/allow_vote_restart = 0 			// allow votes to restart
 	var/allow_vote_mode = 0				// allow votes to change mode
 	var/allow_admin_jump = 1			// allows admin jumping
-	var/allow_admin_spawning = 0		// allows admin item spawning
+	var/allow_admin_spawning = 1		// allows admin item spawning
 	var/allow_admin_rev = 1				// allows admin revives
 	var/vote_delay = 600				// minimum time between voting sessions (seconds, 10 minute default)
 	var/vote_period = 60				// length of voting period (seconds, default 1 minute)

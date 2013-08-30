@@ -224,11 +224,8 @@ obj/machinery/microwave/attackby(var/obj/item/O as obj, var/mob/user as mob)
 		else
 			user << "It's broken!"
 	else if(src.dirty) // The microwave is all dirty so can't be used!
-		if(istype(O, /obj/item/weapon/cleaner)) // If they're trying to clean it then let them
-			var/obj/item/weapon/cleaner/C = O
-			if(C.saftey == 1)
-				user << "\blue The catch is still on!"
-				return
+		if(istype(O, /obj/item/weapon/reagent_containers/spray/cleaner)) // If they're trying to clean it then let them
+			var/obj/item/weapon/reagent_containers/spray/cleaner/C = O
 			if (C.reagents.total_volume < 1)
 				user << "\blue Its empty!"
 				return
@@ -393,7 +390,7 @@ Please clean it before use!</TT><BR>
 						src.operating = 1 // Turn it on
 						src.icon_state = "mw1"
 						src.updateUsrDialog()
-						var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+						var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 						s.set_up(2, 1, src)
 						s.start()
 						icon_state = "mwb" // Make it look all busted up and shit

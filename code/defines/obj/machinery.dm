@@ -1,9 +1,3 @@
-/obj/machinery
-	name = "machinery"
-	icon = 'stationobjs.dmi'
-	var/stat = 0
-	var/mocktxt = null
-
 /obj/machinery/alarm
 	name = "alarm"
 	icon = 'monitors.dmi'
@@ -14,27 +8,6 @@
 	var/alarm_zone = null
 	networking = 2
 	security = 1
-/obj/machinery/autolathe
-	name = "Autolathe"
-	icon_state = "autolathe"
-	density = 1
-	var/m_amount = 0.0
-	var/g_amount = 0.0
-	var/const/m_max = 150000.0  // Maximum capacity for metal
-	var/const/g_max =  75000.0  // and glass respectively.
-	var/operating = 0.0
-	var/opened = 0.0
-	var/temp = null
-	anchored = 1.0
-	var/list/L = list()
-	var/list/LL = list()
-	var/hacked = 0
-	var/disabled = 0
-	var/shocked = 0
-	var/list/wires = list()
-	var/hack_wire
-	var/disable_wire
-	var/shock_wire
 
 /obj/machinery/camera
 	name = "Security Camera"
@@ -51,6 +24,7 @@
 	var/bugged = 0
 	networking = PROCESS_RPCS
 	security = 1
+
 /obj/machinery/camera/call_function(datum/function/F)
 	..()
 	if(uppertext(F.arg1) != net_pass)
@@ -65,15 +39,7 @@
 		src.status = 0
 	else if(F.name == "enable")
 		src.status = 1
-/obj/machinery/dispenser
-	name = "Tank Storage Unit"
-	desc = "A simple yet bulky one-way storage device for gas tanks. Holds 10 plasma and 10 oxygen tanks."
-	icon = 'objects.dmi'
-	icon_state = "dispenser"
-	density = 1
-	var/o2tanks = 10.0
-	var/pltanks = 10.0
-	anchored = 1.0
+
 
 /obj/machinery/dna_scanner
 	name = "DNA Scanner/Implanter"
@@ -121,7 +87,7 @@
 /obj/machinery/hologram_proj
 	name = "Hologram Projector"
 	icon = 'stationobjs.dmi'
-	icon_state = "hologram0"
+	icon_state = "holopad0"
 	var/id = null
 	var/atom/projection = null
 	anchored = 1.0
@@ -250,44 +216,6 @@
 	var/obj/machinery/dna_scanner/connected = null
 	anchored = 1.0
 
-/obj/machinery/scan_consolenew
-	name = "DNA Modifier Access Console"
-	icon = 'computer.dmi'
-	icon_state = "scanner"
-	density = 1
-	var/uniblock = 1.0
-	var/strucblock = 1.0
-	var/subblock = 1.0
-	var/status = null
-	var/radduration = 2.0
-	var/radstrength = 1.0
-	var/radacc = 1.0
-	var/buffer1 = null
-	var/buffer2 = null
-	var/buffer3 = null
-	var/buffer1owner = null
-	var/buffer2owner = null
-	var/buffer3owner = null
-	var/buffer1label = null
-	var/buffer2label = null
-	var/buffer3label = null
-	var/buffer1type = null
-	var/buffer2type = null
-	var/buffer3type = null
-	var/buffer1iue = 0
-	var/buffer2iue = 0
-	var/buffer3iue = 0
-	var/delete = 0
-	var/injectorready = 1
-	var/temphtml = null
-	var/obj/machinery/dna_scanner/connected = null
-	var/obj/item/weapon/disk/data/genetics/diskette = null
-	anchored = 1.0
-
-	var/brightnessred = 0
-	var/brightnessgreen = 0
-	var/brightnessblue = 2
-
 /obj/machinery/sec_lock
 	name = "Security Pad"
 	icon = 'stationobjs.dmi'
@@ -332,15 +260,13 @@
 	icon_state = "propulsion"
 	opacity = 1
 
-/obj/machinery/shuttle/engine/propulsion/burst
-	name = "burst"
+/obj/machinery/shuttle/engine/propulsion/pod
+	icon_state = "podengine"
 
 /obj/machinery/shuttle/engine/propulsion/burst/left
-	name = "left"
 	icon_state = "burst_l"
 
 /obj/machinery/shuttle/engine/propulsion/burst/right
-	name = "right"
 	icon_state = "burst_r"
 
 /obj/machinery/shuttle/engine/router
@@ -443,36 +369,6 @@
 	var/brightnessgreen = 0
 	var/brightnessblue = 0
 
-#define SMESMAXCHARGELEVEL 200000
-#define SMESMAXOUTPUT 200000
-
-/obj/machinery/power/smes/magical
-	name = "magical power storage unit"
-	desc = "A high-capacity superconducting magnetic energy storage (SMES) unit. Magically produces power."
-	process()
-		capacity = INFINITY
-		charge = INFINITY
-		..()
-
-/obj/machinery/power/smes
-	name = "SMES"
-	desc = "A high-capacity superconducting magnetic energy storage (SMES) unit."
-	icon_state = "smes"
-	density = 1
-	anchored = 1
-	var/output = 30000
-	var/lastout = 0
-	var/loaddemand = 0
-	var/capacity = 5e6
-	var/charge = 5e6
-	var/charging = 0
-	var/chargemode = 1
-	var/chargecount = 0
-	var/chargelevel = 0
-	var/online = 1
-	var/n_tag = null
-	var/obj/machinery/power/terminal/terminal = null
-
 /obj/machinery/power/solar
 	name = "Solar Panel"
 	desc = "A solar electrical generator."
@@ -507,17 +403,6 @@
 	var/trackdir = 1		// 0 =CCW, 1=CW
 	var/nexttime = 0
 
-
-
-/obj/machinery/cell_charger
-	name = "Power Cell Charger"
-	desc = "A charging unit for Power Cells."
-	icon = 'power.dmi'
-	icon_state = "ccharger0"
-	var/obj/item/weapon/cell/charging = null
-	var/chargelevel = -1
-	anchored = 1
-
 /obj/machinery/light_switch
 	desc = "A light switch"
 	name = "Light Switch"
@@ -540,246 +425,6 @@
 	var/area/area = null
 	var/otherarea = null
 	var/id = 1
-
-
-/obj/machinery/vending
-	name = "Vendomat"
-	desc = "A generic vending machine."
-	icon = 'vending.dmi'
-	icon_state = "generic"
-	anchored = 1
-	density = 1
-	var/active = 1 //No sales pitches if off!
-	var/vend_ready = 1 //Are we ready to vend?? Is it time??
-	var/vend_delay = 10 //How long does it take to vend?
-	var/points = 0
-	var/product_paths = "" //String of product paths separated by semicolons.
-	var/product_amounts = "" //String of product amounts separated by semicolons, must have amount for every path in product_paths
-	var/product_prices = "" //String of product prices in Points separated by semicolons, must have amount for every path in product_paths
-	var/product_slogans = "" //String of slogans separated by semicolons, optional
-	var/product_hidden = "" //String of products that are hidden unless hacked.
-	var/hidden_prices = "" //String of product prices for hidden items
-	var/list/product_records = list()
-	var/list/hidden_records = list()
-	var/list/slogan_list = list()
-	var/vend_reply //Thank you for shopping!
-	var/last_reply = 0
-	var/last_slogan = 0 //When did we last pitch?
-	var/slogan_delay = 600 //How long until we can pitch again?
-	var/icon_vend //Icon_state when vending!
-	var/icon_deny //Icon_state when vending!
-	var/emagged = 0 //Ignores if somebody doesn't have card access to that machine.
-	var/seconds_electrified = 0 //Shock customers like an airlock.
-	var/shoot_inventory = 0 //Fire items at customers! We're broken!
-	var/extended_inventory = 0 //can we access the hidden inventory?
-	var/panel_open = 0 //Hacking that vending machine. Gonna get a free candy bar.
-	var/wires = 15
-	var/charge_type = ""
-
-/obj/machinery/vending/coffee
-	name = "Coffee Machine"
-	desc = "A Robust Coffee vending machine."
-	icon_state = "coffee"
-	icon_vend = "coffee-vend"
-	points = 10
-	product_paths = "/obj/item/weapon/reagent_containers/food/drinks/coffee"
-	//product_amounts = "25"
-	product_prices = "1"
-	vend_delay = 34
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "coffee"
-
-/obj/machinery/vending/snack
-	name = "Snack Machine"
-	desc = "All manner of tasty, but unhealthy snacks"
-	icon_state = "snack"
-	points = 10
-	product_paths = "/obj/item/weapon/reagent_containers/food/snacks/candy;/obj/item/weapon/reagent_containers/food/snacks/chips"
-	//product_amounts = "10;10"
-	product_prices = "1;1"
-	product_slogans = "Try our new nougat bar!;Twice the calories for half the price!"
-	product_hidden = "/obj/item/weapon/reagent_containers/food/snacks/donut"
-	hidden_prices = "1"
-	charge_type = "snack"
-
-/obj/machinery/vending/cart
-	name = "PTech"
-	desc = "Cartridges for PDAs"
-	icon_state = "cart"
-	icon_deny = "cart-deny"
-	points = 10
-	product_paths = "/obj/item/weapon/cartridge/medical;/obj/item/weapon/cartridge/engineering;/obj/item/weapon/cartridge/security;/obj/item/weapon/cartridge/janitor;/obj/item/weapon/cartridge/signal/toxins;/obj/item/device/pda/heads;/obj/item/weapon/cartridge/captain;/obj/item/weapon/cartridge/quartermaster"
-	//product_amounts = "10;10;10;10;10;10;10;10"
-	product_prices = "1;1;1;1;1;1;3;1"
-	product_slogans = ""
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "cart"
-
-/obj/machinery/vending/cigarette
-	name = "Cigarette Vendor"
-	desc = "If you want to get cancer, might as well do it in style"
-	icon_state = "cigs"
-	points = 10
-	product_paths = "/obj/item/weapon/cigpacket;/obj/item/weapon/zippo/lighter"
-	//product_amounts = "10;10"
-	product_prices = "1;1"
-	product_slogans = "Space cigs taste good like a cigarette should.;I'd rather toolbox than switch.;Smoke!;Don't believe the reports - smoke today!"
-	vend_delay = 34
-	product_hidden = "/obj/item/weapon/zippo"
-	hidden_prices = "2"
-	charge_type = "cigarette"
-
-/obj/machinery/vending/medical
-	name = "NanoMed Plus"
-	desc = "Medical dispenser."
-	icon_state = "med"
-	icon_deny = "med-deny"
-	req_access_txt = "5"
-	points = 10
-	product_paths = "/obj/item/clothing/under/rank/medical;/obj/item/clothing/under/rank/chemist;/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/shoes/white;/obj/item/device/healthanalyzer;/obj/item/weapon/medical/bruise_pack;/obj/item/weapon/medical/ointment;/obj/item/weapon/medical/bandaid;/obj/item/weapon/reagent_containers/glass/bottle/antitoxin;/obj/item/weapon/reagent_containers/glass/bottle/inaprovaline;/obj/item/weapon/reagent_containers/glass/bottle/stoxin;/obj/item/weapon/reagent_containers/syringe;/obj/item/weapon/tank/anesthetic;/obj/item/clothing/mask/medical;/obj/item/clothing/gloves/latex;/obj/item/weapon/storage/firstaid/regular;/obj/item/weapon/storage/firstaid/toxin;/obj/item/weapon/storage/firstaid/fire;/obj/item/weapon/gun/syringe"
-	//product_amounts = "4;4;4;4;12"
-	product_prices = "1;1;1;1;2;1;1;1;3;3;3;1;2;1;1;9;9;9;4"
-	product_hidden = "/obj/item/weapon/reagent_containers/pill/tox;/obj/item/weapon/reagent_containers/glass/bottle/toxin"
-	hidden_prices = "3;3"
-	charge_type = "medical"
-
-
-/obj/machinery/vending/security
-	name = "SecTech"
-	desc = "A security equipment vendor"
-	icon_state = "sec"
-	icon_deny = "sec-deny"
-	req_access_txt = "1"
-	points = 10
-	product_paths = "/obj/item/clothing/under/color/red;/obj/item/clothing/under/ftech;/obj/item/clothing/under/det;/obj/item/clothing/suit/storage/det_suit;/obj/item/clothing/head/det_hat;/obj/item/clothing/head/helmet;/obj/item/clothing/suit/armor/vest;/obj/item/clothing/suit/storage/gearharness;/obj/item/weapon/storage/belt/security;/obj/item/device/radio/headset/headset_sec;/obj/item/clothing/glasses/sunglasses;/obj/item/weapon/handcuffs;/obj/item/weapon/baton;/obj/item/weapon/gun/energy/taser_gun;/obj/item/weapon/flashbang;/obj/item/device/flash/*;/obj/item/weapon/storage/box/evidence*/"
-	//product_amounts = "8;5;4"
-	product_prices = "1;1;1;1;1;3;3;3;2;1;1;1;4;4;3;3;2"
-	product_hidden = "/obj/item/kitchen/donut_box"
-	hidden_prices = "3"
-	charge_type = "security"
-
-/*	Not used, adapted the old chem dispenser to be compatible with the chemistry charge unit.
-/obj/machinery/vending/chemistry
-	name = "Chem Dispenser"
-	desc = "A chemical dispenser."
-	icon_state = "generic"
-	//icon_deny = "med-deny"
-	req_access_txt = "33"
-	points = 10
-	product_paths = "/obj/item/weapon/reagent_containers/glass/bottle/antitoxin;/obj/item/weapon/reagent_containers/glass/bottle/inaprovaline;/obj/item/weapon/reagent_containers/glass/bottle/stoxin;/obj/item/weapon/reagent_containers/glass/bottle/toxin;/obj/item/weapon/reagent_containers/syringe"
-	//product_amounts = "4;4;4;4;12"
-	product_prices = "2;2;2;2;1"
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "chemistry"
-*/
-/obj/machinery/vending/genetics
-	name = "Genetics Dispenser"
-	desc = "Medical drug dispenser."
-	icon_state = "med"
-	icon_deny = "med-deny"
-	req_access_txt = "5"
-	points = 10
-	product_paths = "/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/under/rank/geneticist;/obj/item/weapon/reagent_containers/glass/bottle/antitoxin;/obj/item/weapon/reagent_containers/glass/bottle/inaprovaline;/obj/item/weapon/reagent_containers/glass/bottle/stoxin;/obj/item/weapon/reagent_containers/glass/bottle/toxin;/obj/item/weapon/reagent_containers/syringe"
-	//product_amounts = "4;4;4;4;12"
-	product_prices = "1;1;2;2;2;2;1"
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "genetics"
-
-/obj/machinery/vending/toxins
-	name = "Toxins dispenser"
-	desc = "Medical drug dispenser."
-	icon = 'objects.dmi'
-	icon_state = "dispenser"
-	//icon_deny = "med-deny"
-	req_access_txt = "7"
-	points = 10
-	product_paths = "/obj/item/clothing/under/rank/scientist;/obj/item/clothing/suit/bio_suit;/obj/item/clothing/head/bio_hood;/obj/item/weapon/screwdriver;/obj/item/weapon/wrench;/obj/item/weapon/tank/oxygen;/obj/item/weapon/tank/plasma;/obj/item/device/transfer_valve;/obj/item/device/igniter;/obj/item/device/timer;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler;/obj/item/weapon/chem_grenade"
-	//product_amounts = "4;4;4;4;12"
-	product_prices = "1;2;2;1;1;1;2;3;2;2;2;2;2"
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "toxins"
-
-/obj/machinery/vending/robotics
-	name = "Robotech Deluxe"
-	desc = "All the tools you need to create your own robot army."
-	icon_state = "robotics"
-	icon_deny = "robotics-deny"
-	req_access_txt = "29"
-	points = 10
-	product_paths = "/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/under/rank/roboticist;/obj/item/weapon/CableCoil/power;/obj/item/weapon/optical_unit;/obj/item/weapon/circuitry;/obj/item/weapon/cell/supercharged;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler;/obj/item/device/healthanalyzer;/obj/item/weapon/scalpel;/obj/item/weapon/circular_saw;/obj/item/weapon/tank/anesthetic;/obj/item/clothing/mask/medical;/obj/item/weapon/screwdriver;/obj/item/weapon/crowbar"
-	//product_amounts = "4;4;4;4;12"
-	product_prices = "1;1;1;1;1;3;2;2;2;4;4;2;1;1;1"
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "robotics"
-
-/obj/machinery/vending/bar
-	name = "Brewmaster 9000"
-	desc = "The Brewmaster 9000 has just what you need to make your customers forget about, well... everything."
-	icon_state = "bar"
-	icon_deny = "bar-deny"
-	req_access_txt = "25"
-	points = 100
-	product_paths = {"/obj/item/weapon/reagent_containers/food/drinks/tea;/obj/item/weapon/reagent_containers/food/drinks/h_chocolate;/obj/item/weapon/reagent_containers/food/drinks/cola;/obj/item/weapon/reagent_containers/food/drinks/coffee;/obj/item/weapon/reagent_containers/food/drinks/thirteenloko;/obj/item/weapon/reagent_containers/food/drinks/tonic;/obj/item/weapon/reagent_containers/food/drinks/dry_ramen;/obj/item/weapon/reagent_containers/food/drinks/sodawater;/obj/item/weapon/reagent_containers/food/drinks/beer;/obj/item/weapon/reagent_containers/food/drinks/ale;/obj/item/weapon/reagent_containers/food/drinks/milk;/obj/item/weapon/reagent_containers/food/drinks/bottle/gin;/obj/item/weapon/reagent_containers/food/drinks/bottle/vodka;/obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla;/obj/item/weapon/reagent_containers/food/drinks/bottle/patron;/obj/item/weapon/reagent_containers/food/drinks/bottle/absinthe;/obj/item/weapon/reagent_containers/food/drinks/bottle/cognac;/obj/item/weapon/reagent_containers/food/drinks/bottle/cream;/obj/item/weapon/reagent_containers/food/drinks/bottle/kahlua;/obj/item/weapon/reagent_containers/food/drinks/bottle/limejuice;/obj/item/weapon/reagent_containers/food/drinks/bottle/orangejuice;/obj/item/weapon/reagent_containers/food/drinks/bottle/tomatojuice;/obj/item/weapon/reagent_containers/food/drinks/bottle/rum;/obj/item/weapon/reagent_containers/food/drinks/bottle/vermouth;/obj/item/weapon/reagent_containers/food/drinks/bottle/wine;/obj/item/weapon/reagent_containers/food/drinks/drinkingglass;/obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey"}
-	//product_amounts = "4;4;4;4;12"
-	product_prices = "2;2;2;2;2;2;2;2;2;2;2;5;5;5;5;5;5;2;5;2;2;2;5;5;5;1;5"
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "bar"
-
-/obj/machinery/vending/kitchen
-    name = "Kitchen Mate Plus"
-    desc = "The Kitchen Mate Plus.  Better ingredients.  Better burgers."
-    icon_state = "kitchen"
-    icon_deny = "kitchen-deny"
-    req_access_txt = "28"
-    points = 30
-    product_paths = {"/obj/item/clothing/under/chef;
-/obj/item/clothing/suit/storage/chef;
-/obj/item/clothing/head/chefhat;
-/obj/item/weapon/kitchen/utensil/knife;
-/obj/item/weapon/kitchen/rollingpin;
-/obj/item/weapon/reagent_containers/food/drinks/cola;
-/obj/item/weapon/reagent_containers/food/drinks/coffee;
-/obj/item/kitchen/egg_box;
-/obj/item/weapon/reagent_containers/food/snacks/breadsys/butterpack;
-/obj/item/weapon/reagent_containers/food/snacks/breadsys/salamistick;
-/obj/item/weapon/reagent_containers/food/snacks/breadsys/bigcheese;
-/obj/item/weapon/reagent_containers/food/snacks/sugar;
-/obj/item/weapon/reagent_containers/food/snacks/flour;
-/obj/item/weapon/reagent_containers/food/snacks/noodles;
-/obj/item/weapon/reagent_containers/food/snacks/meat;
-/obj/item/weapon/reagent_containers/food/snacks/rawmeatball;
-/obj/item/weapon/reagent_containers/food/snacks/ketchup;
-/obj/item/weapon/reagent_containers/food/snacks/potato;
-/obj/item/weapon/reagent_containers/food/snacks/tomato;
-/obj/item/weapon/reagent_containers/food/snacks/apple;
-/obj/item/weapon/reagent_containers/food/snacks/fungi;
-/obj/item/weapon/reagent_containers/food/snacks/plump"}
-    //product_amounts = "10;10;10;10;10;10;10;10;10;10;10;10;10;10;10;10;10;10;10"
-    product_prices = "1;1;1;1;1;1;1;2;2;2;2;1;1;1;1;1;1;1;1;1;1;2"
-    product_hidden = ""
-    hidden_prices = ""
-    charge_type = "kitchen"
-
-/obj/machinery/vending/engineering
-	name = "Robco Tool Maker"
-	desc = "Everything you need for do-it-yourself ship repair."
-	icon_state = "engi"
-	icon_deny = "engi-deny"
-	req_access_txt = "10"
-	points = 10
-	product_paths = "/obj/item/clothing/under/rank/chief_engineer;/obj/item/clothing/under/rank/engineer;/obj/item/clothing/shoes/orange;/obj/item/clothing/head/helmet/hardhat;/obj/item/weapon/storage/belt/utility;/obj/item/clothing/glasses/meson;/obj/item/clothing/gloves/yellow;/obj/item/weapon/screwdriver;/obj/item/weapon/crowbar;/obj/item/weapon/wirecutters;/obj/item/device/multitool;/obj/item/weapon/wrench;/obj/item/device/t_scanner;/obj/item/weapon/CableCoil/power;/obj/item/weapon/circuitry;/obj/item/weapon/cell;/obj/item/weapon/weldingtool;/obj/item/clothing/head/helmet/welding;/obj/item/weapon/light/tube;/obj/item/clothing/suit/fire"
-	//product_amounts = "4;4;4;4;12"
-	product_prices = "1;1;1;2;2;1;2;1;1;2;2;1;1;1;2;2;1;1;1;2"
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "engineering"
 
 /obj/machinery/gibber
 	name = "Gibber"

@@ -503,7 +503,7 @@
 					M.buckled = null
 				else
 					var/obj/S = locate(text("start*AI"))
-					if ((istype(S, /obj/landmark/start) && istype(S.loc, /turf)))
+					if ((istype(S, /obj/effect/landmark/start) && istype(S.loc, /turf)))
 						M << "\blue <B>You have been teleported to your new starting location!</B>"
 						M.loc = S.loc
 						M.buckled = null
@@ -793,8 +793,6 @@
 						removed_paths += dirty_path
 					else if (!ispath(path, /obj) && !ispath(path, /turf) && !ispath(path, /mob))
 						removed_paths += dirty_path
-					else if (ispath(path, /obj/item/weapon/gun/energy/pulse_rifle))
-						removed_paths += dirty_path
 					else if (ispath(path, /obj/bhole) && !(src.rank in list("Coder", "Host")))
 						removed_paths += dirty_path
 					else if (ispath(path, /mob) && !(src.rank in list("Super Administrator", "Coder", "Host")))
@@ -861,7 +859,7 @@
 				if("sec_classic1")
 					for(var/obj/item/clothing/suit/fire/O in world)
 						del(O)
-					for(var/obj/grille/O in world)
+					for(var/obj/structure/grille/O in world)
 						del(O)
 					for(var/obj/machinery/vehicle/pod/O in world)
 						for(var/mob/M in src)
@@ -1016,11 +1014,11 @@
 					sleep(40)
 					for(var/mob/M in world)
 						shake_camera(M, 400, 1)
-					for(var/obj/window/W in world)
+					for(var/obj/structure/window/W in world)
 						spawn(0)
 							sleep(rand(10,400))
 							W.ex_act(rand(2,1))
-					for(var/obj/grille/G in world)
+					for(var/obj/structure/grille/G in world)
 						spawn(0)
 							sleep(rand(20,400))
 							G.ex_act(rand(2,1))
@@ -1036,7 +1034,7 @@
 						spawn(0)
 							sleep(rand(30,400))
 							Cable.ex_act(rand(2,1))
-					for(var/obj/closet/Closet in world)
+					for(var/obj/structure/closet/Closet in world)
 						spawn(0)
 							sleep(rand(30,400))
 							Closet.ex_act(rand(2,1))
