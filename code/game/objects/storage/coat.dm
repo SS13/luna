@@ -147,7 +147,7 @@
 	return L
 
 /obj/item/clothing/suit/storage/proc/show_to(mob/user as mob)
-	for(var/obj/item/weapon/mousetrap/MT in src)
+	for(var/obj/item/device/assembly/mousetrap/MT in src)
 		if(MT.armed)
 			for(var/mob/O in viewers(user, null))
 				if(O == user)

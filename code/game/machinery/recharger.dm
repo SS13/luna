@@ -12,7 +12,7 @@
 /obj/machinery/recharger/attackby(obj/item/weapon/G, mob/user)
 	if(istype(user,/mob/living/silicon))
 		return
-	if(istype(G, /obj/item/weapon/gun/energy) || istype(G, /obj/item/weapon/baton))
+	if(istype(G, /obj/item/weapon/gun/energy) || istype(G, /obj/item/weapon/melee/baton))
 		if(charging)
 			return
 
@@ -73,8 +73,8 @@
 			else
 				icon_state = "recharger2"
 			return
-		if(istype(charging, /obj/item/weapon/baton))
-			var/obj/item/weapon/baton/B = charging
+		if(istype(charging, /obj/item/weapon/melee/baton))
+			var/obj/item/weapon/melee/baton/B = charging
 			if (B.charges < B.maximum_charges)
 				B.charges++
 				icon_state = "recharger1"

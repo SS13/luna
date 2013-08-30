@@ -70,10 +70,6 @@ CIGS
 					/obj/item/clothing/mask/cigarette,
 					/obj/item/clothing/mask/cigarette,
 					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
 					/obj/item/clothing/mask/cigarette/med/o2,
 					/obj/item/clothing/mask/cigarette/med/fire,
 					/obj/item/clothing/mask/cigarette/med/brute,
@@ -82,7 +78,7 @@ CIGS
 
 /obj/item/weapon/cigpacket/robust
 	name = "RobustCo packet"
-	desc = "A packet of six imported RobustCo battle sticks. A label on the packaging reads, \"Robuster's choise!\""
+	desc = "A packet of six imported RobustCo combat sticks. A label on the packaging reads, \"Robuster's choise!\""
 	icon_state = "Dpacket"
 	item_state = "Dpacket"
 	allowreagents = 0
@@ -91,7 +87,6 @@ CIGS
 
 /obj/item/weapon/cigpacket/o2
 	name = "Cigarette packet"
-	desc = "A label on the packaging reads, \"In case of hazardous depressurization, smoke a cig!\""
 	allowreagents = 0
 	cigtypes = list(/obj/item/clothing/mask/cigarette/med/o2)
 
@@ -185,8 +180,8 @@ CIGS
 		if(M.lit)
 			light("<span class='notice'>[user] lights their [name] with their [W].</span>")
 
-	else if(istype(W, /obj/item/weapon/sword))
-		var/obj/item/weapon/sword/S = W
+	else if(istype(W, /obj/item/weapon/melee/energy/sword))
+		var/obj/item/weapon/melee/energy/sword/S = W
 		if(S.active)
 			light("<span class='warning'>[user] swings their [W], barely missing their nose. They light their [name] in the process.</span>")
 

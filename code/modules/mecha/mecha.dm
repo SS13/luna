@@ -265,6 +265,8 @@
 	var/move_result = 0
 	if(hasInternalDamage(MECHA_INT_CONTROL_LOST))
 		move_result = mechsteprand()
+	else if(direction == UP || direction == DOWN)
+		move_result = move_z(cardinal)
 	else if(src.dir!=direction)
 		move_result = mechturn(direction)
 	else
@@ -291,6 +293,10 @@
 	if(result)
 		playsound(src,'sound/mecha/mechstep.ogg',40,1)
 	return 1
+
+
+/obj/mecha/proc/move_z(cardinal)
+	return 0
 
 
 /obj/mecha/proc/mechsteprand()
@@ -408,7 +414,7 @@
 /obj/mecha/attack_alien(mob/user as mob)
 	src.log_message("Attack by alien. Attacker - [user].",1)
 	if(!prob(src.deflect_chance))
-		src.take_damage(15)
+		src.take_damage(8)
 		src.check_for_internal_damage(list(MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST))
 		playsound(src.loc, 'sound/weapons/slash.ogg', 50, 1, -1)
 		user << "\red You slash at the armored suit!"
@@ -445,12 +451,12 @@
 			src.check_for_internal_damage(list(MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST))
 	return
 
-/obj/mecha/bullet_act(var/type) //wrapper
+/*obj/mecha/bullet_act(var/type) //wrapper
 
 	src.log_message("Hit by projectile.",1)
 	call((proc_res["dynbulletdamage"]||src), "dynbulletdamage")(type) //calls equipment
 	..()
-	return
+	return*/
 
 /obj/mecha/bullet_act(var/obj/item/projectile/Proj) //wrapper
 	src.log_message("Hit by projectile. Type: [Proj.name]([Proj.flag]).",1)

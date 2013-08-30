@@ -96,12 +96,12 @@
 
 		contraband += /obj/item/weapon/gun/projectile
 		//contraband += /obj/item/weapon/c_tube //Toy sword ey, not on beepskies watch
-		contraband += /obj/item/weapon/sword
+		contraband += /obj/item/weapon/melee/energy/sword
 		contraband += /obj/item/device/chameleon
 		contraband += /obj/item/device/hacktool
 		contraband += /obj/item/device/powersink
 		contraband += /obj/item/weapon/staff
-		contraband += /obj/item/weapon/device/cloak
+		contraband += /obj/item/device/cloak
 
 /obj/machinery/bot/secbot/examine()
 	set src in view()
@@ -671,7 +671,7 @@ Auto Patrol: []"},
 	if((src.idcheck) || (isnull(perp:wear_id)) && (!istype(perp:wear_id, /obj/item/weapon/card/id/syndicate))) //Syndicate IDs mess with electronics, beepsky won't suspect a thing
 
 
-		for(var/obj/item/weapon/device/cloak/S in perp)
+		for(var/obj/item/device/cloak/S in perp)
 			if(S.active)
 				arrestreasons += "Carrying activated cloaking device"
 				secure_arrest = 1
@@ -687,15 +687,15 @@ Auto Patrol: []"},
 			arrestreasons = list()
 			return 0
 
-		if(istype(perp:belt, /obj/item/weapon/gun) || istype(perp.belt, /obj/item/weapon/baton))
+		if(istype(perp:belt, /obj/item/weapon/gun) || istype(perp.belt, /obj/item/weapon/melee/baton))
 			arrestreasons += "Unauthorized weapon on belt [perp.belt.name]"
 			threatcount += 4
 
-		if(istype(perp.l_hand, /obj/item/weapon/gun) || istype(perp.l_hand, /obj/item/weapon/baton))
+		if(istype(perp.l_hand, /obj/item/weapon/gun) || istype(perp.l_hand, /obj/item/weapon/melee/baton))
 			arrestreasons += "Unauthorized weapon in left hand: [perp.l_hand.name]"
 			threatcount += 4
 
-		if(istype(perp.r_hand, /obj/item/weapon/gun) || istype(perp.r_hand, /obj/item/weapon/baton))
+		if(istype(perp.r_hand, /obj/item/weapon/gun) || istype(perp.r_hand, /obj/item/weapon/melee/baton))
 			arrestreasons += "Unauthorized weapon in right hand [perp.r_hand.name]"
 			threatcount += 4
 
@@ -796,7 +796,7 @@ Auto Patrol: []"},
 
 	new /obj/item/device/prox_sensor(Loc) // Dropping a prox sensor
 
-	var/obj/item/weapon/baton/B = new /obj/item/weapon/baton(Loc) // Dropping a baton, no charges
+	var/obj/item/weapon/melee/baton/B = new /obj/item/weapon/melee/baton(Loc) // Dropping a baton, no charges
 	B.charges = 0
 
 	if (prob(50)) // Dropping a robot left arm
@@ -874,7 +874,7 @@ Auto Patrol: []"},
 		src.overlays += image('aibots.dmi', "hs_arm")
 		del(W)
 
-	else if ((istype(W, /obj/item/weapon/baton)) && (src.build_step >= 3))
+	else if ((istype(W, /obj/item/weapon/melee/baton)) && (src.build_step >= 3))
 		src.build_step++
 		user << "You complete the Securitron! Beep boop."
 		var/obj/machinery/bot/secbot/S = new /obj/machinery/bot/secbot

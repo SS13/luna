@@ -12,7 +12,7 @@
 	new /obj/item/clothing/shoes/jackboots(src)
 	new /obj/item/clothing/head/helmet(src)
 	new /obj/item/clothing/glasses/sunglasses(src)
-	new /obj/item/weapon/baton(src)
+	new /obj/item/weapon/melee/baton(src)
 	new /obj/item/device/flash(src)
 	new /obj/item/weapon/storage/box/grenades/flashbang(src)
 	new /obj/item/clothing/head/helmet/Secsoft(src)
@@ -79,7 +79,7 @@
 	new /obj/item/weapon/storage/box/id( src )
 	new /obj/item/weapon/storage/box/grenades/flashbang(src)
 	new /obj/item/weapon/handcuffs(src)
-	new /obj/item/weapon/baton(src)
+	new /obj/item/weapon/melee/baton(src)
 	new /obj/item/clothing/gloves/black(src)
 	new /obj/item/weapon/storage/backpack/security(src)
 	return
@@ -98,7 +98,7 @@
 	new /obj/item/clothing/head/helmet/wardencap(src)
 	new /obj/item/weapon/storage/box/handcuff(src)
 	new /obj/item/weapon/handcuffs(src)
-	new /obj/item/weapon/baton(src)
+	new /obj/item/weapon/melee/baton(src)
 	new /obj/item/clothing/gloves/black(src)
 	new /obj/item/weapon/storage/backpack/security(src)
 	return

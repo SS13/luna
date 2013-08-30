@@ -520,6 +520,7 @@
 	New()
 		..()
 		reagents.add_reagent("nutriment", 3)
+		reagents.add_reagent("xenomicrobes", 3)
 		src.bitesize = 6
 
 /obj/item/weapon/reagent_containers/food/snacks/faggot
@@ -716,10 +717,6 @@
 		bitesize = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pie/calm
-	name = "banana cream pie"
-	desc = "Just like back home, on clown planet! HONK!"
-	icon_state = "pie"
-	trash = /obj/item/trash/plate
 	New()
 		..()
 		reagents.add_reagent("neurotoxin", 10)
@@ -837,6 +834,7 @@
 	New()
 		..()
 		reagents.add_reagent("nutriment", 10)
+		reagents.add_reagent("xenomicrobes", 3)
 		bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/wingfangchu
@@ -1732,6 +1730,7 @@
 	New()
 		..()
 		reagents.add_reagent("nutriment", 30)
+		reagents.add_reagent("xenomicrobes", 3)
 		bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/xenomeatbreadslice

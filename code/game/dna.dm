@@ -308,47 +308,47 @@
 
 
 	if(ismuton(NOBREATHBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M << "\blue You stop breathing"
 			M.mutations |= mNobreath
 	if(ismuton(REMOTEVIEWBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M << "\blue Your mind expands"
 			M.mutations |= mRemote
 	if(ismuton(REGENERATEBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M << "\blue You feel strange"
 			M.mutations |= mRegen
 	if(ismuton(INCREASERUNBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M << "\blue You feel quick"
 			M.mutations |= mRun
 	if(ismuton(REMOTETALKBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M << "\blue You expand your mind outwards"
 			M.mutations |= mRemotetalk
 	if(ismuton(MORPHBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M.mutations |= mMorph
 			M << "\blue Your skin feels strange"
 	if(ismuton(BLENDBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M.mutations |= mBlend
 			M << "\blue You feel alone"
 	if(ismuton(HALLUCINATIONBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M.mutations |= mHallucination
 			M << "\blue Your mind says 'Hello'"
 	if(ismuton(NOPRINTSBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M.mutations |= mFingerprints
 			M << "\blue Your fingers feel numb"
 	if(ismuton(SHOCKIMMUNITYBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M.mutations |= mShock
 			M << "\blue You feel strange"
 	if(ismuton(SMALLSIZEBLOCK,M))
-		if(prob(15))
+		if(inj || prob(30))
 			M << "\blue Your skin feels rubbery"
 			M.mutations |= mSmallsize
 
@@ -397,7 +397,7 @@
 		M.sdisabilities |= 1
 		M << "\red You can't seem to see anything."
 	if (isblockon(getblock(M.dna.struc_enzymes, TELEBLOCK,3),TELEBLOCK))
-		if(inj || prob(15))
+		if(inj || prob(20))
 			M << "\blue You feel smarter."
 			M.mutations |= 1
 	if (isblockon(getblock(M.dna.struc_enzymes, DEAFBLOCK,3),DEAFBLOCK))

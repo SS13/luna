@@ -757,7 +757,7 @@
 			user << "You empty the plant bag into the All-In-One grinder."
 
 		src.updateUsrDialog()
-		return 0
+		return 0*/
 
 	if (!is_type_in_list(O, blend_items) && !is_type_in_list(O, juice_items))
 		user << "Cannot refine into a reagent."
@@ -767,7 +767,7 @@
 	O.loc = src
 	holdingitems += O
 	src.updateUsrDialog()
-	return 0*/
+	return 0
 
 /obj/machinery/reagentgrinder/attack_paw(mob/user as mob)
 	return src.attack_hand(user)

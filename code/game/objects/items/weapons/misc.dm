@@ -26,7 +26,7 @@ DNA INJECTOR
 
 
 /obj/item/weapon/dnainjector/proc/inject(mob/M as mob)
-	M.radiation += rand(20,50)
+	M.radiation += rand(20,40)
 	if (dnatype == "ui")
 		if (!block) //isolated block?
 			if (ue) //unique enzymes? yes
@@ -46,12 +46,12 @@ DNA INJECTOR
 	if (dnatype == "se")
 		if (!block) //isolated block?
 			M.dna.struc_enzymes = dna
-			domutcheck(M, null)
-			uses--
 		else
 			M.dna.struc_enzymes = setblock(M.dna.struc_enzymes,block,dna,3)
-			domutcheck(M, null,1)
-			uses--
+
+		if(!type == "/obj/item/weapon/dnainjector") domutcheck(M, null, 1)
+		else domutcheck(M, null)
+		uses--
 	del(src)
 	return uses
 

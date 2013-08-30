@@ -130,7 +130,7 @@ var/supply_shuttle_points = 50
 	var/shuttleat = supply_shuttle_at_station ? SUPPLY_STATION_AREATYPE : SUPPLY_DOCK_AREATYPE
 
 	for(var/turf/T in get_area_turfs(shuttleat) )
-		var/crate = locate(/obj/structure/crate) in T
+		var/crate = locate(/obj/structure/closet/crate) in T
 		if (crate)
 			del(crate)
 			supply_shuttle_points += SUPPLY_POINTSPERCRATE

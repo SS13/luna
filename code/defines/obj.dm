@@ -314,6 +314,7 @@
 /obj/item/device/hacktool
 	name = "hacktool"
 	icon_state = "hacktool"
+	origin_tech = "magnets=2;engineering=5;syndicate=3"
 	flags = FPRINT | TABLEPASS | CONDUCT
 	force = 5.0
 	w_class = 2.0

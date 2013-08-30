@@ -694,18 +694,16 @@
 			H.loc = P
 			if((P.dir & (P.dir - 1)) || istype(P,/obj/structure/disposalpipe/crossZ) || istype(P,/obj/structure/disposalpipe/junction))
 				for(var/mob/M in H)
-					M.weakened += 2
-					if(prob(20))
-						M.paralysis += 2
-					if(istype(M,/mob/living/carbon/human) && prob(60))
+					if(prob(30)) M.weakened += 1
+					if(prob(10)) M.paralysis += 1
+					if(istype(M,/mob/living/carbon/human) && prob(40))
 						var/datum/organ/external/temp = pick(M:organs)
 						if (istype(temp, /datum/organ/external))
-							temp.take_damage(4, 0)
+							temp.take_damage(3, 0)
 							if(temp.name == "head")
-								M.paralysis += 4
+								M.paralysis += 2
 								M << "\red Your head smashes into a rogue piece of metal!"
 							else if(temp.name == "groin")
-								M.weakened += 4
 								M << "\red You're gonna remember that one in the morning!"
 							M:UpdateDamageIcon()
 							M:UpdateDamage()

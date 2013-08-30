@@ -847,7 +847,7 @@
 			mask = /obj/item/clothing/mask/gas/swat
 			over = /obj/item/clothing/suit/armor/swat
 			back2 = /obj/item/weapon/gun/projectile
-			back1 = /obj/item/weapon/device/cloak
+			back1 = /obj/item/device/cloak
 			back3 = /obj/item/weapon/rcd
 			back4 = /obj/item/device/hacktool
 		if("Overseer")

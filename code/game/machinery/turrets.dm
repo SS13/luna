@@ -461,10 +461,14 @@
 		if( !area_T || (area_T.type != protected_area.type) )
 			protected_area.Exited(T)
 			return 0 //If the guy is somehow not in the turret's area (teleportation), get them out the damn list. --NEO
+
+		var/turf/turf_T = get_turf(T)
+		if(turf_T.density) return 0 //Not shooting people in walls
+
 		if( iscarbon(T) )
 			var/mob/living/carbon/MC = T
-			if( !MC.stat )
-				if( !MC.lying || lasers )
+			if(!MC.stat)
+				if(!MC.lying || lasers)
 					return 1
 		else if( istype(T, /obj/mecha) )
 			var/obj/mecha/ME = T

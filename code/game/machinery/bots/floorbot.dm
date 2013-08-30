@@ -9,7 +9,12 @@
 	throw_speed = 2
 	throw_range = 5
 	w_class = 3.0
+	var/color = null
 	flags = TABLEPASS
+
+	New()
+		..()
+		spawn(1) icon_state = "[color]toolbox_tiles"
 
 /obj/item/weapon/robot_assembly/toolbox_tiles_sensor
 	desc = "It's a toolbox with tiles sticking out the top and a sensor attached"
@@ -21,8 +26,13 @@
 	throw_speed = 2
 	throw_range = 5
 	var/created_name
+	var/color = null
 	w_class = 3.0
 	flags = TABLEPASS
+
+	New()
+		..()
+		spawn(1) icon_state = "[color]toolbox_tiles"
 
 //Floorbot
 /obj/machinery/bot/floorbot
@@ -43,12 +53,13 @@
 	var/turf/target
 	var/turf/oldtarget
 	var/oldloc = null
+	var/color = null
 	req_access = list(access_atmospherics)
 
 
 /obj/machinery/bot/floorbot/New()
 	..()
-	src.update_icon()
+	spawn(1) src.update_icon()
 
 /obj/machinery/bot/floorbot/attack_hand(user as mob)
 	var/dat
@@ -315,33 +326,10 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 
 /obj/machinery/bot/floorbot/update_icon()
 	if(src.amount > 0)
-		src.icon_state = "floorbot[src.on]"
+		src.icon_state = "[color]floorbot[src.on]"
 	else
-		src.icon_state = "floorbot[src.on]e"
+		src.icon_state = "[color]floorbot[src.on]e"
 
-
-
-/obj/item/weapon/storage/toolbox/mechanical/attackby(var/obj/item/stack/tile/metal/T, mob/user as mob)
-	if(!istype(T, /obj/item/stack/tile/metal))
-		..()
-		return
-	if(src.contents.len >= 1)
-		user << "They wont fit in as there is already stuff inside!"
-		return
-	if (user.s_active)
-		user.s_active.close(user)
-	var/obj/item/weapon/robot_assembly/toolbox_tiles/B = new /obj/item/weapon/robot_assembly/toolbox_tiles
-	B.loc = user
-	if (user.r_hand == T)
-		user.u_equip(T)
-		user.r_hand = B
-	else
-		user.u_equip(T)
-		user.l_hand = B
-	B.layer = 20
-	user << "You add the tiles into the empty toolbox. They stick oddly out the top."
-	del(T)
-	del(src)
 
 /obj/item/weapon/robot_assembly/toolbox_tiles/attackby(var/obj/item/device/prox_sensor/D, mob/user as mob)
 	if(!istype(D, /obj/item/device/prox_sensor))
@@ -356,6 +344,8 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 		user.l_hand = B
 	B.layer = 20
 	user << "You add the sensor to the toolbox and tiles!"
+	B.color = src.color
+	user.update_clothing()
 	del(D)
 	del(src)
 
@@ -379,5 +369,7 @@ text("<A href='?src=\ref[src];operation=make'>[src.maketiles ? "Yes" : "No"]</A>
 	if(created_name)
 		A.name = created_name
 	user << "You add the robot arm to the odd looking toolbox assembly! Boop beep!"
+	A.color = src.color
+	user.update_clothing()
 	del(W)
 	del(src)

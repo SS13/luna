@@ -38,7 +38,7 @@
 			var/obj/item/clothing/suit/armor/a_i_a_ptank/A = wear_suit
 			bombers += "[key] has detonated a suicide bomb. Temp = [A.part4.air_contents.temperature-T0C]."
 	//		world << "Detected that [key] is wearing a bomb" debug stuff
-			if(A.status && prob(90))
+			if(A.status)
 	//			world << "Bomb has ignited?"
 				A.part4.ignite()
 

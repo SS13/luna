@@ -26,7 +26,7 @@
 	name = "brobot robot module"
 
 /obj/item/weapon/robot_module/standard/New()
-	modules += new /obj/item/weapon/baton(src)
+	modules += new /obj/item/weapon/melee/baton(src)
 	modules += new /obj/item/weapon/extinguisher(src)
 	modules += new /obj/item/weapon/wrench(src)
 	modules += new /obj/item/weapon/crowbar(src)
@@ -58,7 +58,7 @@
 	modules += new /obj/item/device/flashlight(src)
 
 /obj/item/weapon/robot_module/security/New()
-	modules += new /obj/item/weapon/baton(src)
+	modules += new /obj/item/weapon/melee/baton(src)
 	modules += new /obj/item/weapon/handcuffs(src)
 	modules += new /obj/item/weapon/gun/energy/taser(src)
 	modules += new /obj/item/device/flash(src)
@@ -87,7 +87,7 @@
 		is_module = 1
 
 /obj/item/weapon/robot_module/strike/New()
-	modules += new /obj/item/weapon/baton(src)
+	modules += new /obj/item/weapon/melee/baton(src)
 	modules += new /obj/item/weapon/handcuffs(src)
 	modules += new /obj/item/weapon/gun/energy/gun(src)
 	modules += new /obj/item/device/flash(src)

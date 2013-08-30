@@ -30,6 +30,9 @@
 /obj/item/weapon/reagent_containers/attack(mob/M as mob, mob/user as mob, def_zone)
 	return
 
+/obj/item/weapon/reagent_containers/attackby()
+	return
+
 /obj/item/weapon/reagent_containers/afterattack(obj/target, mob/user , flag)
 	return
 

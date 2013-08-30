@@ -85,8 +85,8 @@
 	if (!( flag ))
 		for(var/mob/living/carbon/M in oviewers(3, null))
 			if (prob(50))
-				if (locate(/obj/item/weapon/device/cloak, M))
-					for(var/obj/item/weapon/device/cloak/S in M)
+				if (locate(/obj/item/device/cloak, M))
+					for(var/obj/item/device/cloak/S in M)
 						S.active = 0
 						S.icon_state = "shield0"
 			if (M.client)

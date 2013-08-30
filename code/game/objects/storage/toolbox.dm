@@ -12,6 +12,35 @@
 	w_class = 4.0
 	origin_tech = "combat=1"
 
+/obj/item/weapon/storage/toolbox/attackby(var/obj/item/stack/tile/metal/T, mob/user as mob)
+	if(!istype(T))
+		..()
+		return
+	if(istype(src, /obj/item/weapon/storage/toolbox/syndicate)) return
+
+	if(src.contents.len >= 1)
+		user << "They wont fit in as there is already stuff inside!"
+		return
+	if (user.s_active)
+		user.s_active.close(user)
+	var/obj/item/weapon/robot_assembly/toolbox_tiles/B = new /obj/item/weapon/robot_assembly/toolbox_tiles
+	B.loc = user
+	if (user.r_hand == T)
+		user.u_equip(T)
+		user.r_hand = B
+	else
+		user.u_equip(T)
+		user.l_hand = B
+	B.layer = 20
+	user << "You add the tiles into the empty toolbox. They stick oddly out the top."
+
+	if(istype(src, /obj/item/weapon/storage/toolbox/empty) || istype(src, /obj/item/weapon/storage/toolbox/emergency)) B.color = "r"
+	else if (istype(src, /obj/item/weapon/storage/toolbox/electrical)) B.color = "y"
+	user.update_clothing()
+	del(T)
+	del(src)
+
+
 /obj/item/weapon/storage/toolbox/New()
 	..()
 	if (src.type == /obj/item/weapon/storage/toolbox)

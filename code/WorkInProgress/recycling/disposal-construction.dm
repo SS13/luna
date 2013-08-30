@@ -7,7 +7,7 @@
 	icon = 'disposal.dmi'
 	icon_state = "conpipe-s"
 	anchored = 0
-	density = 1
+	density = 0
 	pressure_resistance = 5*ONE_ATMOSPHERE
 	m_amt = 1850
 	level = 2
@@ -44,12 +44,15 @@
 				dpdir = dir
 			if(6)
 				base_state = "disposal"
+				density = 1
 			if(7)
 				base_state = "outlet"
 				dpdir = dir
+				density = 1
 			if(8)
 				base_state = "intake"
 				dpdir = dir
+				density = 1
 
 
 		icon_state = "con[base_state]"
@@ -156,11 +159,7 @@
 		if(istype(I, /obj/item/weapon/wrench) && !ispipe)
 			if(anchored)
 				anchored = 0
-				if(ispipe)
-					level = 2
-					density = 0
-				else
-					density = 1
+				density = 1
 				user << "You detach the [nicetype] from the underfloor."
 			else
 				anchored = 1

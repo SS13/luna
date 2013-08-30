@@ -172,9 +172,9 @@
 			tmob.loc = oldloc
 			now_pushing = 0
 			return
-		if(istype(equipped(), /obj/item/weapon/baton)) // add any other item paths you think are necessary
+		if(istype(equipped(), /obj/item/weapon/melee/baton)) // add any other item paths you think are necessary
 			if(loc:ul_Luminosity() < 3 || blinded)
-				var/obj/item/weapon/baton/W = equipped()
+				var/obj/item/weapon/melee/baton/W = equipped()
 				if (world.time > lastDblClick+2)
 					lastDblClick = world.time
 					if(((prob(40)) || (prob(95) && mutations & CLUMSY)) && W.status)
@@ -262,7 +262,7 @@
 			S.active = 0
 			S.icon_state = "shield0"
 
-	for(var/obj/item/weapon/device/cloak/S in src)
+	for(var/obj/item/device/cloak/S in src)
 		if (S.active)
 			shielded = 1
 			S.active = 0
@@ -428,48 +428,62 @@
 	return*/
 
 /mob/living/carbon/human/ex_act(severity)
-	flick("flash", flash)
+	if(!blinded)
+		flick("flash", flash)
+
+// /obj/item/clothing/suit/bomb_suit(src)
+// /obj/item/clothing/head/bomb_hood(src)
 
 	if (stat == 2 && client)
-		gib(1)
+		gib()
 		return
 
 	else if (stat == 2 && !client)
-		gibs(loc, virus)
+		gibs(loc, viruses)
 		del(src)
 		return
 
 	var/shielded = 0
-	for(var/obj/item/device/shield/S in src)
-		if (S.active)
-			shielded = 1
-			break
-
 	var/b_loss = null
 	var/f_loss = null
 	switch (severity)
 		if (1.0)
 			b_loss += 500
-			gib(1)
-			return
+			if (!prob(getarmor(null, "bomb")))
+				gib()
+				return
+			else
+				var/atom/target = get_edge_target_turf(src, get_dir(src, get_step_away(src, src)))
+				throw_at(target, 200, 4)
+			//return
+//				var/atom/target = get_edge_target_turf(user, get_dir(src, get_step_away(user, src)))
+				//user.throw_at(target, 200, 4)
 
 		if (2.0)
 			if (!shielded)
-				b_loss += 50
+				b_loss += 60
 
-			f_loss += 50
+			f_loss += 60
+
+			if (prob(getarmor(null, "bomb")))
+				b_loss = b_loss/1.5
+				f_loss = f_loss/1.5
 
 			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 30
 				ear_deaf += 120
+			if (prob(70) && !shielded)
+				Paralyse(10)
 
 		if(3.0)
 			b_loss += 30
-			if (prob(50) && !shielded)
-				paralysis += 10
+			if (prob(getarmor(null, "bomb")))
+				b_loss = b_loss/2
 			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 15
 				ear_deaf += 60
+			if (prob(50) && !shielded)
+				Paralyse(10)
 
 	for(var/organ in organs)
 		var/datum/organ/external/temp = organs[text("[]", organ)]
@@ -1626,7 +1640,7 @@
 							if("uniform")
 								message = text("\red <B>[] is trying to take off \a [] from []'s body!</B>", source, target.w_uniform, target)
 							if("pockets")
-								for(var/obj/item/weapon/mousetrap/MT in  list(target.l_store, target.r_store))
+								for(var/obj/item/device/assembly/mousetrap/MT in  list(target.l_store, target.r_store))
 									if(MT.armed)
 										for(var/mob/O in viewers(target, null))
 											if(O == source)
