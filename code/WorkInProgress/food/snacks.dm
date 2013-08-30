@@ -26,7 +26,6 @@
 /obj/item/weapon/reagent_containers/food/snacks
 	name = "snack"
 	desc = "yummy"
-	icon = 'cooking.dmi'
 	icon_state = null
 	var/amount = 3   //amount of bites
 	var/edible = 1   //can you eat this?
@@ -57,7 +56,6 @@
 						reagents.trans_to(M, reagents.total_volume)
 				src.amount--
 				M.nutrition += src.heal_amt * 10
-				M.poo += 0.1
 				src.heal(M)
 				playsound(M.loc,'eatfood.ogg', rand(10,50), 1)
 				if(!src.amount)
@@ -78,7 +76,6 @@
 						reagents.trans_to(M, reagents.total_volume)
 				src.amount--
 				M.nutrition += src.heal_amt * 10
-				M.poo += 0.1
 				src.heal(M)
 				playsound(M.loc, 'eatfood.ogg', rand(10,50), 1)
 				if(!src.amount)
@@ -141,7 +138,7 @@
 /obj/item/weapon/reagent_containers/food/snacks/noodles
 	name = "noodles"
 	desc = "Uncooked spaghetti."
-	icon_state = "noodles"
+	icon_state = "spagetti"
 	edible = 0
 
 /obj/item/weapon/reagent_containers/food/snacks/doughslice
@@ -274,12 +271,6 @@
 	amount = 3
 	heal_amt = 1
 
-/obj/item/weapon/reagent_containers/food/snacks/pie
-	name = "custard pie"
-	desc = "It smells delicious. You just want to plant your face in it."
-	icon_state = "pie"
-	amount = 3
-
 /obj/item/weapon/reagent_containers/food/snacks/waffles
 	name = "waffles"
 	desc = "Sweet waffles."
@@ -383,14 +374,14 @@
 /obj/item/weapon/reagent_containers/food/snacks/steak
 	name = "steak"
 	desc = "A juicy meat steak."
-	icon_state = "steak"
+	icon_state = "meatstake"
 	amount = 3
 	heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/ssteak
 	name = "sauced steak"
 	desc = "A sauced meat steak."
-	icon_state = "ssteak"
+	icon_state = "meatstake"
 	amount = 3
 	heal_amt = 3
 
@@ -496,6 +487,8 @@
 	icon_state = "pieapple"
 	amount = 3
 	heal_amt = 3
+
+
 
 /obj/item/weapon/reagent_containers/food/snacks/piepotato
 	name = "potato pie"
@@ -1038,7 +1031,6 @@
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/salamistick
 	name = "salami stick"
 	desc = "Don't choke on this, find a knife."
-	icon = 'cooking.dmi'
 	icon_state = "salamistick3"
 	edible = 0
 	amount = 5
@@ -1047,7 +1039,7 @@
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/bigcheese
 	name = "cut of cheese"
 	desc = "Cut it with a knife."
-	icon = 'cooking.dmi'
+	icon = 'food.dmi'
 	icon_state = "bigcheese"
 	heal_amt = 3
 	amount = 1
@@ -1055,7 +1047,6 @@
 // *** Now icons for the stuff which goes on top of the bread slice ***
 
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop
-	icon = 'cooking.dmi'
 	var/stateontop = "salami3" //state when ontop a sandvich
 
 // a slice of bread loaf
@@ -1211,10 +1202,10 @@
 		overlays += image(W.icon,icon_state = W.icon_state)
 		user << "You put [W] ontop of the [src]"
 		src.heal_amt++
-	updateicon()
+	update_icon()
 
 
-/obj/item/weapon/reagent_containers/food/snacks/breadsys/bread/proc/updateicon()
+/obj/item/weapon/reagent_containers/food/snacks/breadsys/bread/update_icon()
 	src.overlays = null
 	var/num = amount
 	for(var/obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/X in src)
@@ -1267,27 +1258,6 @@
 	heal_amt = 2
 	heal(var/mob/M)
 		..()
-
-/obj/item/weapon/reagent_containers/food/snacks/donkpocket
-	name = "donk-pocket"
-	desc = "The food of choice for the seasoned traitor."
-	icon_state = "donkpocket"
-	heal_amt = 1
-	amount = 1
-	var/warm = 0
-	heal(var/mob/M)
-		if(src.warm && M.reagents)
-			M.reagents.add_reagent("tricordrazine",15)
-		else
-			M << "\red It's just not good enough cold.."
-		..()
-
-	proc/cooltime()
-		if (src.warm)
-			spawn( 4200 )
-				src.warm = 0
-				src.name = "donk-pocket"
-		return
 
 /obj/item/weapon/reagent_containers/food/snacks/humanburger
 	name = "-burger"

@@ -25,7 +25,64 @@
 	if(name == "alien") name = text("alien ([rand(1, 1000)])")
 	real_name = name
 
+/mob/living/carbon/alien/humanoid/attack_slime(mob/living/carbon/slime/M as mob)
+	if (!ticker)
+		M << "You cannot attack people before the game has started."
+		return
 
+	if(M.Victim) return // can't attack while eating!
+
+	if (health > -100)
+
+		for(var/mob/O in viewers(src, null))
+			if ((O.client && !( O.blinded )))
+				O.show_message(text("\red <B>The [M.name] glomps []!</B>", src), 1)
+
+		var/damage = rand(1, 3)
+
+		if(istype(M, /mob/living/carbon/slime/adult))
+			damage = rand(10, 30)
+		else
+			damage = rand(5, 25)
+
+		adjustBruteLoss(damage)
+
+		if(M.powerlevel > 0)
+			var/stunprob = 10
+			var/power = M.powerlevel + rand(0,3)
+
+			switch(M.powerlevel)
+				if(1 to 2) stunprob = 20
+				if(3 to 4) stunprob = 30
+				if(5 to 6) stunprob = 40
+				if(7 to 8) stunprob = 60
+				if(9) 	   stunprob = 70
+				if(10) 	   stunprob = 95
+
+			if(prob(stunprob))
+				M.powerlevel -= 3
+				if(M.powerlevel < 0)
+					M.powerlevel = 0
+
+				for(var/mob/O in viewers(src, null))
+					if ((O.client && !( O.blinded )))
+						O.show_message(text("\red <B>The [M.name] has shocked []!</B>", src), 1)
+
+				Weaken(power)
+				if (stuttering < power)
+					stuttering = power
+				Stun(power)
+
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+				s.set_up(5, 1, src)
+				s.start()
+
+				if (prob(stunprob) && M.powerlevel >= 8)
+					adjustFireLoss(M.powerlevel * rand(6,10))
+
+		updatehealth()
+
+	return
 
 /mob/living/carbon/alien/humanoid/movement_delay()
 	var/tally = 0
@@ -45,29 +102,6 @@
 				stat("Distribution Pressure", internal.distribute_pressure)
 
 		stat(null, "Plasma Stored: [toxloss]")
-
-/mob/living/carbon/alien/humanoid/bullet_act(flag, A as obj)
-	var/shielded = 0
-	for(var/obj/item/device/shield/S in src)
-		if (S.active)
-			if (flag == "bullet")
-				return
-			shielded = 1
-			S.active = 0
-			S.icon_state = "shield0"
-
-	for(var/obj/item/weapon/cloaking_device/S in src)
-		if (S.active)
-			shielded = 1
-			S.active = 0
-			S.icon_state = "shield0"
-
-	if (shielded && flag != "bullet")
-		src << "\blue Your shield was disturbed by a laser!"
-		if(paralysis <= 12)	paralysis = 12
-		updatehealth()
-
-	return ..(flag, A)
 
 /mob/living/carbon/alien/humanoid/ex_act(severity)
 	flick("flash", flash)
@@ -226,7 +260,7 @@
 	overlays = null
 
 	if(buckled)
-		if(istype(buckled, /obj/stool/bed))
+		if(istype(buckled, /obj/structure/stool/bed)  && !istype(buckled, /obj/structure/stool/bed/chair))
 			lying = 1
 		else
 			lying = 0
@@ -345,7 +379,7 @@
 			shielded = 1
 			break
 
-	for (var/obj/item/weapon/cloaking_device/S in src)
+	for (var/obj/item/weapon/device/cloak/S in src)
 		if (S.active)
 			shielded = 2
 			break
@@ -386,6 +420,8 @@
 	return
 
 /mob/living/carbon/alien/humanoid/attack_paw(mob/M as mob)
+	..()
+
 	if (M.a_intent == "help")
 		sleeping = 0
 		resting = 0
@@ -406,31 +442,23 @@
 	return
 
 /mob/living/carbon/alien/humanoid/attack_hand(mob/living/carbon/human/M as mob)
-	if (!ticker)
-		M << "You cannot attack people before the game has started."
-		return
+	..()
 
-	if (istype(loc, /turf) && istype(loc.loc, /area/start))
-		M << "No attacking people at spawn, you jackass."
-		return
+	if(M.gloves && istype(M.gloves,/obj/item/clothing/gloves))
+		var/obj/item/clothing/gloves/G = M.gloves
+		if(G.cell)
+			if(M.a_intent == "harm")//Stungloves.
+				if(G.cell.charge >= 2500)
+					G.cell.charge -= 2500
+					visible_message("<span class='danger'>[src] has been touched with the stun gloves by [M]!</span>")
 
-/*Removed stungloves as they are dodgy weapons :3. -CN
-	if ((M.gloves && M.gloves.elecgen == 1 && M.a_intent == "hurt") /*&& (!istype(src:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
-		if(M.gloves.uses > 0)
-			M.gloves.uses--
-			if (weakened < 5)
-				weakened = 5
-			if (stuttering < 5)
-				stuttering = 5
-			if (stunned < 5)
-				stunned = 5
-			for(var/mob/O in viewers(src, null))
-				if (O.client)
-					O.show_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>", 1, "\red You hear someone fall", 2)
-		else
-			M.gloves.elecgen = 0
-			M << "\red Not enough charge! "
-			return*/
+					Stun(10)
+					Weaken(10)
+
+					return 1
+				else
+					M << "<span class='notice'>Not enough charge!</span>"
+				return
 
 	if (M.a_intent == "help")
 		if (health > 0)
@@ -475,10 +503,10 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.elecgen == 1))
+			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.cell))
 				var/damage = rand(1, 9)
 				if (prob(90))
-					if (M.mutations & 8)
+					if (M.mutations & HULK)
 						damage += 5
 						spawn(0)
 							paralysis += 1
@@ -503,7 +531,7 @@
 						O.show_message(text("\red <B>[] has attempted to punch []!</B>", M, src), 1)
 					return
 			else
-				if (!( lying ) && !(M.gloves && M.gloves.elecgen == 1))
+				if (!( lying ) && !(M.gloves && M.gloves.cell))
 					var/randn = rand(1, 100)
 					if (randn <= 25)
 						weakened = 2

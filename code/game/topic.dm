@@ -80,18 +80,7 @@ proc/GetMapInfo()
 	var/obj/mapinfo/M = locate()
 	world << M.name
 	world << M.mapname
-proc/replacetext(haystack, needle, replace)
-	if(!haystack || !needle || !replace)
-		return
-	var
-		needleLen = length(needle)
-		replaceLen = length(replace)
-		pos = findtext(haystack, needle)
-	while(pos)
-		haystack = copytext(haystack, 1, pos) + \
-			replace + copytext(haystack, pos+needleLen)
-		pos = findtext(haystack, needle, pos+replaceLen)
-	return haystack
+
 proc/file2list(A)
 	var/text = file2text(A)
 	var/list/lines = list()

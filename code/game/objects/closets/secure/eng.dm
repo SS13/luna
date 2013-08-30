@@ -41,10 +41,10 @@
 	new /obj/item/device/t_scanner(src)
 	new /obj/item/device/t_scanner(src)
 	new /obj/item/device/t_scanner(src)
-	new /obj/item/weapon/CableCoil/power(src)
-	new /obj/item/weapon/CableCoil/power(src)
-	new /obj/item/weapon/CableCoil/power(src)
-	new /obj/item/weapon/CableCoil/power(src)
+	new /obj/item/weapon/cable_coil(src, 30)
+	new /obj/item/weapon/cable_coil(src, 30)
+	new /obj/item/weapon/cable_coil(src, 30)
+	new /obj/item/weapon/cable_coil(src, 30)
 	return
 
 /obj/secure_closet/engweld/New()

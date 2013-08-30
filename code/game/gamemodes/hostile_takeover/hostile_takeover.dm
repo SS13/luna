@@ -50,11 +50,11 @@
 
 
 /datum/game_mode/hostile/post_setup()
-	for(var/obj/landmark/hostile_spawn/S in world)
+	for(var/obj/effect/landmark/hostile_spawn/S in world)
 		hostile_spawns += S.loc
 		del(S)
 
-	for(var/obj/landmark/crew_spawn/D in world)
+	for(var/obj/effect/landmark/crew_spawn/D in world)
 		crew_spawns += D.loc
 		del(D)
 
@@ -96,9 +96,9 @@
 
 	return
 
-obj/landmark/hostile_spawn
+/obj/effect/landmark/hostile_spawn
 	name = "Hostile-Spawn"
-obj/landmark/crew_spawn
+/obj/effect/landmark/crew_spawn
 	name = "Crew-Prison"
 
 /datum/game_mode/hostile/proc/equip_hostile(mob/living/carbon/human/synd_mob, radio_freq)
@@ -114,10 +114,10 @@ obj/landmark/crew_spawn
 	synd_mob.equip_if_possible(new /obj/item/clothing/head/helmet/swat(synd_mob), synd_mob.slot_head)
 
 	synd_mob.equip_if_possible(new /obj/item/weapon/storage/backpack(synd_mob), synd_mob.slot_back)
-	synd_mob.equip_if_possible(new /obj/item/weapon/reagent_containers/pill/tox(synd_mob), synd_mob.slot_in_backpack)
+	synd_mob.equip_if_possible(new /obj/item/weapon/reagent_containers/pill/cyanide(synd_mob), synd_mob.slot_in_backpack)
 	synd_mob.equip_if_possible(new /obj/item/weapon/handcuffs(synd_mob), synd_mob.slot_in_backpack)
-	synd_mob.equip_if_possible(new /obj/item/weapon/gun/energy/general(synd_mob), synd_mob.slot_in_backpack)
-	synd_mob.equip_if_possible(new /obj/item/weapon/gun/revolver(synd_mob), synd_mob.slot_in_backpack)
+	synd_mob.equip_if_possible(new /obj/item/weapon/gun/energy/gun(synd_mob), synd_mob.slot_in_backpack)
+	synd_mob.equip_if_possible(new /obj/item/weapon/gun/projectile(synd_mob), synd_mob.slot_in_backpack)
 	synd_mob.equip_if_possible(new /obj/item/weapon/baton(synd_mob), synd_mob.slot_in_backpack)
 
 	synd_mob.update_clothing()

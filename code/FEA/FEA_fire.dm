@@ -178,6 +178,8 @@ obj/fire/proc/process()
 		if(prob(50))
 			continue
 		var/turf/simulated/floor/TS = get_step(src,dirs)
+		if(!istype(TS))
+			continue
 		if(!TS || !TS.air)
 			continue
 		if(locate(/obj/fire) in TS)

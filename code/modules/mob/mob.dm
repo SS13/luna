@@ -56,7 +56,6 @@
 /mob/var/disabilities = 0
 /mob/var/atom/movable/pulling = null
 /mob/var/stat = 0.0
-#define STAT_ALIVE 0
 #define STAT_ASLEEP 1
 #define STAT_DEAD 2
 /mob/var/next_move = null
@@ -100,8 +99,6 @@
 /mob/var/is_jittery = 0
 /mob/var/jitteriness = 0
 /mob/var/charges = 0.0
-/mob/var/urine = 0.0
-/mob/var/poo = 0.0
 /mob/var/nutrition = 1600 //dun break
 /mob/var/paralysis = 0.0
 /mob/var/stunned = 0.0
@@ -117,7 +114,7 @@
 /mob/var/lastKnownIP = null
 /mob/var/lastKnownCkey = null
 /mob/var/lastKnownID = null
-/mob/var/obj/stool/buckled = null
+/mob/var/obj/structure/stool/buckled = null
 /mob/var/obj/item/weapon/handcuffs/handcuffed = null
 /mob/var/obj/item/l_hand = null
 /mob/var/obj/item/r_hand = null
@@ -205,46 +202,7 @@
 
 	usr.show_message(t, 1)
 
-// fun if you want to typecast humans/monkeys/etc without writing long path-filled lines.
-/proc/ishuman(A)
-	if(A && istype(A, /mob/living/carbon/human))
-		return 1
-	return 0
 
-/proc/isalien(A)
-	if(A && istype(A, /mob/living/carbon/alien))
-		return 1
-	return 0
-
-/proc/ismonkey(A)
-	if(A && istype(A, /mob/living/carbon/monkey))
-		return 1
-	return 0
-
-/proc/isrobot(A)
-	if(A && istype(A, /mob/living/silicon/robot))
-		return 1
-	return 0
-
-/proc/isAI(A)
-	if(A && istype(A, /mob/living/silicon/ai))
-		return 1
-	return 0
-
-/proc/iscarbon(A)
-	if(A && istype(A, /mob/living/carbon))
-		return 1
-	return 0
-
-/proc/issilicon(A)
-	if(A && istype(A, /mob/living/silicon))
-		return 1
-	return 0
-proc/iszombie(A)
-	if(A && istype(A, /mob/living/carbon/human))
-		if(A:zombie)
-			return 1
-	return 0
 /proc/hsl2rgb(h, s, l)
 	return
 mob/verb/turnnorth()
@@ -259,6 +217,7 @@ mob/verb/turneast()
 mob/verb/turnwest()
 	set hidden = 1
 	dir = WEST
+
 /proc/ran_zone(zone, probability)
 
 	if (probability == null)
@@ -1285,11 +1244,6 @@ mob/verb/turnwest()
 		hands.dir = SOUTH
 	return
 
-/mob/proc/drop_item_v()
-	if (stat == 0)
-		drop_item()
-	return
-
 /mob/proc/drop_from_slot(var/obj/item/item)
 	if(!item)
 		return
@@ -1307,55 +1261,10 @@ mob/verb/turnwest()
 	T.Entered(item)
 	return
 
-/mob/proc/drop_item()
-	var/obj/item/W = equipped()
-	if (W)
-		u_equip(W)
-		if (client)
-			client.screen -= W
-		if (W)
-			W.loc = loc
-			W.dropped(src)
-			if (W)
-				W.layer = initial(W.layer)
-		var/turf/T = get_turf(loc)
-		T.Entered(W)
-	return
-
-/mob/proc/before_take_item(var/obj/item/item)
-	item.loc = null
-	item.layer = initial(item.layer)
-	u_equip(item)
-	//if (client)
-	//	client.screen -= item
-	//update_clothing()
-	return
-
-/mob/proc/get_active_hand()
-	if (hand)
-		return l_hand
-	else
-		return r_hand
-
-/mob/proc/get_inactive_hand()
-	if ( ! hand)
-		return l_hand
-	else
-		return r_hand
-
 /mob/proc/put_in_hand(var/obj/item/I)
 	if(!I) return
 	I.loc = src
 	if (hand)
-		l_hand = I
-	else
-		r_hand = I
-	I.layer = 20
-	update_clothing()
-
-/mob/proc/put_in_inactive_hand(var/obj/item/I)
-	I.loc = src
-	if (!hand)
 		l_hand = I
 	else
 		r_hand = I
@@ -1389,20 +1298,6 @@ mob/verb/turnwest()
 	user << browse(dat, text("window=mob[];size=325x500", name))
 	onclose(user, "mob[name]")
 	return
-
-/mob/proc/u_equip(W as obj)
-	if (W == r_hand)
-		r_hand = null
-	else if (W == l_hand)
-		l_hand = null
-	else if (W == handcuffed)
-		handcuffed = null
-	else if (W == back)
-		back = null
-	else if (W == wear_mask)
-		wear_mask = null
-
-	update_clothing()
 
 /mob/proc/ret_grab(obj/list_container/mobl/L as obj, flag)
 	if ((!( istype(l_hand, /obj/item/weapon/grab) ) && !( istype(r_hand, /obj/item/weapon/grab) )))
@@ -1756,67 +1651,21 @@ mob/verb/turnwest()
 	if(LinkBlocked(usr.loc,loc)) return
 	show_inv(usr)
 
-/mob/bullet_act(flag)
-	if (flag == PROJECTILE_BULLET)
-		if (istype(src, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = src
-			var/dam_zone = pick("chest", "chest", "chest", "groin", "head")
-			if (H.organs[text("[]", dam_zone)])
-				var/datum/organ/external/affecting = H.organs[text("[]", dam_zone)]
-				if (affecting.take_damage(51, 0))
-					H.UpdateDamageIcon()
-				else
-					H.UpdateDamage()
-		else
-			bruteloss += 51
-		updatehealth()
-		if (prob(80) && weakened <= 2)
-			weakened = 2
-	else if (flag == PROJECTILE_TASER)
-		if (prob(75) && stunned <= 10)
-			stunned = 10
-		else
-			weakened = 10
-	else if(flag == PROJECTILE_LASER)
-		if (istype(src, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = src
-			var/dam_zone = pick("chest", "chest", "chest", "groin", "head")
-			if (H.organs[text("[]", dam_zone)])
-				var/datum/organ/external/affecting = H.organs[text("[]", dam_zone)]
-				if (affecting.take_damage(20, 0))
-					H.UpdateDamageIcon()
-				else
-					H.UpdateDamage()
-		else
-			bruteloss += 20
-		updatehealth()
-		if (prob(25) && stunned <= 2)
-			stunned = 2
-	else if(flag == PROJECTILE_PULSE)
-		if (istype(src, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = src
-			var/dam_zone = pick("chest", "chest", "chest", "groin", "head")
-			if (H.organs[text("[]", dam_zone)])
-				var/datum/organ/external/affecting = H.organs[text("[]", dam_zone)]
-				if (affecting.take_damage(40, 0))
-					H.UpdateDamageIcon()
-				else
-					H.UpdateDamage()
-		else
-			bruteloss += 40
-		updatehealth()
-		if (prob(50))
-			stunned = min(stunned, 5)
-	else if(flag == PROJECTILE_BOLT)
-		toxloss += 3
-		radiation += 100
-		updatehealth()
-		stuttering += 5
-		drowsyness += 5
-		if (prob(10))
-			weakened = min(weakened, 2)
-	return
+/mob/living/bullet_act(obj/item/projectile/P, def_zone)
+	var/obj/item/weapon/device/cloak/C = locate((/obj/item/weapon/device/cloak) in src)
+	if(C && C.active)
+		C.attack_self(src)//Should shut it off
+		src << "<span class='notice'>Your [C] was disrupted!</span>"
+		Stun(2)
 
+	var/absorb = run_armor_check(def_zone, P.flag)
+	if(absorb >= 2)
+		P.on_hit(src,2)
+		return 2
+	if(!P.nodamage)
+		apply_damage((P.damage/(absorb+1)), P.damage_type, def_zone)
+	P.on_hit(src, absorb)
+	return absorb
 
 /atom/movable/Move(NewLoc, direct)
 	if (direct & direct - 1)
@@ -1992,7 +1841,7 @@ mob/verb/turnwest()
 		var/j_pack = 0
 		if ((istype(mob.loc, /turf/space)))
 			if (!( mob.restrained() ))
-				if (!( (locate(/obj/grille) in oview(1, mob)) || (locate(/turf/simulated) in oview(1, mob)) || (locate(/obj/lattice) in oview(1, mob)) ))
+				if (!( (locate(/obj/structure/grille) in oview(1, mob)) || (locate(/turf/simulated) in oview(1, mob)) || (locate(/obj/structure/lattice) in oview(1, mob)) ))
 					if (istype(mob.back, /obj/item/weapon/tank/jetpack))
 						var/obj/item/weapon/tank/jetpack/J = mob.back
 						j_pack = J.allow_thrust(0.01, mob)
@@ -2149,7 +1998,7 @@ mob/verb/turnwest()
 /mob/proc/can_use_hands()
 	if(handcuffed)
 		return 0
-	if(buckled && istype(buckled, /obj/stool/bed)) // buckling does not restrict hands
+	if(buckled && istype(buckled, /obj/structure/stool/bed) && !istype(buckled, /obj/structure/stool/bed/chair)) // buckling does not restrict hands
 		return 0
 	return ..()
 
@@ -2280,16 +2129,7 @@ mob/verb/turnwest()
 	return L
 
 /mob/proc/check_contents_for(A)
-	var/list/L = list()
-	L += contents
-	for(var/obj/item/weapon/storage/S in contents)
-		L += S.return_inv()
-	for(var/obj/item/weapon/secstorage/S in contents)
-		L += S.return_inv()
-	for(var/obj/item/weapon/gift/G in contents)
-		L += G.gift
-		if (istype(G.gift, /obj/item/weapon/storage))
-			L += G.gift:return_inv()
+	var/list/L = src.get_contents()
 
 	for(var/obj/B in L)
 		if(B.type == A)
@@ -2444,3 +2284,83 @@ mob/verb/turnwest()
 /mob/proc/log_m(var/text)
 	if(mind)
 		mind.log.log_m(text,src)
+
+/mob/verb/stop_pulling()
+	set name = "Stop Pulling"
+	set category = "IC"
+
+	if(pulling)
+		pulling = null
+
+
+/mob/proc/Stun(amount)
+	stunned = max(max(stunned,amount),0) //can't go below 0, getting a low amount of stun doesn't lower your current stun
+	return
+
+/mob/proc/SetStunned(amount) //if you REALLY need to set stun to a set amount without the whole "can't go below current stunned"
+	stunned = max(amount,0)
+	return
+
+/mob/proc/AdjustStunned(amount)
+	stunned = max(stunned + amount,0)
+	return
+
+/mob/proc/Weaken(amount)
+	weakened = max(max(weakened,amount),0)
+	return
+
+/mob/proc/SetWeakened(amount)
+	weakened = max(amount,0)
+	return
+
+/mob/proc/AdjustWeakened(amount)
+	weakened = max(weakened + amount,0)
+	return
+
+/mob/proc/Paralyse(amount)
+	paralysis = max(max(paralysis,amount),0)
+	return
+
+/mob/proc/SetParalysis(amount)
+	paralysis = max(amount,0)
+	return
+
+/mob/proc/AdjustParalysis(amount)
+	paralysis = max(paralysis + amount,0)
+	return
+
+/mob/proc/Sleeping(amount)
+	sleeping = max(max(sleeping,amount),0)
+	return
+
+/mob/proc/SetSleeping(amount)
+	sleeping = max(amount,0)
+	return
+
+/mob/proc/AdjustSleeping(amount)
+	sleeping = max(sleeping + amount,0)
+	return
+
+/mob/proc/Resting(amount)
+	resting = max(max(resting,amount),0)
+	return
+
+/mob/proc/SetResting(amount)
+	resting = max(amount,0)
+	return
+
+/mob/proc/AdjustResting(amount)
+	resting = max(resting + amount,0)
+	return
+
+//List of active diseases
+
+/mob/var/list/viruses = list() // replaces var/datum/disease/virus
+
+/mob/var/update_icon = 1 //Set to 1 to trigger update_icons() at the next life() call
+
+/mob/var/status_flags = CANSTUN|CANWEAKEN|CANPARALYSE|CANPUSH	//bitflags defining which status effects can be inflicted (replaces canweaken, canstun, etc)
+
+/mob/var/area/lastarea = null
+
+/mob/var/digitalcamo = 0 // Can they be tracked by the AI?

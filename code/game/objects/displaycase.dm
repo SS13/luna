@@ -1,9 +1,20 @@
-/obj/displaycase/ex_act(severity)
+/obj/structure/displaycase
+	name = "Display Case"
+	icon = 'stationobjs.dmi'
+	icon_state = "glassbox1"
+	desc = "A display case for prized possessions."
+	density = 1
+	anchored = 1
+	var/health = 30
+	var/occupied = 1
+	var/destroyed = 0
+
+/obj/structure/displaycase/ex_act(severity)
 	switch(severity)
 		if (1)
 			new /obj/item/weapon/shard( src.loc )
 			if (occupied)
-				new /obj/item/weapon/gun/energy/laser_gun/captain( src.loc )
+				new /obj/item/weapon/gun/energy/laser/captain( src.loc )
 				occupied = 0
 			del(src)
 		if (2)
@@ -15,38 +26,29 @@
 				src.health -= 5
 				src.healthcheck()
 
-/obj/displaycase/bullet_act(flag)
-
-	if (flag == PROJECTILE_BULLET)
-		src.health -= 10
-		src.healthcheck()
-		return
-	if (flag != PROJECTILE_LASER) //lasers aren't particularly good at breaking glass
-		src.health -= 2
-		src.healthcheck()
-		return
-	else
-		src.health -= 5
-		src.healthcheck()
-		return
+/obj/structure/displaycase/bullet_act(var/obj/item/projectile/Proj)
+	health -= Proj.damage
+	..()
+	src.healthcheck()
+	return
 
 
-/obj/displaycase/blob_act()
+/obj/structure/displaycase/blob_act()
 	if (prob(50))
 		new /obj/item/weapon/shard( src.loc )
 		if (occupied)
-			new /obj/item/weapon/gun/energy/laser_gun/captain( src.loc )
+			new /obj/item/weapon/gun/energy/laser/captain( src.loc )
 			occupied = 0
 		del(src)
 
 
-/obj/displaycase/meteorhit(obj/O as obj)
+/obj/structure/displaycase/meteorhit(obj/O as obj)
 		new /obj/item/weapon/shard( src.loc )
-		new /obj/item/weapon/gun/energy/laser_gun/captain( src.loc )
+		new /obj/item/weapon/gun/energy/laser/captain( src.loc )
 		del(src)
 
 
-/obj/displaycase/proc/healthcheck()
+/obj/structure/displaycase/proc/healthcheck()
 	if (src.health <= 0)
 		if (!( src.destroyed ))
 			src.density = 0
@@ -58,7 +60,7 @@
 		playsound(src.loc, 'Glasshit.ogg', 75, 1)
 	return
 
-/obj/displaycase/proc/update_icon()
+/obj/structure/displaycase/update_icon()
 	if(src.destroyed)
 		src.icon_state = "glassboxb[src.occupied]"
 	else
@@ -66,18 +68,18 @@
 	return
 
 
-/obj/displaycase/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/structure/displaycase/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	src.health -= W.force
 	src.healthcheck()
 	..()
 	return
 
-/obj/displaycase/attack_paw(mob/user as mob)
+/obj/structure/displaycase/attack_paw(mob/user as mob)
 	return src.attack_hand(user)
 
-/obj/displaycase/attack_hand(mob/user as mob)
+/obj/structure/displaycase/attack_hand(mob/user as mob)
 	if (src.destroyed && src.occupied)
-		new /obj/item/weapon/gun/energy/laser_gun/captain( src.loc )
+		new /obj/item/weapon/gun/energy/laser/captain( src.loc )
 		user << "\b You deactivate the hover field built into the case."
 		src.occupied = 0
 		src.add_fingerprint(user)

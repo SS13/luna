@@ -23,7 +23,7 @@ Checked jobs: HoP, HoS, Security Officer, Doctor, CE, Detective, Scientist RD, C
     access_emergency_storage = 14 (HoP, CE, Atmos Tec) (Got name from Strumpet. Not used at all???)
     access_change_id = 15 (HoP)
     access_ai_facilities = 16 (HoP, CE)
-    access_teleporter = 17 (HoS, RD)
+    access_teleporter = 17 (HoS, RD, QM)
     access_eva = 18 (HoP, CE)
     access_heads_only = 19 (HoP, CE, RD, HoS)
     access_captain_only = 20
@@ -52,5 +52,5 @@ Checked jobs: HoP, HoS, Security Officer, Doctor, CE, Detective, Scientist RD, C
     access_hydroponics = 40 (Botanist)
     access_theater = 41 (Clown, Mime)
     access_HoSoffice = 42 (HoS)
-
+	access_mining = 43 (Shaft Miner, QM)
     */

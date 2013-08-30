@@ -54,12 +54,12 @@
 /datum/UnifiedNetworkController/PowernetController/CableTouched(var/obj/cabling/Cable, var/mob/User)
 	return
 
-/datum/UnifiedNetworkController/PowernetController/proc/SupplyPower(var/Amount)
-	Power += Amount
+/datum/UnifiedNetworkController/PowernetController/proc/SupplyPower(var/amount)
+	Power += amount
 	return
 
-/datum/UnifiedNetworkController/PowernetController/proc/DrawPower(var/Amount)
-	Draw += Amount
+/datum/UnifiedNetworkController/PowernetController/proc/DrawPower(var/amount)
+	Draw += amount
 	return
 
 /datum/UnifiedNetworkController/PowernetController/proc/SurplusPower()
@@ -71,7 +71,7 @@
 /datum/UnifiedNetworkController/PowernetController/proc/UnrecoveredSurplusPower()
 	return PowerAvailableLastTick - RecoveredSurplus
 
-/datum/UnifiedNetworkController/PowernetController/proc/RecoverSurplusPower(var/Amount)
-	RecoveredSurplus += Amount
+/datum/UnifiedNetworkController/PowernetController/proc/RecoverSurplusPower(var/amount)
+	RecoveredSurplus += amount
 	return
 

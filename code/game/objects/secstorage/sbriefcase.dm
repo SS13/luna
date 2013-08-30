@@ -16,12 +16,6 @@
 	new /obj/item/weapon/pen(src)
 
 /obj/item/weapon/secstorage/sbriefcase/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & 16) && prob(50))
-		usr << "\red The [src] slips out of your hand and hits your head."
-		usr.bruteloss += 10
-		usr.paralysis += 2
-		return
-
 	var/t = user:zone_sel.selecting
 	if (t == "head")
 		if (M.stat < 2 && M.health < 50 && prob(90))

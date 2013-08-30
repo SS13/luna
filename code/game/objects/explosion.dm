@@ -6,17 +6,27 @@
 	//	return
 
 	message_admins("\red <b>Explosion spawned by [usr.client.key]</b>")
+
 proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, force = 0)
-	if(!epicenter)
+	if(!epicenter) return
+	//Machines which report explosions.
+	for(var/i,i<=doppler_arrays.len,i++)
+		var/obj/machinery/doppler_array/Array = doppler_arrays[i]
+		if(Array)
+			Array.sense_explosion(epicenter.x, epicenter.y, epicenter.z, devastation_range, heavy_impact_range, light_impact_range)
+
+	if(devastation_range <= 1)
+		//3D explosions works horrible with small booms. Dirty fix!
+		tg_explosion(epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range)
 		return
-	if(!force)
-		return
+
+	if(!force) return
+
 	spawn(0)
 		if(devastation_range > 1)
 			message_admins("Explosion with size ([devastation_range], [heavy_impact_range], [light_impact_range]) in area [epicenter.loc.name]. (<a href=\"byond://?src=%admin_ref%;teleto=\ref[epicenter]\">Jump</a>)", admin_ref = 1)
 
-		defer_cables_rebuild ++
-
+		defer_cables_rebuild++
 		stop_zones++
 
 		sleep(5 * tick_multiplier)
@@ -140,7 +150,7 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 		var/sleep
 		spawn(0)
 			if(heavy_impact_range > 1)
-				var/datum/effects/system/explosion/E = new/datum/effects/system/explosion()
+				var/datum/effect/system/explosion/E = new/datum/effect/system/explosion()
 				E.set_up(epicenter)
 				E.start()
 
@@ -195,7 +205,72 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 	return 1
 
 
-
 proc/secondaryexplosion(turf/epicenter, range)
 	for(var/turf/tile in range(range, epicenter))
 		tile.ex_act(2)
+
+//A very crude linear approximatiaon of pythagoras theorem.
+/proc/cheap_pythag(var/dx, var/dy)
+	dx = abs(dx); dy = abs(dy);
+	if(dx>=dy)	return dx + (0.5*dy)	//The longest side add half the shortest side approximates the hypotenuse
+	else		return dy + (0.5*dx)
+
+proc/tg_explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range)
+	src = null	//so we don't abort once src is deleted
+	epicenter = get_turf(epicenter)
+
+	// Clamp all values to MAX_EXPLOSION_RANGE
+	devastation_range = min (3, devastation_range)
+	heavy_impact_range = min (7, heavy_impact_range)
+	light_impact_range = min (14, light_impact_range)
+	flash_range = min (28, flash_range)
+
+	spawn(0)
+
+		message_admins("Explosion with size ([devastation_range], [heavy_impact_range], [light_impact_range]) in area [epicenter.loc.name] ([epicenter.x],[epicenter.y],[epicenter.z])")
+		log_game("Explosion with size ([devastation_range], [heavy_impact_range], [light_impact_range]) in area [epicenter.loc.name] ")
+
+		var/sound/distant_explosion = sound('explosionfar.ogg')
+		for(var/mob/M)
+			M << distant_explosion
+		playsound(epicenter, "explosion", 100, 1, round(devastation_range,1) )
+
+		defer_cables_rebuild++
+		stop_zones++
+
+		//var/lighting_controller_was_processing = lighting_controller.processing	//Pause the lighting updates for a bit
+		//lighting_controller.processing = 0
+		//var/powernet_rebuild_was_deferred_already = defer_powernet_rebuild
+		//if(defer_powernet_rebuild != 2)
+		//	defer_powernet_rebuild = 1
+
+		if(heavy_impact_range > 1)
+			var/datum/effect/system/explosion/E = new/datum/effect/system/explosion()
+			E.set_up(epicenter)
+			E.start()
+
+		var/x0 = epicenter.x
+		var/y0 = epicenter.y
+
+		for(var/turf/T in range(epicenter, max(devastation_range, heavy_impact_range, light_impact_range)))
+			var/dist = cheap_pythag(T.x - x0,T.y - y0)
+
+			if(dist < devastation_range)		dist = 1
+			else if(dist < heavy_impact_range)	dist = 2
+			else if(dist < light_impact_range)	dist = 3
+			else								continue
+
+			T.ex_act(dist)
+			if(T)
+				for(var/atom_movable in T.contents)	//bypass type checking since only atom/movable can be contained by turfs anyway
+					var/atom/movable/AM = atom_movable
+					if(AM)	AM.ex_act(dist)
+
+		sleep(8)
+
+		defer_cables_rebuild --
+		stop_zones--
+		if (!defer_cables_rebuild)
+			HandleUNExplosionDamage()
+
+	return 1

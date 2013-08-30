@@ -153,7 +153,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red <B>[M.name] has bit []!</B>", src), 1)
 			var/damage = rand(1, 5)
-			if (mutations & 8) damage += 10
+			if (mutations & HULK) damage += 10
 			bruteloss += damage
 			updatehealth()
 		else
@@ -162,7 +162,7 @@
 	return
 
 /mob/living/carbon/monkey/attack_paw(mob/M as mob)
-
+	..()
 	if (M.a_intent == "help")
 		sleeping = 0
 		resting = 0
@@ -184,8 +184,68 @@
 					O.show_message("\red <B>[M.name] has attempted to bite [name]!</B>", 1)
 	return
 
-/mob/living/carbon/monkey/attack_hand(mob/M as mob)
+/mob/living/carbon/monkey/attack_slime(mob/living/carbon/slime/M as mob)
+	if (!ticker)
+		M << "You cannot attack people before the game has started."
+		return
 
+	if(M.Victim) return // can't attack while eating!
+
+	if (health > -100)
+
+		for(var/mob/O in viewers(src, null))
+			if ((O.client && !( O.blinded )))
+				O.show_message(text("\red <B>The [M.name] glomps []!</B>", src), 1)
+
+		var/damage = rand(1, 3)
+
+		if(istype(src, /mob/living/carbon/slime/adult))
+			damage = rand(20, 40)
+		else
+			damage = rand(5, 35)
+
+		adjustBruteLoss(damage)
+
+		if(M.powerlevel > 0)
+			var/stunprob = 10
+			var/power = M.powerlevel + rand(0,3)
+
+			switch(M.powerlevel)
+				if(1 to 2) stunprob = 20
+				if(3 to 4) stunprob = 30
+				if(5 to 6) stunprob = 40
+				if(7 to 8) stunprob = 60
+				if(9) 	   stunprob = 70
+				if(10) 	   stunprob = 95
+
+			if(prob(stunprob))
+				M.powerlevel -= 3
+				if(M.powerlevel < 0)
+					M.powerlevel = 0
+
+				for(var/mob/O in viewers(src, null))
+					if ((O.client && !( O.blinded )))
+						O.show_message(text("\red <B>The [M.name] has shocked []!</B>", src), 1)
+
+				Weaken(power)
+				if (stuttering < power)
+					stuttering = power
+				Stun(power)
+
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+				s.set_up(5, 1, src)
+				s.start()
+
+				if (prob(stunprob) && M.powerlevel >= 8)
+					adjustFireLoss(M.powerlevel * rand(6,10))
+
+		updatehealth()
+
+	return
+
+
+/mob/living/carbon/monkey/attack_hand(mob/M as mob)
+	..()
 	if (M.a_intent == "help")
 		sleeping = 0
 		resting = 0
@@ -266,7 +326,7 @@
 		invisibility = 0
 
 	if(buckled)
-		if(istype(buckled, /obj/stool/bed))
+		if(istype(buckled, /obj/structure/stool/bed)  && !istype(buckled, /obj/structure/stool/bed/chair))
 			lying = 1
 		else
 			lying = 0

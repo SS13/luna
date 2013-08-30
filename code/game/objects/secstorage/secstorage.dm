@@ -37,6 +37,9 @@
 	return L
 
 /obj/item/weapon/secstorage/proc/show_to(mob/user as mob)
+	if(user.s_active != src)
+		for(var/obj/item/I in src)
+			if(I.on_found(user)) return
 
 	user.client.screen -= src.boxes
 	user.client.screen -= src.closer

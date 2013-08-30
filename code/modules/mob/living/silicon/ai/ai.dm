@@ -134,30 +134,10 @@
 		updatehealth()
 	return
 
-/mob/living/silicon/ai/bullet_act(flag)
-	if (flag == PROJECTILE_BULLET)
-		if (stat != 2)
-			bruteloss += 60
-			updatehealth()
-			weakened = 10
-	else if (flag == PROJECTILE_TASER)
-		if (prob(75))
-			stunned = 15
-		else
-			weakened = 15
-	else if(flag == PROJECTILE_LASER)
-		if (stat != 2)
-			bruteloss += 20
-			updatehealth()
-			if (prob(25))
-				stunned = 1
-	else if(flag == PROJECTILE_PULSE)
-		if (stat != 2)
-			bruteloss += 40
-			updatehealth()
-			if (prob(50))
-				stunned = min(5, stunned)
-	return
+/mob/living/silicon/ai/bullet_act(var/obj/item/projectile/Proj)
+	..(Proj)
+	updatehealth()
+	return 2
 
 /mob/living/silicon/ai/verb/show_laws_verb()
 	set category = "AI Commands"

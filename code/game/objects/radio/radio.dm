@@ -1,5 +1,47 @@
+/obj/item/device/radio
+	icon = 'icons/obj/radio.dmi'
+	name = "ship bounced radio"
+	suffix = "\[3\]"
+	icon_state = "walkietalkie"
+	item_state = "walkietalkie"
+	var
+		last_transmission
+		frequency = 1459 //common chat
+		traitor_frequency = 0 //tune to frequency to unlock traitor supplies
+		obj/item/device/radio/patch_link = null
+		// /obj/item/weapon/syndicate_uplink/traitorradio = null
+		var/obj/item/device/uplink/radio/traitorradio = null
+		wires = WIRE_SIGNAL | WIRE_RECEIVE | WIRE_TRANSMIT
+		b_stat = 0
+		broadcasting = 0
+		listening = 1
+		freerange = 0 // 0 - Sanitize frequencies, 1 - Full range
+		list/channels = list() //see communications.dm for full list. First channes is a "default" for :h
+//			"Example" = FREQ_LISTENING|FREQ_BROADCASTING
+	flags = FPRINT | CONDUCT | TABLEPASS | ONBELT
+	throw_speed = 2
+	throw_range = 9
+	w_class = 2
+	g_amt = 25
+	m_amt = 75
+
+	var/const
+		WIRE_SIGNAL = 1 //sends a signal, like to set off a bomb or electrocute someone
+		WIRE_RECEIVE = 2
+		WIRE_TRANSMIT = 4
+		TRANSMISSION_DELAY = 5 // only 2/second/radio
+		FREQ_LISTENING = 1
+		//FREQ_BROADCASTING = 2
+
+/obj/item/device/radio/cool
+	icon_state = "walkietalkie_cool"
+	desc = "It has a \"Camer Co.\" label on it."
+
 /obj/item/device/radio/New()
 	..()
+	if(type == /obj/item/device/radio && prob(50))
+		icon_state = "walkietalkie_cool"
+		desc = "It has a \"Camer Co.\" label on it."
 	if(radio_controller)
 		initialize()
 
@@ -30,7 +72,7 @@
 	user.machine = src
 	interact(user)
 
-/obj/item/device/radio/proc/interact(mob/user as mob)
+/obj/item/device/radio/interact(mob/user as mob)
 	var/dat = {"
 				<html><head><title>[src]</title></head><body><TT>
 				Microphone: [broadcasting ? "<A href='byond://?src=\ref[src];talk=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];talk=1'>Disengaged</A>"]<BR>
@@ -231,7 +273,7 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 			if(1349)
 				freq_text = "Mining"
 			if(1347)
-				freq_text = "Cargo"
+				freq_text = "Supply"
 		//There's probably a way to use the list var of channels in code\game\communications.dm to make the dept channels non-hardcoded, but I wasn't in an experimentive mood. --NEO
 
 		if(!freq_text)
@@ -289,13 +331,15 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 			//To properly have the ninja show up on radio. Could also be useful for similar items.
 			//Would not be necessary but the mob could be wearing a mask that is not a voice changer.
 				N = M.wear_mask:voice
-				J = "Unknown"
+				//J = "Unknown"
 			var/rendered = "[part_a][N][part_b][quotedmsg][part_c]"
 			for (var/mob/R in heard_masked)
 				if(istype(R, /mob/living/silicon/ai))
 					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[N] ([J]) </a>[part_b][quotedmsg][part_c]", 2)
 				else
 					R.show_message(rendered, 2)
+				for(var/obj/item/weapon/implant/imp in R)
+					imp.hear(message,M)
 
 		if (length(heard_normal))
 			var/rendered = "[part_a][M.real_name][part_b][quotedmsg][part_c]"
@@ -305,6 +349,8 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.real_name] ([eqjobname]) </a>[part_b][quotedmsg][part_c]", 2)
 				else
 					R.show_message(rendered, 2)
+				for(var/obj/item/weapon/implant/imp in R)
+					imp.hear(message,M)
 
 		if (length(heard_voice))
 			var/rendered = "[part_a][M.voice_name][part_b][M.voice_message][part_c]"
@@ -314,6 +360,8 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name] ([eqjobname]) </a>[part_b][M.voice_message][part_c]", 2)
 				else
 					R.show_message(rendered, 2)
+				for(var/obj/item/weapon/implant/imp in R)
+					imp.hear(message,M)
 
 		if (length(heard_garbled))
 			quotedmsg = M.say_quote(stars(message))
@@ -324,6 +372,8 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name]</a>[part_b][quotedmsg][part_c]", 2)
 				else
 					R.show_message(rendered, 2)
+				for(var/obj/item/weapon/implant/imp in R)
+					imp.hear(message,M)
 
 /obj/item/device/radio/hear_talk(mob/M as mob, msg)
 	if (broadcasting)

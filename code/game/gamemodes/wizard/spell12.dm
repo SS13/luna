@@ -31,7 +31,7 @@
 	var/area/thearea = theareas[A]
 	usr.say("SCYAR NILA [uppertext(A)]")
 
-	var/datum/effects/system/harmless_smoke_spread/smoke = new /datum/effects/system/harmless_smoke_spread()
+	var/datum/effect/system/harmless_smoke_spread/smoke = new /datum/effect/system/harmless_smoke_spread()
 	smoke.set_up(5, 0, usr.loc)
 	smoke.attach(usr)
 	smoke.start()
@@ -68,7 +68,7 @@
 	A = input("Area to jump to", "BOOYEA", A) in theareas
 	var/area/thearea = theareas[A]
 
-	var/datum/effects/system/harmless_smoke_spread/smoke = new /datum/effects/system/harmless_smoke_spread()
+	var/datum/effect/system/harmless_smoke_spread/smoke = new /datum/effect/system/harmless_smoke_spread()
 	smoke.set_up(5, 0, usr.loc)
 	smoke.attach(usr)
 	smoke.start()

@@ -5,6 +5,46 @@
 
 //Potential replacement for genetics revives or something I dunno (?)
 
+
+/obj/machinery/scan_consolenew
+	name = "DNA Modifier Access Console"
+	icon = 'computer.dmi'
+	icon_state = "scanner"
+	density = 1
+	var/uniblock = 1.0
+	var/strucblock = 1.0
+	var/subblock = 1.0
+	var/status = null
+	var/radduration = 2.0
+	var/radstrength = 1.0
+	var/radacc = 1.0
+	var/buffer1 = null
+	var/buffer2 = null
+	var/buffer3 = null
+	var/buffer1owner = null
+	var/buffer2owner = null
+	var/buffer3owner = null
+	var/buffer1label = null
+	var/buffer2label = null
+	var/buffer3label = null
+	var/buffer1type = null
+	var/buffer2type = null
+	var/buffer3type = null
+	var/buffer1iue = 0
+	var/buffer2iue = 0
+	var/buffer3iue = 0
+	var/delete = 0
+	var/injectorready = 1
+	var/temphtml = null
+	var/obj/machinery/dna_scanner/connected = null
+	var/obj/item/weapon/disk/data/genetics/diskette = null
+	anchored = 1.0
+
+	var/brightnessred = 0
+	var/brightnessgreen = 0
+	var/brightnessblue = 2
+
+
 /obj/machinery/clonepod
 	anchored = 1
 	name = "Cloning Pod"
@@ -83,9 +123,9 @@
 		playsound(src.loc, 'Screwdriver.ogg', 50, 1)
 		if(do_after(user, 20))
 			user << "\blue The broken glass falls out."
-			var/obj/computerframe/A = new /obj/computerframe( src.loc )
+			var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
 			new /obj/item/weapon/shard( src.loc )
-			var/obj/item/weapon/circuitboard/cloning/M = new /obj/item/weapon/circuitboard/cloning( A )
+			var/obj/item/weapon/circuitboard/computer/cloning/M = new /obj/item/weapon/circuitboard/computer/cloning( A )
 			for (var/obj/C in src)
 				C.loc = src.loc
 			//M.records = src.records
@@ -703,12 +743,12 @@
 /*
  *	Diskette Box
  */
-/obj/item/weapon/storage/diskboxgenetics
+/obj/item/weapon/storage/box/disk/genetics
 	name = "Genetics Diskette Box"
 	icon_state = "disk_kit"
 	item_state = "syringe_kit"
 
-/obj/item/weapon/storage/diskboxgenetics/New()
+/obj/item/weapon/storage/box/disk/genetics/New()
 	..()
 	new /obj/item/weapon/disk/data/genetics(src)
 	new /obj/item/weapon/disk/data/genetics(src)

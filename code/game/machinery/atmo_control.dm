@@ -19,7 +19,7 @@ obj/machinery/air_sensor
 
 	var/datum/radio_frequency/radio_connection
 
-	proc/update_icon()
+	update_icon()
 		icon_state = "gsensor[on]"
 
 	process()
@@ -93,9 +93,9 @@ obj/machinery/computer/general_air_control
 			if(do_after(user, 20))
 				if (src.stat & BROKEN)
 					user << "\blue The broken glass falls out."
-					var/obj/computerframe/A = new /obj/computerframe( src.loc )
+					var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
 					new /obj/item/weapon/shard( src.loc )
-					var/obj/item/weapon/circuitboard/air_management/M = new /obj/item/weapon/circuitboard/air_management( A )
+					var/obj/item/weapon/circuitboard/computer/air_management/M = new /obj/item/weapon/circuitboard/computer/air_management( A )
 					for (var/obj/C in src)
 						C.loc = src.loc
 					M.frequency = src.frequency
@@ -106,8 +106,8 @@ obj/machinery/computer/general_air_control
 					del(src)
 				else
 					user << "\blue You disconnect the monitor."
-					var/obj/computerframe/A = new /obj/computerframe( src.loc )
-					var/obj/item/weapon/circuitboard/air_management/M = new /obj/item/weapon/circuitboard/air_management( A )
+					var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
+					var/obj/item/weapon/circuitboard/computer/air_management/M = new /obj/item/weapon/circuitboard/computer/air_management( A )
 					for (var/obj/C in src)
 						C.loc = src.loc
 					M.frequency = src.frequency
@@ -332,9 +332,9 @@ Max Output Pressure: [output_pressure] kPa<BR>"}
 				if(do_after(user, 20))
 					if (src.stat & BROKEN)
 						user << "\blue The broken glass falls out."
-						var/obj/computerframe/A = new /obj/computerframe( src.loc )
+						var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
 						new /obj/item/weapon/shard( src.loc )
-						var/obj/item/weapon/circuitboard/injector_control/M = new /obj/item/weapon/circuitboard/injector_control( A )
+						var/obj/item/weapon/circuitboard/computer/injector_control/M = new /obj/item/weapon/circuitboard/computer/injector_control( A )
 						for (var/obj/C in src)
 							C.loc = src.loc
 						M.frequency = src.frequency
@@ -345,8 +345,8 @@ Max Output Pressure: [output_pressure] kPa<BR>"}
 						del(src)
 					else
 						user << "\blue You disconnect the monitor."
-						var/obj/computerframe/A = new /obj/computerframe( src.loc )
-						var/obj/item/weapon/circuitboard/injector_control/M = new /obj/item/weapon/circuitboard/injector_control( A )
+						var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
+						var/obj/item/weapon/circuitboard/computer/injector_control/M = new /obj/item/weapon/circuitboard/computer/injector_control( A )
 						for (var/obj/C in src)
 							C.loc = src.loc
 						M.frequency = src.frequency

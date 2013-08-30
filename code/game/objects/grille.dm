@@ -1,8 +1,20 @@
 //returns the netnum of a stub cable at this grille loc, or 0 if none
 
+/obj/structure/grille
+	desc = "A piece of metal with evenly spaced gridlike holes in it. Blocks large object but lets small items, gas, or energy beams through."
+	name = "grille"
+	icon = 'structures.dmi'
+	icon_state = "grille"
+	density = 1
+	layer = 2.9
+	var/health = 10.0
+	var/destroyed = 0.0
+	anchored = 1.0
+	flags = FPRINT | CONDUCT
+	pressure_resistance = 5*ONE_ATMOSPHERE
 
 
-/obj/grille/ex_act(severity)
+/obj/structure/grille/ex_act(severity)
 	switch(severity)
 		if(1.0)
 			del(src)
@@ -19,19 +31,19 @@
 		else
 	return
 
-/obj/grille/blob_act()
+/obj/structure/grille/blob_act()
 	src.health--
 	src.healthcheck()
 
 
-/obj/grille/meteorhit(var/obj/M)
+/obj/structure/grille/meteorhit(var/obj/M)
 	if (M.icon_state == "flaming")
 		src.health -= 2
 		healthcheck()
 	return
 
-/obj/grille/attack_hand(var/obj/M)
-	if ((usr.mutations & 8)) // If hulk
+/obj/structure/grille/attack_hand(var/obj/M)
+	if ((usr.mutations & HULK))
 		usr << text("\blue You kick the grille.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -55,8 +67,8 @@
 		playsound(src.loc, 'grillehit.ogg', 80, 1)
 		src.health -= 1
 
-/obj/grille/attack_paw(var/obj/M)
-	if ((usr.mutations & 8))
+/obj/structure/grille/attack_paw(var/obj/M)
+	if ((usr.mutations & HULK))
 		usr << text("\blue You kick the grille.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -72,18 +84,26 @@
 		playsound(src.loc, 'grillehit.ogg', 80, 1)
 		src.health -= 1
 
-/obj/grille/CanPass(atom/movable/mover, turf/source, height=0, air_group=0)
+/obj/structure/grille/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1
-
-	if ((istype(mover, /obj/effects) || istype(mover, /obj/item/weapon/dummy) || istype(mover, /obj/beam) || istype(mover, /obj/meteor/small)))
+	if(istype(mover) && mover.checkpass(PASSGRILLE))
+		return 1
+	else if (istype(mover, /obj/effects) || istype(mover, /obj/item/weapon/dummy) || istype(mover, /obj/beam) || istype(mover, /obj/meteor/small))
 		return 1
 	else
-		if (istype(mover, /obj/bullet))
+		if(istype(mover, /obj/item/projectile))
 			return prob(30)
 		else
-			return !src.density
+			return !density
 
-/obj/grille/attackby(obj/item/weapon/W, mob/user)
+/obj/structure/grille/bullet_act(var/obj/item/projectile/Proj)
+	if(!Proj)	return
+	..()
+	src.health -= Proj.damage*0.2
+	healthcheck()
+	return
+
+/obj/structure/grille/attackby(obj/item/weapon/W, mob/user)
 	if (istype(W, /obj/item/weapon/wirecutters))
 		if(!shock(user, 100))
 			playsound(src.loc, 'Wirecutter.ogg', 100, 1)
@@ -114,17 +134,17 @@
 	..()
 	return
 
-/obj/grille/proc/healthcheck()
+/obj/structure/grille/proc/healthcheck()
 	if (src.health <= 0)
 		if (!( src.destroyed ))
 			src.icon_state = "brokengrille"
 			src.density = 0
 			src.destroyed = 1
-			new /obj/item/weapon/rods( src.loc )
+			new /obj/item/stack/rods( src.loc )
 
 		else
 			if (src.health <= -10.0)
-				new /obj/item/weapon/rods( src.loc )
+				new /obj/item/stack/rods( src.loc )
 				//SN src = null
 				del(src)
 				return
@@ -133,7 +153,7 @@
 // shock user with probability prb (if all connections & power are working)
 // returns 1 if shocked, 0 otherwise
 
-/obj/grille/proc/shock(mob/user, prb)
+/obj/structure/grille/proc/shock(mob/user, prb)
 
 	if(!anchored || destroyed)		// anchored/destroyed grilles are never connected
 		return 0

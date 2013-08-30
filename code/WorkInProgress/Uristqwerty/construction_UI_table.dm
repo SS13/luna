@@ -34,7 +34,7 @@
 		return ..()
 
 /datum/construction_UI/table/build(state, dir)
-	var/obj/table/T = new /obj/table(loc)
+	var/obj/structure/table/T = new /obj/structure/table(loc)
 	T.icon_state = state
 	T.dir = dir
 	T.add_fingerprint(user)
@@ -59,7 +59,30 @@
 	default_state = "reinf_table"
 
 /datum/construction_UI/table/reinforced/build(state, dir)
-	var/obj/table/reinforced/T = new /obj/table/reinforced(loc)
+	var/obj/structure/table/reinforced/T = new /obj/structure/table/reinforced(loc)
+	T.icon_state = state
+	T.dir = dir
+	T.add_fingerprint(user)
+	del(parts)
+
+
+
+/datum/construction_UI/table/wood
+	states = list(	"wood_table",
+					"wood_middle",
+
+					"wood_tabledir&dir=1", "wood_tabledir&dir=2", "wood_tabledir&dir=4", "wood_tabledir&dir=8",
+					"wood_tabledir&dir=5", "wood_tabledir&dir=6", "wood_tabledir&dir=9", "wood_tabledir&dir=10",
+
+					"wood_1tilethick&dir=1", "wood_1tilethick&dir=2", "wood_1tilethick&dir=4", "wood_1tilethick&dir=8",
+					"wood_1tilethick&dir=5", "wood_1tilethick&dir=6", "wood_1tilethick&dir=9", "wood_1tilethick&dir=10",
+
+					"wood_1tileendtable&dir=1", "wood_1tileendtable&dir=2", "wood_1tileendtable&dir=4", "wood_1tileendtable&dir=8")
+
+	default_state = "wood_table"
+
+/datum/construction_UI/table/wood/build(state, dir)
+	var/obj/structure/table/woodentable/T = new /obj/structure/table/woodentable(loc)
 	T.icon_state = state
 	T.dir = dir
 	T.add_fingerprint(user)

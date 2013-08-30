@@ -5,7 +5,7 @@
 	anchored = 1
 	var/list/items_inside = list()
 	var/list/item_1 = (/obj/item/weapon/cigpacket) // Something different from null
-	var/list/item_2 = (/obj/item/weapon/zippo/lighter) // Normal locker won't be used anyway
+	var/list/item_2 = (/obj/item/weapon/lighter) // Normal locker won't be used anyway
 	var/list/item_3 = (/obj/item/weapon/reagent_containers/food/drinks/coffee)
 	var/obj/spawn_1
 	var/obj/spawn_2

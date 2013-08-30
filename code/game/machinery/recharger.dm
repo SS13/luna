@@ -1,55 +1,102 @@
-obj/machinery/recharger
-	anchored = 1.0
-	icon = 'stationobjs.dmi'
-	icon_state = "recharger0"
+/obj/machinery/recharger
 	name = "recharger"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "recharger0"
+	anchored = 1
+	//use_power = 1
+	//idle_power_usage = 4
+	//active_power_usage = 250
+	var/obj/item/weapon/charging = null
 
-	var
-		obj/item/weapon/gun/energy/charging = null
-		obj/item/weapon/baton/charging2 = null
 
-/obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
-	if (src.charging || src.charging2)
+/obj/machinery/recharger/attackby(obj/item/weapon/G, mob/user)
+	if(istype(user,/mob/living/silicon))
 		return
-	if (istype(G, /obj/item/weapon/gun/energy))
+	if(istype(G, /obj/item/weapon/gun/energy) || istype(G, /obj/item/weapon/baton))
+		if(charging)
+			return
+
+		//Checks to make sure he's not in space doing it, and that the area got proper power.
+		var/area/a = get_area(src)
+		if(!isarea(a) || a.power_equip == 0)
+			user << "<span class='notice'>[src] blinks red as you try to insert [G].</span>"
+			return
+
+		if (istype(G, /obj/item/weapon/gun/energy/gun/nuclear) || istype(G, /obj/item/weapon/gun/energy/crossbow))
+			user << "<span class='notice'>Your gun's recharge port was removed to make room for a miniaturized reactor.</span>"
+			return
+		//if (istype(G, /obj/item/weapon/gun/energy/staff))
+		//	return
 		user.drop_item()
 		G.loc = src
-		src.charging = G
-	if (istype(G, /obj/item/weapon/baton))
-		user.drop_item()
-		G.loc = src
-		src.charging2 = G
-
-/obj/machinery/recharger/attack_hand(mob/user as mob)
-	src.add_fingerprint(user)
-	if (src.charging)
-		src.charging.update_icon()
-		src.charging.loc = src.loc
-		src.charging = null
-	if(src.charging2)
-	//	src.charging2.update_icon()
-		src.charging2.loc = src.loc
-		src.charging2 = null
+		charging = G
+		//use_power = 2
+		update_icon()
+	else if(istype(G, /obj/item/weapon/wrench))
+		if(charging)
+			user << "<span class='notice'>Remove the charging item first!</span>"
+			return
+		anchored = !anchored
+		user << "<span class='notice'>You [anchored ? "attached" : "detached"] [src].</span>"
+		playsound(loc, 'sound/items/Ratchet.ogg', 75, 1)
 
 
-/obj/machinery/recharger/attack_paw(mob/user as mob)
-	if ((ticker && ticker.mode.name == "monkey"))
-		return src.attack_hand(user)
+/obj/machinery/recharger/attack_hand(mob/user)
+	if(issilicon(user))
+		return
+
+	add_fingerprint(user)
+	if(charging)
+		charging.update_icon()
+		charging.loc = loc
+		user.put_in_hands(charging)
+		charging = null
+		//use_power = 1
+		update_icon()
+
+
+/obj/machinery/recharger/attack_paw(mob/user)
+	return attack_hand(user)
+
 
 /obj/machinery/recharger/process()
-	if ((src.charging) && ! (stat & NOPOWER) )
-		if (src.charging.charges < src.charging.maximum_charges)
-			src.charging.charges++
-			src.icon_state = "recharger1"
-			use_power(250)
-		else
-			src.icon_state = "recharger2"
-	if ((src.charging2) && ! (stat & NOPOWER) )
-		if (src.charging2.charges < src.charging2.maximum_charges)
-			src.charging2.charges++
-			src.icon_state = "recharger1"
-			use_power(250)
-		else
-			src.icon_state = "recharger2"
-	else if (!(src.charging || src.charging2))
-		src.icon_state = "recharger0"
+	if(stat & (NOPOWER|BROKEN) || !anchored)
+		return
+
+	if(charging)
+		if(istype(charging, /obj/item/weapon/gun/energy))
+			var/obj/item/weapon/gun/energy/E = charging
+			if(E.power_supply.charge < E.power_supply.maxcharge)
+				E.power_supply.give(100)
+				icon_state = "recharger1"
+				use_power(250)
+			else
+				icon_state = "recharger2"
+			return
+		if(istype(charging, /obj/item/weapon/baton))
+			var/obj/item/weapon/baton/B = charging
+			if (B.charges < B.maximum_charges)
+				B.charges++
+				icon_state = "recharger1"
+				use_power(250)
+			else
+				icon_state = "recharger2"
+
+
+/obj/machinery/recharger/emp_act(severity)
+	if(stat & (NOPOWER|BROKEN) || !anchored)
+		..(severity)
+		return
+
+	if(istype(charging,  /obj/item/weapon/gun/energy))
+		var/obj/item/weapon/gun/energy/E = charging
+		if(E.power_supply)
+			E.power_supply.emp_act(severity)
+	..(severity)
+
+
+/obj/machinery/recharger/update_icon()	//we have an update_icon() in addition to the stuff in process to make it feel a tiny bit snappier.
+	if(charging)
+		icon_state = "recharger1"
+	else
+		icon_state = "recharger0"

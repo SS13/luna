@@ -4,18 +4,18 @@
 		return null
 	return Network.Controller
 
-/obj/machinery/power/proc/AddPower(var/Amount)
+/obj/machinery/power/proc/AddPower(var/amount)
 	var/datum/UnifiedNetworkController/PowernetController/Controller = GetPowernet()
 	if (!Controller)
 		return
-	Controller.SupplyPower(Amount)
+	Controller.SupplyPower(amount)
 	return
 
-/obj/machinery/power/proc/AddLoad(var/Amount)
+/obj/machinery/power/proc/AddLoad(var/amount)
 	var/datum/UnifiedNetworkController/PowernetController/Controller = GetPowernet()
 	if (!Controller)
 		return
-	Controller.DrawPower(Amount)
+	Controller.DrawPower(amount)
 	return
 
 /obj/machinery/power/proc/Surplus()

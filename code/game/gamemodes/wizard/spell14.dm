@@ -71,15 +71,12 @@
 		M << "\red <B>Your equipment malfunctions.</B>" //Yeah, i realise that this WILL
 														//show if theyre not carrying anything
 														//that is affected. lazy.
-		if (locate(/obj/item/weapon/cloaking_device, M))
-			for(var/obj/item/weapon/cloaking_device/S in M)
-				S.active = 0
-				S.icon_state = "shield0"
+		for(var/obj/item/weapon/device/cloak/S in M)
+			S.active = 0
+			S.icon_state = "shield0"
 
-		if (locate(/obj/item/weapon/gun/energy, M))
-			for(var/obj/item/weapon/gun/energy/G in M)
-				G.charges = 0
-				G.update_icon()
+		for(var/obj/item/weapon/gun/energy/G in M)
+			G.emp_act(1)
 
 		if ((istype(M, /mob/living/carbon/human)) && (istype(M:glasses, /obj/item/clothing/glasses/thermal)))
 			M << "\red <B>Your thermal glasses malfunction.</B>"

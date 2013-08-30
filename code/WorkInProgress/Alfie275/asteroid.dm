@@ -1,17 +1,17 @@
 
-/obj/landmark/mapload
+/obj/effect/landmark/mapload
 	name = "Mapload marker"
 
 
 
 
-/obj/landmark/mapload/asteroid
+/obj/effect/landmark/mapload/asteroid
 	New()
 
 proc/setupasteroid()
 	return
 /*	var/list/maps = list("bone","cartel")
-	for(var/obj/landmark/mapload/asteroid/m in world)
+	for(var/obj/effect/landmark/mapload/asteroid/m in world)
 		if(maps.len&&rand(0,1)==1)
 			var/map = pick(maps)
 			maps-=map

@@ -81,7 +81,7 @@ atom
 			luminosity = ul_Luminosity()
 
 			for(var/turf/Affected in view(ul_Luminosity(), src))
-				var/Falloff = src.ul_FalloffAmount(Affected)
+				var/Falloff = src.ul_Falloffamount(Affected)
 
 				var/DeltaRed = LuminosityRed - Falloff
 				var/DeltaGreen = LuminosityGreen - Falloff
@@ -115,7 +115,7 @@ atom
 
 			for(var/turf/Affected in view(ul_Luminosity(), src))
 
-				var/Falloff = ul_FalloffAmount(Affected)
+				var/Falloff = ul_Falloffamount(Affected)
 
 				var/DeltaRed = LuminosityRed - Falloff
 				var/DeltaGreen = LuminosityGreen - Falloff
@@ -143,7 +143,7 @@ atom
 
 			return
 
-		ul_FalloffAmount(var/atom/ref)
+		ul_Falloffamount(var/atom/ref)
 			if (ul_FalloffStyle == UL_I_FALLOFF_ROUND)
 				var/x = (ref.x - src.x)
 				var/y = (ref.y - src.y)
@@ -188,7 +188,7 @@ atom
 			var/TurfAdjust = isturf(src) ? 1 : 0
 
 			for(var/atom/Affected in view(ul_TopLuminosity, src))
-				if(Affected.ul_IsLuminous() && Affected.ul_Extinguished == UL_I_LIT && (ul_FalloffAmount(Affected) <= Affected.luminosity + TurfAdjust))
+				if(Affected.ul_IsLuminous() && Affected.ul_Extinguished == UL_I_LIT && (ul_Falloffamount(Affected) <= Affected.luminosity + TurfAdjust))
 					Affected.ul_Extinguish()
 					Blanked += Affected
 

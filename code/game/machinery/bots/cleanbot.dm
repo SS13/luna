@@ -1,5 +1,5 @@
 //Cleanbot assembly
-/obj/item/weapon/bucket_sensor
+/obj/item/weapon/robot_assembly/bucket_sensor
 	desc = "It's a bucket. With a sensor attached."
 	name = "proxy bucket"
 	icon = 'aibots.dmi'
@@ -31,8 +31,8 @@
 	var/oil = 1
 	var/panelopen = 0
 	var/list/target_types = list()
-	var/obj/decal/cleanable/target
-	var/obj/decal/cleanable/oldtarget
+	var/obj/effect/decal/cleanable/target
+	var/obj/effect/decal/cleanable/oldtarget
 	var/oldloc = null
 	req_access = list(access_janitor)
 
@@ -157,11 +157,11 @@ text("<A href='?src=\ref[src];operation=oddbutton'>[src.oddbutton ? "Yes" : "No"
 	if(src.oddbutton && prob(5))
 		for(var/mob/O in viewers(src, null))
 			O.show_message(text("Something flies out of [src]. He seems to be acting oddly."), 1)
-		var/obj/decal/cleanable/blood/gibs/gib = new /obj/decal/cleanable/blood/gibs(src.loc)
+		var/obj/effect/decal/cleanable/blood/gibs/gib = new /obj/effect/decal/cleanable/blood/gibs(src.loc)
 		//gib.streak(list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
 		src.oldtarget = gib
 	if(!src.target || src.target == null)
-		for (var/obj/decal/cleanable/D in view(7,src))
+		for (var/obj/effect/decal/cleanable/D in view(7,src))
 			for(var/T in src.target_types)
 				if(!(D in cleanbottargets) && (D.type == T || D.parent_type == T) && D != src.oldtarget)
 					src.oldtarget = D
@@ -176,7 +176,7 @@ text("<A href='?src=\ref[src];operation=oddbutton'>[src.oddbutton ? "Yes" : "No"
 	if(src.target && (src.target != null) && src.path.len == 0)
 		spawn(0)
 			if (istype(src.loc, /turf))
-				src.path = AStar(src.loc, src.target.loc, /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 120, id=botcard, exclude=list(/obj/landmark/alterations/nopath))
+				src.path = AStar(src.loc, src.target.loc, /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 120, id=botcard, exclude=list(/obj/effect/landmark/alterations/nopath))
 				src.path = reverselist(src.path)
 				if(src.path.len == 0)
 					src.oldtarget = src.target
@@ -199,18 +199,18 @@ text("<A href='?src=\ref[src];operation=oddbutton'>[src.oddbutton ? "Yes" : "No"
 
 /obj/machinery/bot/cleanbot/proc/get_targets()
 	src.target_types = new/list()
-	target_types += /obj/decal/cleanable/vomit/
+	target_types += /obj/effect/decal/cleanable/vomit/
 	if(src.blood)
-		target_types += /obj/decal/cleanable/blood/
-		target_types += /obj/decal/cleanable/blood/drip/
-		target_types += /obj/decal/cleanable/blood/gibs/
-		target_types += /obj/decal/cleanable/blood/splatter/
-		target_types += /obj/decal/cleanable/blood/tracks/
+		target_types += /obj/effect/decal/cleanable/blood/
+		target_types += /obj/effect/decal/cleanable/blood/drip/
+		target_types += /obj/effect/decal/cleanable/blood/gibs/
+		target_types += /obj/effect/decal/cleanable/blood/splatter/
+		target_types += /obj/effect/decal/cleanable/blood/tracks/
 	if(src.oil)
-		target_types += /obj/decal/cleanable/oil/
-		target_types += /obj/decal/cleanable/oil/streak/
+		target_types += /obj/effect/decal/cleanable/oil/
+		target_types += /obj/effect/decal/cleanable/oil/streak/
 
-/obj/machinery/bot/cleanbot/proc/clean(var/obj/decal/cleanable/target)
+/obj/machinery/bot/cleanbot/proc/clean(var/obj/effect/decal/cleanable/target)
 	src.anchored = 1
 	src.icon_state = "cleanbot-c"
 	for(var/mob/O in viewers(src, null))
@@ -223,7 +223,7 @@ text("<A href='?src=\ref[src];operation=oddbutton'>[src.oddbutton ? "Yes" : "No"
 		src.anchored = 0
 		src.target = null
 
-/obj/item/weapon/bucket_sensor/attackby(var/obj/item/W, mob/user as mob)
+/obj/item/weapon/robot_assembly/bucket_sensor/attackby(var/obj/item/W, mob/user as mob)
 	if (istype(W, /obj/item/weapon/pen))
 		var/t = input(user, "Enter new robot name", src.name, src.created_name) as text
 		t = copytext(sanitize(t), 1, MAX_MESSAGE_LEN)

@@ -15,7 +15,7 @@
 			if(prob(20) && T.z < 5 && istype(T,/turf/simulated/floor))
 				spawn(50+rand(0,3000))
 					picked = pick(turfs)
-					var/obj/portal/P = new /obj/portal( T )
+					var/obj/effect/portal/P = new /obj/effect/portal( T )
 					P.target = picked
 					P.creator = null
 					P.icon = 'objects.dmi'

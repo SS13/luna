@@ -11,6 +11,7 @@
 	var/list/logs = list()
 	var/list/overlayslist = list()
 	var/labels[0] //for labels
+	var/pass_flags = 0
 
 	///Chemistry.
 	var/datum/reagents/reagents = null
@@ -42,6 +43,9 @@
 		return flags & OPENCONTAINER
 
 
+/atom/proc/checkpass(passflag)
+	return pass_flags&passflag
+
 obj
 	assume_air(datum/air_group/giver)
 		if(loc)
@@ -63,6 +67,13 @@ obj
 
 /atom/proc/meteorhit(obj/meteor as obj)
 	return
+
+/atom/proc/emp_act(var/severity)
+	return
+
+/atom/proc/bullet_act(obj/item/projectile/P)
+	P.on_hit(src,0)
+	. = 0
 
 /*/atom/proc/allow_drop()
 	return 1*/
@@ -89,6 +100,10 @@ obj
 /atom/movable/overlay/attack_hand(a, b, c)
 	if (src.master)
 		return src.master.attack_hand(a, b, c)
+	return
+
+// for slimes
+/atom/proc/attack_slime(mob/user as mob)
 	return
 
 /atom/movable/overlay/New()

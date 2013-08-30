@@ -4,12 +4,12 @@
 	icon = 'atmos.dmi'
 	icon_state = "sheater0"
 	name = "space heater"
-	desc = "Made by Space Amish using traditional space techniques, this heater is guaranteed not to set the station on fire."
+	desc = "Made by Space Amish using traditional space techniques, this heater is guaranteed not to set the ship on fire."
 	var/obj/item/weapon/cell/cell
 	var/on = 0
 	var/open = 0
 	var/set_temperature = 50		// in celcius, add T0C for kelvin
-	var/heating_power = 40000
+	var/heating_power = 100000
 
 	flags = FPRINT
 
@@ -17,12 +17,12 @@
 	New()
 		..()
 		cell = new(src)
-		cell.charge = 1000
-		cell.maxcharge = 1000
+		cell.charge = 2500
+		cell.maxcharge = 2500
 		update_icon()
 		return
 
-	proc/update_icon()
+	update_icon()
 		if(open)
 			icon_state = "sheater-open"
 		else
@@ -120,7 +120,7 @@
 					var/value = text2num(href_list["val"])
 
 					// limit to 20-90 degC
-					set_temperature = dd_range(20, 90, set_temperature + value)
+					set_temperature = dd_range(15, 90, set_temperature + value)
 
 				if("cellremove")
 					if(open && cell && !usr.equipped())
@@ -132,7 +132,7 @@
 							usr.r_hand = cell
 
 						cell.add_fingerprint(usr)
-						cell.updateicon()
+						cell.update_icon()
 						cell = null
 
 						usr.visible_message("\blue [usr] removes the power cell from \the [src].", "\blue You remove the power cell from \the [src].")

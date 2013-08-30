@@ -22,7 +22,7 @@
 //	name = "Soda Charge"
 //	contains = list("/obj/item/weapon/vending_charge/soda")
 //	cost = 10
-//	containertype = "/obj/crate"
+//	containertype = "/obj/structure/crate"
 //	containername = "Soda machine charge crate"
 
 // charge moved to the file with the other charges so it isn't at the bottom of the list on the console

@@ -14,9 +14,9 @@
 
 /obj/item/weapon/vial
 	name = "glass vial"
-	icon = 'chemical.dmi'
+	icon = 'icons/obj/chemical.dmi'
 	desc = "a glass vial filled with a strange liquid"
-	icon_state = "vialgreen"
+	icon_state = "vial"
 	item_state = "vialgreen"
 	throwforce = 3.0
 	throw_speed = 1
@@ -25,17 +25,13 @@
 	w_class = 1.0
 
 /obj/item/weapon/vial/green
-	name = "glass vial"
-	icon = 'chemical.dmi'
 	desc = "a glass vial filled with a strange green liquid"
-	icon_state = "vialgreen"
+	icon_state = "vial-green"
 	item_state = "vialgreen"
 
 /obj/item/weapon/vial/blue
-	name = "glass vial"
-	icon = 'chemical.dmi'
 	desc = "a glass vial filled with a shimmering blue liquid"
-	icon_state = "vialblue"
+	icon_state = "vial-blue"
 	item_state = "vialblue"
 //////////////////////////////////////////////////////////
 
@@ -61,16 +57,9 @@
 	var/A = src
 	src = null
 	del(A)
-	switch(pick(1,2,3))
-		if(1)
-			spawn(300)
-				user:gib()
-		if(2)
-			user:weakened += 5
-			user:contract_disease(new /datum/disease/gbs)
-		if(3)
-			spawn(200)
-				user:contract_disease(new /datum/disease/gbs)
+	if(prob(50)) user:weakened += 5
+	user:contract_disease(new /datum/disease/gbs)
+
 /obj/item/weapon/vial/green/shatter()
 	var/A = src
 	var/atom/sourceloc = get_turf(src.loc)
@@ -111,7 +100,7 @@
 	var/obj/overlay/O = new /obj/overlay( sourceloc )
 	var/obj/overlay/O2 = new /obj/overlay( sourceloc )
 
-	O.name = "green liquid"
+	O.name = "blue liquid"
 	O.density = 0
 	O.anchored = 1
 	O.icon = 'effects.dmi'
@@ -140,7 +129,7 @@
 	var/obj/overlay/O = new /obj/overlay( sourceloc )
 	var/obj/overlay/O2 = new /obj/overlay( sourceloc )
 
-	O.name = "green liquid"
+	O.name = "blue liquid"
 	O.density = 0
 	O.anchored = 1
 	O.icon = 'effects.dmi'
@@ -185,7 +174,7 @@
 			var/i
 			for(i=0, i<10, i++)
 				spawn(0)
-					var/obj/effects/water/water1 = new /obj/effects/water( mobloc )
+					var/obj/effect/effect/water/water1 = new /obj/effect/effect/water( mobloc )
 					var/direction = pick(cardinal8)
 					water1.name = "water"
 					water1.density = 0
@@ -209,7 +198,7 @@
 				var/c
 				for(c=0, c<pick(1,2,3), c++)
 					turf = get_step(turf,direction)
-				var/obj/effects/water/water2 = new /obj/effects/water( turf )
+				var/obj/effect/effect/water/water2 = new /obj/effect/effect/water( turf )
 				water2.name = "water"
 				water2.icon = 'water.dmi'
 				water2.icon_state = "extinguish"

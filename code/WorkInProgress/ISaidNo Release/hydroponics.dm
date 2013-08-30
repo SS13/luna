@@ -551,7 +551,7 @@
 					HYPmutateplant("normal")
 					if (!prob(src.endurance)) src.health -= 2
 			if (growing.growthmode == "carnivore" && src.reagents.has_reagent("blood") || src.reagents.has_reagent("synthflesh")) src.growth += 3
-			if (src.reagents.has_reagent("acid") || src.reagents.has_reagent("pacid"))
+			if (src.reagents.has_reagent("sacid") || src.reagents.has_reagent("pacid"))
 				src.growth -= 3
 				if (!prob(src.endurance)) src.health -= 2
 			if (src.reagents.has_reagent("plasma"))
@@ -559,10 +559,10 @@
 				else src.growth += 1
 			if (src.reagents.has_reagent("fuel") || src.reagents.has_reagent("chlorine") || src.reagents.has_reagent("mercury") || src.reagents.has_reagent("toxin") || src.reagents.has_reagent("toxic_slurry"))
 				if (!istype(growing,/datum/plant/slurrypod) && !istype(growing,/datum/plant/radweed) && !prob(src.endurance)) src.health -= 1
-			if (src.reagents.has_reagent("weedkiller") && growing.growthmode == "weed") src.health -= 2
+			if (src.reagents.has_reagent("plantbgone") && growing.growthmode == "weed") src.health -= 2
 			if(prob(0.1)) src.reagents.remove_any(1)
 		if (growing.growthmode == "weed")
-			if (!src.reagents.has_reagent("weedkiller")) src.growth += 1
+			if (!src.reagents.has_reagent("plantbgone")) src.growth += 1
 		if (growing.growthmode == "boring") src.growth += 1
 
 		// SPECIAL PROCS
@@ -698,7 +698,7 @@
 					O.show_message(text("<b>[]</b> fastens the [] to the floor.", user, src), 1)
 				playsound(src.loc, 'Screwdriver.ogg', 100, 1)
 				src.anchored = 1
-/*		else if (istype(W, /obj/item/weapon/weldingtool) || istype(W, /obj/item/weapon/zippo) || istype(W, /obj/item/device/igniter))			Rawr, I don't like hydroponicists welding plants! - CN
+/*		else if (istype(W, /obj/item/weapon/weldingtool) || istype(W, /obj/item/weapon/lighter/zippo) || istype(W, /obj/item/device/igniter))			Rawr, I don't like hydroponicists welding plants! - CN
 			if (istype(W, /obj/item/weapon/weldingtool) && !W:welding)
 				user << "\red It would help if you lit it first, dumbass!"
 				return
@@ -709,7 +709,7 @@
 				else
 					user << "\red Need more fuel."
 					return
-			else if (istype(W, /obj/item/weapon/zippo) && !W:lit)
+			else if (istype(W, /obj/item/weapon/lighter/zippo) && !W:lit)
 				user << "\red It would help if you lit it first, dumbass!"
 				return
 			if (src.current)
@@ -987,7 +987,7 @@
 				src.reagents.add_reagent("plant_nutrients", src.growth)
 				HYPdestroyplant()
 
-	proc/update_icon()
+	update_icon()
 		var/datum/plant/growing = src.current
 		var/datum/plantgenes/DNA = src.plantgenes
 		src.overlays = null
@@ -1106,7 +1106,7 @@
 		src.generation = 0
 		update_icon()
 
-/obj/reagent_dispensers/compostbin
+/obj/structure/reagent_dispensers/compostbin
 	name = "compost tank"
 	desc = "A device that mulches up unwanted produce into usable fertiliser."
 	icon = 'hydroponics.dmi'
@@ -1188,7 +1188,7 @@
 	var/list/allowed = list(/obj/item/weapon/reagent_containers/food/snacks/plant/,\
 	/obj/item/weapon/reagent_containers/food/snacks/mushroom/,\
 	/obj/item/weapon/plant/,\
-	/obj/item/weapon/medical/ointment,\
+	/obj/item/stack/medical/ointment,\
 	/obj/item/weapon/dnainjector)
 	///obj/item/weapon/reagent_containers/poo)	/* Strumpetplaya - commenting this out as it has components we don't support.
 
@@ -1253,7 +1253,7 @@
 					else if(istype(I,/obj/item/weapon/reagent_containers/food/snacks/plant/lime)) G.reagents.add_reagent("juice_lime", 20)
 					else if(istype(I,/obj/item/weapon/reagent_containers/food/snacks/plant/lemon)) G.reagents.add_reagent("juice_lemon", 20)
 					else if(istype(I,/obj/item/weapon/reagent_containers/food/snacks/plant/tomato)) G.reagents.add_reagent("juice_tomato", 20)
-					else if(istype(I,/obj/item/weapon/medical/ointment)) G.reagents.add_reagent("kelotane", 20)
+					else if(istype(I,/obj/item/stack/medical/ointment)) G.reagents.add_reagent("kelotane", 20)
 					else if(istype(I,/obj/item/weapon/dnainjector)) G.reagents.add_reagent("mutagen", 20)
 					else if(istype(I,/obj/item/weapon/plant/sugar)) G.reagents.add_reagent("sugar", 20)
 					else if(istype(I,/obj/item/weapon/reagent_containers/food/snacks/ingredient/sugar)) G.reagents.add_reagent("sugar", 20)
@@ -1618,7 +1618,7 @@
 	attack_hand(var/mob/user as mob)
 		user.machine = src
 		var/dat = "<B>[src.name]</B><BR><HR>"
-		dat += "<b>Amount to Vend</b>: <A href='?src=\ref[src];amount=1'>[src.vendamt]</A><br><br>"
+		dat += "<b>amount to Vend</b>: <A href='?src=\ref[src];amount=1'>[src.vendamt]</A><br><br>"
 		dat += "<b>Tomato</b>: <A href='?src=\ref[src];vend=1'><U>Vend</U></A><br>"
 		dat += "<b>Grape</b>: <A href='?src=\ref[src];vend=2'><U>Vend</U></A><br>"
 		dat += "<b>Orange</b>: <A href='?src=\ref[src];vend=3'><U>Vend</U></A><br>"
@@ -1865,19 +1865,6 @@
 		R.my_atom = src
 		R.add_reagent("poo", 60)
 
-/obj/item/weapon/reagent_containers/glass/bottle/weedkiller
-	name = "atrazine bottle"
-	desc = "A small bottle filled with Atrazine, an effective weedkiller."
-	icon = 'chemical.dmi'
-	icon_state = "bottle10"
-	amount_per_transfer_from_this = 10
-
-	New()
-		var/datum/reagents/R = new/datum/reagents(30)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("weedkiller", 30)
-
 /obj/item/weapon/seedplanter
 	name = "Portable Seed Fabricator"
 	desc = "A tool for cyborgs used to create plant seeds."
@@ -1912,92 +1899,6 @@
 			if("Wheat", "wheat") src.seedpath = /obj/item/weapon/seed/wheat
 			if(null) return
 			else user << "\red ERROR: Seed type not recognised."
-
-//
-// AWKWARD MISC/EXPERIMENTAL SHIT STARTS HERE
-//
-
-// SPACE VINE OR KUDZU
-
-/obj/spacevine
-	name = "Space Kudzu"
-	desc = "An extremely expansionistic species of vine."
-	icon = 'objects.dmi'
-	icon_state = "vine-light1"
-	anchored = 1
-	density = 0
-	var/growth = 0
-	var/waittime = 40
-
-	New()
-		if(istype(src.loc, /turf/space))
-			del(src)
-			return
-
-	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (!W) return
-		if (!user) return
-		if (istype(W, /obj/item/weapon/axe)) del src
-		if (istype(W, /obj/item/weapon/circular_saw)) del src
-		if (istype(W, /obj/item/weapon/kitchen/utensil/knife)) del src
-		if (istype(W, /obj/item/weapon/scalpel)) del src
-		if (istype(W, /obj/item/weapon/screwdriver)) del src
-		if (istype(W, /obj/item/weapon/shard)) del src
-		if (istype(W, /obj/item/weapon/sword)) del src
-		//if (istype(W, /obj/item/weapon/saw)) del src		Strumpetplaya - Commented out as it uses components we do not support
-		if (istype(W, /obj/item/weapon/weldingtool)) del src
-		if (istype(W, /obj/item/weapon/wirecutters)) del src
-		..()
-
-/obj/spacevine/proc/Life()
-	if (!src) return
-	var/Vspread
-	if (prob(50)) Vspread = locate(src.x + rand(-1,1),src.y,src.z)
-	else Vspread = locate(src.x,src.y + rand(-1, 1),src.z)
-	var/dogrowth = 1
-	if (!istype(Vspread, /turf/simulated/floor)) dogrowth = 0
-	for(var/obj/O in Vspread)
-		if (istype(O, /obj/window) || istype(O, /obj/forcefield) || istype(O, /obj/blob) || istype(O, /obj/alien/weeds) || istype(O, /obj/spacevine)) dogrowth = 0
-		if (istype(O, /obj/machinery/door/))
-			if(O:p_open == 0 && prob(50)) O:open()
-			else dogrowth = 0
-	if (dogrowth == 1)
-		var/obj/spacevine/B = new /obj/spacevine(Vspread)
-		B.icon_state = pick("vine-light1", "vine-light2", "vine-light3")
-		spawn(20)
-			if(B)
-				B.Life()
-	src.growth += 1
-	if (src.growth == 10)
-		src.name = "Thick Space Kudzu"
-		src.icon_state = pick("vine-med1", "vine-med2", "vine-med3")
-		src.opacity = 1
-		src.waittime = 80
-	if (src.growth == 20)
-		src.name = "Dense Space Kudzu"
-		src.icon_state = pick("vine-hvy1", "vine-hvy2", "vine-hvy3")
-		src.density = 1
-	spawn(src.waittime)
-		if (src.growth < 20) src.Life()
-
-/obj/spacevine/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			del(src)
-			return
-		if(2.0)
-			if (prob(66))
-				del(src)
-				return
-		if(3.0)
-			if (prob(33))
-				del(src)
-				return
-		else
-	return
-
-/obj/spacevine/temperature_expose(null, temp, volume)
-	del src
 
 // CRYSTAL
 

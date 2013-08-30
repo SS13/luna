@@ -5,14 +5,30 @@ TRACKER IMPLANT
 IMPLANT PAD
 FREEDOM IMPLANT
 IMPLANTER
-
 */
 
+/***************
+* IMPLANT CASE *
+***************/
+/obj/item/weapon/implantcase
+	name = "Glass Case"
+	icon = 'icons/obj/items.dmi'
+	icon_state = "implantcase-0"
+	var/obj/item/weapon/implant/imp = null
+	item_state = "implantcase"
+	throw_speed = 1
+	throw_range = 5
+	w_class = 1.0
+
 /obj/item/weapon/implantcase/proc/update()
-	if (src.imp)
-		src.icon_state = text("implantcase-[]", src.imp.color)
+	if (imp)
+		if(imp.icon_state == "implant_s_b" || imp.icon_state ==  "implant_s")
+			icon_state = "implantcase-s"
+		else
+			icon_state ="implantcase-b"
+
 	else
-		src.icon_state = "implantcase-0"
+		icon_state = "implantcase-0"
 	return
 
 /obj/item/weapon/implantcase/attackby(obj/item/weapon/I as obj, mob/user as mob)
@@ -27,36 +43,106 @@ IMPLANTER
 			src.name = text("Glass Case- '[]'", t)
 		else
 			src.name = "Glass Case"
-	else
-		if (!( istype(I, /obj/item/weapon/implanter) ))
-			return
-	if (I:imp)
-		if ((src.imp || I:imp.implanted))
-			return
-		I:imp.loc = src
-		src.imp = I:imp
-		I:imp = null
-		src.update()
-		I:update()
-	else
-		if (src.imp)
-			if (I:imp)
+
+	else if(istype(I, /obj/item/weapon/reagent_containers/syringe))
+		if(!src.imp)	return
+		if(!src.imp.allow_reagents)	return
+		if(src.imp.reagents.total_volume >= src.imp.reagents.maximum_volume)
+			user << "\red [src] is full."
+		else
+			I.reagents.trans_to(src.imp, 5)
+			user << "\blue You inject 5 units of the solution. The syringe now contains [I.reagents.total_volume] units."
+
+	else if(istype(I, /obj/item/weapon/implanter))
+		if (I:imp)
+			if ((src.imp || I:imp.implanted))
 				return
-			src.imp.loc = I
-			I:imp = src.imp
-			src.imp = null
-			update()
+			I:imp.loc = src
+			src.imp = I:imp
+			I:imp = null
+			src.update()
 			I:update()
+		else
+			if (src.imp)
+				if (I:imp)
+					return
+				src.imp.loc = I
+				I:imp = src.imp
+				src.imp = null
+				update()
+				I:update()
 	return
 
-/obj/item/weapon/implantcase/tracking/New()
 
-	src.imp = new /obj/item/weapon/implant/tracking( src )
-	..()
-	return
+
+
+/obj/item/weapon/implantcase/death_alarm
+	name = "Glass Case- 'Death Alarm'"
+	desc = "A case containing a death alarm implant."
+	icon_state = "implantcase-b"
+	New()
+		src.imp = new /obj/item/weapon/implant/death_alarm( src )
+		..()
+		return
+
+/obj/item/weapon/implantcase/chem
+	name = "Glass Case- 'Chem'"
+	desc = "A case containing a chemical implant."
+	icon_state = "implantcase-b"
+	New()
+		src.imp = new /obj/item/weapon/implant/chem/prison( src )
+		..()
+		return
+
+/obj/item/weapon/implantcase/explosive
+	icon_state = "implantcase-s"
+	New()
+		src.imp = new /obj/item/weapon/implant/explosive( src )
+		..()
+		return
+
+/obj/item/weapon/implantcase/chemtraitor
+	name = "Glass Case- 'Chem'"
+	desc = "A case containing a chemical implant."
+	icon_state = "implantcase-s"
+	New()
+		src.imp = new /obj/item/weapon/implant/chem/traitor( src )
+		..()
+		return
+
+/obj/item/weapon/implantcase/tracking
+	name = "Glass Case- 'Tracking'"
+	desc = "A case containing a tracking implant."
+	icon_state = "implantcase-b"
+	New()
+		src.imp = new /obj/item/weapon/implant/tracking( src )
+		..()
+		return
+
+/obj/item/weapon/implantcase/freedom
+	icon_state = "implantcase-s"
+	New()
+		src.imp = new /obj/item/weapon/implant/freedom( src )
+		..()
+		return
+
+
+/**************
+* IMPLANT PAD *
+**************/
+/obj/item/weapon/implantpad
+	name = "implantpad"
+	icon = 'items.dmi'
+	icon_state = "implantpad-0"
+	var/obj/item/weapon/implantcase/case = null
+	var/broadcasting = null
+	var/listening = 1.0
+	item_state = "electronic"
+	throw_speed = 1
+	throw_range = 5
+	w_class = 2.0
 
 /obj/item/weapon/implantpad/proc/update()
-
 	if (src.case)
 		src.icon_state = "implantpad-1"
 	else
@@ -194,6 +280,17 @@ No Implant Specifics"}
 		return
 	return
 
+
+/***********
+* IMPLANTS *
+***********/
+/obj/item/weapon/implant
+	name = "implant"
+	icon = 'device.dmi'
+	icon_state = "implant"
+	var/implanted = null
+	var/allow_reagents = 0
+
 /obj/item/weapon/implant/catchMessage(msg,mob/source)
 	hear(msg,source)
 	return
@@ -207,13 +304,76 @@ No Implant Specifics"}
 /obj/item/weapon/implant/proc/implanted(source as mob)
 	return
 
+/obj/item/weapon/implant/proc/activate(cause)
+	return
 
-/obj/item/weapon/implantcase/death_alarm/New()
-	src.imp = new /obj/item/weapon/implant/death_alarm( src )
-	..()
+// CHEM
+/obj/item/weapon/implant/chem
+	icon_state = "implant_b"
+	desc = "Injects things."
+	allow_reagents = 1
+	var/volume = 50
+
+	New()
+		..()
+		var/datum/reagents/R = new/datum/reagents(volume)
+		reagents = R
+		R.my_atom = src
+
+	activate(var/cause)
+		if((!cause))	return 0
+		var/mob/living/carbon/R = src.loc
+		src.reagents.trans_to(R, cause)
+		R << "You hear a faint *beep*."
+		if(!src.reagents.total_volume)
+			R << "You hear a faint click from your chest."
+			spawn(0)
+				del(src)
+		return
+
+	emp_act(severity)
+		switch(severity)
+			if(1)
+				if(prob(60))
+					activate(20)
+			if(2)
+				if(prob(60))
+					activate(5)
+
+
+// CHEM TRAITOR
+/obj/item/weapon/implant/chem/traitor
+	icon_state = "implant_s_b"
+	var/phrase = "flatlander"
+	var/activation_emote = "chuckle"
+	volume = 100
+
+/obj/item/weapon/implant/chem/traitor/implanted(mob/source as mob)
+	src.activation_emote = input("Choose 10 units injection emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
+	usr.mind.store_memory("Chemical implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to inject 10 units.", 0, 0)
+	usr << "The implanted chemical implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to inject 10 units."
+	src.phrase = input("Choose 100 units injection phrase:") as text
+	src.phrase = sanitize(phrase)
+	usr.mind.store_memory("Chemical implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to inject 100 units.", 0, 0)
+	usr << "The implanted chemical implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to inject 100 units."
+
+/obj/item/weapon/implant/chem/traitor/hear(var/msg)
+	if(findtext(msg,src.phrase))
+		activate(100)
+
+/obj/item/weapon/implant/chem/traitor/trigger(emote, source as mob)
+	if(emote == activation_emote)
+		src.activate(10)
 	return
 
 
+// CHEM PRISONEER
+/obj/item/weapon/implant/chem/prison/trigger(emote, source as mob)
+	if(emote == "deathgasp")
+		src.activate(src.reagents.total_volume)
+	return
+
+// DEATH ALARM
 /obj/item/weapon/implant/death_alarm/process()
 	var/mob/M = src.loc
 	if(M.stat == 2)
@@ -221,15 +381,25 @@ No Implant Specifics"}
 		radioalert("[M.name]'s death alarm", "[M.name] has died in [t.loc.name]!")
 		processing_items.Remove(src)
 
-
 /obj/item/weapon/implant/death_alarm/implanted(mob/source as mob)
 	processing_items.Add(src)
 
+
+// FREEDOM
+/obj/item/weapon/implant/freedom
+	icon_state = "implant_s_b"
+	var/uses = 1.0
+	var/activation_emote = "chuckle"
 
 /obj/item/weapon/implant/freedom/New()
 	src.uses = rand(1, 5)
 	..()
 	return
+
+/obj/item/weapon/implant/freedom/implanted(mob/source as mob)
+	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
+	source.mind.store_memory("Freedom implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
+	source << "The implanted freedom implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
 
 /obj/item/weapon/implant/freedom/trigger(emote, mob/source as mob)
 	if (src.uses < 1)
@@ -250,6 +420,23 @@ No Implant Specifics"}
 				if (W)
 					W.layer = initial(W.layer)
 
+		if(ishuman(source))
+			var/mob/living/carbon/human/H = source
+			H.reagents.add_reagent("synaptizine", 10)
+			H.reagents.add_reagent("hyperzine", 10)
+
+
+// COMPRESSED MATTER
+/obj/item/weapon/implant/compressed
+	icon_state = "implant_s_b"
+	var/activation_emote = "chuckle"
+	var/obj/scanned = null
+
+/obj/item/weapon/implant/compressed/implanted(mob/source as mob)
+	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
+	if(source.mind)
+		source.mind.store_memory("Compressed matter implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
+	source << "The implanted compressed matter implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
 
 /obj/item/weapon/implant/compressed/trigger(emote, mob/source as mob)
 	if (src.scanned == null)
@@ -259,52 +446,17 @@ No Implant Specifics"}
 		source << "The air glows as \the [src.scanned.name] uncompresses."
 		var/turf/t = get_turf(source)
 		src.scanned.loc = t
-		del src
+		del(src)
 
 
-/obj/item/weapon/implant/freedom/implanted(mob/source as mob)
-	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
-	source.mind.store_memory("Freedom implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
-	source << "The implanted freedom implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
+// EXPLOSIVE
+obj/item/weapon/implant/explosive
+	icon_state = "implant_s_b"
+	var/phrase = "flatlander"
 
-/obj/item/weapon/implant/compressed/implanted(mob/source as mob)
-	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
-	source.mind.store_memory("Compressed matter implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
-	source << "The implanted compressed matter implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
-
-/obj/item/weapon/implant/timplant/implanted(mob/source as mob)
-	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
-	source.mind.store_memory("Teleport implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
-	source << "The implanted Teleport implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
-
-/obj/item/weapon/implant/explosive/implanted(mob/source as mob)
-	src.phrase = input("Choose activation phrase:") as text
-	usr.mind.store_memory("Explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
-	usr << "The implanted explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
-
-
-/obj/item/weapon/implant/slave/implanted(mob/target as mob)
-	target.mholder=src
-
-/obj/item/weapon/implant/master/implanted(mob/target as mob)
-	target.mholder=src
-	src.phrase = input("Choose activation phrase:") as text
-	usr.mind.store_memory("Explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
-	usr << "The implanted explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
-
-
-
-/obj/item/weapon/implant/vfac/implanted(mob/source as mob)
-	src.phrase = input("Choose activation phrase:") as text
-
-
-	//	else if("GBS")
-	//		src.virus =/datum/disease/gbs
-
-	usr.mind.store_memory("Viral factory implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
-	usr << "The implanted viral factory implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
-
-
+/obj/item/weapon/implant/explosive/hear_talk(mob/M as mob, msg)
+	hear(msg)
+	return
 
 /obj/item/weapon/implant/explosive/hear(var/msg)
 	if(findtext(msg,src.phrase))
@@ -316,6 +468,33 @@ No Implant Specifics"}
 		if(t)
 			t.hotspot_expose(SPARK_TEMP,125)
 		del(src)
+
+/obj/item/weapon/implant/explosive/implanted(mob/source as mob)
+	src.phrase = input("Choose activation phrase:") as text
+	src.phrase = sanitize(phrase)
+	if(usr.mind)
+		usr.mind.store_memory("Explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
+	usr << "The implanted explosive implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
+
+
+// TRACKING
+/obj/item/weapon/implant/tracking
+	var/frequency = 1451
+	var/id = 1.0
+
+
+// TELEPORTER
+/obj/item/weapon/implant/timplant
+	icon_state = "implant_s"
+	var/activation_emote = "chuckle"
+
+/obj/item/device/radio/beacon/traitor
+	name = "personal teleporter beacon"
+
+/obj/item/weapon/implant/timplant/implanted(mob/source as mob)
+	src.activation_emote = input("Choose activation emote:") in list("blink", "blink_r", "eyebrow", "chuckle", "twitch_s", "frown", "nod", "blush", "giggle", "grin", "groan", "shrug", "smile", "pale", "sniff", "whimper", "wink")
+	source.mind.store_memory("Teleport implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate.", 0, 0)
+	source << "The implanted Teleport implant can be activated by using the [src.activation_emote] emote, <B>say *[src.activation_emote]</B> to attempt to activate."
 
 /obj/item/weapon/implant/timplant/trigger(emote, mob/source as mob)
 	if (emote == src.activation_emote)
@@ -339,20 +518,66 @@ No Implant Specifics"}
 		source.contents.Remove(src)
 
 
-
+// ALIEN EMBRYO
+/obj/item/weapon/implant/alien
+	icon_state = "implant_s_b"
 
 /obj/item/weapon/implant/alien/implanted(mob/source as mob)
 	source.contract_disease(new/datum/disease/alien_embryo, 1)
-	del src
+	del(src)
+
+
+// VIRAL
+/obj/item/weapon/implant/vfac
+	icon_state = "implant_s"
+	var/phrase = "flatlander"
+	var/datum/disease/virus = /datum/disease/cold
+
+/obj/item/weapon/implant/vfac/implanted(mob/source as mob)
+	src.phrase = input("Choose activation phrase:") as text
+	usr.mind.store_memory("Viral factory implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
+	usr << "The implanted viral factory implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
 
 /obj/item/weapon/implant/vfac/hear(var/msg)
 	if(findtext(msg,src.phrase))
 		var/mob/m = loc
 		infect_mob_random_greater(m)
 
+
+//MIND CONTROL: SLAVE
+/obj/item/weapon/implant/slave
+	icon_state = "implant_s"
+	var/phrase = "123"
+	var/obj/item/weapon/implant/master/m
+	var/mob/living/carbon/human/limited/d
+
+/obj/item/weapon/implant/slave/implanted(mob/target as mob)
+	target.mholder=src
+
 /obj/item/weapon/implant/slave/New()
 	src.d = new/mob/living/carbon/human/limited
 
+/obj/item/weapon/implant/slave/proc/death()
+	if(src.m && src.d.key)
+		if(prob(5))
+			src.m.loc:key = src.loc:key
+			src.loc:key = src.d.key
+		else
+			src.m.loc:key = src.d.key
+			src.loc << "/red The implant malfunctions."
+
+
+//MIND CONTROL: MASTER
+/obj/item/weapon/implant/master
+	icon_state = "implant_s"
+	var/phrase = "123"
+	var/obj/item/weapon/implant/slave/s
+
+/obj/item/weapon/implant/master/implanted(mob/target as mob)
+	target.mholder=src
+	src.phrase = input("Choose activation phrase:") as text
+	usr.mind.store_memory("Mind control implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate.", 0, 0)
+	usr << "The implanted mind control implant can be activated by saying something containing the phrase ''[src.phrase]'', <B>say [src.phrase]</B> to attempt to activate."
 
 /obj/item/weapon/implant/master/hear(var/msg)
 	if(findtext(msg,src.phrase))
@@ -364,41 +589,39 @@ No Implant Specifics"}
 			src.s.loc:verbs+=/mob/proc/endmindcontrol
 			src.s.loc<<"Use endmindcontrol to end."
 
-
-
-/obj/item/weapon/implanter/proc/update()
-	if (src.imp)
-		src.icon_state = "implanter1"
-	else
-		src.icon_state = "implanter0"
-	return
-
-
-/obj/item/weapon/implanter/compress/update()
-	if (src.imp)
-		var/obj/item/weapon/implant/compressed/c = src.imp
-		if(!c.scanned)
-			src.icon_state = "cimplanter0"
+/obj/item/weapon/implant/master/proc/death()
+	if(src.s && src.s.d.key)
+		if(prob(5))
+			src.loc:key = src.s.loc:key
+			src.s.loc:key = src.s.d:key
 		else
-			src.icon_state = "cimplanter1"
-	else
-		src.icon_state = "cimplanter2"
-	return
+			var/k = src.s.loc:key
+			src.s.loc:key = src.s.d.key
+			src.s.d.key = k
+			src.s.d << "/red The implant malfunctions."
+			src.s.d.client.eye = src.s.loc
 
-/obj/item/weapon/implanter/compress/attack(mob/M as mob, mob/user as mob)
-	var/obj/item/weapon/implant/compressed/c = src.imp
-	if (c.scanned == null)
-		user << "Please scan an object with the implanter first."
-		return
-	..()
 
-/obj/item/weapon/implanter/compress/afterattack(atom/A, mob/user as mob)
-	if(istype(A,/obj/item))
-		var/obj/item/weapon/implant/compressed/c = src.imp
-		c.scanned = A
-		A.loc.contents.Remove(A)
-		src.update()
+mob/proc/endmindcontrol()
+	usr.verbs-=/mob/proc/endmindcontrol
+	usr.contents.Remove(usr.mholder:d)
+	usr.mholder:m:loc:key = usr.key
+	usr.key = usr.mholder:d:key
+	usr.mholder:d:key = ""
 
+
+/************
+* IMPLANTER *
+************/
+/obj/item/weapon/implanter
+	name = "implanter"
+	icon = 'items.dmi'
+	icon_state = "implanter0"
+	var/obj/item/weapon/implant/imp = null
+	item_state = "syringe_0"
+	throw_speed = 1
+	throw_range = 5
+	w_class = 2.0
 
 /obj/item/weapon/implanter/attack(mob/target as mob, mob/user as mob)
 	if (!src.imp) return
@@ -441,38 +664,28 @@ No Implant Specifics"}
 		src.imp = null
 		src.icon_state = "implanter0"
 
+/obj/item/weapon/implanter/proc/update()
+	if (src.imp)
+		src.icon_state = "implanter1"
+	else
+		src.icon_state = "implanter0"
+	return
 
 
+/obj/item/weapon/implanter/compress
+	icon_state = "implanter0"
+	imp = /obj/item/weapon/implant/compressed
 
+/obj/item/weapon/implanter/compress/attack(mob/M as mob, mob/user as mob)
+	var/obj/item/weapon/implant/compressed/c = src.imp
+	if (c.scanned == null)
+		user << "Please scan an object with the implanter first."
+		return
+	..()
 
-
-/obj/item/weapon/implant/slave/proc/death()
-	if(src.m && src.d.key)
-		if(rand(5))
-			src.m.loc:key = src.loc:key
-			src.loc:key = src.d.key
-		else
-			src.m.loc:key = src.d.key
-			src.loc << "/red The implant malfunctions."
-
-/obj/item/weapon/implant/master/proc/death()
-	if(src.s && src.s.d.key)
-		if(rand(5))
-			src.loc:key = src.s.loc:key
-			src.s.loc:key = src.s.d:key
-		else
-			var/k = src.s.loc:key
-			src.s.loc:key = src.s.d.key
-			src.s.d.key = k
-			src.s.d << "/red The implant malfunctions."
-			src.s.d.client.eye = src.s.loc
-
-mob/proc/endmindcontrol()
-	usr.verbs-=/mob/proc/endmindcontrol
-	usr.contents.Remove(usr.mholder:d)
-	usr.mholder:m:loc:key = usr.key
-	usr.key = usr.mholder:d:key
-	usr.mholder:d:key = ""
-
-
-
+/obj/item/weapon/implanter/compress/afterattack(atom/A, mob/user as mob)
+	if(istype(A,/obj/item))
+		var/obj/item/weapon/implant/compressed/c = src.imp
+		c.scanned = A
+		A.loc.contents.Remove(A)
+		src.update()

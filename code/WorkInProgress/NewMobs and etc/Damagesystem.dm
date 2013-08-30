@@ -3,7 +3,6 @@
 /mob/living/carbon/human/icon = 'mob.dmi'
 /mob/living/carbon/human/icon_state = "m-none"
 
-/mob/living/carbon/human/random_events = list("blink")
 /mob/living/carbon/human/species = "Human"
 /mob/living/carbon/human/var/lastnutritioncomplaint = 0
 /mob/living/carbon/human/var/bloodloss = 0
@@ -39,7 +38,6 @@
 /mob/living/carbon/human/var/list/body_standing = list()
 /mob/living/carbon/human/var/list/body_lying = list()
 
-/mob/living/carbon/human/var/mutantrace = null
 /mob/living/carbon/human/var/bot = 0
 /mob/living/carbon/human/var/zombie = 0
 /mob/living/carbon/human/var/pale = 0
@@ -47,7 +45,6 @@
 /mob/living/carbon/human/var/zombifying = 0
 /mob/living/carbon/human/var/zombi_infected = 0
 /mob/living/carbon/human/var/image/zombieimage = null
-/mob/living/carbon/human/var/organs2 = list()
 /mob/living/carbon/human/var/datum/organ/external/DEBUG_lfoot
 /mob/living/carbon/human/var/datum/reagents/vessel
 
@@ -114,17 +111,17 @@
 	organs["l_foot"] += l_foot
 	organs["r_foot"] += r_foot
 
-	organs2 += chest
-	organs2 += groin
-	organs2 += head
-	organs2 += l_arm
-	organs2 += r_arm
-	organs2 += l_hand
-	organs2 += r_hand
-	organs2 += l_leg
-	organs2 += r_leg
-	organs2 += l_foot
-	organs2 += r_foot
+	organs += chest
+	organs += groin
+	organs += head
+	organs += l_arm
+	organs += r_arm
+	organs += l_hand
+	organs += r_hand
+	organs += l_leg
+	organs += r_leg
+	organs += l_foot
+	organs += r_foot
 	DEBUG_lfoot = l_foot
 
 	var/g = "m"
@@ -157,11 +154,11 @@
 
 /mob/living/carbon/human/proc/fixblood()
 	for(var/datum/reagent/blood/B in vessel.reagent_list)
-		if(B.id == "blood")
-			B.blood_type = src.b_type
-			B.blood_DNA = src.dna.unique_enzymes
-			if(virus2)
-				B.virus2 = virus2.getcopy()
+		if(B.id == "blood" && B.data)
+			B.data["blood_type"] = src.b_type
+			B.data["blood_DNA"] = src.dna.unique_enzymes
+			if(viruses)
+				B.data["viruses"] = viruses
 
 /mob/living/carbon/human/Bump(atom/movable/AM as mob|obj, yes)
 	if ((!( yes ) || now_pushing))
@@ -180,7 +177,7 @@
 				var/obj/item/weapon/baton/W = equipped()
 				if (world.time > lastDblClick+2)
 					lastDblClick = world.time
-					if(((prob(40)) || (prob(95) && mutations & 16)) && W.status)
+					if(((prob(40)) || (prob(95) && mutations & CLUMSY)) && W.status)
 						src << "\red You accidentally stun yourself with the [W.name]."
 						weakened = max(12, weakened)
 						playsound(loc, 'Egloves.ogg', 50, 1, -1)
@@ -195,13 +192,6 @@
 						W:charges--
 					now_pushing = 0
 					return
-		/*if(istype(tmob, /mob/living/carbon/human) && tmob.mutations & 32)
-			if(prob(40) && !(mutations & 32))
-				for(var/mob/M in viewers(src, null))
-					if(M.client)
-						M << "\red <B>[src] fails to push [tmob]'s fat ass out of the way.</B>"
-				now_pushing = 0
-				return*/
 	now_pushing = 0
 	spawn(0)
 		..()
@@ -219,45 +209,23 @@
 /mob/living/carbon/human/movement_delay()
 	var/tally = 1.3
 
-	if(zombie)
-		return 4
+	if(zombie) return 6
 
+	if(reagents.has_reagent("nuka_cola")) return -1
 	if(reagents.has_reagent("hyperzine")) return -1
 
 	var/health_deficiency = (health_full - health)
 	if(health_deficiency >= 40)
-		tally += (health_deficiency / 25)
-
+		tally += (health_deficiency / 30)
 
 	for(var/organ in list("l_leg","l_foot","r_leg","r_foot"))
 		var/datum/organ/external/o = organs["[organ]"]
-		if(o.broken)
-			tally += 6
+		if(o.broken) tally += 4
 
-	if(wear_suit)
-		switch(wear_suit.type)
-			if(/obj/item/clothing/suit/straight_jacket)
-				tally += 15
-			if(/obj/item/clothing/suit/fire)	//	firesuits slow you down a bit
-				tally += 1.3
-			if(/obj/item/clothing/suit/fire/heavy)	//	firesuits slow you down a bit
-				tally += 1.7
-			if(/obj/item/clothing/suit/armor/riot) //	riot gear is heavy mang
-				tally += 2
-			if(/obj/item/clothing/suit/space)
-				if(!istype(loc, /turf/space))		//	space suits slow you down a bit unless in space
-					tally += 3
-			if(/obj/item/clothing/suit/space/spaceengi)
-				if(!istype(loc, /turf/space))		//	reinstating the slowdown for engineering suits~ :3
-					tally += 2
+	if(wear_suit) tally += wear_suit.slowdown
 
-	if (istype(shoes, /obj/item/clothing/shoes))
-		if (shoes.chained)
-			tally += 15
-		else
-			tally += -1.0
-	/*if(mutations & 32)
-		tally += 1.5*/
+	if(shoes) tally += shoes.slowdown
+
 	if (bodytemperature < 283.222)
 		tally += (283.222 - bodytemperature) / 10 * 1.25
 
@@ -282,7 +250,7 @@
 				stat("Tank Pressure", internal.air_contents.return_pressure())
 				stat("Distribution Pressure", internal.distribute_pressure)
 
-
+/*
 /mob/living/carbon/human/bullet_act(flag, A as obj)
 	var/shielded = 0
 
@@ -294,7 +262,7 @@
 			S.active = 0
 			S.icon_state = "shield0"
 
-	for(var/obj/item/weapon/cloaking_device/S in src)
+	for(var/obj/item/weapon/device/cloak/S in src)
 		if (S.active)
 			shielded = 1
 			S.active = 0
@@ -457,7 +425,7 @@
 		stuttering += 5
 		drowsyness += 5
 
-	return
+	return*/
 
 /mob/living/carbon/human/ex_act(severity)
 	flick("flash", flash)
@@ -487,9 +455,9 @@
 
 		if (2.0)
 			if (!shielded)
-				b_loss += 60
+				b_loss += 50
 
-			f_loss += 60
+			f_loss += 50
 
 			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 30
@@ -550,7 +518,7 @@
 
 	show_message("\red The blob attacks you!")
 	var/list/zones = list()
-	for(var/datum/organ/external/part in organs2)
+	for(var/datum/organ/external/part in organs)
 		if(!part.destroyed)
 			zones += part.name
 	var/zone = pick(zones)
@@ -574,7 +542,7 @@
 					O.show_message(text("\red <B>The blob has weakened []!</B>", src), 1, "\red You hear someone fall.", 2)
 			temp.take_damage(damage)
 		if ("chest")
-			if ((((wear_suit && wear_suit.body_parts_covered & UPPER_TORSO) || (w_uniform && w_uniform.body_parts_covered & UPPER_TORSO)) && prob(85)))
+			if ((((wear_suit && wear_suit.body_parts_covered & CHEST) || (w_uniform && w_uniform.body_parts_covered & CHEST)) && prob(85)))
 				show_message("\red You have been protected from a hit to the chest.")
 				return
 			if (damage > 4.9)
@@ -591,7 +559,7 @@
 				if(stat != 2)	stat = 1
 			temp.take_damage(damage)
 		if ("groin")
-			if ((((wear_suit && wear_suit.body_parts_covered & LOWER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(75)))
+			if ((((wear_suit && wear_suit.body_parts_covered & GROIN) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(75)))
 				show_message("\red You have been protected from a hit to the lower chest.")
 				return
 			else
@@ -726,16 +694,6 @@
 			u_equip(W)
 			back = W
 			W.equipped(src, text)
-/*		if("headset") // No specialized headset slot yet. Headsets use the ears slot
-			if (ears)
-				if (emptyHand)
-					ears.DblClick()
-				return
-			if (!( istype(W, /obj/item/device/radio/headset) ))
-				return
-			u_equip(W)
-			w_radio = W
-			W.equipped(src, text) */
 		if("o_clothing")
 			if (wear_suit)
 				if (emptyHand)
@@ -743,9 +701,6 @@
 				return
 			if (!( istype(W, /obj/item/clothing/suit) ))
 				return
-			/*if (mutations & 32 && !(W.flags & ONESIZEFITSALL))
-				src << "\red You're too fat to wear the [W.name]!"
-				return*/
 			u_equip(W)
 			wear_suit = W
 			W.equipped(src, text)
@@ -819,9 +774,6 @@
 				return
 			if (!( istype(W, /obj/item/clothing/under) ))
 				return
-			/*if (mutations & 32 && !(W.flags & ONESIZEFITSALL))
-				src << "\red You're too fat to wear the [W.name]!"
-				return*/
 			u_equip(W)
 			w_uniform = W
 			W.equipped(src, text)
@@ -875,378 +827,6 @@
 		updatehealth()
 	return
 
-/mob/living/carbon/human/update_clothing()
-	..()
-
-	if (monkeyizing)
-		return
-
-	overlays = null
-
-	// lol
-	var/fat = ""
-	/*if (mutations & 32)
-		fat = "fat"*/
-
-	if (mutations & 8)
-		overlays += image("icon" = 'genetics.dmi', "icon_state" = "hulk[fat][!lying ? "_s" : "_l"]")
-
-	if (mutations & 2)
-		overlays += image("icon" = 'genetics.dmi', "icon_state" = "fire[fat][!lying ? "_s" : "_l"]")
-
-	if (mutations & 1)
-		overlays += image("icon" = 'genetics.dmi', "icon_state" = "telekinesishead[fat][!lying ? "_s" : "_l"]")
-
-	if (mutantrace)
-		overlays += image("icon" = 'genetics.dmi', "icon_state" = "[mutantrace][fat][!lying ? "_s" : "_l"]")
-		if(face_standing)
-			del(face_standing)
-		if(face_lying)
-			del(face_lying)
-		if(stand_icon)
-			del(stand_icon)
-		if(lying_icon)
-			del(lying_icon)
-	else
-		if(!face_standing || !face_lying)
-			update_face()
-		if(!stand_icon || !lying_icon)
-			update_body()
-
-	if(buckled)
-		if(istype(buckled, /obj/stool/bed))
-			lying = 1
-		else
-			lying = 0
-
-	// Automatically drop anything in store / id / belt if you're not wearing a uniform.
-	if (!w_uniform)
-		for (var/obj/item/thing in list(r_store, l_store, wear_id, belt))
-			if (thing)
-				u_equip(thing)
-				if (client)
-					client.screen -= thing
-
-				if (thing)
-					thing.loc = loc
-					thing.dropped(src)
-					thing.layer = initial(thing.layer)
-
-
-	//if (zone_sel)
-	//	zone_sel.overlays = null
-	//	zone_sel.overlays += body_standing
-	//	zone_sel.overlays += image("icon" = 'zone_sel.dmi', "icon_state" = text("[]", zone_sel.selecting))
-
-	if (lying)
-		icon = lying_icon
-
-		overlays += body_lying
-
-		if (face_lying)
-			overlays += face_lying
-	else
-		icon = stand_icon
-
-		overlays += body_standing
-
-		if (face_standing)
-			overlays += face_standing
-
-	// Uniform
-	if (w_uniform)
-		/*if (mutations & 32 && !(w_uniform.flags & ONESIZEFITSALL))
-			src << "\red You burst out of the [w_uniform.name]!"
-			var/obj/item/clothing/c = w_uniform
-			u_equip(c)
-			if(client)
-				client.screen -= c
-			if(c)
-				c:loc = loc
-				c:dropped(src)
-				c:layer = initial(c:layer)*/
-		w_uniform.screen_loc = ui_iclothing
-		if (istype(w_uniform, /obj/item/clothing/under))
-			var/t1 = w_uniform.color
-			if (!t1)
-				t1 = icon_state
-			/*if (mutations & 32)
-				overlays += image("icon" = 'uniform_fat.dmi', "icon_state" = "[t1][!lying ? "_s" : "_l"]", "layer" = MOB_LAYER)*/
-			//else
-			if(!lying)
-				var/datum/organ/external/rhand = organs["r_hand"]
-				var/datum/organ/external/lhand = organs["l_hand"]
-				var/iconx = text("[][][][]",t1, (!(lying) ? "_s" : "_l"),(rhand.destroyed ? "_rhand" : null),(lhand.destroyed ? "_lhand" : null))
-				overlays += image('uniform.dmi',"[iconx]",MOB_LAYER)
-			else
-				var/iconx = "[t1]_l"
-				overlays += image('uniform.dmi',"[iconx]",MOB_LAYER)
-			if (w_uniform.blood_DNA)
-				var/icon/stain_icon = icon('blood.dmi', "uniformblood[!lying ? "" : "2"]")
-				overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-
-	if (wear_id)
-		overlays += image("icon" = 'mob.dmi', "icon_state" = "id[!lying ? null : "2"]", "layer" = MOB_LAYER)
-
-	if (client)
-		client.screen -= hud_used.intents
-		client.screen -= hud_used.mov_int
-
-
-	//Screenlocs for these slots are handled by the huds other_update()
-	//because theyre located on the 'other' inventory bar.
-
-	// Gloves
-	if (gloves)
-		var/datum/organ/external/rhand = organs["r_hand"]
-		var/datum/organ/external/lhand = organs["l_hand"]
-		var/t1 = gloves.item_state
-		if (!t1)
-			t1 = gloves.icon_state
-		if(!lying)
-			if(!rhand.destroyed)
-				overlays += image('hands.dmi',"[t1]_rhand",MOB_LAYER)
-			if(!lhand.destroyed)
-				overlays += image('hands.dmi',"[t1]_lhand",MOB_LAYER)
-		else
-			if(!rhand.destroyed)
-				overlays += image('hands.dmi',"[t1]2_rhand",MOB_LAYER)
-			if(!lhand.destroyed)
-				overlays += image('hands.dmi',"[t1]2_lhand",MOB_LAYER)
-		if (gloves.blood_DNA)
-			var/icon/stain_icon = icon('blood.dmi', "bloodyhands[!lying ? "" : "2"]")
-			overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-	else if (blood_DNA)
-		var/icon/stain_icon = icon('blood.dmi', "bloodyhands[!lying ? "" : "2"]")
-		overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-	// Glasses
-	if (glasses)
-		var/t1 = glasses.icon_state
-		overlays += image("icon" = 'eyes.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-	// Ears
-	if (ears)
-		var/t1 = ears.icon_state
-		overlays += image("icon" = 'ears.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-	// Shoes
-	if (shoes)
-		var/t1 = shoes.icon_state
-		overlays += image("icon" = 'feet.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		if (shoes.blood_DNA)
-			var/icon/stain_icon = icon('blood.dmi', "shoesblood[!lying ? "" : "2"]")
-			overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)	// Radio
-/*	if (w_radio)
-		overlays += image("icon" = 'ears.dmi', "icon_state" = "headset[!lying ? "" : "2"]", "layer" = MOB_LAYER) */
-
-	if(client) hud_used.other_update() //Update the screenloc of the items on the 'other' inventory bar
-											   //to hide / show them.
-
-	if (wear_mask)
-		if (istype(wear_mask, /obj/item/clothing/mask))
-			var/t1 = wear_mask.icon_state
-			overlays += image("icon" = 'mask.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-			if (!istype(wear_mask, /obj/item/clothing/mask/cigarette))
-				if (wear_mask.blood_DNA)
-					var/icon/stain_icon = icon('blood.dmi', "maskblood[!lying ? "" : "2"]")
-					overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-			wear_mask.screen_loc = ui_mask
-
-
-	if (client)
-		if (i_select)
-			if (intent)
-				client.screen += hud_used.intents
-
-				var/list/L = dd_text2list(intent, ",")
-				L[1] += ":-11"
-				i_select.screen_loc = dd_list2text(L,",") //ICONS4, FUCKING SHIT
-			else
-				i_select.screen_loc = null
-		if (m_select)
-			if (m_int)
-				client.screen += hud_used.mov_int
-
-				var/list/L = dd_text2list(m_int, ",")
-				L[1] += ":-11"
-				m_select.screen_loc = dd_list2text(L,",") //ICONS4, FUCKING SHIT
-			else
-				m_select.screen_loc = null
-
-
-	if (wear_suit)
-		/*if (mutations & 32 && !(wear_suit.flags & ONESIZEFITSALL))
-			src << "\red You burst out of the [wear_suit.name]!"
-			var/obj/item/clothing/c = wear_suit
-			u_equip(c)
-			if(client)
-				client.screen -= c
-			if(c)
-				c:loc = loc
-				c:dropped(src)
-				c:layer = initial(c:layer)*/
-		if (istype(wear_suit, /obj/item/clothing/suit))
-			var/t1 = wear_suit.icon_state
-			overlays += image("icon" = 'suit.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		if (wear_suit.blood_DNA)
-			var/icon/stain_icon = null
-			if (istype(wear_suit, /obj/item/clothing/suit/armor/vest || /obj/item/clothing/suit/wcoat || /obj/item/clothing/suit/armor/a_i_a_ptank))
-				stain_icon = icon('blood.dmi', "armorblood[!lying ? "" : "2"]")
-			else if (istype(wear_suit, /obj/item/clothing/suit/storage/det_suit || /obj/item/clothing/suit/storage/labcoat))
-				stain_icon = icon('blood.dmi', "coatblood[!lying ? "" : "2"]")
-			else
-				stain_icon = icon('blood.dmi', "suitblood[!lying ? "" : "2"]")
-			overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-		wear_suit.screen_loc = ui_oclothing
-		if (istype(wear_suit, /obj/item/clothing/suit/straight_jacket))
-			if (handcuffed)
-				handcuffed.loc = loc
-				handcuffed.layer = initial(handcuffed.layer)
-				handcuffed = null
-			if ((l_hand || r_hand))
-				var/h = hand
-				hand = 1
-				drop_item()
-				hand = 0
-				drop_item()
-				hand = h
-//	var/icon/hair = icon()
-	if(!lying)
-		var/icon/hair_s = new/icon("icon" = 'human_face.dmi', "icon_state" = "[hair_icon_state]_s")
-		hair_s.Blend(rgb(r_hair, g_hair, b_hair), ICON_ADD)
-		overlays += image("icon" = hair_s, "layer" = MOB_LAYER)
-/*		if(src.hair)
-			src.hair.icon = hair_s
-		else
-			hair = new/obj/overlay(src)
-			src.hair.icon = hair_s
-			src.layer  = MOB_LAYER
-		overlays += hair*/
-	else
-		var/icon/hair_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "[hair_icon_state]_l")
-		hair_l.Blend(rgb(r_hair, g_hair, b_hair), ICON_ADD)
-		overlays += image("icon" = hair_l, "layer" = MOB_LAYER)
-	//	if(src.hair)
-		//	src.hair.icon = hair_l
-
-	//	else
-			//hair = new/obj/overlay(src)
-			//src.hair.icon = hair_l
-			//src.layer = MOB_LAYER
-
-
-		//hair.layer = MOB_LAYER + 1
-	// Head
-	if (head)
-		var/t1 = head.icon_state
-		var/icon/head_icon = icon('head.dmi', text("[][]", t1, (!( lying ) ? null : "2")))
-		overlays += image("icon" = head_icon, "layer" = MOB_LAYER)
-		if (head.blood_DNA)
-			var/icon/stain_icon = icon('blood.dmi', "helmetblood[!lying ? "" : "2"]")
-			overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-		head.screen_loc = ui_head
-
-	// Belt
-	if (belt)
-		var/t1 = belt.item_state
-		if (!t1)
-			t1 = belt.icon_state
-		overlays += image("icon" = 'belt.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		belt.screen_loc = ui_belt
-
-	if ((wear_mask && !(wear_mask.see_face)) || (head && !(head.see_face))) // can't see the face
-		if (wear_id)
-			if (istype(wear_id, /obj/item/weapon/card/id))
-				var/obj/item/weapon/card/id/id = wear_id
-				if (id.registered)
-					name = id.registered
-				else
-					name = "Unknown"
-			else if (istype(wear_id, /obj/item/device/pda))
-				var/obj/item/device/pda/pda = wear_id
-				if (pda.owner)
-					name = pda.owner
-				else
-					name = "Unknown"
-		else
-			name = "Unknown"
-	else
-		if (wear_id)
-			if (istype(wear_id, /obj/item/weapon/card/id))
-				var/obj/item/weapon/card/id/id = wear_id
-				if (id.registered != real_name)
-					name = "[real_name] (as [id.registered])"
-
-
-			else if (istype(wear_id, /obj/item/device/pda))
-				var/obj/item/device/pda/pda = wear_id
-				if (pda.owner)
-					if (pda.owner != real_name)
-						name = "[real_name] (as [pda.owner])"
-		else
-			name = real_name
-
-	if (wear_id)
-		wear_id.screen_loc = ui_id
-
-	if (l_store)
-		l_store.screen_loc = ui_storage1
-
-	if (r_store)
-		r_store.screen_loc = ui_storage2
-
-	if (back)
-		var/t1 = back.icon_state
-		overlays += image("icon" = 'back.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		back.screen_loc = ui_back
-
-	if (handcuffed)
-		pulling = null
-		if (!lying)
-			overlays += image("icon" = 'mob.dmi', "icon_state" = "handcuff1", "layer" = MOB_LAYER)
-		else
-			overlays += image("icon" = 'mob.dmi', "icon_state" = "handcuff2", "layer" = MOB_LAYER)
-
-	if (client)
-		client.screen -= contents
-		client.screen += contents
-
-	if (r_hand)
-		overlays += image("icon" = 'items_righthand.dmi', "icon_state" = r_hand.item_state ? r_hand.item_state : r_hand.icon_state, "layer" = MOB_LAYER+1)
-		r_hand.screen_loc = ui_rhand
-	if (l_hand)
-		overlays += image("icon" = 'items_lefthand.dmi', "icon_state" = l_hand.item_state ? l_hand.item_state : l_hand.icon_state, "layer" = MOB_LAYER+1)
-		l_hand.screen_loc = ui_lhand
-
-
-
-	var/shielded = 0
-	for (var/obj/item/device/shield/S in src)
-		if (S.active)
-			shielded = 1
-			break
-
-	for (var/obj/item/weapon/cloaking_device/S in src)
-		if (S.active)
-			shielded = 2
-			break
-
-	if(client && client.admin_invis)
-		invisibility = 100
-	else if (shielded == 2)
-		invisibility = 2
-	else
-		invisibility = 0
-
-	if (shielded)
-		overlays += image("icon" = 'mob.dmi', "icon_state" = "shield", "layer" = MOB_LAYER)
-
-	for (var/mob/M in viewers(1, src))
-		if ((M.client && M.machine == src))
-			spawn (0)
-				show_inv(M)
-				return
-
-	last_b_state = stat
-
 /mob/living/carbon/human/hand_p(mob/M as mob)
 	if (!ticker)
 		M << "You cannot attack people before the game has started."
@@ -1287,7 +867,7 @@
 						O.show_message(text("\red <B>[M.name] has bit []!</B>", src), 1)
 				var/damage = rand(1, 3)
 				var/zones = list()
-				for(var/datum/organ/external/p in organs2)
+				for(var/datum/organ/external/p in organs)
 					if(!p.destroyed)
 						zones += p.name
 				if(!zones)
@@ -1347,7 +927,7 @@
 					O.show_message(text("\red <B>[M.name] has bit []!</B>", src), 1)
 				var/damage = rand(1, 3)
 				var/list/zones = list()
-				for(var/datum/organ/external/p in organs2)
+				for(var/datum/organ/external/p in organs)
 					if(!p.destroyed)
 						zones += p.name
 				if(!zones)
@@ -1362,6 +942,68 @@
 				updatehealth()
 				if(istype(M.virus, /datum/disease/jungle_fever))
 					monkeyize()
+	return
+
+/mob/living/carbon/human/attack_slime(mob/living/carbon/slime/M as mob)
+	if(M.Victim) return // can't attack while eating!
+
+	if (health > -100)
+
+		for(var/mob/O in viewers(src, null))
+			if ((O.client && !( O.blinded )))
+				O.show_message(text("\red <B>The [M.name] glomps []!</B>", src), 1)
+
+		var/damage = rand(1, 3)
+
+		if(istype(M, /mob/living/carbon/slime/adult))
+			damage = rand(10, 25)
+		else
+			damage = rand(5, 15)
+
+
+		var/dam_zone = pick("head", "chest", "l_arm", "r_arm", "l_leg", "r_leg", "groin")
+
+		var/datum/organ/external/affecting = get_organ(ran_zone(dam_zone))
+		//var/armor_block = run_armor_check(affecting, "melee")
+		apply_damage(damage, BRUTE, affecting/*, armor_block*/)
+
+
+		if(M.powerlevel > 0)
+			var/stunprob = 10
+			var/power = M.powerlevel + rand(0,3)
+
+			switch(M.powerlevel)
+				if(1 to 2) stunprob = 20
+				if(3 to 4) stunprob = 30
+				if(5 to 6) stunprob = 40
+				if(7 to 8) stunprob = 60
+				if(9) 	   stunprob = 70
+				if(10) 	   stunprob = 95
+
+			if(prob(stunprob))
+				M.powerlevel -= 3
+				if(M.powerlevel < 0)
+					M.powerlevel = 0
+
+				for(var/mob/O in viewers(src, null))
+					if ((O.client && !( O.blinded )))
+						O.show_message(text("\red <B>The [M.name] has shocked []!</B>", src), 1)
+
+				Weaken(power)
+				if (stuttering < power)
+					stuttering = power
+				Stun(power)
+
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+				s.set_up(5, 1, src)
+				s.start()
+
+				if (prob(stunprob) && M.powerlevel >= 8)
+					adjustFireLoss(M.powerlevel * rand(6,10))
+
+
+		updatehealth()
+
 	return
 
 /mob/living/carbon/human/attack_alien(mob/living/carbon/alien/humanoid/M as mob)
@@ -1427,7 +1069,7 @@
 						affecting.take_damage(damage)
 					else
 						if (def_zone == "chest")
-							if ((((wear_suit && wear_suit.body_parts_covered & UPPER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(85)))
+							if ((((wear_suit && wear_suit.body_parts_covered & CHEST) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(85)))
 								show_message("\red You have been protected from a hit to the chest.")
 								return
 							if (damage > 4.9)
@@ -1446,7 +1088,7 @@
 							affecting.take_damage(damage)
 						else
 							if (def_zone == "groin")
-								if ((((wear_suit && wear_suit.body_parts_covered & LOWER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(75)))
+								if ((((wear_suit && wear_suit.body_parts_covered & GROIN) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(75)))
 									show_message("\red You have been protected from a hit to the lower chest.")
 									return
 								if (damage > 4.9)
@@ -1501,24 +1143,23 @@
 		M << "No attacking people at spawn, you jackass."
 		return
 
-/*Removed stungloves as they are dodgy weapons :3. -CN
-	if ((M.gloves && M.gloves.elecgen == 1 && M.a_intent == "hurt") /*&& (!istype(src:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
-		if(M.gloves.uses > 0)
-			M.gloves.uses--
-			if (weakened < 5)
-				weakened = 5
-			if (stuttering < 5)
-				stuttering = 5
-			if (stunned < 5)
-				stunned = 5
-			for(var/mob/O in viewers(src, null))
-				if (O.client)
-					O.show_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>", 1, "\red You hear someone fall", 2)
-		else
-			M.gloves.elecgen = 0
-			M << "\red Not enough charge! "
-			return
-			*/
+	if(M.gloves && istype(M.gloves,/obj/item/clothing/gloves))
+		var/obj/item/clothing/gloves/G = M.gloves
+		if(G.cell)
+			if(M.a_intent == "hurt")//Stungloves.
+				if(G.cell.charge >= 2500)
+					G.cell.charge -= 2500
+					visible_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>")
+					log_attack("[M.name] ([M.ckey]) stungloved [src.name] ([src.ckey])")
+
+					Stun(10)
+					Weaken(10)
+					stuttering += 10
+
+					return 1
+				else
+					M << "<span class='notice'>Not enough charge!</span>"
+				return
 
 	if (M.a_intent == "help")
 		if (M.zombie)
@@ -1526,14 +1167,76 @@
 		if (health > 0)
 			if (w_uniform)
 				w_uniform.add_fingerprint(M)
-			sleeping = 0
-			resting = 0
-			if (paralysis >= 3) paralysis -= 3
-			if (stunned >= 3) stunned -= 3
-			if (weakened >= 3) weakened -= 3
-			playsound(loc, 'thudswoosh.ogg', 50, 1, -1)
-			for(var/mob/O in viewers(src, null))
-				O.show_message(text("\blue [] shakes [] trying to wake [] up!", M, src, src), 1)
+		if (M.zombie)
+			return
+		if (health > 0)
+			if (w_uniform)
+				w_uniform.add_fingerprint(M)
+			if(M == src)
+				visible_message( \
+					"<span class='notice'>[src] examines \himself.", \
+					"<span class='notice'>You check yourself for injuries.</span>")
+
+				for(var/datum/organ/external/org in M.organs)
+					if(istype(org, /datum/organ/external/wound) || istype(org, /datum/organ/external/groin))
+						continue
+					var/status = ""
+					var/brutedamage = org.brute_dam
+					var/burndamage = org.burn_dam
+					if(halloss > 0)
+						if(prob(30))
+							brutedamage += halloss
+						if(prob(30))
+							burndamage += halloss
+
+					if(org.destroyed)
+						src << "\t \red My [org.display_name] is <b>missing</b>!."
+						continue
+
+					else if(org.robotic)
+						if(brutedamage > 0)
+							status = "dented"
+						if(brutedamage > 30)
+							status = "severely dented"
+						if(brutedamage > 0 && burndamage > 0)
+							status += " and "
+						if(burndamage > 30)
+							status += "burnt"
+						else if(burndamage > 0)
+							status += "charred"
+
+						if(status == "")
+							status = "OK"
+						src << "\t [status == "OK" ? "\blue" : "\red"] My robotic [org.display_name] is [status]."
+						continue
+
+					if(brutedamage > 0)
+						status = "bruised"
+					if(brutedamage > 30)
+						status = "mangled"
+					if(org.bleeding)
+						status = "<b>bleeding</b>"
+					if((brutedamage > 0 || org.bleeding) && burndamage > 0)
+						status += " and "
+
+					if(burndamage > 40)
+						status += "peeling away"
+					else if(burndamage > 20)
+						status += "blistered"
+					else if(burndamage > 0)
+						status += "numb"
+					if(status == "")
+						status = "OK"
+					src << "\t [status == "OK" ? "\blue" : "\red"] My [org.display_name] is [status]."
+			else
+				sleeping = 0
+				resting = 0
+				if (paralysis >= 3) paralysis -= 3
+				if (stunned >= 3) stunned -= 3
+				if (weakened >= 3) weakened -= 3
+				playsound(loc, 'thudswoosh.ogg', 50, 1, -1)
+				for(var/mob/O in viewers(src, null))
+					O.show_message(text("\blue [] shakes [] trying to wake [] up!", M, src, src), 1)
 		else
 			if (M.health >= -75.0)
 				if (((M.head && M.head.flags & 4) || ((M.wear_mask && !( M.wear_mask.flags & 32 )) || ((head && head.flags & 4) || (wear_mask && !( wear_mask.flags & 32 ))))))
@@ -1555,6 +1258,9 @@
 				return
 			if (M.zombie)
 				return
+			if(buckled)
+				M << "<span class='notice'>You cannot grab [src], \he is buckled in!</span>"
+				return
 			if (w_uniform)
 				w_uniform.add_fingerprint(M)
 			var/obj/item/weapon/grab/G = new /obj/item/weapon/grab( M )
@@ -1571,7 +1277,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.elecgen == 1))
+			if (M.a_intent == "hurt")
 				if (w_uniform)
 					w_uniform.add_fingerprint(M)
 				var/damage = rand(1, 9)
@@ -1615,13 +1321,13 @@
 					updatehealth()
 					return
 				t = M.zone_sel.selecting
-				if ((t in list( "eyes", "mouth" )))
+				if (t in list( "eyes", "mouth" ))
 					t = "head"
 				var/def_zone = ran_zone(t)
 				if (organs["[def_zone]"])
 					affecting = organs["[def_zone]"]
 				if ((istype(affecting, /datum/organ/external) && prob(90) && !affecting.destroyed))
-					if (M.mutations & 8)
+					if (M.mutations & HULK)
 						damage += 5
 						spawn(0)
 							paralysis += 1
@@ -1629,11 +1335,18 @@
 							sleep(3)
 							step_away(src,M,15)
 					playsound(loc, "punch", 25, 1, -1)
-					for(var/mob/O in viewers(src, null))
-						O.show_message(text("\red <B>[] has punched []!</B>", M, src), 1)
+					if(!def_zone == "head")
+						for(var/mob/O in viewers(src, null))
+							O.show_message(text("\red <B>[] has punched []!</B>", M, src), 1)
 
 					if (def_zone == "head")
+						for(var/mob/O in viewers(src, null))
+							O.show_message(text("\red <B>[] has punched [] in face!</B>", M, src), 1)
 						if ((((head && head.body_parts_covered & HEAD) || (wear_mask && wear_mask.body_parts_covered & HEAD)) && prob(99)))
+							if (istype(wear_mask, /obj/item/clothing/mask/gas/clown_hat))
+								for(var/mob/O in viewers(src, null))
+									O.show_message(text("[src]'s nose honks!"), 1)
+								playsound(src.loc, 'sound/items/bikehorn.ogg', 50, 1)
 							if (prob(20))
 								affecting.take_damage(damage, 0)
 							else
@@ -1647,7 +1360,7 @@
 						affecting.take_damage(damage)
 					else
 						if (def_zone == "chest")
-							if ((((wear_suit && wear_suit.body_parts_covered & UPPER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(85)))
+							if ((((wear_suit && wear_suit.body_parts_covered & CHEST) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(85)))
 								show_message("\red You have been protected from a hit to the chest.")
 								return
 							if (damage > 4.9)
@@ -1666,7 +1379,7 @@
 							affecting.take_damage(damage)
 						else
 							if (def_zone == "groin")
-								if ((((wear_suit && wear_suit.body_parts_covered & LOWER_TORSO) || (w_uniform && w_uniform.body_parts_covered & LOWER_TORSO)) && prob(75)))
+								if ((((wear_suit && wear_suit.body_parts_covered & GROIN) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(75)))
 									show_message("\red You have been protected from a hit to the lower chest.")
 									return
 								if (damage > 4.9)
@@ -1694,7 +1407,7 @@
 						O.show_message(text("\red <B>[] has attempted to punch []!</B>", M, src), 1)
 					return
 			else
-				if (!( lying ) && !(M.gloves && M.gloves.elecgen == 1))
+				if (!( lying ) && !(M.gloves && M.gloves.cell))
 					if (w_uniform)
 						w_uniform.add_fingerprint(M)
 					var/randn = rand(1, 100)
@@ -1795,123 +1508,6 @@
 			face_icon_state = "facial_hogan"
 		else
 			face_icon_state = "bald"
-
-
-/mob/living/carbon/human/proc/update_body()
-	if(stand_icon)
-		del(stand_icon)
-	if(lying_icon)
-		del(lying_icon)
-
-	if (mutantrace)
-		return
-
-	var/g = "m"
-	if (gender == MALE)
-		g = "m"
-	else if (gender == FEMALE)
-		g = "f"
-
-	stand_icon = new /icon('human.dmi', "body_[g]_s")
-	lying_icon = new /icon('human.dmi', "body_[g]_l")
-
-	if (underwear > 0)
-		stand_icon.Blend(new /icon('human.dmi', "underwear[underwear]_[g]_s"), ICON_OVERLAY)
-		lying_icon.Blend(new /icon('human.dmi', "underwear[underwear]_[g]_l"), ICON_OVERLAY)
-
-	var/husk = (mutations & 64)
-	//var/obese = (mutations & 32)
-	if (husk)
-		stand_icon.Blend(new /icon('human.dmi', "husk_s"), ICON_OVERLAY)
-		lying_icon.Blend(new /icon('human.dmi', "husk_l"), ICON_OVERLAY)
-	//stand_icon.Blend(new /icon('human.dmi', "groin_[g]_s"), ICON_OVERLAY)
-	//lying_icon.Blend(new /icon('human.dmi', "groin_[g]_l"), ICON_OVERLAY)
-/*	for(var/datum/organ/external/part in organs2)
-		if(istype(part,/datum/organ/external/groin))
-			stand_icon.Blend(new /icon('human.dmi', "groin_[g]_s"), ICON_OVERLAY)
-			lying_icon.Blend(new /icon('human.dmi', "groin_[g]_l"), ICON_OVERLAY)
-			continue
-		if(istype(part,/datum/organ/external/chest))
-			stand_icon.Blend(new /icon('human.dmi', "chest_[g]_s"), ICON_OVERLAY)
-			lying_icon.Blend(new /icon('human.dmi', "chest_[g]_l"), ICON_OVERLAY)
-			continue
-		if(istype(part,/datum/organ/external/chest))
-			if (underwear > 0)
-				stand_icon.Blend(new /icon('human.dmi', "underwear[underwear]_[g]_s"), ICON_OVERLAY)
-				lying_icon.Blend(new /icon('human.dmi', "underwear[underwear]_[g]_l"), ICON_OVERLAY)
-		if(!part.destroyed)
-			stand_icon.Blend(new /icon('human.dmi', "[part.icon_name]_s"), ICON_OVERLAY)
-			lying_icon.Blend(new /icon('human.dmi', "[part.icon_name]_l"), ICON_OVERLAY)*/
-
-
-
-	// Skin tone
-	if (s_tone >= 0)
-		stand_icon.Blend(rgb(s_tone, s_tone, s_tone), ICON_ADD)
-		lying_icon.Blend(rgb(s_tone, s_tone, s_tone), ICON_ADD)
-	else
-		stand_icon.Blend(rgb(-s_tone,  -s_tone,  -s_tone), ICON_SUBTRACT)
-		lying_icon.Blend(rgb(-s_tone,  -s_tone,  -s_tone), ICON_SUBTRACT)
-	if(zombie)
-		stand_icon.Blend(rgb(100,100,100))
-		lying_icon.Blend(rgb(100,100,100))
-	if(pale)
-		stand_icon.Blend(rgb(100,100,100))
-		lying_icon.Blend(rgb(100,100,100))
-
-/mob/living/carbon/human/proc/update_face()
-	if(organs)
-		var/datum/organ/external/org = organs["head"]
-		if(org)
-			if(org.destroyed)
-				del(face_standing)
-				del(face_lying)
-				return
-	del(face_standing)
-	del(face_lying)
-
-	if (mutantrace)
-		return
-
-	var/g = "m"
-	if (gender == MALE)
-		g = "m"
-	else if (gender == FEMALE)
-		g = "f"
-
-	var/icon/eyes_s = new/icon("icon" = 'human_face.dmi', "icon_state" = "eyes_s")
-	var/icon/eyes_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "eyes_l")
-	eyes_s.Blend(rgb(r_eyes, g_eyes, b_eyes), ICON_ADD)
-	eyes_l.Blend(rgb(r_eyes, g_eyes, b_eyes), ICON_ADD)
-
-	var/icon/facial_s = new/icon("icon" = 'human_face.dmi', "icon_state" = "[face_icon_state]_s")
-	var/icon/facial_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "[face_icon_state]_l")
-	facial_s.Blend(rgb(r_facial, g_facial, b_facial), ICON_ADD)
-	facial_l.Blend(rgb(r_facial, g_facial, b_facial), ICON_ADD)
-
-	var/icon/mouth_s = new/icon("icon" = 'human_face.dmi', "icon_state" = "mouth_[g]_s")
-	var/icon/mouth_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "mouth_[g]_l")
-
-	//eyes_s.Blend(hair_s, ICON_OVERLAY)
-	//eyes_l.Blend(hair_l, ICON_OVERLAY)
-	eyes_s.Blend(mouth_s, ICON_OVERLAY)
-	eyes_l.Blend(mouth_l, ICON_OVERLAY)
-	eyes_s.Blend(facial_s, ICON_OVERLAY)
-	eyes_l.Blend(facial_l, ICON_OVERLAY)
-
-	face_standing = new /image()
-	face_lying = new /image()
-	face_standing.icon = eyes_s
-	face_lying.icon = eyes_l
-
-	del(mouth_l)
-	del(mouth_s)
-	del(facial_l)
-	del(facial_s)
-	//del(hair_l)
-	//del(hair_s)
-	del(eyes_l)
-	del(eyes_s)
 
 /obj/equip_e/human/process()
 	if (item)
@@ -2071,16 +1667,19 @@
 	if(source.mutations & 1)
 		mut = 1
 	if(!source || !target)						return
-	if(source.loc != s_loc && mut == 0)						return
-	if(target.loc != t_loc && mut == 0)						return
+	if(source.loc != s_loc && mut == 0)			return
+	if(target.loc != t_loc && mut == 0)			return
 	if(LinkBlocked(s_loc,t_loc) && mut == 0)	return
-	if(item && source.equipped() != item)	return
-	if ((source.restrained() && mut == 0)) return
-	if(source.stat)	return
+	if(item && source.equipped() != item)		return
+	if ((source.restrained() && mut == 0)) 		return
+	if(source.stat)								return
+
 	switch(place)
 		if("mask")
 			if (target.wear_mask)
 				var/obj/item/W = target.wear_mask
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2096,26 +1695,11 @@
 					item.layer = 20
 					target.wear_mask = item
 					item.loc = target
-/*		if("headset")
-			if (target.w_radio)
-				var/obj/item/W = target.w_radio
-				target.u_equip(W)
-				if (target.client)
-					target.client.screen -= W
-				if (W)
-					W.loc = target.loc
-					W.dropped(target)
-					W.layer = initial(W.layer)
-			else
-				if (istype(item, /obj/item/device/radio/headset))
-					source.drop_item()
-					loc = target
-					item.layer = 20
-					target.w_radio = item
-					item.loc = target*/
 		if("gloves")
 			if (target.gloves)
 				var/obj/item/W = target.gloves
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2134,6 +1718,8 @@
 		if("eyes")
 			if (target.glasses)
 				var/obj/item/W = target.glasses
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2152,6 +1738,8 @@
 		if("belt")
 			if (target.belt)
 				var/obj/item/W = target.belt
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2170,6 +1758,8 @@
 		if("head")
 			if (target.head)
 				var/obj/item/W = target.head
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2188,6 +1778,8 @@
 		if("ears")
 			if (target.ears)
 				var/obj/item/W = target.ears
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2197,13 +1789,7 @@
 					W.layer = initial(W.layer)
 				W.add_fingerprint(source)
 			else
-				if (istype(item, /obj/item/clothing/ears))
-					source.drop_item()
-					loc = target
-					item.layer = 20
-					target.ears = item
-					item.loc = target
-				else if (istype(item, /obj/item/device/radio/headset))
+				if (istype(item, /obj/item/clothing/ears) || istype(item, /obj/item/device/radio/headset))
 					source.drop_item()
 					loc = target
 					item.layer = 20
@@ -2212,6 +1798,8 @@
 		if("shoes")
 			if (target.shoes)
 				var/obj/item/W = target.shoes
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2276,6 +1864,8 @@
 		if("uniform")
 			if (target.w_uniform)
 				var/obj/item/W = target.w_uniform
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2321,6 +1911,8 @@
 		if("suit")
 			if (target.wear_suit)
 				var/obj/item/W = target.wear_suit
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2339,6 +1931,8 @@
 		if("id")
 			if (target.wear_id)
 				var/obj/item/W = target.wear_id
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2357,6 +1951,8 @@
 		if("back")
 			if (target.back)
 				var/obj/item/W = target.back
+				if(!W.canremove) return
+
 				target.u_equip(W)
 				if (target.client)
 					target.client.screen -= W
@@ -2474,26 +2070,6 @@
 	del(src)
 	return
 
-/mob/living/carbon/human/proc/HealDamage(zone, brute, burn)
-
-	var/datum/organ/external/E = organs[text("[]", zone)]
-	if (istype(E, /datum/organ/external))
-		if(E.destroyed)
-			return
-		if (E.heal_damage(brute, burn))
-			UpdateDamageIcon()
-		else
-			UpdateDamage()
-	else
-		return 0
-	return
-/*/mob/living/carbon/human/verb/eat(var/text as text)
-	set src in view(5)
-	for(var/datum/organ/external/l in organs2)
-		if(l.name == text)
-			l.destroyed = 1
-			break
-	update_body()*/
 // new damage icon system
 // now constructs damage icon for each organ from mask * damage field
 
@@ -2513,6 +2089,8 @@
 	bruteloss = 0
 	fireloss = 0
 
+	updatehealth()
+
 	for (var/datum/organ/external/O in L)
 		if(!O.destroyed)
 			O.update_icon()
@@ -2525,14 +2103,11 @@
 			var/icon/DI = new /icon('dam_human.dmi', O.damage_state)			// the damage icon for whole human
 			DI.Blend(new /icon('dam_mask.dmi', O.icon_name), ICON_MULTIPLY)		// mask with this organ's pixels
 
-//		world << "[O.icon_name] [O.damage_state] \icon[DI]"
 
 			body_standing += DI
 
 			DI = new /icon('dam_human.dmi', "[O.damage_state]-2")				// repeat for lying icons
 			DI.Blend(new /icon('dam_mask.dmi', "[O.icon_name]2"), ICON_MULTIPLY)
-
-//		world << "[O.r_name]2 [O.d_i_state]-2 \icon[DI]"
 
 			body_lying += DI
 
@@ -2540,7 +2115,6 @@
 		//body_lying += new /icon( 'dam_zones.dmi', text("[]2", O.d_i_state) )
 
 /mob/living/carbon/human/show_inv(mob/user as mob)
-
 	user.machine = src
 	var/dat = {"
 	<B><HR><FONT size=3>[name]</FONT></B>
@@ -2566,11 +2140,6 @@
 	user << browse(dat, text("window=mob[name];size=340x480"))
 	onclose(user, "mob[name]")
 	return
-
-
-/mob/living/carbon/human/verb/fuck()
-	set hidden = 1
-	alert("Go play HellMOO if you wanna do that.")
 
 
 // called when something steps onto a human

@@ -132,7 +132,7 @@
 /obj/machinery/shielding/emitter/plate/hide(var/i)
 	if(level == 1 && istype(loc, /turf/simulated))
 		invisibility = i ? 101 : 0
-	updateicon()
+	update_icon()
 
-/obj/machinery/shielding/emitter/plate/proc/updateicon()
+/obj/machinery/shielding/emitter/plate/update_icon()
 	return

@@ -122,9 +122,6 @@
 	return null
 
 /mob/living/carbon/proc/handle_virus_updates()
-	if(bodytemperature > 406)
-		resistances += virus
-		virus = null
 
 	if(!virus)
 		if(prob(40))
@@ -136,7 +133,7 @@
 						var/datum/disease/D = new M.virus.type //Making sure strain_data is preserved
 						D.strain_data = M.virus.strain_data
 						contract_disease(D)
-			for(var/obj/decal/cleanable/blood/B in view(4, src))
+			for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
 				if(B.virus && B.virus.spread == "Airborne")
 					if(B.virus.affected_species.Find(species))
 						if(resistances.Find(B.virus.type))
@@ -152,7 +149,7 @@
 		for(var/mob/living/carbon/M in oviewers(4,src))
 			if(M.virus2)
 				infect_virus2(src,M.virus2)
-		for(var/obj/decal/cleanable/blood/B in view(4, src))
+		for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
 			if(B.virus2)
 				infect_virus2(src,B.virus2)
 		for(var/obj/virus/V in src.loc)
@@ -203,7 +200,7 @@
 
 	// lets give them a fair bit of leeway so they don't just start dying
 	//as that may be realistic but it's no fun
-	if((bodytemperature > (T0C + 50)) || (bodytemperature < (T0C + 10)) && (!istype(loc, /obj/machinery/atmospherics/unary/cryo_cell))) // Last bit is just disgusting, i know
+	if((bodytemperature > (T0C + 50)) || (bodytemperature < (T0C + 10)) && !istype(loc, /obj/machinery/atmospherics/unary/cryo_cell)) // Last bit is just disgusting, i know
 		if(environment.temperature > (T0C + 50) || (environment.temperature < (T0C + 10)))
 			var/transfer_coefficient
 
@@ -215,23 +212,23 @@
 			if(wear_suit && (wear_suit.body_parts_covered & HEAD) && (environment.temperature < wear_suit.protective_temperature))
 				transfer_coefficient *= wear_suit.heat_transfer_coefficient
 
-			handle_temperature_damage(HEAD, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(80)) handle_temperature_damage(HEAD, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
-			if(wear_suit && (wear_suit.body_parts_covered & UPPER_TORSO) && (environment.temperature < wear_suit.protective_temperature))
+			if(wear_suit && (wear_suit.body_parts_covered & CHEST) && (environment.temperature < wear_suit.protective_temperature))
 				transfer_coefficient *= wear_suit.heat_transfer_coefficient
-			if(w_uniform && (w_uniform.body_parts_covered & UPPER_TORSO) && (environment.temperature < w_uniform.protective_temperature))
+			if(w_uniform && (w_uniform.body_parts_covered & CHEST) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			handle_temperature_damage(UPPER_TORSO, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(80)) handle_temperature_damage(CHEST, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
-			if(wear_suit && (wear_suit.body_parts_covered & LOWER_TORSO) && (environment.temperature < wear_suit.protective_temperature))
+			if(wear_suit && (wear_suit.body_parts_covered & GROIN) && (environment.temperature < wear_suit.protective_temperature))
 				transfer_coefficient *= wear_suit.heat_transfer_coefficient
-			if(w_uniform && (w_uniform.body_parts_covered & LOWER_TORSO) && (environment.temperature < w_uniform.protective_temperature))
+			if(w_uniform && (w_uniform.body_parts_covered & GROIN) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			handle_temperature_damage(LOWER_TORSO, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(80)) handle_temperature_damage(GROIN, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & LEGS) && (environment.temperature < wear_suit.protective_temperature))
@@ -239,7 +236,7 @@
 			if(w_uniform && (w_uniform.body_parts_covered & LEGS) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			handle_temperature_damage(LEGS, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(80)) handle_temperature_damage(LEGS, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & ARMS) && (environment.temperature < wear_suit.protective_temperature))
@@ -247,7 +244,7 @@
 			if(w_uniform && (w_uniform.body_parts_covered & ARMS) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			handle_temperature_damage(ARMS, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(80)) handle_temperature_damage(ARMS, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & HANDS) && (environment.temperature < wear_suit.protective_temperature))
@@ -255,7 +252,7 @@
 			if(gloves && (gloves.body_parts_covered & HANDS) && (environment.temperature < gloves.protective_temperature))
 				transfer_coefficient *= gloves.heat_transfer_coefficient
 
-			handle_temperature_damage(HANDS, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(80)) handle_temperature_damage(HANDS, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & FEET) && (environment.temperature < wear_suit.protective_temperature))
@@ -263,7 +260,7 @@
 			if(shoes && (shoes.body_parts_covered & FEET) && (environment.temperature < shoes.protective_temperature))
 				transfer_coefficient *= shoes.heat_transfer_coefficient
 
-			handle_temperature_damage(FEET, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(80)) handle_temperature_damage(FEET, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 	if(stat==2)
 		bodytemperature += 0.1*(environment.temperature - bodytemperature)*environment_heat_capacity/(environment_heat_capacity + 270000)
@@ -273,14 +270,14 @@
 
 /mob/living/carbon/proc/handle_mutations_and_radiation()
 	if(fireloss)
-		if(mutations & 2 || prob(50))
+		if(mutations & 2)
 			switch(fireloss)
 				if(1 to 50)
 					fireloss--
 				if(51 to 100)
 					fireloss -= 5
 
-	if (mutations & 8 && health <= 25)
+	if (mutations & HULK && health <= 25)
 		mutations &= ~8
 		src << "\red You suddenly feel very weak."
 		weakened = 3
@@ -318,8 +315,11 @@
 				toxloss += 3
 				if(prob(1))
 					src << "\red You mutate!"
-					randmutb(src)
-					domutcheck(src,null)
+					if(prob(90))
+						randmutb(src)
+					else
+						randmutg(src)
+					domutcheck(src,null, 1)
 					emote("gasp")
 				updatehealth()
 
@@ -327,7 +327,7 @@
 	return
 
 /mob/living/carbon/proc/handle_stomach()
-	for(var/mob/M in stomach_contents)
+	for(var/mob/living/M in stomach_contents)
 		if(M.loc != src)
 			stomach_contents.Remove(M)
 			continue
@@ -344,7 +344,7 @@
 				continue
 			if(air_master.current_cycle%3==1)
 				if(!M.nodamage)
-					M.bruteloss += 5
+					M.adjustBruteLoss(5)
 				nutrition += 10
 
 /mob/living/carbon/proc/handle_disabilities()
@@ -374,7 +374,7 @@
 
 	if(sleeping)
 		paralysis = max(paralysis, 3)
-		if (prob(1) && health)
+		if (prob(2) && health)
 			emote("snore")
 		sleeping--
 
@@ -462,11 +462,11 @@
 
 /mob/living/carbon/proc/check_if_buckled()
 	if (buckled)
-		lying = istype(buckled, /obj/stool/bed) || istype(buckled, /obj/machinery/conveyor)
+		lying = (istype(buckled, /obj/structure/stool/bed) && !istype(buckled, /obj/structure/stool/bed/chair)) || istype(buckled, /obj/machinery/conveyor)
 		if(lying)
 			drop_item()
 		density = 1
-		if(istype(buckled,/obj/stool/chair))
+		if(istype(buckled,/obj/structure/stool/bed/chair))
 			dir = buckled.dir
 	else
 		density = !lying
@@ -496,7 +496,7 @@
 		if(health > 0)
 			oxyloss += 14*vsc.OXYGEN_LOSS
 		else
-			oxyloss += 5
+			oxyloss += 4
 		oxygen_alert = max(oxygen_alert, 1)
 		return 0
 
@@ -601,25 +601,71 @@
 		return
 	var/discomfort = min(abs(exposed_temperature - bodytemperature)*(exposed_intensity)/2000000, 1.0) * vsc.TEMP_DMG
 
-	switch(body_part)
-		if(HEAD)
-			TakeDamage("head", 0, 2.5*discomfort)
-		if(UPPER_TORSO)
-			TakeDamage("chest", 0, 2.5*discomfort)
-		if(LOWER_TORSO)
-			TakeDamage("groin", 0, 2.0*discomfort)
-		if(LEGS)
-			TakeDamage("l_leg", 0, 0.6*discomfort)
-			TakeDamage("r_leg", 0, 0.6*discomfort)
-		if(ARMS)
-			TakeDamage("l_arm", 0, 0.4*discomfort)
-			TakeDamage("r_arm", 0, 0.4*discomfort)
-		if(FEET)
-			TakeDamage("l_foot", 0, 0.25*discomfort)
-			TakeDamage("r_foot", 0, 0.25*discomfort)
-		if(HANDS)
-			TakeDamage("l_hand", 0, 0.25*discomfort)
-			TakeDamage("r_hand", 0, 0.25*discomfort)
+	if(ishuman(src))
+		var/mob/living/carbon/human/H = src
+		var/datum/organ/external/org
+
+		switch(body_part)
+			if(HEAD)
+				org = H.get_organ("head")
+				if(!org.robotic)
+					TakeDamage("head", 0, 1.1*discomfort)
+			if(CHEST)
+				org = H.get_organ("chest")
+				if(!org.robotic)
+					TakeDamage("chest", 0, 1.4*discomfort)
+			if(GROIN)
+				org = H.get_organ("groin")
+				if(!org.robotic)
+					TakeDamage("groin", 0, 0.9*discomfort)
+			if(LEGS)
+				org = H.get_organ("l_leg")
+				if(!org.robotic)
+					TakeDamage("l_leg", 0, 0.4*discomfort)
+				org = H.get_organ("r_leg")
+				if(!org.robotic)
+					TakeDamage("r_leg", 0, 0.4*discomfort)
+			if(ARMS)
+				org = H.get_organ("l_arm")
+				if(!org.robotic)
+					TakeDamage("l_arm", 0, 0.3*discomfort)
+				org = H.get_organ("r_arm")
+				if(!org.robotic)
+					TakeDamage("r_arm", 0, 0.3*discomfort)
+			if(FEET)
+				org = H.get_organ("l_foot")
+				if(!org.robotic)
+					TakeDamage("l_foot", 0, 0.15*discomfort)
+				org = H.get_organ("r_foot")
+				if(!org.robotic)
+					TakeDamage("r_foot", 0, 0.15*discomfort)
+			if(HANDS)
+				org = H.get_organ("l_hand")
+				if(!org.robotic)
+					TakeDamage("l_hand", 0, 0.15*discomfort)
+				org = H.get_organ("r_hand")
+				if(!org.robotic)
+					TakeDamage("r_hand", 0, 0.15*discomfort)
+	else
+		switch(body_part)
+			if(HEAD)
+				TakeDamage("head", 0, 1.1*discomfort)
+			if(CHEST)
+				TakeDamage("chest", 0, 1.4*discomfort)
+			if(GROIN)
+				TakeDamage("groin", 0, 0.9*discomfort)
+			if(LEGS)
+				TakeDamage("l_leg", 0, 0.4*discomfort)
+				TakeDamage("r_leg", 0, 0.4*discomfort)
+			if(ARMS)
+				TakeDamage("l_arm", 0, 0.3*discomfort)
+				TakeDamage("r_arm", 0, 0.3*discomfort)
+			if(FEET)
+				TakeDamage("l_foot", 0, 0.15*discomfort)
+				TakeDamage("r_foot", 0, 0.15*discomfort)
+			if(HANDS)
+				TakeDamage("l_hand", 0, 0.15*discomfort)
+				TakeDamage("r_hand", 0, 0.15*discomfort)
 
 /mob/living/carbon/proc/handle_random_events()
 	if (random_events.len && prob(1) && prob(2))
@@ -647,10 +693,10 @@
 	var/thermal_protection = 1.0
 	//Handle normal clothing
 	if(head && (head.body_parts_covered & HEAD))
-		thermal_protection += 0.5
-	if(wear_suit && (wear_suit.body_parts_covered & UPPER_TORSO))
-		thermal_protection += 0.5
-	if(w_uniform && (w_uniform.body_parts_covered & UPPER_TORSO))
+		thermal_protection += 0.2
+	if(wear_suit && (wear_suit.body_parts_covered & CHEST))
+		thermal_protection += 0.3
+	if(w_uniform && (w_uniform.body_parts_covered & CHEST))
 		thermal_protection += 0.1
 	if(wear_suit && (wear_suit.body_parts_covered & LEGS))
 		thermal_protection += 0.2

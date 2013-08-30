@@ -4,6 +4,20 @@ LOCATOR
 HAND_TELE
 
 */
+/obj/item/weapon/locator
+	name = "locator"
+	icon = 'device.dmi'
+	icon_state = "locator"
+	var/temp = null
+	var/frequency = 1451
+	var/broadcasting = null
+	var/listening = 1.0
+	flags = FPRINT | TABLEPASS| CONDUCT
+	w_class = 2.0
+	item_state = "electronic"
+	throw_speed = 4
+	throw_range = 20
+	m_amt = 400
 
 /obj/item/weapon/locator/attack_self(mob/user as mob)
 	user.machine = src
@@ -102,7 +116,7 @@ Frequency:
 /// HAND TELE
 
 
-/obj/item/weapon/hand_tele/attack_self(mob/user as mob)
+/obj/item/weapon/device/hand_tele/attack_self(mob/user as mob)
 	var/list/L = list(  )
 	for(var/obj/machinery/teleport/hub/R in world)
 		var/obj/machinery/computer/teleporter/com = locate(/obj/machinery/computer/teleporter, locate(R.x - 2, R.y, R.z))
@@ -121,18 +135,16 @@ Frequency:
 	if ((user.equipped() != src || user.stat || user.restrained()))
 		return
 	var/count = 0	//num of portals from this teleport in world
-	for(var/obj/portal/PO in world)
+	for(var/obj/effect/portal/PO in world)
 		if(PO.creator == src)	count++
-	if(count >= 3)
+	if(count >= 4)
 		user.show_message("\red The hand teleporter is recharging!")
 		return
 	var/T = L[t1]
 	for(var/mob/O in hearers(user, null))
 		O.show_message("\blue Locked In", 2)
-	var/obj/portal/P = new /obj/portal( get_turf(src) )
+	var/obj/effect/portal/P = new /obj/effect/portal( get_turf(src) )
 	P.target = T
 	P.creator = src
 	src.add_fingerprint(user)
 	return
-
-

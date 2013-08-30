@@ -1,5 +1,36 @@
 // the SMES
 // stores power
+#define SMESMAXCHARGELEVEL 200000
+#define SMESMAXOUTPUT 200000
+
+/obj/machinery/power/smes/magical
+	name = "magical power storage unit"
+	desc = "A high-capacity superconducting magnetic energy storage (SMES) unit. Magically produces power."
+	process()
+		capacity = INFINITY
+		charge = INFINITY
+		..()
+
+/obj/machinery/power/smes
+	name = "SMES"
+	desc = "A high-capacity superconducting magnetic energy storage (SMES) unit."
+	icon_state = "smes"
+	density = 1
+	anchored = 1
+	var/output = 30000
+	var/lastout = 0
+	var/loaddemand = 0
+	var/capacity = 5e6
+	var/charge = 5e6
+	var/charging = 0
+	var/chargemode = 1
+	var/chargecount = 0
+	var/chargelevel = 0
+	var/online = 1
+	var/n_tag = null
+	var/obj/machinery/power/terminal/terminal = null
+
+
 
 /obj/machinery/power/smes/New()
 	..()
@@ -19,10 +50,10 @@
 
 		terminal.master = src
 
-		updateicon()
+		update_icon()
 
 
-/obj/machinery/power/smes/proc/updateicon()
+/obj/machinery/power/smes/update_icon()
 
 	overlays = null
 	if(stat & BROKEN)
@@ -99,7 +130,7 @@
 
 	// only update icon if state changed
 	if(last_disp != chargedisplay() || last_chrg != charging || last_onln != online)
-		updateicon()
+		update_icon()
 
 	for(var/mob/M in viewers(1, src))
 		if ((M.client && M.machine == src))
@@ -135,7 +166,7 @@
 	loaddemand = lastout-excess
 
 	if(clev != chargedisplay() )
-		updateicon()
+		update_icon()
 
 
 /obj/machinery/power/smes/AddLoad(var/amount)
@@ -160,7 +191,7 @@
 
 
 
-/obj/machinery/power/smes/proc/interact(mob/user)
+/obj/machinery/power/smes/interact(mob/user)
 
 	if ( (get_dist(src, user) > 1 ))
 		if (!istype(user, /mob/living/silicon/ai))
@@ -219,11 +250,11 @@
 			chargemode = !chargemode
 			if(!chargemode)
 				charging = 0
-			updateicon()
+			update_icon()
 
 		else if( href_list["online"] )
 			online = !online
-			updateicon()
+			update_icon()
 		else if( href_list["input"] )
 
 			var/i = text2num(href_list["input"])

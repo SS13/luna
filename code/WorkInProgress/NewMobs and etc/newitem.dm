@@ -1,6 +1,5 @@
 /obj/item/proc/process()
 	processing_items.Remove(src)
-
 	return null
 
 /obj/item/proc/attack_self()
@@ -30,6 +29,9 @@
 //
 // ***TODO: implement unequipped()
 //
+
+/obj/item/proc/on_found(mob/finder as mob)
+	return
 
 /obj/item/proc/afterattack()
 	return
@@ -87,7 +89,7 @@
 		if(5.0)
 			t = "huge"
 		else
-	if ((usr.mutations & 16) && prob(50)) t = "funny-looking"
+	if ((usr.mutations & CLUMSY) && prob(30)) t = "funny-looking"
 	usr << text("This is a []\icon[][]. It is a [] item.", !src.blood_DNA ? "" : "bloody ",src, src.name, t)
 	usr << src.desc
 	return
@@ -102,7 +104,10 @@
 	src.throwing = 0
 
 	if (src.loc == user)
-		user.u_equip(src)
+		if(istype(src, /obj/item/clothing) && !src:canremove)
+			return
+		else
+			user.u_equip(src)
 	else
 		if(ishuman(user) && !user:zombie)
 			src.pickup(user)
@@ -135,7 +140,6 @@
 	return
 
 /obj/item/attack_paw(mob/user as mob)
-
 	if (istype(src.loc, /obj/item/weapon/storage))
 		for(var/mob/M in range(1, src.loc))
 			if (M.s_active == src.loc)
@@ -152,8 +156,26 @@
 	src.layer = 20
 	user.update_clothing()
 	return
+
+
+/obj/item/verb/verb_pickup()
+	set src in oview(1)
+	set category = "Object"
+	set name = "Pick up"
+
+	if(!usr.canmove || usr.stat || usr.restrained() || !in_range(src, usr))
+		return
+
+	if(ishuman(usr))
+		if(usr.get_active_hand() == null)
+			src.Click()
+	else
+		usr << "\red This mob type can't use this verb."
+
+
 /obj/item/var/superblunt = 0
 /obj/item/var/slash = 0
+
 /obj/item/proc/attack(mob/M as mob, mob/user as mob, def_zone)
 	if (!M) // not sure if this is the right thing...
 		return
@@ -254,7 +276,7 @@
 									user2.w_uniform.add_blood(H)
 					affecting.take_damage(b_dam, f_dam,slash,superblunt)
 				else if (def_zone == "chest")
-					if (b_dam && ((istype(H.wear_suit, /obj/item/clothing/suit/armor/)) && H.wear_suit.body_parts_covered & UPPER_TORSO) && prob(90 - src.force))
+					if (b_dam && ((istype(H.wear_suit, /obj/item/clothing/suit/armor/)) && H.wear_suit.body_parts_covered & CHEST) && prob(90 - src.force))
 						H.show_message("\red You have been protected from a hit to the chest.")
 						return
 					if ((b_dam && prob(src.force + affecting.brute_dam + affecting.burn_dam) && !H.zombie))
@@ -296,7 +318,7 @@
 									user2.w_uniform.add_blood(H)
 					affecting.take_damage(b_dam, f_dam,slash,superblunt)
 				else if (def_zone == "groin")
-					if (b_dam && (istype(H.wear_suit, /obj/item/clothing/suit/armor/) && H.wear_suit.body_parts_covered & LOWER_TORSO) && prob(90 - src.force))
+					if (b_dam && (istype(H.wear_suit, /obj/item/clothing/suit/armor/) && H.wear_suit.body_parts_covered & GROIN) && prob(90 - src.force))
 						H.show_message("\red You have been protected from a hit to the groin (phew).")
 						return
 					if ((b_dam && prob(src.force + affecting.brute_dam + affecting.burn_dam) && H.zombie ))
@@ -374,7 +396,7 @@
 			if("brute")
 				M.bruteloss += power
 			if("fire")
-				if (!(M.mutations & 2))
+				if (!(M.mutations & COLD_RESISTANCE))
 					M.fireloss += power
 			//		M << "heres ur burn notice"
 		M.updatehealth()

@@ -17,7 +17,7 @@
 	spawn(600*tick_multiplier)
 		usr.verbs += /mob/proc/kill
 	usr.say("EI NATH")
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(4, 1, M)
 	s.start()
 

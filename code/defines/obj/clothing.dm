@@ -40,15 +40,40 @@
 	w_class = 2.0
 	flags = GLASSESCOVERSEYES | TABLEPASS
 
+	var/see_turfs = 0
+	var/see_mobs = 0
+	var/see_objs = 0
+
+	var/see_in_dark = 2
+	var/see_invisible = 0
+
 /obj/item/clothing/glasses/blindfold
 	name = "Blindfold"
 	icon_state = "blindfold"
 	item_state = "blindfold"
 
+/obj/item/clothing/glasses/science
+	name = "Science Goggles"
+	icon_state = "purple"
+	item_state = "glasses"
+
 /obj/item/clothing/glasses/meson
 	name = "Optical Meson Scanner"
+	origin_tech = "magnets=2;engineering=2"
 	icon_state = "meson"
 	item_state = "meson"
+
+	see_turfs = 1
+	see_in_dark = 3
+	see_invisible = 1
+
+/obj/item/clothing/glasses/meson/night
+	name = "Night Vision Goggles"
+	desc = "You can totally see in the dark now!"
+	icon_state = "night"
+	item_state = "glasses"
+	origin_tech = "magnets=3;engineering=2"
+	see_in_dark = 6
 
 /obj/item/clothing/glasses/regular
 	name = "Prescription Glasses"
@@ -63,11 +88,30 @@
 	protective_temperature = 1300
 	var/already_worn = 0
 
+	see_in_dark = 1
+
 /obj/item/clothing/glasses/thermal
-	name = "Thermal"
-	desc = "Optical Thermal Scanner."
+	name = "Optical Thermal Scanner"
+	desc = "Thermals in the shape of glasses."
 	icon_state = "thermal"
 	item_state = "thermal"
+	origin_tech = "magnets=4"
+
+	see_mobs = 1
+	see_in_dark = 4
+	see_invisible = 2
+
+	emp_act(severity)
+		if(istype(src.loc, /mob/living/carbon/human))
+			var/mob/living/carbon/human/M = src.loc
+			M << "\red The Optical Thermal Scanner overloads and blinds you!"
+			if(M.glasses == src)
+				M.eye_blind = 4
+				M.eye_blurry = 6
+				M.disabilities |= NEARSIGHTED
+				spawn(100)
+					M.disabilities &= ~NEARSIGHTED
+		..()
 
 // NO GLOVES NO LOVES
 
@@ -78,7 +122,8 @@
 	protective_temperature = 400
 	heat_transfer_coefficient = 0.25
 	siemens_coefficient = 0.50
-	var/elecgen = 0
+	var/wired = 0
+	var/obj/item/weapon/cell/cell = 0
 	var/uses = 0
 	body_parts_covered = HANDS
 	flags = TABLEPASS
@@ -91,7 +136,6 @@
 
 	protective_temperature = 1500
 	heat_transfer_coefficient = 0.01
-
 
 /obj/item/clothing/gloves/cyborg
 	desc = "beep boop borp"
@@ -128,15 +172,6 @@
 	protective_temperature = 1100
 	heat_transfer_coefficient = 0.05
 
-/obj/item/clothing/gloves/stungloves/
-	name = "Stungloves"
-	desc = "These gloves are electrically charged."
-	icon_state = "yellow"
-	item_state = "ygloves"
-	siemens_coefficient = 0.30
-	elecgen = 1
-	uses = 10
-
 /obj/item/clothing/gloves/yellow
 	desc = "These gloves are electrically insulated."
 	name = "Insulated gloves"
@@ -152,7 +187,7 @@
 	name = "Green gloves"
 	icon_state = "green"
 	item_state = "greengloves"
-	siemens_coefficient = 0.30
+	siemens_coefficient = 0.10
 
 	protective_temperature = 1100
 	heat_transfer_coefficient = 0.05
@@ -181,16 +216,6 @@
 	item_state = "bio_hood"
 	permeability_coefficient = 0.01
 	flags = FPRINT|TABLEPASS|HEADSPACE|HEADCOVERSEYES|HEADCOVERSMOUTH|PLASMAGUARD
-
-/obj/item/clothing/head/righelm
-	name = "Rig Helm"
-	icon_state = "rig_helm"
-	flags = FPRINT|TABLEPASS|HEADSPACE|HEADCOVERSEYES|HEADCOVERSMOUTH|PLASMAGUARD
-	permeability_coefficient = 0.02
-	protective_temperature = 1000
-	heat_transfer_coefficient = 0.02
-	gas_transfer_coefficient = 0.01
-	body_parts_covered = HEAD
 
 /obj/item/clothing/head/cakehat
 	name = "Cakehat"
@@ -254,7 +279,7 @@
 /obj/item/clothing/head/green_band
 	name = "Green Bandana"
 	icon_state = "green_bandana"
-	item_state = "green_bandana"
+	item_state = "greenbandana"
 	flags = FPRINT | TABLEPASS
 
 
@@ -271,21 +296,9 @@
 
 /obj/item/clothing/head/helmet/riot
 	name = "Riot helmet"
-	icon_state = "riothelmet"
+	icon_state = "riot"
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES | HEADCOVERSMOUTH
 	item_state = "helmet"
-
-/obj/item/clothing/head/helmet/space
-	name = "Space helmet"
-	icon_state = "space"
-	flags = FPRINT |TABLEPASS| HEADSPACE | HEADCOVERSEYES | HEADCOVERSMOUTH | PLASMAGUARD
-	see_face = 0.0
-	item_state = "space"
-
-/obj/item/clothing/head/helmet/space/syndicate
-	name = "Red space helmet"
-	icon_state = "syndicate"
-	item_state = "syndicate"
 
 /obj/item/clothing/head/helmet/swat
 	name = "SWAT helmet"
@@ -301,10 +314,11 @@
 
 /obj/item/clothing/head/helmet/hardhat
 	name = "Hard hat"
-	icon_state = "hardhat0"
+	icon_state = "hardhat0_yellow"
 	flags = FPRINT | TABLEPASS
-	item_state = "hardhat0"
+	item_state = "hardhat0_yellow"
 	var/on = 0
+	color = "yellow"
 
 /obj/item/clothing/head/helmet/plump
 	name = "Plump helmet helmet"
@@ -325,6 +339,7 @@
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES | HEADCOVERSMOUTH
 	see_face = 0.0
 	item_state = "welding"
+	origin_tech = "materials=2;engineering=2"
 	protective_temperature = 1300
 	m_amt = 3000
 	g_amt = 1000
@@ -343,7 +358,7 @@
 
 /obj/item/clothing/head/helmet/Policehat
 	name = "Police Hat"
-	icon_state = "policehat"
+	icon_state = "policehelm"
 	item_state = "that"
 	flags = FPRINT | TABLEPASS
 
@@ -363,7 +378,7 @@
 	flags = TABLEPASS
 
 /obj/item/clothing/mask/gas
-	name = "Gas mask"
+	name = "gas mask"
 	desc = "A close-fitting mask that can filter some environmental toxins or be connected to an air supply."
 	icon_state = "gas_mask"
 	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKCOVERSEYES | MASKINTERNALS
@@ -377,7 +392,7 @@
 
 
 /obj/item/clothing/mask/gas/emergency
-	name = "Emergency gas mask"
+	name = "emergency gas mask"
 	icon_state = "gas_alt"
 	item_state = "gas_alt"
 
@@ -387,9 +402,7 @@
 	icon_state = "swat"
 
 /obj/item/clothing/mask/gas/voice
-	name = "gas mask"
-	desc = "A close-fitting mask that can filter some environmental toxins or be connected to an air supply."
-	icon_state = "gas_mask"
+	origin_tech = "syndicate=4"
 	var/voice = "Unknown"
 	vchange = 1
 
@@ -417,16 +430,35 @@
 	gas_transfer_coefficient = 0.10
 	permeability_coefficient = 0.50
 
-/obj/item/clothing/mask/clown_hat
-	name = "Clown wig and mask"
-	desc = "You're gay for even considering wearing this."
+/obj/item/clothing/mask/gas/clown_hat
+	name = "clown wig and mask"
+	desc = "A true prankster's facial attire. A clown is incomplete without his wig and mask."
 	icon_state = "clown"
 	item_state = "clown"
 
-/obj/item/clothing/mask/mime
-	name = "Mime mask"
+/obj/item/clothing/mask/gas/sexyclown
+	name = "sexy-clown wig and mask"
+	desc = "A feminine clown mask for the dabbling crossdressers or female entertainers."
+	icon_state = "sexyclown"
+	item_state = "sexyclown"
+
+/obj/item/clothing/mask/gas/mime
+	name = "mime mask"
+	desc = "The traditional mime's mask. It has an eerie facial posture."
 	icon_state = "mime"
 	item_state = "mime"
+
+/obj/item/clothing/mask/gas/monkeymask
+	name = "monkey mask"
+	desc = "A mask used when acting as a monkey."
+	icon_state = "monkeymask"
+	item_state = "monkeymask"
+
+/obj/item/clothing/mask/gas/sexymime
+	name = "sexy mime mask"
+	desc = "A traditional female mime's mask."
+	icon_state = "sexymime"
+	item_state = "sexymime"
 
 /obj/item/clothing/mask/medical
 	name = "Medical mask"
@@ -456,22 +488,13 @@
 	permeability_coefficient = 0.05
 
 
-/obj/item/clothing/mask/cigarette
-	name = "Cigarette"
-	icon_state = "cigoff"
-	var/lit = 0
-	throw_speed = 0.5
-	item_state = "cigoff"
-	var/lastHolder = null
-	var/smoketime = 300
-	w_class = 1
-
 // OMG SHOES
 
 /obj/item/clothing/shoes
 	name = "Shoes"
 	icon = 'shoes.dmi'
 	var/chained = 0
+	slowdown = -1
 
 	body_parts_covered = FEET
 	flags = FPRINT | TABLEPASS
@@ -490,6 +513,7 @@
 
 /obj/item/clothing/shoes/magnetic
 	name = "Magboots"
+	flags = FPRINT | TABLEPASS | NOSLIP | CONDUCT
 	icon_state = "magboots"
 	item_state = "o_shoes"
 
@@ -530,7 +554,7 @@
 
 /obj/item/clothing/shoes/jackboots
 	name = "Jackboots"
-	desc = "heavy duty protective boots"
+	desc = "Nanotrasen-issue Security combat boots for combat scenarios or combat situations. All combat, all the time."
 	icon_state = "jackboots"
 	protective_temperature = 1500
 	heat_transfer_coefficient = 0.01
@@ -548,12 +572,22 @@
 /obj/item/clothing/shoes/galoshes
 	desc = "Rubber boots"
 	name = "Galoshes"
+	flags = FPRINT | TABLEPASS | NOSLIP
 	icon_state = "galoshes"
 	permeability_coefficient = 0.05
 
+/obj/item/clothing/shoes/syndigaloshes
+	desc = "A pair of brown shoes. They seem to have extra grip."
+	name = "brown shoes"
+	icon_state = "brown"
+	item_state = "brown"
+	permeability_coefficient = 0.05
+	flags = FPRINT | TABLEPASS | NOSLIP
+	origin_tech = "syndicate=3"
+
 /obj/item/clothing/shoes/clown_shoes
-	desc = "Damn, thems some big shoes."
-	name = "Clown shoes"
+	desc = "The prankster's standard-issue clowning shoes. Damn, they're huge!"
+	name = "clown shoes"
 	icon_state = "clown"
 	item_state = "clown_shoes"
 
@@ -565,29 +599,18 @@
 	var/fire_resist = T0C+100
 	flags = FPRINT | TABLEPASS
 	var/airflowprot = 0
-
-/obj/item/clothing/suit/rig
-	name = "Rig Suit"
-	desc = "Rig"
-	icon_state = "rig"
-	item_state = "rig"
-	flags = FPRINT|TABLEPASS|PLASMAGUARD
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
-	permeability_coefficient = 0.02
-	protective_temperature = 1000
-	heat_transfer_coefficient = 0.02
-	gas_transfer_coefficient = 0.01
-	airflowprot = 1
+	var/reflectchance = 0
 
 /obj/item/clothing/suit/bio_suit
 	name = "Bio suit"
 	desc = "A suit that protects against biological contamination."
 	icon_state = "bio_suit"
 	item_state = "bio_suit"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.01
 	heat_transfer_coefficient = 0.30
+	slowdown = 1
 
 	flags = FPRINT|TABLEPASS|PLASMAGUARD
 
@@ -599,48 +622,21 @@
 	desc = "Someone who wears this means business"
 	icon_state = "detective"
 	item_state = "det_suit"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 
 /obj/item/clothing/suit/judgerobe
 	name = "Judge's robe"
 	desc = "This robe commands authority"
 	icon_state = "judge"
 	item_state = "judge"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 
 /obj/item/clothing/suit/storage/labcoat
 	name = "Labcoat"
 	desc = "A suit that protects against minor chemical spills."
 	icon_state = "labcoat"
 	item_state = "labcoat"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
-	permeability_coefficient = 0.25
-	heat_transfer_coefficient = 0.75
-
-/obj/item/clothing/suit/storage/labcoat/gen
-	name = "Genetic's labcoat"
-	desc = "A suit that protects against minor chemical spills."
-	icon_state = "labcoat_gen"
-	item_state = "labcoat"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
-	permeability_coefficient = 0.25
-	heat_transfer_coefficient = 0.75
-
-/obj/item/clothing/suit/storage/labcoat/chem
-	name = "Chemical's labcoat"
-	desc = "A suit that protects against minor chemical spills."
-	icon_state = "labcoat_chem"
-	item_state = "labcoat"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
-	permeability_coefficient = 0.25
-	heat_transfer_coefficient = 0.75
-
-/obj/item/clothing/suit/storage/labcoat/tox
-	name = "Scienist's labcoat"
-	desc = "A suit that protects against minor chemical spills."
-	icon_state = "labcoat_tox"
-	item_state = "labcoat"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	body_parts_covered = CHEST|GROIN|ARMS
 	permeability_coefficient = 0.25
 	heat_transfer_coefficient = 0.75
 
@@ -649,42 +645,42 @@
 	desc = "A fancy chef's coat."
 	icon_state = "chef"
 	item_state = "chef"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	body_parts_covered = CHEST|GROIN|ARMS
 
 /obj/item/clothing/suit/storage/chaplain_hoodie
 	name = "Chaplain hoodie"
 	desc = "A black hoodie."
 	icon_state = "chaplain_hoodie"
 	item_state = "judge"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 
 /obj/item/clothing/suit/storage/apron
 	name = "Apron"
 	desc = "A simple blue apron. It has a big pocket on the front you could store something in."
 	icon_state = "apron"
 	item_state = "apron"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	body_parts_covered = CHEST|GROIN
 
 /obj/item/clothing/suit/chicken
 	name = "Chiken suit"
 	desc = "A chicken suit."
 	icon_state = "chickensuit"
 	item_state = "chickensuit"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS|FEET
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS|FEET
 
 /obj/item/clothing/suit/storage/holydaypriest
 	name = "Holidaypriest robe"
 	desc = "A white robe."
 	icon_state = "holidaypriest"
 	item_state = "w_suit"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 
 /obj/item/clothing/suit/storage/captunic
 	name = "Captain tunic"
 	desc = "A captain tunic."
 	icon_state = "captunic"
 	item_state = "w_suit"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 
 /obj/item/clothing/suit/storage/hazard
 	name = "Hazard west"
@@ -695,34 +691,35 @@
 	protective_temperature = 300
 	siemens_coefficient = 0.30
 	heat_transfer_coefficient = 0.50
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	body_parts_covered = CHEST|GROIN
 
 
 /obj/item/clothing/suit/straight_jacket
 	name = "Straight jacket"
 	desc = "A suit that totally restrains an individual"
-	icon_state = "straightjacket"
+	icon_state = "straight_jacket"
 	item_state = "straightjacket"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+	slowdown = 15
 
 /obj/item/clothing/suit/wcoat
 	name = "Waistcoat"
 	icon_state = "vest"
 	item_state = "wcoat"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	body_parts_covered = CHEST|GROIN|ARMS
 
 /obj/item/clothing/suit/storage/hos
 	name = "HoS coat"
 	icon_state = "hos"
 	item_state = "hos"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	body_parts_covered = CHEST|GROIN|ARMS
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
 /obj/item/clothing/suit/warden_jacket
 	name = "Warden jacket"
 	icon_state = "warden_jacket"
 	item_state = "r_suit"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	body_parts_covered = CHEST|GROIN|ARMS
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
 /obj/item/clothing/suit/wizrobe
@@ -733,7 +730,7 @@
 	gas_transfer_coefficient = 0.01 // IT'S MAGICAL OKAY JEEZ +1 TO NOT DIE
 	permeability_coefficient = 0.01
 	heat_transfer_coefficient = 0.01
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 
 // ARMOR
 
@@ -742,15 +739,24 @@
 	desc = "An armored vest that protects against some damage."
 	icon_state = "armor"
 	item_state = "armor"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	body_parts_covered = CHEST|GROIN
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+
+/obj/item/clothing/suit/armor/laserproof
+	name = "ablative armor vest"
+	desc = "A vest that excels in protecting the wearer against energy projectiles."
+	icon_state = "armor_reflec"
+	item_state = "armor_reflec"
+	body_parts_covered = CHEST|GROIN
+	armor = list(melee = 10, bullet = 10, laser = 80, energy = 50, bomb = 0, bio = 0, rad = 0)
+	reflectchance = 60
 
 /obj/item/clothing/suit/storage/gearharness
 	name = "Gear harness"
 	desc = "A simple security harness, used for storing small objects"
 	icon_state = "gearharness"
 	item_state = "gearharness"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	body_parts_covered = CHEST|GROIN
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
 /obj/item/clothing/suit/storage/armourrigvest
@@ -758,7 +764,7 @@
 	desc = "An important looking armoured vest, outfitted with pockets."
 	icon_state = "armourrigvest"
 	item_state = "armourrigvest"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	body_parts_covered = CHEST|GROIN
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
 /obj/item/clothing/suit/armor/a_i_a_ptank
@@ -772,26 +778,26 @@
 	var/obj/item/clothing/suit/armor/vest/part3 = null
 	var/status = 0
 	flags = FPRINT | TABLEPASS | CONDUCT | ONESIZEFITSALL
-	body_parts_covered = UPPER_TORSO
+	body_parts_covered = CHEST
 
 /obj/item/clothing/suit/armor/captain
 	name = "Captain's armor"
 	icon_state = "caparmor"
 	item_state = "caparmor"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 
-/obj/item/clothing/suit/armor/captain_b
+/obj/item/clothing/suit/armor/captain/newstyle
 	name = "Captain's armor"
 	icon_state = "caparmor_b"
 	item_state = "caparmor_b"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 
 /obj/item/clothing/suit/armor/centcomm
 	name = "Cent. Com. armor"
 	desc = "A suit that protects against some damage."
 	icon_state = "centcom"
 	item_state = "centcom"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 
 /obj/item/clothing/suit/armor/heavy
 	name = "Heavy armor"
@@ -799,10 +805,10 @@
 	icon_state = "heavy"
 	item_state = "swat_suit"
 	gas_transfer_coefficient = 0.90
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 
 /obj/item/clothing/suit/armor/tdome
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 
 /obj/item/clothing/suit/armor/tdome/red
 	name = "Thunderdome suit (red)"
@@ -818,64 +824,47 @@
 	name = "SWAT suit"
 	icon_state = "heavy"
 	item_state = "heavy"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 
 /obj/item/clothing/suit/armor/riot
 	name = "Riot suit"
 	desc = "Heavy segmented armor designed to help control rioters."
-	icon_state = "riotsuit"
-	item_state = "riotsuit"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	icon_state = "riot"
+	item_state = "riot"
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
+	slowdown = 2
 
 // FIRE SUITS
 
 /obj/item/clothing/suit/fire
 	name = "Firesuit"
 	desc = "A suit that protects against fire and heat."
-	icon_state = "fire"
-	item_state = "fire"
+	icon_state = "firesuit"
+	item_state = "firesuit"
 	gas_transfer_coefficient = 0.90
 	permeability_coefficient = 0.50
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+	slowdown = 1.3
 
-	protective_temperature = 4500
+	protective_temperature = 8000
 	heat_transfer_coefficient = 0.01
 
 /obj/item/clothing/suit/fire/heavy
 	name = "Firesuit"
 	desc = "A suit that protects against extreme fire and heat."
-	icon_state = "thermal"
-	item_state = "ro_suit"
+	icon_state = "fire"
+	item_state = "fire"
+	slowdown = 2
 
-	protective_temperature = 10000
+	protective_temperature = 30000
 	heat_transfer_coefficient = 0.01
-
-// SPACE SUITS
-
-/obj/item/clothing/suit/space
-	name = "Space suit"
-	desc = "A suit that protects against low pressure environments."
-	icon_state = "space"
-	gas_transfer_coefficient = 0.01
-	item_state = "s_suit"
-	flags = FPRINT | TABLEPASS | SUITSPACE | PLASMAGUARD
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
-	permeability_coefficient = 0.02
-	protective_temperature = 1000
-	heat_transfer_coefficient = 0.02
-
-
-/obj/item/clothing/suit/space/syndicate
-	name = "Red space suit"
-	icon_state = "syndicate"
-	item_state = "space_suit_syndicate"
 
 // UNDERS AND BY THAT, NATURALLY I MEAN UNIFORMS/JUMPSUITS
 
 /obj/item/clothing/under
 	icon = 'uniforms.dmi'
 	name = "Under"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	protective_temperature = T0C + 50
 	heat_transfer_coefficient = 0.30
 	permeability_coefficient = 0.90
@@ -890,6 +879,7 @@
 	item_state = "bl_suit"
 	color = "black"
 	desc = null
+	origin_tech = "syndicate=3"
 	var/list/clothing_choices = list()
 
 /obj/item/clothing/under/chameleon/all
@@ -1087,9 +1077,9 @@
 /obj/item/clothing/under/rank/cargo
 	name = "Cargo's Jumpsuit"
 	desc = "What can brown do for you?"
-	icon_state = "cargo"
+	icon_state = "Cargo Technician"
 	item_state = "lb_suit"
-	color = "cargo"
+	color = "Cargo Technician"
 
 /obj/item/clothing/under/rank/miner
 	name = "Miner's Jumpsuit"

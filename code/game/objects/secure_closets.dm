@@ -12,7 +12,7 @@
 	return src.opened
 
 /obj/secure_closet/proc/can_close()
-	for(var/obj/closet/closet in get_turf(src))
+	for(var/obj/structure/closet/closet in get_turf(src))
 		return 0
 	for(var/obj/secure_closet/closet in get_turf(src))
 		if(closet != src)
@@ -209,7 +209,7 @@
 		return
 	if(!src.opened)
 		return
-	if(istype(O, /obj/secure_closet) || istype(O, /obj/closet))
+	if(istype(O, /obj/secure_closet) || istype(O, /obj/structure/closet))
 		return
 	step_towards_3d(O, src.loc)
 	if (user != O)

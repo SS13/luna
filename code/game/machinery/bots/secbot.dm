@@ -13,7 +13,6 @@
 	var/arrest_type = 0 	// if true, don't handcuff
 	var/auto_patrol = 0		// set to make bot automatically patrol
 	var/check_records = 1 	// does it check security records?
-	var/emagged = 0 		// emagged Secbots view everyone as a criminal
 	var/frustration = 0 	// when it reaches a preset value (8), it will stop following a criminal
 	var/health = 50
 	var/idcheck = 1 		// if false, all station IDs are authorized for weapons.
@@ -95,14 +94,14 @@
 		radio.listening = 0
 
 
-		contraband += /obj/item/weapon/gun/revolver
+		contraband += /obj/item/weapon/gun/projectile
 		//contraband += /obj/item/weapon/c_tube //Toy sword ey, not on beepskies watch
 		contraband += /obj/item/weapon/sword
 		contraband += /obj/item/device/chameleon
 		contraband += /obj/item/device/hacktool
 		contraband += /obj/item/device/powersink
 		contraband += /obj/item/weapon/staff
-		contraband += /obj/item/weapon/cloaking_device
+		contraband += /obj/item/weapon/device/cloak
 
 /obj/machinery/bot/secbot/examine()
 	set src in view()
@@ -270,11 +269,11 @@ Auto Patrol: []"},
 					var/mob/living/carbon/M = src.target
 					var/maxstuns = 4
 					if (istype(M, /mob/living/carbon/human))
-						if (M.weakened < 10 && (!(M.mutations & 8))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+						if (M.weakened < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 							M.weakened = 10
-						if (M.stuttering < 10 && (!(M.mutations & 8))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+						if (M.stuttering < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 							M.stuttering = 10
-						if (M.stunned < 10 && (!(M.mutations & 8))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+						if (M.stunned < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 							M.stunned = 10
 					else
 						M.weakened = 10
@@ -432,6 +431,12 @@ Auto Patrol: []"},
 			calc_path(patrol_target)*/
 
 	return
+
+/obj/machinery/bot/secbot/bullet_act(var/obj/item/projectile/Proj)
+	health -= Proj.damage
+	..()
+	if (src.health <= 0)
+		src.explode()
 
 // perform a single patrol step
 /obj/machinery/bot/secbot/proc/patrol_step()
@@ -666,7 +671,7 @@ Auto Patrol: []"},
 	if((src.idcheck) || (isnull(perp:wear_id)) && (!istype(perp:wear_id, /obj/item/weapon/card/id/syndicate))) //Syndicate IDs mess with electronics, beepsky won't suspect a thing
 
 
-		for(var/obj/item/weapon/cloaking_device/S in perp)
+		for(var/obj/item/weapon/device/cloak/S in perp)
 			if(S.active)
 				arrestreasons += "Carrying activated cloaking device"
 				secure_arrest = 1
@@ -686,7 +691,6 @@ Auto Patrol: []"},
 			arrestreasons += "Unauthorized weapon on belt [perp.belt.name]"
 			threatcount += 4
 
-
 		if(istype(perp.l_hand, /obj/item/weapon/gun) || istype(perp.l_hand, /obj/item/weapon/baton))
 			arrestreasons += "Unauthorized weapon in left hand: [perp.l_hand.name]"
 			threatcount += 4
@@ -695,17 +699,17 @@ Auto Patrol: []"},
 			arrestreasons += "Unauthorized weapon in right hand [perp.r_hand.name]"
 			threatcount += 4
 
-		/*if(istype(perp:wear_suit, /obj/item/clothing/suit/wizrobe))
-			threatcount += 2
-			arrestreasons += "Illegal roleplaying equipment [perp.wear_suit.name]"*/
+		if(istype(perp:wear_suit, /obj/item/clothing/suit/wizrobe))
+			threatcount += 1
+			arrestreasons += "Illegal roleplaying equipment [perp.wear_suit.name]"
 
-		/*if(perp.mutantrace)						// Being on a research ship, one might expect to see oddities around
-			threatcount += 2
-			arrestreasons += "Unknown Species"*/
+		if(perp.dna && perp.dna.mutantrace)
+			threatcount += 1
+			arrestreasons += "Unknown Species"
 
 	//Agent cards lower threatlevel when normal idchecking is off.
 		if((istype(perp:wear_id, /obj/item/weapon/card/id/syndicate)) && src.idcheck)
-			threatcount -= 2
+			threatcount -= 3
 
 	if (src.check_records)
 		for (var/datum/data/record/E in data_core.general)
@@ -748,19 +752,6 @@ Auto Patrol: []"},
 		var/turf/T = get_turf(src)
 		M:loc = T
 
-/obj/machinery/bot/secbot/bullet_act(flag, A as obj)
-	if (flag == PROJECTILE_BULLET)
-		src.health -= 20
-
-	else if (flag == PROJECTILE_WEAKBULLET)
-		src.health -= 2
-
-	else if (flag == PROJECTILE_LASER)
-		src.health -= 10
-
-	if (src.health <= 0)
-		src.explode()
-
 /obj/machinery/bot/secbot/proc/speak(var/message)
 	for(var/mob/O in hearers(src, null))
 		O << "<span class='game say'><span class='name'>[src]</span> beeps, \"[message]\""
@@ -798,7 +789,7 @@ Auto Patrol: []"},
 
 	var/turf/Loc = get_turf(src)
 
-	var/obj/item/weapon/secbot_assembly/Sa = new /obj/item/weapon/secbot_assembly(Loc) // Dropping a partial assembly
+	var/obj/item/weapon/robot_assembly/secbot/Sa = new /obj/item/weapon/robot_assembly/secbot(Loc) // Dropping a partial assembly
 	Sa.build_step = 1
 	Sa.overlays += image('aibots.dmi', "hs_hole")
 	Sa.created_name = src.name
@@ -816,7 +807,7 @@ Auto Patrol: []"},
 			A.loc = Loc
 			A.captured_by_securitron = 0
 
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread // Sparks!
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread // Sparks!
 	s.set_up(3, 1, src)
 	s.start()
 
@@ -838,7 +829,7 @@ Auto Patrol: []"},
 	src.updateUsrDialog()
 //Secbot Construction
 
-/obj/item/weapon/secbot_assembly
+/obj/item/weapon/robot_assembly/secbot
 	name = "helmet/signaler assembly"
 	desc = "Some sort of bizarre assembly."
 	icon = 'aibots.dmi'
@@ -858,10 +849,10 @@ Auto Patrol: []"},
 	if (!S.b_stat)
 		return
 	else
-		src.assemble(src, S, user, /obj/item/weapon/secbot_assembly)
+		src.assemble(src, S, user, /obj/item/weapon/robot_assembly/secbot)
 		user << "You add the signaler to the helmet."
 
-/obj/item/weapon/secbot_assembly/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/weapon/robot_assembly/secbot/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if ((istype(W, /obj/item/weapon/weldingtool)) && (!src.build_step))
 		if ((W:welding) && (W:get_fuel() >= 1))
 			W:use_fuel(1)

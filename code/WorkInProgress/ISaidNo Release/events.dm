@@ -64,7 +64,7 @@ proc/randomevent_laws()
 
 /proc/randomevent_kudzu()
 	var/list/EV = list()
-	for(var/obj/landmark/S in world)
+	for(var/obj/effect/landmark/S in world)
 		if (S.name == "kudzustart")
 			EV.Add(S.loc)
 	if(!EV.len)
@@ -117,7 +117,7 @@ proc/randomevent_laws()
 	var/dogrowth = 1
 	if (!istype(Vspread, /turf/simulated/floor)) dogrowth = 0
 	for(var/obj/O in Vspread)
-		if (istype(O, /obj/window) || istype(O, /obj/forcefield) || istype(O, /obj/blob) || istype(O, /obj/alien/weeds) || istype(O, /obj/spacevine)) dogrowth = 0
+		if (istype(O, /obj/structure/window) || istype(O, /obj/forcefield) || istype(O, /obj/blob) || istype(O, /obj/alien/weeds) || istype(O, /obj/spacevine)) dogrowth = 0
 		if (istype(O, /obj/machinery/door/))
 			if(O:p_open == 0 && prob(50)) O:open()
 			else dogrowth = 0

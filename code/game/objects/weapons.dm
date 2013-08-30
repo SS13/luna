@@ -1,5 +1,5 @@
 /obj/mine/proc/triggerrad(obj)
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	obj:radiation += 50
@@ -10,7 +10,7 @@
 
 /obj/mine/proc/triggerstun(obj)
 	obj:stunned += 30
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	spawn(0)
@@ -54,7 +54,7 @@
 		del(src)
 
 /obj/mine/proc/triggerkick(obj)
-	var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
 	s.start()
 	del(obj:client)
@@ -109,7 +109,7 @@
 	src.part2.ignite()
 	return
 
-/obj/decal/ash/attack_hand(mob/user as mob)
+/obj/effect/decal/cleanable/ash/attack_hand(mob/user as mob)
 	usr << "\blue The ashes slip through your fingers."
 	del(src)
 	return
@@ -884,7 +884,7 @@
 		if(!src.status)
 			src.part3.release()
 	return
-
+/*
 /obj/bullet/Bump(atom/A as mob|obj|turf|area)
 	spawn(0)
 		if(A)
@@ -959,7 +959,7 @@
 				if (M.anchored)
 					continue
 				if (istype(M, /atom/movable))
-					var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+					var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 					s.set_up(5, 1, M)
 					s.start()
 					if(prob(src.failchance)) //oh dear a problem, put em in deep space
@@ -1016,7 +1016,7 @@
 		src.process()
 		return
 	return
-
+*/
 /obj/beam/i_beam/proc/hit()
 	//world << "beam \ref[src]: hit"
 	if (src.master)
@@ -1129,12 +1129,6 @@
 //PROJECTILE_BOLT = 5			crossbow
 //PROJECTILE_WEAKBULLET = 6		detective's revolver
 
-/atom/proc/bullet_act(flag)
-	if(flag == PROJECTILE_PULSE)
-		src.ex_act(2)
-	return
-
-
 /turf/Entered(atom/A as mob|obj)
 	..()
 	if ((A && A.density && !( istype(A, /obj/beam) )))
@@ -1163,9 +1157,8 @@
 					affecting = H.organs[pick("l_foot", "r_foot")]
 					H.weakened = max(3, H.weakened)
 			if("l_hand", "r_hand")
-				if(!H.gloves)
-					affecting = H.organs[type]
-					H.stunned = max(3, H.stunned)
+				affecting = H.organs[type]
+				H.stunned = max(3, H.stunned)
 		if(affecting)
 			affecting.take_damage(1, 0)
 			H.UpdateDamageIcon()
@@ -1184,7 +1177,7 @@
 		user << "\blue You arm the mousetrap."
 	else
 		icon_state = "mousetrap"
-		if((user.brainloss >= 60 || user.mutations & 16) && prob(50))
+		if((user.brainloss >= 60 || user.mutations & CLUMSY) && prob(50))
 			var/which_hand = "l_hand"
 			if(!user.hand)
 				which_hand = "r_hand"
@@ -1201,7 +1194,7 @@
 
 /obj/item/weapon/mousetrap/attack_hand(mob/user as mob)
 	if(armed)
-		if((user.brainloss >= 60 || user.mutations & 16) && prob(50))
+		if((user.brainloss >= 60 || user.mutations & CLUMSY) && prob(50))
 			var/which_hand = "l_hand"
 			if(!user.hand)
 				which_hand = "r_hand"

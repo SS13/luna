@@ -44,22 +44,6 @@
 		item.throw_at(target, item.throw_range, item.throw_speed)
 
 
-
-/proc/get_cardinal_step_away(atom/start, atom/finish) //returns the position of a step from start away from finish, in one of the cardinal directions
-	//returns only NORTH, SOUTH, EAST, or WEST
-	var/dx = finish.x - start.x
-	var/dy = finish.y - start.y
-	if(abs(dy) > abs (dx)) //slope is above 1:1 (move horizontally in a tie)
-		if(dy > 0)
-			return get_step(start, SOUTH)
-		else
-			return get_step(start, NORTH)
-	else
-		if(dx > 0)
-			return get_step(start, WEST)
-		else
-			return get_step(start, EAST)
-
 /atom/movable/proc/hit_check()
 	if(src.throwing)
 		for(var/atom/A in get_turf(src))
@@ -79,7 +63,7 @@
 		hit_atom.visible_message("\red [hit_atom] has been hit by [src].")
 		var/mob/M = hit_atom
 		if(src.vars.Find("throwforce"))
-			M.bruteloss += src:throwforce
+			M:adjustBruteLoss(src:throwforce)
 
 	else if(isobj(hit_atom))
 		var/obj/O = hit_atom
@@ -91,7 +75,7 @@
 		if(T.density)
 			spawn(2) step(src, turn(src.dir, 180))
 			if(ismob(src) && hasvar(src,"bruteloss"))
-				src:bruteloss += 20
+				src:adjustBruteLoss(20)
 
 /atom/movable/Bump(atom/O)
 	if(src.throwing)
