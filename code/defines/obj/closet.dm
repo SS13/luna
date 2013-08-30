@@ -186,8 +186,14 @@
 	icon_state = "grey"
 	icon_closed = "grey"
 
+
 /obj/structure/closet/wardrobe/bar
 	name = "Bar Wardrobe"
+	icon_state = "black"
+	icon_closed = "black"
+
+/obj/structure/closet/wardrobe/BlackAdvanced
+	name = "Black Wardrobe"
 	icon_state = "black"
 	icon_closed = "black"
 

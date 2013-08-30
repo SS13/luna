@@ -251,6 +251,23 @@
 	icon_state = "pwig"
 	item_state = "pwig"
 
+/obj/item/clothing/head/xenos1
+	name = "Xeno Had"
+	icon_state = "xenos"
+	item_state = "xenos"
+
+/obj/item/clothing/head/xenos2
+	name = "Xeno Had"
+	desc = "A powdered wig"
+	icon_state = "xenom"
+	item_state = "xenom"
+
+/obj/item/clothing/head/kitty
+	name = "Xeno Had"
+	desc = "A powdered wig"
+	icon_state = "kitty"
+	item_state = "kitty"
+
 
 /obj/item/clothing/head/that
 	name = "Hat"
@@ -648,6 +665,18 @@
 
 	flags = FPRINT|TABLEPASS|PLASMAGUARD
 
+/obj/item/clothing/suit/jacket
+	name = "Jacket"
+	icon_state = "jacket"
+	item_state = "jacket"
+	body_parts_covered = CHEST|GROIN|ARMS
+
+/obj/item/clothing/suit/Alien
+	name = "Alien Clouth"
+	icon_state = "xenos"
+	item_state = "xenos"
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
+
 /obj/item/clothing/suit/storage
     name = "Storage"
 
@@ -905,6 +934,13 @@
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
 // Colors
+
+/obj/item/clothing/under/internal
+//starts off as black
+	name = "Fashion"
+	icon_state = "internalaffairs"
+	item_state = "internalaffairs"
+	color = "internalaffairs"
 
 /obj/item/clothing/under/chameleon
 //starts off as black
