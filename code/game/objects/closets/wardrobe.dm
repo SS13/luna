@@ -237,6 +237,21 @@
 	new /obj/item/clothing/shoes/black( src )
 	return
 
+obj/structure/closet/wardrobe/BlackAdvanced/New()
+	..()
+	new /obj/item/clothing/under/internal( src )
+	new /obj/item/clothing/under/internal( src )
+	new /obj/item/clothing/under/internal( src )
+	new /obj/item/clothing/suit/jacket( src )
+	new /obj/item/clothing/suit/jacket( src )
+	new /obj/item/clothing/suit/jacket( src )
+	new /obj/item/clothing/head/kitty( src )
+	new /obj/item/clothing/shoes/black( src )
+	new /obj/item/clothing/shoes/black( src )
+	new /obj/item/clothing/shoes/black( src )
+	new /obj/item/clothing/shoes/black( src )
+	return
+
 /obj/structure/closet/wardrobe/mixed/New()
 	..()
 	new /obj/item/clothing/under/color/blue( src )
