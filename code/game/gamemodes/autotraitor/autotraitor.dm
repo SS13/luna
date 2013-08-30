@@ -12,7 +12,7 @@
 /obj/item/weapon/gun/projectile:7:Revolver;
 /obj/item/ammo_magazine/a357:3:Revolver Ammo;
 /obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;
-/obj/item/weapon/sword:5:Energy sword;
+/obj/item/weapon/melee/energy/sword:5:Energy sword;
 /obj/item/device/hacktool:4:Hacktool;
 /obj/item/weapon/storage/toolbox/syndicate:1:Fully Loaded Toolbox;
 /obj/item/weapon/soap/syndie:1:Syndicate Soap;

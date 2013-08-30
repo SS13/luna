@@ -97,13 +97,13 @@ proc/randomevent_laws()
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
 		if (!W) return
 		if (!user) return
-		if (istype(W, /obj/item/weapon/axe)) del src
+		if (istype(W, /obj/item/weapon/melee/energy/axe)) del src
 		if (istype(W, /obj/item/weapon/circular_saw)) del src
 		if (istype(W, /obj/item/weapon/kitchen/utensil/knife)) del src
 		if (istype(W, /obj/item/weapon/scalpel)) del src
 		if (istype(W, /obj/item/weapon/screwdriver)) del src
 		if (istype(W, /obj/item/weapon/shard)) del src
-		if (istype(W, /obj/item/weapon/sword)) del src
+		if (istype(W, /obj/item/weapon/melee/energy/sword)) del src
 		if (istype(W, /obj/item/weapon/saw)) del src
 		if (istype(W, /obj/item/weapon/weldingtool)) del src
 		if (istype(W, /obj/item/weapon/wirecutters)) del src

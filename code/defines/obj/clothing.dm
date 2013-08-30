@@ -312,13 +312,47 @@
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
 	item_state = "thunderdome"
 
+
 /obj/item/clothing/head/helmet/hardhat
-	name = "Hard hat"
+	name = "hard hat"
+	desc = "A piece of headgear used in dangerous working conditions to protect the head. Comes with a built-in flashlight."
 	icon_state = "hardhat0_yellow"
 	flags = FPRINT | TABLEPASS
 	item_state = "hardhat0_yellow"
 	var/on = 0
 	color = "yellow"
+
+/obj/item/clothing/head/helmet/hardhat/orange
+	icon_state = "hardhat0_orange"
+	item_state = "hardhat0_orange"
+	color = "orange"
+
+/obj/item/clothing/head/helmet/hardhat/red
+	icon_state = "hardhat0_red"
+	item_state = "hardhat0_red"
+	color = "red"
+	name = "firefighter helmet"
+//	flags = FPRINT | TABLEPASS | STOPSPRESSUREDMAGE
+//	heat_protection = HEAD
+//	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
+//	cold_protection = HEAD
+//	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
+
+/obj/item/clothing/head/helmet/hardhat/white
+	icon_state = "hardhat0_white"
+	item_state = "hardhat0_white"
+	color = "white"
+//	flags = FPRINT | TABLEPASS | STOPSPRESSUREDMAGE
+//	heat_protection = HEAD
+//	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
+//	cold_protection = HEAD
+//	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
+
+/obj/item/clothing/head/helmet/hardhat/dblue
+	icon_state = "hardhat0_dblue"
+	item_state = "hardhat0_dblue"
+	color = "dblue"
+
 
 /obj/item/clothing/head/helmet/plump
 	name = "Plump helmet helmet"
@@ -683,14 +717,14 @@
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 
 /obj/item/clothing/suit/storage/hazard
-	name = "Hazard west"
+	name = "hazard west"
 	desc = "A orange west."
 	icon_state = "hazard"
 	item_state = "orangebook"
-	permeability_coefficient = 0.50
-	protective_temperature = 300
+	permeability_coefficient = 0.60
+	protective_temperature = 200
 	siemens_coefficient = 0.30
-	heat_transfer_coefficient = 0.50
+	heat_transfer_coefficient = 0.60
 	body_parts_covered = CHEST|GROIN
 
 
@@ -716,14 +750,14 @@
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
 /obj/item/clothing/suit/warden_jacket
-	name = "Warden jacket"
+	name = "warden jacket"
 	icon_state = "warden_jacket"
 	item_state = "r_suit"
 	body_parts_covered = CHEST|GROIN|ARMS
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
 /obj/item/clothing/suit/wizrobe
-	name = "Robe"
+	name = "robe"
 	desc = "A magnificent blue robe that seems to radiate power"
 	icon_state = "wizard"
 	item_state = "wizrobe"
@@ -735,7 +769,7 @@
 // ARMOR
 
 /obj/item/clothing/suit/armor/vest
-	name = "Armor"
+	name = "armor vest"
 	desc = "An armored vest that protects against some damage."
 	icon_state = "armor"
 	item_state = "armor"

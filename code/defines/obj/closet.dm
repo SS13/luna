@@ -1,18 +1,3 @@
-/obj/structure/closet
-	desc = "It's a closet!"
-	name = "Closet"
-	icon = 'closet.dmi'
-	icon_state = "closed"
-	density = 1
-	var/icon_closed = "closed"
-	var/icon_opened = "open"
-	var/bang_time = 0
-	var/opened = 0
-	var/welded = 0
-	flags = FPRINT
-
-
-
 /obj/structure/closet/portal
 	desc = "It's a closet!"
 	name = "Closet"
@@ -41,21 +26,6 @@
 	desc = "A bulky (yet mobile) closet. Comes with formal clothes"
 	name = "Formal closet"
 
-/obj/structure/closet/emcloset
-	desc = "A bulky (yet mobile) closet. Comes prestocked with a gasmask and o2 tank for emergencies."
-	name = "Emergency Closet"
-	icon_state = "emergency"
-	icon_closed = "emergency"
-	icon_opened = "emergencyopen"
-
-/obj/structure/closet/firecloset
-	desc = "A firecloset."
-	name = "Fire Closet"
-	icon_state = "firecloset"
-	icon_closed = "firecloset"
-	icon_opened = "fireclosetopen"
-
-
 /obj/structure/closet/jcloset
 	desc = "A bulky (yet mobile) closet. Comes with janitor's clothes and biohazard gear."
 	name = "Custodial Closet"
@@ -70,34 +40,6 @@
 	icon_state = "coffin"
 	icon_closed = "coffin"
 	icon_opened = "coffin_open"
-
-/obj/structure/closet/l3closet
-	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
-	name = "Level 3 Biohazard Suit"
-	icon_state = "bio"
-	icon_closed = "bio"
-	icon_opened = "bioopen"
-
-/obj/structure/closet/l3seccloset
-	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
-	name = "Level 3 Security Biohazard Suit"
-	icon_state = "bio_security"
-	icon_closed = "bio_security"
-	icon_opened = "bio_securityopen"
-
-/obj/structure/closet/l3jancloset
-	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
-	name = "Level 3 Janitor Biohazard Suit"
-	icon_state = "bio_janitor"
-	icon_closed = "bio_janitor"
-	icon_opened = "bio_janitoropen"
-
-/obj/structure/closet/l3scicloset
-	desc = "A bulky (yet mobile) closet. Comes prestocked with level 3 biohazard gear for emergencies."
-	name = "Level 3 Scientist Biohazard Suit"
-	icon_state = "bio_scientist"
-	icon_closed = "bio_scientist"
-	icon_opened = "bio_scientistopen"
 
 /obj/structure/closet/syndicate
 	desc = "Syndicate preparations closet."

@@ -325,7 +325,7 @@
 			shielded = 1
 			break
 
-	for (var/obj/item/weapon/device/cloak/S in src)
+	for (var/obj/item/device/cloak/S in src)
 		if (S.active)
 			shielded = 2
 			break

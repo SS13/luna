@@ -83,7 +83,7 @@
 	slowdown = 0
 	armor = list(melee = 40, bullet = 10, laser = 15,energy = 15, bomb = 50, bio = 100, rad = 90)
 	protective_temperature = 30000
-	reflectchance = 10 //So shiny!
+	reflectchance = 20 //So shiny!
 //	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 //	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 

@@ -99,6 +99,8 @@
 	var/move_result = 0
 	if(internal_damage&MECHA_INT_CONTROL_LOST)
 		move_result = mechsteprand()
+	else if(direction == UP || direction == DOWN)
+		move_result = move_z(cardinal)
 	else if(src.dir!=direction)
 		move_result = mechturn(direction)
 	else
@@ -132,6 +134,32 @@
 			src.occupant_message("<font color='[src.thrusters?"blue":"red"]'>Thrusters [thrusters?"en":"dis"]abled.")
 	return
 
+/obj/mecha/combat/marauder/move_z(cardinal)
+	if (!thrusters) return 0
+	if (z > 4)
+		occupant << "\red There is nothing of interest in that direction."
+		return 0
+	if (cardinal == UP) // Going up!
+		if(z != 1) // If we aren't at the very top of the ship
+			var/turf/T = locate(x, y, z - 1)
+			// You can only jetpack up if there's space above, and you're sitting on either hull (on the exterior), or space
+			if(T && istype(T, /turf/space) && istype(loc, /turf/space))
+				step(src, cardinal)
+				return 1
+			else occupant << "\red You bump into the ship's plating."
+		else occupant << "\red The ship's gravity well keeps you in orbit!" // Assuming the ship starts on z level 1, you don't want to go past it
+
+	else if (cardinal == DOWN) // Going down!
+		if (z != 4 && z != 5) // If we aren't at the very bottom of the ship, or out in space
+			var/turf/T = locate(x, y, z + 1)
+			// You can only jetpack down if you're sitting on space and there's space down below, or hull
+			if(T && istype(T, /turf/space) && istype(loc, /turf/space))
+				step(src, cardinal)
+				return 1
+			else occupant << "\red You bump into the ship's plating."
+		else occupant << "\red The ship's gravity well keeps you in orbit!"
+	else occupant << "\red WRONG DIR"
+	return 0
 
 /obj/mecha/combat/marauder/verb/smoke()
 	set category = "Exosuit Interface"

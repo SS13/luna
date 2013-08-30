@@ -204,6 +204,23 @@
 	..()
 
 
+//water flower
+/obj/item/weapon/reagent_containers/spray/waterflower
+	name = "water flower"
+	desc = "A seemingly innocent sunflower...with a twist."
+	icon = 'icons/obj/harvest.dmi'
+	icon_state = "sunflower"
+	item_state = "sunflower"
+	amount_per_transfer_from_this = 2
+	volume = 20
+
+/obj/item/weapon/reagent_containers/spray/waterflower/New()
+	..()
+	reagents.add_reagent("water", 20)
+
+/obj/item/weapon/reagent_containers/spray/waterflower/attack_self(var/mob/user) //Don't allow changing how much the flower sprays
+	return
+
 //Used by spraybottles.
 /obj/effect/decal/chempuff
 	name = "chemicals"

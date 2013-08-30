@@ -14,227 +14,6 @@
 //	mouse_drag_pointer = MOUSE_ACTIVE_POINTER	//???
 	var/rigged = 0
 
-/obj/structure/closet/crate/internals
-	desc = "A internals crate."
-	name = "Internals crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "o2crate"
-	density = 1
-	icon_opened = "o2crateopen"
-	icon_closed = "o2crate"
-
-/obj/structure/closet/crate/trashcart
-	desc = "A heavy, metal trashcart with wheels."
-	name = "Trash Cart"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "trashcart"
-	density = 1
-	icon_opened = "trashcartopen"
-	icon_closed = "trashcart"
-
-/*these aren't needed anymore
-/obj/structure/closet/crate/hat
-	desc = "A crate filled with Valuable Collector's Hats!."
-	name = "Hat Crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "crate"
-	density = 1
-	icon_opened = "crateopen"
-	icon_closed = "crate"
-
-/obj/structure/closet/crate/contraband
-	name = "Poster crate"
-	desc = "A random assortment of posters manufactured by providers NOT listed under Nanotrasen's whitelist."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "crate"
-	density = 1
-	icon_opened = "crateopen"
-	icon_closed = "crate"
-*/
-
-/obj/structure/closet/crate/medical
-	desc = "A medical crate."
-	name = "Medical crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "medicalcrate"
-	density = 1
-	icon_opened = "medicalcrateopen"
-	icon_closed = "medicalcrate"
-
-/obj/structure/closet/crate/rcd
-	desc = "A crate for the storage of the RCD."
-	name = "RCD crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "crate"
-	density = 1
-	icon_opened = "crateopen"
-	icon_closed = "crate"
-
-/obj/structure/closet/crate/freezer
-	desc = "A freezer."
-	name = "Freezer"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "freezer"
-	density = 1
-	icon_opened = "freezeropen"
-	icon_closed = "freezer"
-	var/target_temp = T0C - 40
-	var/cooling_power = 40
-
-	return_air()
-		var/datum/gas_mixture/gas = (..())
-		if(!gas)	return null
-		var/datum/gas_mixture/newgas = new/datum/gas_mixture()
-		newgas.oxygen = gas.oxygen
-		newgas.carbon_dioxide = gas.carbon_dioxide
-		newgas.nitrogen = gas.nitrogen
-		newgas.toxins = gas.toxins
-		newgas.volume = gas.volume
-		newgas.temperature = gas.temperature
-		if(newgas.temperature <= target_temp)	return
-
-		if((newgas.temperature - cooling_power) > target_temp)
-			newgas.temperature -= cooling_power
-		else
-			newgas.temperature = target_temp
-		return newgas
-
-
-/obj/structure/closet/crate/bin
-	desc = "A large bin."
-	name = "Large bin"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "largebin"
-	density = 1
-	icon_opened = "largebinopen"
-	icon_closed = "largebin"
-
-/obj/structure/closet/crate/radiation
-	desc = "A crate with a radiation sign on it."
-	name = "Radioactive gear crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "radiation"
-	density = 1
-	icon_opened = "radiationopen"
-	icon_closed = "radiation"
-
-/obj/structure/closet/crate/secure/weapon
-	desc = "A secure weapons crate."
-	name = "Weapons crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "weaponcrate"
-	density = 1
-	icon_opened = "weaponcrateopen"
-	icon_closed = "weaponcrate"
-
-/obj/structure/closet/crate/secure/plasma
-	desc = "A secure plasma crate."
-	name = "Plasma crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "plasmacrate"
-	density = 1
-	icon_opened = "plasmacrateopen"
-	icon_closed = "plasmacrate"
-
-/obj/structure/closet/crate/secure/gear
-	desc = "A secure gear crate."
-	name = "Gear crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "secgearcrate"
-	density = 1
-	icon_opened = "secgearcrateopen"
-	icon_closed = "secgearcrate"
-
-/obj/structure/closet/crate/secure/hydrosec
-	desc = "A crate with a lock on it, painted in the scheme of the station's botanists."
-	name = "secure hydroponics crate"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "hydrosecurecrate"
-	density = 1
-	icon_opened = "hydrosecurecrateopen"
-	icon_closed = "hydrosecurecrate"
-
-/obj/structure/closet/crate/secure/bin
-	desc = "A secure bin."
-	name = "Secure bin"
-	icon_state = "largebins"
-	icon_opened = "largebinsopen"
-	icon_closed = "largebins"
-	redlight = "largebinr"
-	greenlight = "largebing"
-	sparks = "largebinsparks"
-	emag = "largebinemag"
-
-/obj/structure/closet/crate/secure
-	desc = "A secure crate."
-	name = "Secure crate"
-	icon_state = "securecrate"
-	icon_opened = "securecrateopen"
-	icon_closed = "securecrate"
-	var/redlight = "securecrater"
-	var/greenlight = "securecrateg"
-	var/sparks = "securecratesparks"
-	var/emag = "securecrateemag"
-	var/broken = 0
-	var/locked = 1
-
-/obj/structure/closet/crate/hydroponics
-	name = "Hydroponics crate"
-	desc = "All you need to destroy those pesky weeds and pests."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "hydrocrate"
-	icon_opened = "hydrocrateopen"
-	icon_closed = "hydrocrate"
-	density = 1
-
-/obj/structure/closet/crate/hydroponics/prespawned
-	//This exists so the prespawned hydro crates spawn with their contents.
-/*	name = "Hydroponics crate"
-	desc = "All you need to destroy those pesky weeds and pests."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "hydrocrate"
-	icon_opened = "hydrocrateopen"
-	icon_closed = "hydrocrate"
-	density = 1*/
-	New()
-		..()
-		new /obj/item/weapon/reagent_containers/spray/plantbgone(src)
-		new /obj/item/weapon/reagent_containers/spray/plantbgone(src)
-		new /obj/item/weapon/minihoe(src)
-//		new /obj/item/weapon/weedspray(src)
-//		new /obj/item/weapon/weedspray(src)
-//		new /obj/item/weapon/pestspray(src)
-//		new /obj/item/weapon/pestspray(src)
-//		new /obj/item/weapon/pestspray(src)
-
-
-/obj/structure/closet/crate/secure/New()
-	..()
-	if(locked)
-		overlays.Cut()
-		overlays += redlight
-	else
-		overlays.Cut()
-		overlays += greenlight
-
-/obj/structure/closet/crate/rcd/New()
-	..()
-	new /obj/item/weapon/rcd_ammo(src)
-	new /obj/item/weapon/rcd_ammo(src)
-	new /obj/item/weapon/rcd_ammo(src)
-	new /obj/item/weapon/rcd(src)
-
-/obj/structure/closet/crate/radiation/New()
-	..()
-	new /obj/item/clothing/suit/radiation(src)
-	new /obj/item/clothing/head/radiation(src)
-	new /obj/item/clothing/suit/radiation(src)
-	new /obj/item/clothing/head/radiation(src)
-	new /obj/item/clothing/suit/radiation(src)
-	new /obj/item/clothing/head/radiation(src)
-	new /obj/item/clothing/suit/radiation(src)
-	new /obj/item/clothing/head/radiation(src)
-
 /obj/structure/closet/crate/open()
 	playsound(src.loc, 'sound/machines/click.ogg', 15, 1, -3)
 
@@ -274,13 +53,300 @@
 		if(rigged && locate(/obj/item/device/radio/electropack) in src)
 			if(isliving(user))
 				var/mob/living/L = user
-				if(L.electrocute_act(17, src))
+				if(L.electrocute_act(22, src))
 					var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 					s.set_up(5, 1, src)
 					s.start()
 					return
 		open()
 	return
+
+/obj/structure/closet/crate/fireworks
+	name = "Fireworks crate"
+/obj/structure/closet/crate/fireworks/New()
+	new /obj/item/weapon/sparkler(src)
+	new /obj/item/weapon/sparkler(src)
+	new /obj/item/weapon/sparkler(src)
+	new /obj/item/weapon/sparkler(src)
+	new /obj/item/weapon/sparkler(src)
+	new /obj/item/weapon/sparkler(src)
+	new /obj/item/weapon/sparkler(src)
+	new /obj/item/weapon/sparkler(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+	new /obj/item/weapon/firework(src)
+
+/obj/structure/closet/crate/internals
+	desc = "A internals crate."
+	name = "Internals crate"
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "o2crate"
+	icon_opened = "o2crateopen"
+	icon_closed = "o2crate"
+
+/obj/structure/closet/crate/internals/New()
+	new /obj/item/clothing/mask/gas(src)
+	if(prob(50)) new /obj/item/weapon/tank/oxygen(src)
+	else new /obj/item/weapon/tank/air(src)
+	new /obj/item/clothing/mask/gas(src)
+	new /obj/item/weapon/tank/air(src)
+	new /obj/item/clothing/mask/gas(src)
+	new /obj/item/weapon/tank/air(src)
+
+/obj/structure/closet/crate/internalsoxy/New()
+	new /obj/item/clothing/mask/gas(src)
+	new /obj/item/weapon/tank/oxygen(src)
+	new /obj/item/clothing/mask/gas(src)
+	new /obj/item/weapon/tank/oxygen(src)
+	new /obj/item/clothing/mask/gas(src)
+	new /obj/item/weapon/tank/oxygen(src)
+
+/obj/structure/closet/crate/trashcart
+	desc = "A heavy, metal trashcart with wheels."
+	name = "Trash Cart"
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "trashcart"
+	icon_opened = "trashcartopen"
+	icon_closed = "trashcart"
+
+/*these aren't needed anymore
+/obj/structure/closet/crate/hat
+	desc = "A crate filled with Valuable Collector's Hats!."
+	name = "Hat Crate"
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "crate"
+	icon_opened = "crateopen"
+	icon_closed = "crate"
+
+/obj/structure/closet/crate/contraband
+	name = "Poster crate"
+	desc = "A random assortment of posters manufactured by providers NOT listed under Nanotrasen's whitelist."
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "crate"
+	icon_opened = "crateopen"
+	icon_closed = "crate"
+*/
+
+/obj/structure/closet/crate/medical
+	desc = "A medical crate."
+	name = "Medical crate"
+	icon_state = "medicalcrate"
+	icon_opened = "medicalcrateopen"
+	icon_closed = "medicalcrate"
+
+/obj/structure/closet/crate/rcd
+	desc = "A crate for the storage of the RCD."
+	name = "RCD crate"
+	icon_state = "crate"
+	icon_opened = "crateopen"
+	icon_closed = "crate"
+
+/obj/structure/closet/crate/rcd/New()
+	..()
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd(src)
+
+/obj/structure/closet/crate/freezer
+	desc = "A freezer."
+	name = "Freezer"
+	icon_state = "freezer"
+	icon_opened = "freezeropen"
+	icon_closed = "freezer"
+	var/target_temp = T0C - 40
+	var/cooling_power = 40
+
+	return_air()
+		var/datum/gas_mixture/gas = (..())
+		if(!gas)	return null
+		var/datum/gas_mixture/newgas = new/datum/gas_mixture()
+		newgas.oxygen = gas.oxygen
+		newgas.carbon_dioxide = gas.carbon_dioxide
+		newgas.nitrogen = gas.nitrogen
+		newgas.toxins = gas.toxins
+		newgas.volume = gas.volume
+		newgas.temperature = gas.temperature
+		if(newgas.temperature <= target_temp)	return
+
+		if((newgas.temperature - cooling_power) > target_temp)
+			newgas.temperature -= cooling_power
+		else
+			newgas.temperature = target_temp
+		return newgas
+
+/obj/structure/closet/crate/freezer/ice/New()
+	..()
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/ice(src)
+
+
+/obj/structure/closet/crate/bin
+	desc = "A large bin."
+	name = "Large bin"
+	icon_state = "largebin"
+	icon_opened = "largebinopen"
+	icon_closed = "largebin"
+
+/obj/structure/closet/crate/radiation
+	desc = "A crate with a radiation sign on it."
+	name = "Radioactive gear crate"
+	icon_state = "radiation"
+	icon_opened = "radiationopen"
+	icon_closed = "radiation"
+
+/obj/structure/closet/crate/secure/weapon
+	desc = "A secure weapons crate."
+	name = "Weapons crate"
+	icon_state = "weaponcrate"
+	icon_opened = "weaponcrateopen"
+	icon_closed = "weaponcrate"
+
+/obj/structure/closet/crate/secure/engineering
+	desc = "A crate for the storage of engineering equipment."
+	name = "Engineering crate"
+	icon_state = "engi_secure_crate"
+	icon_opened = "engi_secure_crate_open"
+	icon_closed = "engi_secure_crate"
+
+/obj/structure/closet/crate/secure/plasma
+	desc = "A secure plasma crate."
+	name = "Plasma crate"
+	icon_state = "plasmacrate"
+	icon_opened = "plasmacrateopen"
+	icon_closed = "plasmacrate"
+
+/obj/structure/closet/crate/secure/gear
+	desc = "A secure gear crate."
+	name = "Gear crate"
+	icon_state = "secgearcrate"
+	icon_opened = "secgearcrateopen"
+	icon_closed = "secgearcrate"
+
+/obj/structure/closet/crate/secure/hydrosec
+	desc = "A crate with a lock on it, painted in the scheme of the station's botanists."
+	name = "secure hydroponics crate"
+	icon_state = "hydrosecurecrate"
+	icon_opened = "hydrosecurecrateopen"
+	icon_closed = "hydrosecurecrate"
+
+/obj/structure/closet/crate/secure/bin
+	desc = "A secure bin."
+	name = "Secure bin"
+	icon_state = "largebins"
+	icon_opened = "largebinsopen"
+	icon_closed = "largebins"
+	redlight = "largebinr"
+	greenlight = "largebing"
+	sparks = "largebinsparks"
+	emag = "largebinemag"
+
+/obj/structure/closet/crate/secure
+	desc = "A secure crate."
+	name = "Secure crate"
+	icon_state = "securecrate"
+	icon_opened = "securecrateopen"
+	icon_closed = "securecrate"
+	var/redlight = "securecrater"
+	var/greenlight = "securecrateg"
+	var/sparks = "securecratesparks"
+	var/emag = "securecrateemag"
+	var/broken = 0
+	var/locked = 1
+
+/obj/structure/closet/crate/hydroponics
+	name = "Hydroponics crate"
+	desc = "All you need to destroy those pesky weeds and pests."
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "hydrocrate"
+	icon_opened = "hydrocrateopen"
+	icon_closed = "hydrocrate"
+
+/obj/structure/closet/crate/engineering
+	desc = "A crate for the storage of engineering equipment."
+	name = "Engineering crate"
+	icon_state = "engi_crate"
+	icon_opened = "engi_crate_open"
+	icon_closed = "engi_crate"
+
+/obj/structure/closet/crate/electical
+	desc = "A crate for the storage of electical equipment."
+	name = "Electical crate"
+	icon_state = "engi_e_crate"
+	icon_opened = "engi_e_crate_open"
+	icon_closed = "engi_e_crate"
+
+//obj/structure/closet/crate/hydroponics/prespawned
+	//This exists so the prespawned hydro crates spawn with their contents.
+/*	name = "Hydroponics crate"
+	desc = "All you need to destroy those pesky weeds and pests."
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "hydrocrate"
+	icon_opened = "hydrocrateopen"
+	icon_closed = "hydrocrate"
+	density = 1*/
+//	New()
+//		..()
+//		new /obj/item/weapon/reagent_containers/spray/plantbgone(src)
+//		new /obj/item/weapon/reagent_containers/spray/plantbgone(src)
+//		new /obj/item/weapon/minihoe(src)
+//		new /obj/item/weapon/weedspray(src)
+//		new /obj/item/weapon/weedspray(src)
+//		new /obj/item/weapon/pestspray(src)
+//		new /obj/item/weapon/pestspray(src)
+//		new /obj/item/weapon/pestspray(src)
+
+
+/obj/structure/closet/crate/secure/New()
+	..()
+	if(locked)
+		overlays.Cut()
+		overlays += redlight
+	else
+		overlays.Cut()
+		overlays += greenlight
+
+/obj/structure/closet/crate/rcd/New()
+	..()
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd_ammo(src)
+	new /obj/item/weapon/rcd(src)
+
+/obj/structure/closet/crate/radiation/New()
+	..()
+	new /obj/item/clothing/suit/radiation(src)
+	new /obj/item/clothing/head/radiation(src)
+	new /obj/item/clothing/suit/radiation(src)
+	new /obj/item/clothing/head/radiation(src)
+	new /obj/item/clothing/suit/radiation(src)
+	new /obj/item/clothing/head/radiation(src)
+	new /obj/item/clothing/suit/radiation(src)
+	new /obj/item/clothing/head/radiation(src)
+
 
 /obj/structure/closet/crate/secure/attack_hand(mob/user as mob)
 	if(locked && !broken)
@@ -303,7 +369,7 @@
 		overlays.Cut()
 		overlays += redlight
 		return
-	else if ( (istype(W, /obj/item/weapon/card/emag)||istype(W, /obj/item/weapon/melee/energy/blade)) && locked &&!broken)
+	else if ( (istype(W, /obj/item/weapon/card/emag)) && locked &&!broken)
 		overlays.Cut()
 		overlays += emag
 		overlays += sparks
@@ -326,8 +392,8 @@
 		user.drop_item()
 		if(W)
 			W.loc = src.loc
-	else if(istype(W, /obj/item/weapon/packageWrap))
-		return
+	/*else if(istype(W, /obj/item/weapon/packageWrap))
+		return*/
 	else if(istype(W, /obj/item/weapon/cable_coil))
 		if(rigged)
 			user << "<span class='notice'>[src] is already rigged!</span>"
@@ -354,7 +420,7 @@
 /obj/structure/closet/crate/secure/emp_act(severity)
 	for(var/obj/O in src)
 		O.emp_act(severity)
-	if(!broken && !opened  && prob(50/severity))
+	if(!broken && !opened  && prob(90/severity))
 		if(!locked)
 			src.locked = 1
 			overlays.Cut()

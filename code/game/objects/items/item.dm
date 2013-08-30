@@ -118,9 +118,9 @@
 			user.l_hand = src
 	else
 		if(ishuman(user))
-			var/datum/organ/external/temp = organs["l_hand"]
+			var/datum/organ/external/temp = organs["r_hand"]
 			if(!temp.destroyed)
-				user.l_hand = src
+				user.r_hand = src
 			else
 				user << "\blue You pick \the [src] up with your ha- wait a minute."
 				return

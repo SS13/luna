@@ -33,3 +33,31 @@
 
 		overlays += mainOverlay
 		overlays += shadeOverlay
+
+/obj/effect/decal/cleanable/crayon/explosive
+	var/exploding = 0
+
+	attackby(obj/item/weapon/W as obj, mob/user as mob)
+		..()
+		if(istype(W, /obj/item/weapon/weldingtool) && W:isOn()) ingite(user)
+		else if(istype(W, /obj/item/toy/minisingulo) && W:on) ingite(user)
+		else if(istype(W, /obj/item/weapon/lighter) && W:lit) ingite(user)
+		else if(istype(W, /obj/item/weapon/match) && W:lit) ingite(user)
+		else if(istype(W, /obj/item/weapon/melee/energy/sword) && W:active) ingite(user)
+		else if(istype(W, /obj/item/device/assembly/igniter)) ingite(user)
+		else if(istype(W, /obj/item/clothing/mask/cigarette)  && W:lit)	ingite(user)
+		else if(istype(W, /obj/item/device/flashlight/flare) && W:on) ingite(user)
+
+	proc/ingite(mob/user)
+		user << "You ingite the explosive [name]!"
+		sleep(10)
+		explode()
+
+	ex_act(blah)
+		explode()
+
+	proc/explode()
+		if(!exploding)
+			exploding = 1
+			sleep(2)
+			explosion(src.loc,-1,-1,1)

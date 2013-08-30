@@ -121,7 +121,7 @@ datum
 					if("captain's antique laser gun")
 						steal_target = /obj/item/weapon/gun/energy/laser_gun/captain
 					if("hand teleporter")
-						steal_target = /obj/item/weapon/device/hand_tele
+						steal_target = /obj/item/device/hand_tele
 					if("RCD")
 						steal_target = /obj/item/weapon/rcd
 					if("jetpack")

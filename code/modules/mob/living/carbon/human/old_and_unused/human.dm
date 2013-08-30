@@ -131,9 +131,9 @@
 			tmob.loc = oldloc
 			now_pushing = 0
 			return
-		if(istype(equipped(), /obj/item/weapon/baton)) // add any other item paths you think are necessary
+		if(istype(equipped(), /obj/item/weapon/melee/baton)) // add any other item paths you think are necessary
 			if(loc:ul_Luminosity() < 3 || blinded)
-				var/obj/item/weapon/baton/W = equipped()
+				var/obj/item/weapon/melee/baton/W = equipped()
 				if (world.time > lastDblClick+2)
 					lastDblClick = world.time
 					if(((prob(40)) || (prob(95) && mutations & CLUMSY)) && W.status)
@@ -243,7 +243,7 @@
 			shielded = 1
 			S.active = 0
 			S.icon_state = "shield0"
-	for(var/obj/item/weapon/device/cloak/S in src)
+	for(var/obj/item/device/cloak/S in src)
 		if (S.active)
 			shielded = 1
 			S.active = 0
@@ -1046,7 +1046,7 @@
 			shielded = 1
 			break
 
-	for (var/obj/item/weapon/device/cloak/S in src)
+	for (var/obj/item/device/cloak/S in src)
 		if (S.active)
 			shielded = 2
 			break
@@ -1757,7 +1757,7 @@
 								if("uniform")
 									message = text("\red <B>[] is trying to take off \a [] from []'s body!</B>", source, target.w_uniform, target)
 								if("pockets")
-									for(var/obj/item/weapon/mousetrap/MT in  list(target.l_store, target.r_store))
+									for(var/obj/item/device/assembly/mousetrap/MT in  list(target.l_store, target.r_store))
 										if(MT.armed)
 											for(var/mob/O in viewers(target, null))
 												if(O == source)

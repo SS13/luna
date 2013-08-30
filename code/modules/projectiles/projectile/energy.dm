@@ -43,8 +43,8 @@
 
 /obj/item/projectile/energy/bolt/large
 	name = "largebolt"
-	damage = 30
-
+	damage = 33
+	weaken = 12
 
 /obj/item/projectile/energy/neurotoxin
 	name = "neuro"

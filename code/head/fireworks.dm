@@ -1,10 +1,11 @@
-obj/item/weapon/firework
+/obj/item/weapon/firework
 	name = "fireworks"
 	icon = 'fireworks.dmi'
 	icon_state = "rocket_0"
 	var/litzor = 0
 	var/datum/effect/system/sparkel_spread/S
-obj/item/weapon/firework/attackby(obj/item/weapon/W,mob/user)
+
+/obj/item/weapon/firework/attackby(obj/item/weapon/W,mob/user)
 	if(litzor)
 		return
 	if (istype(W, /obj/item/weapon/weldingtool) && W:welding || istype(W,/obj/item/weapon/lighter) && W:lit)
@@ -20,13 +21,15 @@ obj/item/weapon/firework/attackby(obj/item/weapon/W,mob/user)
 		S.start()
 		del(src)
 
-obj/item/weapon/sparkler
+
+/obj/item/weapon/sparkler
 	name = "sparkler"
 	icon = 'fireworks.dmi'
 	icon_state = "sparkler_0"
 	var/litzor = 0
 	var/datum/effect/effect/system/spark_spread/S
-obj/item/weapon/sparkler/attackby(obj/item/weapon/W,mob/user)
+
+/obj/item/weapon/sparkler/attackby(obj/item/weapon/W,mob/user)
 	if(litzor)
 		return
 	if (istype(W, /obj/item/weapon/weldingtool) && W:welding || istype(W,/obj/item/weapon/lighter) && W:lit)
@@ -43,24 +46,3 @@ obj/item/weapon/sparkler/attackby(obj/item/weapon/W,mob/user)
 			S.start()
 			sleep(10)
 		del(src)
-/obj/structure/crate/fireworks
-	name = "Fireworks!"
-/obj/structure/crate/fireworks/New()
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)

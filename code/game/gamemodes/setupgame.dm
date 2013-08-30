@@ -8,7 +8,9 @@
 	var/list/avnums = new/list()
 	var/tempnum
 
+	avnums.Add(1)
 	avnums.Add(2)
+	avnums.Add(3)
 	avnums.Add(12)
 	avnums.Add(10)
 	avnums.Add(8)
@@ -17,8 +19,6 @@
 	avnums.Add(13)
 	avnums.Add(6)
 	avnums.Add(9)
-	avnums.Add(1)
-	avnums.Add(3)
 	avnums.Add(5)
 	avnums.Add(7)
 	avnums.Add(14)

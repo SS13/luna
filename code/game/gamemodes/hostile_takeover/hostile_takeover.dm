@@ -118,7 +118,7 @@
 	synd_mob.equip_if_possible(new /obj/item/weapon/handcuffs(synd_mob), synd_mob.slot_in_backpack)
 	synd_mob.equip_if_possible(new /obj/item/weapon/gun/energy/gun(synd_mob), synd_mob.slot_in_backpack)
 	synd_mob.equip_if_possible(new /obj/item/weapon/gun/projectile(synd_mob), synd_mob.slot_in_backpack)
-	synd_mob.equip_if_possible(new /obj/item/weapon/baton(synd_mob), synd_mob.slot_in_backpack)
+	synd_mob.equip_if_possible(new /obj/item/weapon/melee/baton(synd_mob), synd_mob.slot_in_backpack)
 
 	synd_mob.update_clothing()
 

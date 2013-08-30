@@ -116,7 +116,7 @@ Frequency:
 /// HAND TELE
 
 
-/obj/item/weapon/device/hand_tele/attack_self(mob/user as mob)
+/obj/item/device/hand_tele/attack_self(mob/user as mob)
 	var/list/L = list(  )
 	for(var/obj/machinery/teleport/hub/R in world)
 		var/obj/machinery/computer/teleporter/com = locate(/obj/machinery/computer/teleporter, locate(R.x - 2, R.y, R.z))

@@ -333,12 +333,12 @@
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/mousetraps/New()
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
-	new /obj/item/weapon/mousetrap( src )
+	new /obj/item/device/assembly/mousetrap( src )
+	new /obj/item/device/assembly/mousetrap( src )
+	new /obj/item/device/assembly/mousetrap( src )
+	new /obj/item/device/assembly/mousetrap( src )
+	new /obj/item/device/assembly/mousetrap( src )
+	new /obj/item/device/assembly/mousetrap( src )
 	..()
 	return
 
