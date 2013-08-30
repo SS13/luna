@@ -1,4 +1,4 @@
-proc/empulse(turf/epicenter, heavy_range, light_range, log=0, 3dspread=1)
+proc/empulse(turf/epicenter, heavy_range, light_range, log=0, zLevelSpread=1)
 	if(!epicenter) return
 
 	if(!istype(epicenter, /turf))

@@ -1,5 +1,6 @@
 /obj/item/weapon/tank/jetpack
-	name = "Jetpack (Oxygen)"
+	name = "jetpack (oxygen)"
+	desc = "A tank of compressed oxygen for use as propulsion in zero-gravity areas. Use with caution."
 	icon_state = "jetpack0"
 	var/on = 0.0
 	w_class = 4.0
@@ -18,6 +19,7 @@
 	item_state = "jetpack0_ce"
 
 /obj/item/weapon/tank/jetpack/void
+	desc = "It works well in a void."
 	jettype = "_void"
 	icon_state = "jetpack0_void"
 	item_state = "jetpack0_void"
@@ -51,30 +53,17 @@
 	return
 
 
-/obj/item/weapon/tank/jetpack/proc/allow_thrust(num, mob/user as mob)
-	if (!( src.on ))
-		return 0
-	if ((num < 0.01 || src.air_contents.total_moles() < num))
+/obj/item/weapon/tank/jetpack/proc/allow_thrust(num, mob/living/user as mob)
+	if(!(src.on)) return 0
+
+	if((num < 0.005 || src.air_contents.total_moles() < num))
 		src.ion_trail.stop()
 		return 0
 
 	var/datum/gas_mixture/G = src.air_contents.remove(num)
+	var/allgases = G.carbon_dioxide + G.nitrogen + G.oxygen + G.toxins	//fuck trace gases	-Pete
+	if(allgases >= 0.005) return 1
 
-	if (G.oxygen >= 0.01)
-		return 1
-	if (G.toxins > 0.001)
-		if (user)
-			var/d = G.toxins / 2
-			d = min(abs(user.health + 100), d, 25)
-			user.fireloss += d
-			user.updatehealth()
-		return (G.oxygen >= 0.0075 ? 0.5 : 0)
-	else
-		if (G.oxygen >= 0.0075)
-			return 0.5
-		else
-			return 0
-	//G = null
 	del(G)
 	return
 
@@ -86,7 +75,7 @@
 	if (user.z > 4)
 		user << "\red There is nothing of interest in that direction."
 		return
-	if(allow_thrust(0.01, user))
+	if(allow_thrust(0.005, user))
 		switch(cardinal)
 			if (UP) // Going up!
 				if(user.z != 1) // If we aren't at the very top of the ship

@@ -268,7 +268,7 @@
 		..()
 		if (src.trigger == "force" && W.force >= 30 && !src.activated) src.Artifact_Activate()
 		if (src.trigger == "energy")
-			if (istype(W,/obj/item/weapon/baton)) src.Artifact_Activate()
+			if (istype(W,/obj/item/weapon/melee/baton)) src.Artifact_Activate()
 			if (istype(W,/obj/item/weapon/gun/energy/)) src.Artifact_Activate()
 			if (istype(W,/obj/item/device/multitool)) src.Artifact_Activate()
 			if (istype(W,/obj/item/weapon/card/emag)) src.Artifact_Activate()

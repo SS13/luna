@@ -1018,11 +1018,20 @@ mob/verb/turnwest()
 					O.show_message(text("\red <B>[] resists!</B>", usr), 1)
 
 			if(usr:handcuffed && (usr.last_special <= world.time))
-				var/breakouttime = 1200
+				var/breakouttime = 1000
 				var/displaytime = 2
 				if(!usr:canmove)
-					breakouttime = 2400
+					breakouttime = 2000
 					displaytime = 4
+
+				if(istype(usr:handcuffed, /obj/item/weapon/handcuffs/cable))
+					if(!usr:canmove)
+						breakouttime = 1000
+						displaytime = 2
+					else
+						breakouttime = 500
+						displaytime = 0.3
+
 				usr.next_move = world.time + 100
 				usr.last_special = world.time + 100
 				usr << "\red You attempt to remove your handcuffs. (This will take around [displaytime] minutes and you need to stand still)"
@@ -1652,7 +1661,7 @@ mob/verb/turnwest()
 	show_inv(usr)
 
 /mob/living/bullet_act(obj/item/projectile/P, def_zone)
-	var/obj/item/weapon/device/cloak/C = locate((/obj/item/weapon/device/cloak) in src)
+	var/obj/item/device/cloak/C = locate((/obj/item/device/cloak) in src)
 	if(C && C.active)
 		C.attack_self(src)//Should shut it off
 		src << "<span class='notice'>Your [C] was disrupted!</span>"
@@ -1746,17 +1755,22 @@ mob/verb/turnwest()
 	..()
 
 /client/Northeast()
+	var/obj/item/weapon/W = mob.equipped()
 	if (istype(mob, /mob/dead/observer) && mob.z > 1)
 		mob.Move(locate(mob.x, mob.y, mob.z - 1))
 	else if (istype(mob, /mob/living/silicon/ai))
 		var/mob/living/silicon/ai/M = mob
 		if ((!M.current && M.loc.z > 1) || M.current.z > 1)
 			AIMoveZ(UP, mob)
+	else if(isobj(mob.loc))
+		mob.loc:relaymove(mob,UP)
 	else if(istype(mob, /mob/living/carbon))
 		if (mob:back && istype(mob:back, /obj/item/weapon/tank/jetpack))
 			mob:back:move_z(UP, mob)
-		else if(isobj(mob.loc))
-			mob.loc:relaymove(mob,UP)
+		else if(mob:belt && istype(mob:belt, /obj/item/weapon/tank/jetpack))
+			mob:belt:move_z(UP, mob)
+		else if(istype(W, /obj/item/weapon/extinguisher) && istype(mob.loc, /turf/space))
+			W:move_z(UP, mob)
 		else
 			mob:swap_hand()
 
@@ -1770,8 +1784,12 @@ mob/verb/turnwest()
 			AIMoveZ(DOWN, mob)
 	else if(istype(mob, /mob/living/carbon) && mob:back && istype(mob:back, /obj/item/weapon/tank/jetpack))
 		mob:back:move_z(DOWN, mob)
+	else if(istype(mob, /mob/living/carbon) && mob:belt && istype(mob:belt, /obj/item/weapon/tank/jetpack))
+		mob:belt:move_z(DOWN, mob)
 	else if(isobj(mob.loc))
 		mob.loc:relaymove(mob,DOWN)
+	else if(istype(W, /obj/item/weapon/extinguisher))
+		W:move_z(DOWN, mob)
 	else if (W)
 		W.attack_self(mob)
 
@@ -1844,7 +1862,14 @@ mob/verb/turnwest()
 				if (!( (locate(/obj/structure/grille) in oview(1, mob)) || (locate(/turf/simulated) in oview(1, mob)) || (locate(/obj/structure/lattice) in oview(1, mob)) ))
 					if (istype(mob.back, /obj/item/weapon/tank/jetpack))
 						var/obj/item/weapon/tank/jetpack/J = mob.back
-						j_pack = J.allow_thrust(0.01, mob)
+						j_pack = J.allow_thrust(0.005, mob)
+						if(j_pack)
+							mob.inertia_dir = 0
+						if (!( j_pack ))
+							return 0
+					else if (istype(mob:belt, /obj/item/weapon/tank/jetpack))
+						var/obj/item/weapon/tank/jetpack/J = mob:belt
+						j_pack = J.allow_thrust(0.005, mob)
 						if(j_pack)
 							mob.inertia_dir = 0
 						if (!( j_pack ))
@@ -1862,7 +1887,7 @@ mob/verb/turnwest()
 			switch(mob.m_intent)
 				if("run")
 					if (mob.drowsyness > 0)
-						move_delay += 6
+						move_delay += 4
 					move_delay += 1
 				if("face")
 					mob.dir = direct
@@ -1881,15 +1906,12 @@ mob/verb/turnwest()
 			if(ishuman(mob))
 				var/datum/organ/external/lleg = mob.organs["l_leg"]
 				var/datum/organ/external/rleg = mob.organs["r_leg"]
-				if(lleg.broken && rleg.broken)
+				if(lleg.broken && rleg.broken && prob(50))
 					src << "\blue You feel a sharp pain as you try to walk!"
 					mob.paralysis += 10
 					return 0
 				if(lleg.broken || rleg.broken)
-					if(mob.r_hand)
-						if(istype(mob.r_hand,/obj/item/weapon/cane) || istype(mob.l_hand,/obj/item/weapon/cane))
-							src << "\blue You are able to support yourself on the [mob.r_hand]"
-					else if(prob(50))
+					if(prob(10))
 						src << "\blue You feel a sharp pain as you try to walk!"
 						mob.paralysis += 10
 						return 0

@@ -10,7 +10,7 @@
 	can_hold = list(
 	"/obj/item/device/radio",
 	"/obj/item/weapon/hand_labeler",
-	"/obj/item/weapon/oreprospector",
+//	"/obj/item/weapon/oreprospector",
 	"/obj/item/device/pda",
 	"/obj/item/device/analyzer",
 	"/obj/item/weapon/crowbar",
@@ -20,7 +20,7 @@
 	"/obj/item/weapon/wrench",
 	"/obj/item/device/multitool",
 	"/obj/item/device/flashlight",
-	"/obj/item/device/hacktool", // WHY NOT?
+	"/obj/item/device/hacktool", // Why not?
 	"/obj/item/weapon/cable_coil",
 	"/obj/item/device/t_scanner")
 
@@ -50,12 +50,11 @@
 	"/obj/item/device/ammo",
 	"/obj/item/device/pda",
 	"/obj/item/weapon/gun/projectile",
-	"/obj/item/weapon/gun/detectiverevolver",
 	"/obj/item/weapon/gun/energy",
 	"/obj/item/weapon/handcuffs",
 	"/obj/item/device/flash",
-	"/obj/item/weapon/baton",
-	"/obj/item/weapon/classic_baton",
+	"/obj/item/weapon/melee/baton",
+	"/obj/item/weapon/melee/classic_baton",
 	"/obj/item/weapon/grenade/flashbang",
 	"/obj/item/weapon/grenade/emp",
 	"/obj/item/weapon/camera_test",
@@ -65,7 +64,7 @@
 	..()
 	new /obj/item/weapon/handcuffs(src)
 	new /obj/item/weapon/handcuffs(src)
-	new /obj/item/weapon/baton(src)
+	new /obj/item/weapon/melee/baton(src)
 	new /obj/item/weapon/gun/energy(src)
 	new /obj/item/weapon/grenade/flashbang(src)
 	new /obj/item/weapon/grenade/flashbang(src)
@@ -88,6 +87,8 @@
 	"/obj/item/weapon/reagent_containers/glass/beaker",
 	"/obj/item/weapon/reagent_containers/glass/bottle",
 	"/obj/item/weapon/reagent_containers/glass/bloodpack",
+	"/obj/item/weapon/reagent_containers/hypospray",
+	"/obj/item/weapon/reagent_containers/spray",
 	"/obj/item/weapon/reagent_containers/pill")
 
 /obj/item/weapon/storage/belt/MouseDrop(obj/over_object as obj, src_location, over_location)

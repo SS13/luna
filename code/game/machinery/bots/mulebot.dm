@@ -167,9 +167,9 @@
 
 		return
 
-	bullet_act()
-		if(prob(50))
-			load.bullet_act()
+	bullet_act(var/obj/item/projectile/Proj)
+		if(prob(50) && load)
+			load.bullet_act(Proj)
 			unload(0)
 		if(prob(25))
 			src.visible_message("Something shorts out inside [src]!")
@@ -449,7 +449,7 @@
 
 	// called to load a crate
 	proc/load(var/atom/movable/C)
-		if((wires & wire_loadcheck) && !istype(C,/obj/structure/crate))
+		if((wires & wire_loadcheck) && !istype(C,/obj/structure/closet/crate))
 			src.visible_message("[src] makes a sighing buzz.", "You hear an electronic buzzing sound.")
 			playsound(src.loc, 'buzz-sigh.ogg', 50, 0)
 			return		// if not emagged, only allow crates to be loaded
@@ -459,7 +459,7 @@
 		mode = 1
 
 		// if a create, close before loading
-		var/obj/structure/crate/crate = C
+		var/obj/structure/closet/crate/crate = C
 		if(istype(crate))
 			crate.close()
 
@@ -714,7 +714,7 @@
 								AM = A
 								break
 					else			// otherwise, look for crates only
-						AM = locate(/obj/structure/crate) in get_step(loc,loaddir)
+						AM = locate(/obj/structure/closet/crate) in get_step(loc,loaddir)
 					if(AM)
 						load(AM)
 			// whatever happened, check to see if we return home

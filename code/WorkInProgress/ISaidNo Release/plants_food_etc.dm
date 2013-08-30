@@ -431,7 +431,7 @@
 			PDNA.mutantvar = DNA.mutantvar
 			del W
 			del src
-		else if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		else if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			for(var/mob/O in viewers(user, null)) O.show_message(text("[] cuts [] into slices.", user, src), 1)
 			var/makeslices = 6
 			while (makeslices > 0)
@@ -472,7 +472,7 @@
 	edible = 0
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			for(var/mob/O in viewers(user, null)) O.show_message(text("[] cuts [] into slices.", user, src), 1)
 			var/makeslices = 6
 			while (makeslices > 0)
@@ -659,7 +659,7 @@
 		..()
 		src.planttype = new /datum/plant/pumpkin(src)
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			for(var/mob/O in viewers(user, null))
 				O.show_message(text("[] carefully and creatively carves [].", user, src), 1)
 			new /obj/item/clothing/head/pumpkin(user.loc)
@@ -976,7 +976,7 @@
 	amount = 1
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			user << "\blue You cut [src] into smaller pieces..."
 			for(var/i = 1, i <= 4, i++)
 				new /obj/item/weapon/reagent_containers/food/snacks/ingredient/dough_cookie(get_turf(src))
@@ -995,7 +995,7 @@
 			new /obj/item/weapon/reagent_containers/food/snacks/ingredient/pizza2(get_turf(src))
 			del W
 			del src
-		else if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		else if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			user << "\blue You cut [src] into smaller pieces..."
 			for(var/i = 1, i <= 3, i++)
 				new /obj/item/weapon/reagent_containers/food/snacks/ingredient/tortilla(get_turf(src))
@@ -1470,7 +1470,7 @@
 	var/slice_icon = "pizzaslice1"
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			if (src.sliced == 1)
 				user << "\red This has already been sliced."
 				return
@@ -1549,7 +1549,7 @@
 			return
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			for(var/mob/O in viewers(user, null))
 				O.show_message(text("[] cuts [] into slices.", user, src), 1)
 			var/makeslices = 6

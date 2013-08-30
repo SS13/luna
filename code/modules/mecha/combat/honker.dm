@@ -2,7 +2,7 @@
 	desc = "Produced by \"Tyranny of Honk, INC\", this exosuit is designed as heavy clown-support. Used to spread the fun and joy of life. HONK!"
 	name = "H.O.N.K"
 	icon_state = "honker"
-	step_in = 2
+	step_in = 1
 	health = 250
 	deflect_chance = 60
 	internal_damage_threshold = 60
@@ -133,14 +133,13 @@
 
 
 /obj/mecha/combat/honker/mechstep(direction)
-	var/result = step(src,direction)
-	if(result)
+	if(1)
 		if(!squeak)
 			playsound(src, "clownstep", 70, 1)
 			squeak = 1
 		else
 			squeak = 0
-	return result
+	return 1
 
 obj/mecha/combat/honker/Topic(href, href_list)
 	..()

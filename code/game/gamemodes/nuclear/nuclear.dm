@@ -37,7 +37,7 @@
 /obj/item/device/powersink:5:Power sink;
 /obj/item/weapon/cartridge/syndicate:2:Detomatix PDA cart;
 /obj/item/device/chameleon:4:Chameleon projector;
-/obj/item/weapon/sword:5:Energy sword;
+/obj/item/weapon/melee/energy/sword:5:Energy sword;
 /obj/item/weapon/pen/deathpen:4:Death pen;
 /obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;
 /obj/item/clothing/mask/gas/voice:3:Voice changer;

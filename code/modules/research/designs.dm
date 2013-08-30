@@ -1123,6 +1123,15 @@ datum/design/hyper_cell
 	build_path = "/obj/item/weapon/cell/hyper"
 	category = "Misc"
 
+datum/design/anomaly_cell
+	name = "Advanced Anomaly Power Cell"
+	id = "ano_cell"
+	req_tech = list("powerstorage" = 5, "bluespace" = 2, "magnets=4")
+	reliability_base = 70
+	build_type = PROTOLATHE
+	materials = list("$metal" = 400, "$gold" = 100, "$silver" = 200, "$glass" = 100)
+	build_path = "/obj/item/weapon/anobattery/adv"
+
 datum/design/light_replacer
 	name = "Light Replacer"
 	desc = "A device to automatically replace lights. Refill with working lightbulbs."

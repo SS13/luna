@@ -25,6 +25,7 @@
 
 /obj/item/weapon/gun/energy/laser/captain
 	icon_state = "caplaser"
+//	item_state = "caplaser"
 	desc = "This is an antique laser gun. All craftsmanship is of the highest quality. It is decorated with assistant leather and chrome. The object menaces with spikes of energy. On the item is an image of KC13. The soviet station is exploding."
 	projectile_type = "/obj/item/projectile/beam/heavylaser"
 	force = 10
@@ -44,7 +45,7 @@
 
 	process()
 		charge_tick++
-		if(charge_tick < 3) return 0
+		if(charge_tick < 2) return 0
 		charge_tick = 0
 		if(!power_supply) return 0
 		power_supply.give(100)

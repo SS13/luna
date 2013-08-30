@@ -108,7 +108,6 @@
 	process()
 		//Allow for reactions
 		air_contents.react()
-
 		check_status()
 
 	var/integrity = 3
@@ -246,9 +245,6 @@
 	var/obj/item/weapon/icon = src
 	if (istype(src.loc, /obj/item/assembly))
 		icon = src.loc
-		if (!in_range(src, usr))
-			if (icon == src) usr << "\blue If you want any more information you'll need to get closer."
-			return
 
 		var/celsius_temperature = src.air_contents.temperature-T0C
 		var/descriptive
@@ -303,40 +299,75 @@
 
 
 /obj/item/weapon/tank/emergency_oxygen
-	name = "emergency oxygentank"
+	name = "emergency oxygen tank"
 	icon_state = "emergency"
 	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
-	w_class = 2.5
-	force = 4.0
+	w_class = 2
+	force = 7.0
+
+	attackby(var/obj/item/weapon/tank/emergency_oxygen/T, mob/user as mob)
+		if(!istype(T))
+			..()
+			return
+		if(istype(src, /obj/item/weapon/tank/emergency_oxygen/double)) return
+		if(type != T.type) return
+
+		var/obj/item/weapon/tank/emergency_oxygen/double/D
+		if(istype(T, /obj/item/weapon/tank/emergency_oxygen/engi))
+			D = new /obj/item/weapon/tank/emergency_oxygen/double/engi
+		else
+			D = new /obj/item/weapon/tank/emergency_oxygen/double
+
+		D.loc = user
+		if (user.r_hand == T)
+			user.u_equip(T)
+			user.r_hand = D
+		else
+			user.u_equip(T)
+			user.l_hand = D
+		D.layer = 20
+		//user << "You connect the emergency oxygen tanks together."
+		release()
+		T.release()
+		user.update_clothing()
+		del(T)
+		del(src)
+
+
 /obj/item/weapon/tank/emergency_oxygen/New()
 	..()
 	src.air_contents.volume = 15 //liters
-	src.air_contents.oxygen = (1*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
+	src.air_contents.oxygen = (2*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
 
 /obj/item/weapon/tank/emergency_oxygen/engi
 	icon_state = "emergency_engi"
+	item_state = "emergency_engi"
 /obj/item/weapon/tank/emergency_oxygen/engi/New()
 	..()
 	src.air_contents.volume = 25 //liters
-	src.air_contents.oxygen = (1*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
+	src.air_contents.oxygen = (2*ONE_ATMOSPHERE)*src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C)
 	return
 
-/obj/item/weapon/tank/emergency_double
-	name = "double emergency oxygentank"
+
+/obj/item/weapon/tank/emergency_oxygen/double
+	name = "double emergency oxygen tank"
 	icon_state = "emergency_double"
 	item_state = "emergency"
 	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
 	w_class = 2.5
 	force = 6.0
-/obj/item/weapon/tank/emergency_double/New()
+/obj/item/weapon/tank/emergency_oxygen/double/New()
 	..()
 	src.air_contents.volume = 30 //liters
+	src.air_contents.oxygen = 0
 	return
 
-/obj/item/weapon/tank/emergency_double/engi
+
+/obj/item/weapon/tank/emergency_oxygen/double/engi
 	icon_state = "emergency_double_engi"
-/obj/item/weapon/tank/emergency_double/engi/New()
+	item_state = "emergency_engi"
+/obj/item/weapon/tank/emergency_oxygen/double/engi/New()
 	..()
 	src.air_contents.volume = 50 //liters
 	return
@@ -371,7 +402,7 @@
 	return
 
 
-/obj/item/weapon/tank/plasma/proc/release()
+/obj/item/weapon/tank/proc/release()
 	var/datum/gas_mixture/removed = air_contents.remove(air_contents.total_moles())
 
 	loc.assume_air(removed)

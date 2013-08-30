@@ -1,13 +1,20 @@
 
 
 /obj/item/weapon/anobattery
-	name = "Anomaly power battery"
+	name = "anomaly power battery"
 	icon = 'anomaly.dmi'
 	icon_state = "anobattery0"
+	origin_tech = "powerstorage=3;bluespace=1;magnets=3"
 	var/list/datum/anomalyeffect/e = list()
 	var/capacity = 200
 
 	var/list/power = list()
+
+/obj/item/weapon/anobattery/adv
+	name = "advanced anomaly power battery"
+	capacity = 500
+	origin_tech = "powerstorage=5;bluespace=2;magnets=4"
+
 
 /obj/item/weapon/anobattery/proc/UpdateSprite()
 	var/p = (GetTotalPower()/capacity)*100

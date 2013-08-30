@@ -128,22 +128,6 @@ CRATES
 	new /obj/item/clothing/head/helmet/welding(src)
 	new /obj/item/clothing/head/helmet/welding(src)
 
-/* RIP engineering space suits
-/obj/structure/crate/engineeringsuits
-	desc = "A crate for the storage of engineering space suits."
-	name = "Engineering crate"
-	icon_state = "engi_crate"
-	openicon = "engi_crate_open"
-	closedicon = "engi_crate"
-
-/obj/structure/crate/engineeringsuits/New()
-	..()
-	new /obj/item/clothing/head/helmet/space/spaceengi(src)
-	new /obj/item/clothing/suit/space/spaceengi(src)
-	new /obj/item/clothing/head/helmet/space/spaceengi(src)
-	new /obj/item/clothing/suit/space/spaceengi(src)
-*/
-
 /obj/structure/crate/freezer
 	desc = "A freezer."
 	name = "Freezer"

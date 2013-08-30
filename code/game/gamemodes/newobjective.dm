@@ -425,7 +425,7 @@ datum
 		*/
 
 		steal/handtele
-			steal_target = /obj/item/weapon/device/hand_tele
+			steal_target = /obj/item/device/hand_tele
 			explanation_text = "Steal a hand teleporter."
 			weight = 20
 

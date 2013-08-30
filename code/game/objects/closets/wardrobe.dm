@@ -282,16 +282,14 @@
 	new /obj/item/weapon/storage/box/lglo( src )
 	return
 
-/obj/structure/closet/toolcloset/New()
-    ..()
-    new /obj/item/weapon/storage/toolbox/mechanical(src)
-    new /obj/item/weapon/storage/toolbox/mechanical(src)
-    new /obj/item/weapon/wrench(src)
-    new /obj/item/weapon/wrench(src)
-    new /obj/item/weapon/wirecutters(src)
-    new /obj/item/weapon/wirecutters(src)
-    new /obj/item/weapon/screwdriver(src)
-    new /obj/item/weapon/screwdriver(src)
-    new /obj/item/device/flashlight(src)
-    new /obj/item/device/flashlight(src)
-    return
+/obj/structure/closet/toolcloset/New() //¡Î‡‰, Ú˚ Õ¿’”ﬂ ¬Ã≈—“Œ “¿¡Œ¬ “”“ œ–Œ¡≈À€ ﬁ«¿À, ”≈¡¿Õ —–¿Õ€…?
+	..()
+	new /obj/item/weapon/storage/toolbox/mechanical(src)
+	new /obj/item/weapon/wrench(src)
+	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/screwdriver(src)
+	new /obj/item/device/flashlight(src)
+	if(prob(20)) new /obj/item/device/multitool(src)
+	if(prob(5)) new /obj/item/clothing/gloves/yellow(src)
+	if(prob(20)) new /obj/item/weapon/storage/belt/utility(src)
+	return

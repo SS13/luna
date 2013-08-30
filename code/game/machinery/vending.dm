@@ -605,7 +605,7 @@
 	icon_deny = "sec-deny"
 	req_access_txt = "1"
 	points = 10
-	product_paths = "/obj/item/clothing/under/color/red;/obj/item/clothing/under/ftech;/obj/item/clothing/under/det;/obj/item/clothing/suit/storage/det_suit;/obj/item/clothing/head/det_hat;/obj/item/clothing/head/helmet;/obj/item/clothing/suit/armor/vest;/obj/item/clothing/suit/storage/gearharness;/obj/item/weapon/storage/belt/security;/obj/item/device/radio/headset/headset_sec;/obj/item/clothing/glasses/sunglasses;/obj/item/weapon/handcuffs;/obj/item/weapon/baton;/obj/item/weapon/gun/energy/taser;/obj/item/weapon/grenade/flashbang;/obj/item/device/flash/*;/obj/item/weapon/storage/box/evidence*/"
+	product_paths = "/obj/item/clothing/under/color/red;/obj/item/clothing/under/ftech;/obj/item/clothing/under/det;/obj/item/clothing/suit/storage/det_suit;/obj/item/clothing/head/det_hat;/obj/item/clothing/head/helmet;/obj/item/clothing/suit/armor/vest;/obj/item/clothing/suit/storage/gearharness;/obj/item/weapon/storage/belt/security;/obj/item/device/radio/headset/headset_sec;/obj/item/clothing/glasses/sunglasses;/obj/item/weapon/handcuffs;/obj/item/weapon/melee/baton;/obj/item/weapon/gun/energy/taser;/obj/item/weapon/grenade/flashbang;/obj/item/device/flash/*;/obj/item/weapon/storage/box/evidence*/"
 	//product_amounts = "8;5;4"
 	product_prices = "1;1;1;1;1;3;3;3;2;1;1;1;4;4;3;3;2"
 	product_hidden = "/obj/item/kitchen/donut_box"
@@ -631,17 +631,7 @@
 	desc = "Al the tools you need to blow up the ship."
 	req_access_txt = "7"
 	points = 10
-	product_paths = {"/obj/item/clothing/under/rank/scientist;
-					 /obj/item/clothing/suit/bio_suit;
-					 /obj/item/clothing/head/bio_hood;
-					 /obj/item/weapon/screwdriver;
-					 /obj/item/weapon/wrench;
-					 /obj/item/weapon/wirecutters;
-					 /obj/item/device/transfer_valve;
-					 /obj/item/device/igniter;
-					 /obj/item/device/timer;
-					 /obj/item/device/prox_sensor;
-					 /obj/item/device/radio/signaler"}
+	product_paths = {"/obj/item/clothing/under/rank/scientist;/obj/item/clothing/suit/bio_suit;/obj/item/clothing/head/bio_hood;/obj/item/weapon/screwdriver;/obj/item/weapon/wrench;/obj/item/weapon/wirecutters;/obj/item/device/transfer_valve;/obj/item/device/igniter;/obj/item/device/timer;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler"}
 	//product_amounts = "4;4;4;4;12"
 	product_prices = "1;2;2;1;1;1;3;1;1;1;1"
 	product_hidden = ""

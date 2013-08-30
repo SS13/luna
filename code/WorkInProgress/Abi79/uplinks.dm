@@ -46,7 +46,7 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 	throwforce = 5
 	throw_speed = 4
 	throw_range = 20
-	origin_tech = "magnets=2;syndicate=3"
+	origin_tech = "magnets=2;syndicate=3;bluespace=5"
 	m_amt = 100
 
 

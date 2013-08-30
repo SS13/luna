@@ -38,6 +38,7 @@
 	name = "Advanced Energy Gun"
 	desc = "An energy gun with an experimental miniaturized reactor."
 	icon_state = "nucgun"
+	item_state = "nucgun"
 	origin_tech = "combat=3;materials=5;powerstorage=3"
 	var/lightfail = 0
 	var/charge_tick = 0
@@ -67,21 +68,21 @@
 	proc
 		failcheck()
 			lightfail = 0
-			if (prob(src.reliability)) return 1 //No failure
-			if (prob(src.reliability))
+			if (prob(src.reliability))   return 1 //No failure
+			if (prob(src.reliability + 14))
 				for (var/mob/living/M in range(0,src)) //Only a minor failure, enjoy your radiation if you're in the same tile or carrying it
 					if (src in M.contents)
 						M << "\red Your gun feels pleasantly warm for a moment."
 					else
 						M << "\red You feel a warm sensation."
-					M.apply_effect(rand(3,120), IRRADIATE)
+					M.apply_effect(rand(1,30), IRRADIATE)
 				lightfail = 1
 			else
 				for (var/mob/living/M in range(rand(1,4),src)) //Big failure, TIME FOR RADIATION BITCHES
 					if (src in M.contents)
 						M << "\red Your gun's reactor overloads!"
 					M << "\red You feel a wave of heat wash over you."
-					M.apply_effect(300, IRRADIATE)
+					M.apply_effect(140, IRRADIATE)
 				crit_fail = 1 //break the gun so it stops recharging
 				processing_items.Remove(src)
 				update_icon()
@@ -131,7 +132,7 @@
 	name = "energy gun"
 	desc = "A basic energy-based gun with two settings: Stun and kill."
 	icon_state = "energy_newstun100"
-	item_state = null	//so the human update icon uses the icon_state instead.
+	item_state = "energystun100"	//so the human update icon uses the icon_state instead.
 	fire_sound = 'sound/weapons/Taser.ogg'
 	modifystate = "energy_newstun"
 
@@ -153,3 +154,10 @@
 				modifystate = "energy_newstun"
 		update_icon()
 		user.update_clothing()
+
+	update_icon()
+		..()
+		var/ratio = power_supply.charge / power_supply.maxcharge
+		ratio = round(ratio, 0.25) * 100
+		if(mode)	item_state = "energykill[ratio]"
+		else		item_state = "energystun[ratio]"
