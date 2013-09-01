@@ -464,7 +464,6 @@
 		src << "Not when you are incapacitated."
 		return
 	if(!usr.casting()) return
-	var/A
 	usr.verbs -= /mob/proc/teleport
 /*
 	var/list/theareas = new/list()
@@ -477,7 +476,7 @@
 			theareas[AR.name] = AR
 */
 
-	A = input("Area to jump to", "BOOYEA", A) in teleportlocs
+	var/A = input("Area to jump to", "BOOYEA") in teleportlocs
 
 	spawn(600)
 		usr.verbs += /mob/proc/teleport
@@ -512,9 +511,8 @@
 	if(usr.stat)
 		usr << "Not when you are incapacitated."
 		return
-	var/A
 
-	A = input("Area to jump to", "BOOYEA", A) in teleportlocs
+	var/A = input("Area to jump to", "BOOYEA") in teleportlocs
 	var/area/thearea = teleportlocs[A]
 
 	var/datum/effects/system/harmless_smoke_spread/smoke = new /datum/effects/system/harmless_smoke_spread()
