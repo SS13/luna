@@ -1,6 +1,7 @@
 /datum/game_mode/wizard
 	name = "wizard"
 	config_tag = "wizard"
+	votable = 0
 
 	var/datum/mind/wizard
 	var/list/datum/mind/wizards = list()
