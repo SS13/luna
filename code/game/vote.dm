@@ -64,7 +64,7 @@
 				world << "<B>The game will start soon.</B>"
 				going = 1
 		var/wintext = capitalize(winner)
-		if(winner=="default")
+		if(winner=="default" || winner=="none")
 			world << "Result is \red No change."
 			return
 
@@ -85,7 +85,7 @@
 
 	else
 
-		if(winner=="default")
+		if(winner=="default" || winner=="none")
 			world << "Result is \red No restart."
 			return
 
