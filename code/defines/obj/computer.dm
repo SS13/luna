@@ -265,3 +265,9 @@
 	var/status = 0
 	var/timeleft = 60
 	var/stop = 0.0
+
+/obj/machinery/computer/mining
+	name = "Mining Shuttle Control"
+	icon = 'computer.dmi'
+	icon_state = "computer_generic"
+	var/Current_shuttle_position

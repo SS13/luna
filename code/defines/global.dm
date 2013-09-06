@@ -78,6 +78,7 @@ var
 
 	datum/PodControl/LaunchControl = new /datum/PodControl()
 	datum/PodControl/prisonPodControl/PrisonControl = new /datum/PodControl/prisonPodControl()
+	datum/PodControl/Mining_Shuttle_Control/Minign_Shuttle_Controls = new /datum/PodControl/Mining_Shuttle_Control/()
 
 	captainMax = 1
 	engineerMax = 5

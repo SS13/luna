@@ -25,7 +25,6 @@
 		explosionstrength = 1 //NEVER SET THIS BELOW 1
 		floorstrength = 6
 
-
 /turf/space
 	icon = 'space.dmi'
 	name = "space"
@@ -168,10 +167,10 @@ turf/space/hull/New()
 			var/turf/T = locate(x, y, z + 1)
 			if(T)
 				//Fortunately, I've done this before. - Aryn
-				if(istype(T,/turf/space) || T.z > 4)
+				if(istype(T,/turf/space)&&!(istype(T,/turf/space/hull)) || T.z > 4)
 					new/turf/space(src)
-				else if(!istype(T,/turf/simulated/floor))
-					new/turf/simulated/floor/plating(src)
+				/*else if(!istype(T,/turf/simulated/floor))
+					new/turf/simulated/floor/plating(src)*/
 				/*
 				switch (T.type) //Somehow, I don't think I thought this cunning plan all the way through - Sukasa
 					if (/turf/simulated/floor)
