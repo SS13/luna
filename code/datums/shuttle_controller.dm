@@ -40,6 +40,8 @@ var/global/list/datum/shuttle/shuttles = list()
 
 var/global/list/datum/shuttle/prisonshuttles = list()
 
+var/global/list/datum/shuttle/miningshuttles = list()
+
 datum/shuttle
 	var
 		name = "Shuttle"
@@ -205,9 +207,11 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 	var/datum/shuttle/pod1 = new /datum/shuttle("Escape pod 1","/area/shuttle/escape/station/pod1","/area/shuttle/escape/transit/pod1","/area/shuttle/escape/centcom/pod1")
 	var/datum/shuttle/pod2 = new /datum/shuttle("Escape pod 2","/area/shuttle/escape/station/pod2","/area/shuttle/escape/transit/pod2","/area/shuttle/escape/centcom/pod2")
 	var/datum/shuttle/prisonshuttle/prisonshuttle1 = new /datum/shuttle/prisonshuttle("Prison Shuttle","/area/shuttle/prison/station","/area/shuttle/prison/transit","/area/shuttle/prison/prison")
+	var/datum/shuttle/mining/miningshuttle = new /datum/shuttle/mining("Mining Shuttle","/area/shuttle/mining/start","","/area/shuttle/mining/finish")
 	shuttles += pod1
 	shuttles += pod2
 	prisonshuttles += prisonshuttle1
+	miningshuttles += miningshuttle
 	main_shuttle = pod1 // Hack, until proper gameplay for multiple shuttles is established
 
 /datum/PodControl
@@ -461,7 +465,7 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 		departed = 1
 
 	process()
-		//world << "PODCON[timeleft()]"
+
 		var/timeleft = timeleft()
 		if(timeleft > 1e5)		// midnight rollover protection
 			timeleft = 0
@@ -472,3 +476,76 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 			online = 0
 			departed = 1
 
+/datum/PodControl/Mining_Shuttle_Control/
+	endtime
+	online = 0
+	last60 = 0
+	var/location=1
+
+	start()
+		settimeleft(10)
+		online = 1
+		last60 = timeleft()
+
+	process()
+		var/timeleft = timeleft()
+		if(timeleft > 1e5)		// midnight rollover protection
+			timeleft = 0
+
+		if(online && timeleft <= 0)
+			for(var/datum/shuttle/mining/s in miningshuttles)
+				s.depart()
+				if(location==1)
+					location=2
+				else location=1
+			online = 0
+
+
+	proc/cancel()
+		online = 0
+
+
+
+
+/datum/shuttle/mining/
+	name = "Mining Shuttle"
+	location = 1 // 0 = Transit, 1 = Start, 2 = dest
+	online = 0
+	direction = 1 // 1 = Start, 2 = Dest
+	area
+		centcom
+		station
+		transit
+
+	depart()
+		online = 1
+
+	process()
+		if(!online) return
+		switch(location)
+			if(1)
+				var/area/start_location = locate(station)
+				var/area/end_location = locate(centcom)
+				for(var/mob/m in start_location)
+					shake_camera(m, 3, 1)
+				for(var/obj/machinery/door/unpowered/shuttle/D in start_location) /*Made doors close when pod launches, too --Mloc*/
+					D.close()
+				for(var/turf/simulated/shuttle/wall/S in start_location)
+					if(S.icon_state == "wall_hull")
+						S.icon_state = "wall_space"  /*Quickish hack to fix the hull sprites moving with the pod --Mloc*/
+				start_location.move_contents_to(end_location)
+				location = 2
+				online=0
+			if(2)
+				var/area/start_location = locate(centcom)
+				var/area/end_location = locate(station)
+				for(var/mob/m in start_location)
+					shake_camera(m, 3, 1)
+				for(var/obj/machinery/door/unpowered/shuttle/D in start_location) /*Made doors close when pod launches, too --Mloc*/
+					D.close()
+				for(var/turf/simulated/shuttle/wall/S in start_location)
+					if(S.icon_state == "wall_hull")
+						S.icon_state = "wall_space"  /*Quickish hack to fix the hull sprites moving with the pod --Mloc*/
+				start_location.move_contents_to(end_location)
+				location = 1
+				online=0

@@ -151,9 +151,13 @@ var/list/postsetuphooks = list()
 
 		LaunchControl.process()
 		PrisonControl.process()
+		Minign_Shuttle_Controls.process()
+
 		for(var/datum/shuttle/s in shuttles)
 			s.process()
 		for(var/datum/shuttle/s in prisonshuttles)
+			s.process()
+		for(var/datum/shuttle/s in miningshuttles)
 			s.process()
 
 		if(mode.check_finished())
