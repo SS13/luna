@@ -99,9 +99,16 @@
 	luminosity = 1
 	ul_Lighting = 0
 
-/area/shuttle/mining
+/area/shuttle/mining/
 	name = "Mining Shuttle"
 	icon_state = "shuttle1_2"
+
+/area/shuttle/mining/start
+	name = "Mining Shuttle"
+
+/area/shuttle/mining/finish
+	name = "Mining Shuttle"
+
 
 /area/shuttle/miningsast
 	name = "Mining Shuttle Asteroid"
