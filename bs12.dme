@@ -354,6 +354,7 @@
 #include "code\game\machinery\computer\robot.dm"
 #include "code\game\machinery\computer\security.dm"
 #include "code\game\machinery\computer\shuttle.dm"
+#include "code\game\machinery\computer\travel.dm"
 #include "code\game\machinery\doors\airlock.dm"
 #include "code\game\machinery\doors\brigdoors.dm"
 #include "code\game\machinery\doors\checkForMultipleDoors.dm"
