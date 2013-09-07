@@ -90,6 +90,7 @@
 			  ":a" = "alientalk",
 			  ":t" = "Syndicate",
 			  ":d" = "Mining",
+			  ":q" = "Supply",
 
 
 			  //kinda localization -- rastaf0
