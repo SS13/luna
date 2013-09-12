@@ -163,6 +163,8 @@ var/global/list/autolathe_recipes_hidden = list( \
 		return
 
 	attackby(var/obj/item/O as obj, var/mob/user as mob)
+		if(!O)
+			return 1
 		if (stat)
 			return 1
 		if (busy)
@@ -223,7 +225,7 @@ var/global/list/autolathe_recipes_hidden = list( \
 		var/obj/item/stack/stack
 		var/m_amt = O.m_amt
 		var/g_amt = O.g_amt
-		if (istype(O, /obj/item/stack))
+		if (istype(O, /obj/item/stack)&&O)
 			stack = O
 			amount = stack.amount
 			if (m_amt)
@@ -242,7 +244,7 @@ var/global/list/autolathe_recipes_hidden = list( \
 		use_power(max(1000, (m_amt+g_amt)*amount/10))
 		src.m_amount += m_amt * amount
 		src.g_amount += g_amt * amount
-		if (!istype(O, /obj/item/stack))
+		if (!istype(O, /obj/item/stack)&&O)
 			user << "You insert [O.name] into the autolathe."
 		if (O && O.loc == src)
 			del(O)
