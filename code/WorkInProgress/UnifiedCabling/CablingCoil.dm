@@ -9,6 +9,7 @@
 // Unified Cable Network System - Generic Cable Coil Class
 
 /obj/item/weapon/cable_coil
+	name = "cable coil"
 	icon_state = "redcoil3"
 	icon           = 'Coils.dmi'
 	flags          = TABLEPASS | USEDELAY | FPRINT | CONDUCT
@@ -19,10 +20,7 @@
 	item_state     = ""
 
 	var/CoilColour = "red"
-	var/BaseName  = "Electrical"
-	var/ShortDesc = "A piece of electrical cable"
-	var/LongDesc  = "A long piece of electrical cable"
-	var/CoilDesc  = "A spool of electrical cable"
+	var/BaseName  = "electrical"
 	var/Maxamount  = 30
 	var/amount     = 30
 	var/CableType  = /obj/cabling/power
@@ -37,7 +35,6 @@
 	pixel_x = rand(-4,4)
 	pixel_y = rand(-4,4)
 	update_icon()
-	name = "[BaseName] Cable"
 	..(Location)
 
 /obj/item/weapon/cable_coil/update_icon()
@@ -52,20 +49,35 @@
 		item_state = "[CoilColour]coil3"
 
 /obj/item/weapon/cable_coil/examine()
-
 	if (amount == 1)
-		usr << ShortDesc
+		usr << "A short piece of power cable."
 	else if(amount == 2)
-		usr << LongDesc
+		usr << "A piece of power cable."
 	else
-		usr << CoilDesc
-		usr << "There are [amount] usable lengths on the spool"
+		usr << "A coil of power cable. There are [amount] lengths of cable in the coil."
+
+/obj/item/weapon/cable_coil/verb/make_restraint()
+	set name = "Make Cable Restraints"
+	set category = "Object"
+	var/mob/M = usr
+
+	if(ishuman(M) && !M.restrained() && !M.stat && !M.paralysis && ! M.stunned)
+		if(!istype(usr.loc,/turf)) return
+		if(src.amount <= 14)
+			usr << "\red You need at least 15 lengths to make restraints!"
+			return
+		new /obj/item/weapon/handcuffs/cable(usr.loc)
+		usr << "\blue You wind some cable together to make some restraints."
+		src.use(15)
+	else
+		usr << "\blue You cannot do that."
+	..()
 
 /obj/item/weapon/cable_coil/attackby(obj/item/weapon/W, mob/user)
 	if( istype(W, /obj/item/weapon/wirecutters) && amount > 2)
 		amount--
 		new/obj/item/weapon/cable_coil(user.loc, 1)
-		user << "You cut a length off the [name]."
+		user << "You cut a piece off the [name]."
 		update_icon()
 		return
 

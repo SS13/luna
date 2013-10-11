@@ -25,6 +25,7 @@
 
 /obj/item/weapon/gun/energy/laser/captain
 	icon_state = "caplaser"
+//	item_state = "caplaser"
 	desc = "This is an antique laser gun. All craftsmanship is of the highest quality. It is decorated with assistant leather and chrome. The object menaces with spikes of energy. On the item is an image of KC13. The soviet station is exploding."
 	projectile_type = "/obj/item/projectile/beam/heavylaser"
 	force = 10
@@ -44,7 +45,7 @@
 
 	process()
 		charge_tick++
-		if(charge_tick < 3) return 0
+		if(charge_tick < 2) return 0
 		charge_tick = 0
 		if(!power_supply) return 0
 		power_supply.give(100)
@@ -84,7 +85,7 @@
 	projectile_type = "/obj/item/projectile/beam/xray"
 	charge_cost = 50
 
-/*
+
 ////////Laser Tag////////////////////
 
 /obj/item/weapon/gun/energy/laser/bluetag
@@ -105,11 +106,11 @@
 
 	New()
 		..()
-		processing_objects.Add(src)
+		processing_items.Add(src)
 
 
 	Del()
-		processing_objects.Remove(src)
+		processing_items.Remove(src)
 		..()
 
 
@@ -142,11 +143,11 @@
 
 	New()
 		..()
-		processing_objects.Add(src)
+		processing_items.Add(src)
 
 
 	Del()
-		processing_objects.Remove(src)
+		processing_items.Remove(src)
 		..()
 
 
@@ -157,4 +158,4 @@
 		if(!power_supply) return 0
 		power_supply.give(100)
 		update_icon()
-		return 1*/
+		return 1

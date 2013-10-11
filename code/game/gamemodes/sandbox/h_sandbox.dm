@@ -139,11 +139,11 @@ datum/hSB
 							continue
 						if(istype(O, /obj/item/assembly))
 							continue
-						if(istype(O, /obj/item/weapon/device/cloak))
+						if(istype(O, /obj/item/device/cloak))
 							continue
 						if(istype(O, /obj/item/weapon/dummy))
 							continue
-						if(istype(O, /obj/item/weapon/sword))
+						if(istype(O, /obj/item/weapon/melee/energy/sword))
 							continue
 						if(istype(O, /obj/item/device/shield))
 							continue

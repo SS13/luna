@@ -1,4 +1,4 @@
-/obj/item/clothing
+/*obj/item/clothing
 	name = "clothing"
 
 //Ears: currently only used for headsets and earmuffs
@@ -127,17 +127,19 @@ BLIND     // can't see anything
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	max_heat_protection_temperature = SPACE_SUIT_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = SPACE_SUIT_MAX_TEMP_PROTECT*/
 
 
 //Under clothing
 /obj/item/clothing/under
 	icon = 'icons/obj/clothing/uniforms.dmi'
 	name = "under"
+	protective_temperature = T0C + 50
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
+	heat_transfer_coefficient = 0.30
 	permeability_coefficient = 0.90
 	flags = FPRINT | TABLEPASS
-	slot_flags = SLOT_ICLOTHING
+	//slot_flags = SLOT_ICLOTHING
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	var/has_sensor = 1//For the crew computer 2 = unable to change mode
 	var/sensor_mode = 0
@@ -146,8 +148,7 @@ BLIND     // can't see anything
 		2 = Report detailed damages
 		3 = Report location
 		*/
-	var/obj/item/clothing/tie/hastie = null
-
+/*
 /obj/item/clothing/under/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/clothing/tie))
 		if(hastie)
@@ -165,7 +166,7 @@ BLIND     // can't see anything
 
 			return
 
-	..()
+	..()*/
 
 /obj/item/clothing/under/examine()
 	set src in view()
@@ -179,8 +180,8 @@ BLIND     // can't see anything
 			usr << "Its vital tracker appears to be enabled."
 		if(3)
 			usr << "Its vital tracker and tracking beacon appear to be enabled."
-	if(hastie)
-		usr << "\A [hastie] is clipped to it."
+/*	if(hastie)
+		usr << "\A [hastie] is clipped to it."*/
 
 /obj/item/clothing/under/verb/toggle()
 	set name = "Toggle Suit Sensors"
@@ -208,7 +209,7 @@ BLIND     // can't see anything
 		if(3)
 			usr << "Your suit will now report your vital lifesigns as well as your coordinate position."
 	..()
-
+/*
 /obj/item/clothing/under/verb/removetie()
 	set name = "Remove Accessory"
 	set category = "Object"
@@ -226,4 +227,4 @@ BLIND     // can't see anything
 
 /obj/item/clothing/under/rank/New()
 	sensor_mode = pick(0,1,2,3)
-	..()
+	..()*/

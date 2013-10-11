@@ -501,7 +501,7 @@ steam.start() -- spawns the effect
 	start()
 		var/i = 0
 
-		var/color = mix_color_from_reagents(chemholder.reagents.reagent_list)
+		var/mix_color = mix_color_from_reagents(chemholder.reagents.reagent_list)
 
 		for(i=0, i<src.number, i++)
 			if(src.total_smoke > 20)
@@ -521,8 +521,8 @@ steam.start() -- spawns the effect
 				if(chemholder.reagents.total_volume != 1) // can't split 1 very well
 					chemholder.reagents.copy_to(smoke, chemholder.reagents.total_volume / number) // copy reagents to each smoke, divide evenly
 
-				if(color)
-					smoke.icon += color // give the smoke color, if it has any to begin with
+				if(mix_color)
+					smoke.icon += mix_color // give the smoke color, if it has any to begin with
 				else
 					// if no color, just use the old smoke icon
 					smoke.icon = 'icons/effects/96x96.dmi'

@@ -85,7 +85,7 @@
 
 
 /obj/machinery/hologram_proj
-	name = "Hologram Projector"
+	name = "hologram projector"
 	icon = 'stationobjs.dmi'
 	icon_state = "holopad0"
 	var/id = null
@@ -93,7 +93,7 @@
 	anchored = 1.0
 
 /obj/machinery/igniter
-	name = "Floor-mounted Igniter"
+	name = "floor-mounted Igniter"
 	icon = 'stationobjs.dmi'
 	icon_state = "igniter1"
 	var/id = null
@@ -128,23 +128,6 @@
 	anchored = 1.0
 	var/frequency = 0
 	var/id
-
-/obj/machinery/nuclearbomb
-	desc = "Uh oh."
-	name = "Nuclear Fission Explosive"
-	icon = 'stationobjs.dmi'
-	icon_state = "nuclearbomb0"
-	density = 1
-	var/deployable = 0.0
-	var/extended = 0.0
-	var/timeleft = 60.0
-	var/timing = 0.0
-	var/r_code = "ADMIN"
-	var/code = ""
-	var/yes_code = 0.0
-	var/safety = 1.0
-	var/obj/item/weapon/disk/nuclear/auth = null
-	flags = FPRINT
 
 /obj/machinery/optable
 	name = "Operating Table"
@@ -230,7 +213,7 @@
 
 
 /obj/machinery/ignition_switch
-	name = "Ignition Switch"
+	name = "ignition switch"
 	icon = 'objects.dmi'
 	icon_state = "launcherbtt"
 	desc = "A remote control switch for a mounted igniter."

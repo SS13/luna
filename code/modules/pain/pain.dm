@@ -22,15 +22,15 @@ mob/proc/pain(var/partname, var/amount, var/force)
 	var/msg
 	switch(amount)
 		if(1 to 10)
-			flash_weak_pain()
+			if(prob(50)) flash_weak_pain()
 			msg = "<b>Your [partname] hurts a bit."
 		if(11 to 90)
-			flash_weak_pain()
-			msg = "<b><font size=1>Ouch! Your [partname] hurts."
+			if(prob(50)) flash_weak_pain()
+			msg = "<b><font size=1>Ouch! Your [partname] hurts. </font>"
 		if(91 to 10000)
-			flash_pain()
-			msg = "<b><font size=3>OH GOD! Your [partname] is hurting terribly!"
-	if(msg && (msg != last_pain_message || prob(10)))
+			if(prob(50)) flash_pain()
+			msg = "<b><font size=3>OH GOD! Your [partname] is hurting terribly! </font>"
+	if(msg && prob(30) && (last_pain_message != msg || prob(20)))
 		last_pain_message = msg
 		src << msg
 	next_pain_time = world.time + (100 - amount) * tick_multiplier

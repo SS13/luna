@@ -125,7 +125,7 @@ datum
 			id = "lube"
 			result = "lube"
 			required_reagents = list("water" = 1, "silicon" = 1, "oxygen" = 1)
-			result_amount = 4
+			result_amount = 3
 
 		pacid
 			name = "Polytrinic acid"
@@ -337,7 +337,7 @@ datum
 			name = "Flash powder"
 			id = "flash_powder"
 			result = null
-			required_reagents = list("aluminium" = 1, "potassium" = 1, "sulfur" = 1 )
+			required_reagents = list("aluminium" = 1, "potassium" = 1, "sulfur" = 1)
 			result_amount = null
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
@@ -345,22 +345,17 @@ datum
 				s.set_up(2, 1, location)
 				s.start()
 				for(var/mob/living/carbon/M in viewers(world.view, location))
+					if(hasvar(M, "glasses") && istype(M:glasses, /obj/item/clothing/glasses/sunglasses)) continue
+
 					switch(get_dist(M, location))
 						if(0 to 3)
-							if(hasvar(M, "glasses"))
-								if(istype(M:glasses, /obj/item/clothing/glasses/sunglasses))
-									continue
-
-							flick("e_flash", M.flash)
-							M.weakened = 15
-
-						if(4 to 5)
-							if(hasvar(M, "glasses"))
-								if(istype(M:glasses, /obj/item/clothing/glasses/sunglasses))
-									continue
-
 							flick("e_flash", M.flash)
 							M.stunned = 5
+							M.weakened = 15
+
+						if(4 to 6)
+							flick("e_flash", M.flash)
+							M.weakened = 5
 
 		napalm
 			name = "Napalm"
@@ -504,8 +499,6 @@ datum
 			result_amount = 2
 
 			on_reaction(var/datum/reagents/holder, var/created_volume)
-
-
 				var/location = get_turf(holder.my_atom)
 				for(var/mob/M in viewers(5, location))
 					M << "\red The solution violently bubbles!"
@@ -529,12 +522,10 @@ datum
 			name = "Metal Foam"
 			id = "metalfoam"
 			result = null
-			required_reagents = list("aluminum" = 3, "foaming_agent" = 1, "pacid" = 1)
+			required_reagents = list("aluminium" = 3, "foaming_agent" = 1, "pacid" = 1)
 			result_amount = 5
 
 			on_reaction(var/datum/reagents/holder, var/created_volume)
-
-
 				var/location = get_turf(holder.my_atom)
 
 				for(var/mob/M in viewers(5, location))
@@ -553,8 +544,6 @@ datum
 			result_amount = 5
 
 			on_reaction(var/datum/reagents/holder, var/created_volume)
-
-
 				var/location = get_turf(holder.my_atom)
 
 				for(var/mob/M in viewers(5, location))

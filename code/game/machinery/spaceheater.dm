@@ -134,7 +134,7 @@
 						cell.add_fingerprint(usr)
 						cell.update_icon()
 						cell = null
-
+						if(istype(usr, /mob/living/carbon/human)) usr:update_clothing()
 						usr.visible_message("\blue [usr] removes the power cell from \the [src].", "\blue You remove the power cell from \the [src].")
 
 

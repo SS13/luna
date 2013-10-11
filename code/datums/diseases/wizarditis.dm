@@ -78,6 +78,7 @@ STI KALY - blind
 				H.shoes = new /obj/item/clothing/shoes/sandal(H)
 				H.shoes.layer = 20
 			return
+		H.update_clothing()
 	else
 		var/mob/living/carbon/H = affected_mob
 		if(prob(chance))
@@ -85,6 +86,7 @@ STI KALY - blind
 				H.drop_r_hand()
 				H.put_in_r_hand( new /obj/item/weapon/staff(H) )
 			return
+
 	return
 
 

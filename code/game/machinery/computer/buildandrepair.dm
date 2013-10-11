@@ -119,7 +119,9 @@
 	name = "Circuit board (PanD.E.M.I.C. 2200)"
 	computertype = "/obj/machinery/computer/pandemic"
 	origin_tech = "programming=2;biotech=2"
-
+/obj/item/weapon/circuitboard/computer/mecha_control
+	name = "Circuit Board (Exosuit Control Console)"
+	computertype = "/obj/machinery/computer/mecha"
 
 /obj/structure/frame
 	density = 1

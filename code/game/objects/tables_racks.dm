@@ -5,6 +5,7 @@
 	density = 1
 	layer = 2.8
 	anchored = 1.0
+	throwpass = 1
 
 /obj/structure/table/reinforced
 	name = "reinforced table"
@@ -16,25 +17,21 @@
 	icon_state = "wood_table"
 
 /obj/structure/table/ex_act(severity)
-
 	switch(severity)
 		if(1.0)
-			//SN src = null
 			del(src)
 			return
 		if(2.0)
-			if (prob(50))
-				//SN src = null
+			if(prob(50))
 				del(src)
 				return
 		if(3.0)
-			if (prob(25))
-				src.density = 0
-		else
+			if(prob(25))
+				new /obj/item/weapon/table_parts( src.loc )
+				del(src)
 	return
-/obj/structure/table/throwpass = 1
-/obj/structure/table/blob_act()
 
+/obj/structure/table/blob_act()
 	if(prob(50))
 		new /obj/item/weapon/table_parts( src.loc )
 		del(src)
@@ -99,7 +96,7 @@
 /obj/structure/table/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1
 
-	if ((mover.flags & 2 || istype(mover, /obj/meteor)) )
+	if ((mover.flags & 2 || istype(mover, /obj/effect/meteor)) )
 		return 1
 	else
 		return 0

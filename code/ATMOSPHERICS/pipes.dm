@@ -373,7 +373,7 @@ obj/machinery/atmospherics/pipe
 
 	simple/heat_exchanging
 		icon = 'heat.dmi'
-		icon_state = "3"
+		icon_state = "intact"
 		level = 2
 
 		minimum_temperature_difference = 20
@@ -493,10 +493,6 @@ obj/machinery/atmospherics/pipe
 				air_temporary.nitrogen = 2*(35*ONE_ATMOSPHERE*N2STANDARD)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
 
 				..()
-
-		govno
-			icon = 'govno_tank.dmi'
-			name = "Pressure Tank (SHITTY SPRITE)"
 
 		Del()
 			if(node1)

@@ -1,4 +1,4 @@
-/obj/forcefield
+/obj/effect/forcefield
 	desc = "A space wizard's magic wall."
 	name = "FORCEWALL"
 	icon = 'mob.dmi'
@@ -30,7 +30,7 @@
 	var/forcefield
 	var/mob/living/carbon/human/G = usr
 	G.say("TARCOL MINTI ZHERI")
-	forcefield =  new /obj/forcefield(locate(usr.x,usr.y,usr.z))
+	forcefield =  new /obj/effect/forcefield(locate(usr.x,usr.y,usr.z))
 	spawn (300*tick_multiplier)
 		del (forcefield)
 	return

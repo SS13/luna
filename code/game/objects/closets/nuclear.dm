@@ -4,7 +4,7 @@
 /obj/structure/closet/syndicate/nuclear/New()
 	..()
 	sleep(2)
-	new /obj/item/weapon/storage/box/handcuff( src )
+	new /obj/item/weapon/storage/box/handcuffs( src )
 	new /obj/item/weapon/storage/box/grenades/flashbang( src )
 	new /obj/item/weapon/gun/energy/gun( src )
 	new /obj/item/weapon/gun/energy/gun( src )

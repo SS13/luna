@@ -75,7 +75,7 @@ mob/living/carbon/alien/Life()
 		if ((M.client && !( M.blinded )))
 			M.show_message(text("\red [] has been hit by []", src, O), 1)
 	if (health > 0)
-		bruteloss += (istype(O, /obj/meteor/small) ? 10 : 25)
+		bruteloss += (istype(O, /obj/effect/meteor/small) ? 10 : 25)
 		fireloss += 30
 
 		updatehealth()

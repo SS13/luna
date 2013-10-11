@@ -30,7 +30,6 @@
 	var/note = "Congratulations, your station has chosen the Thinktronic 5230 Personal Data Assistant!" //Current note in the notepad function.
 	var/cart = "" //A place to stick cartridge menu information
 
-	//var/obj/item/weapon/integrated_uplink/uplink = null
 	var/obj/item/device/uplink/pda/uplink = null
 
 	var/obj/item/weapon/card/id/id = null //Making it possible to slot an ID card into the PDA so it can function as both.
@@ -164,6 +163,9 @@
 	if (fon)
 		user.ul_SetLuminosity(user.luminosity - f_lum)
 		user.ul_SetLuminosity(user.luminosity + f_lum)
+
+/obj/item/device/pda/GetID()
+	return id
 
 /obj/item/device/pda/New()
 	..()
@@ -508,6 +510,18 @@
 
 					tnote += "<i><b>&rarr; To [P.owner]:</b></i><br>[sanitize(t)]<br>"
 					P.tnote += "<i><b>&larr; From <a href='byond://?src=\ref[P];choice=Message;target=\ref[src]'>[owner]</a>:</b></i><br>[sanitize(t)]<br>"
+
+
+					//Search for holder of the PDA.
+					var/mob/living/L = null
+					if(P.loc && isliving(P.loc))
+						L = P.loc
+					//Maybe they are a pAI!
+					else
+						L = get(P, /mob/living/silicon)
+
+					if(L)
+						L << "\icon[P] <b>Message from [src.owner] ([ownjob]), </b>\"[t]\" (<a href='byond://?src=\ref[P];choice=Message;skiprefresh=1;target=\ref[src]'>Reply</a>)"
 
 					if (prob(15)) //Give the AI a chance of intercepting the message
 						for (var/mob/living/silicon/ai/A in world)
@@ -859,7 +873,7 @@
 				user << "\blue No significant chemical agents found in [A]."
 
 	if (!scanmode && istype(A, /obj/item/weapon/paper) && owner)
-		if ((!isnull(uplink)) && (uplink.active))
+		if (!isnull(uplink) && uplink.active)
 			uplink.orignote = A:info
 		else
 			note = A:info
@@ -895,7 +909,7 @@
 		//if ((istype(M, /mob/living/carbon/human) && istype(M:shoes, /obj/item/clothing/shoes/galoshes)) || M.m_intent == "walk") // bay12 one, now tg one works -- ACCount
 			return
 
-		if ((istype(M, /mob/living/carbon/human) && (M.real_name != src.owner) && (istype(src.cartridge, /obj/item/weapon/cartridge/clown))))
+		if (istype(M, /mob/living/carbon/human) && M.real_name != src.owner && istype(src.cartridge, /obj/item/weapon/cartridge/clown))
 			src.cartridge:honk_charges++
 
 		M.pulling = null

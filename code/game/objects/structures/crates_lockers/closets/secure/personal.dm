@@ -7,10 +7,7 @@
 /obj/structure/closet/secure_closet/personal/New()
 	..()
 	spawn(2)
-		if(prob(50))
-			new /obj/item/weapon/storage/backpack(src)
-		else
-			new /obj/item/weapon/storage/backpack/satchel_norm(src)
+		new /obj/item/weapon/storage/backpack(src)
 		new /obj/item/device/radio/headset( src )
 	return
 
@@ -52,7 +49,7 @@
 	..()
 	spawn(4)
 		contents = list()
-		new /obj/item/weapon/storage/backpack/satchel/withwallet( src )
+//		new /obj/item/weapon/storage/backpack/satchel/withwallet( src )
 		new /obj/item/device/radio/headset( src )
 	return
 
@@ -67,31 +64,23 @@
 			user << "\red It appears to be broken."
 			return
 		var/obj/item/weapon/card/id/I = W
-		if(!I || !I.registered_name)	return
-		if(src.allowed(user) || !src.registered_name || (istype(I) && (src.registered_name == I.registered_name)))
+		if(!I || !I.registered)	return
+		if(src.allowed(user) || !src.registered_name || (istype(I) && (src.registered_name == I.registered)))
 			//they can open all lockers, or nobody owns this, or they own this locker
 			src.locked = !( src.locked )
 			if(src.locked)	src.icon_state = src.icon_locked
 			else	src.icon_state = src.icon_closed
 
 			if(!src.registered_name)
-				src.registered_name = I.registered_name
-				src.desc = "Owned by [I.registered_name]."
+				src.registered_name = I.registered
+				src.desc = "Owned by [I.registered]."
 		else
 			user << "\red Access Denied"
-	else if( (istype(W, /obj/item/weapon/card/emag)||istype(W, /obj/item/weapon/melee/energy/blade)) && !src.broken)
+	else if(istype(W, /obj/item/weapon/card/emag) && !src.broken)
 		broken = 1
 		locked = 0
 		desc = "It appears to be broken."
 		icon_state = src.icon_broken
-		if(istype(W, /obj/item/weapon/melee/energy/blade))
-			var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
-			spark_system.set_up(5, 0, src.loc)
-			spark_system.start()
-			playsound(src.loc, 'sound/weapons/blade1.ogg', 50, 1)
-			playsound(src.loc, "sparks", 50, 1)
-			for(var/mob/O in viewers(user, 3))
-				O.show_message("\blue The locker has been sliced open by [user] with an energy blade!", 1, "\red You hear metal being sliced and sparks flying.", 2)
 	else
 		user << "\red Access Denied"
 	return

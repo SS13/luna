@@ -163,6 +163,8 @@
 	var/move_result = 1
 	if(internal_damage&MECHA_INT_CONTROL_LOST)
 		mechsteprand()
+	else if(direction == UP || direction == DOWN)
+		move_result = move_z(cardinal)
 	else if(src.dir!=direction)
 		mechturn(direction)
 	else
@@ -179,4 +181,31 @@
 		spawn(tmp_step_in) can_move = 1
 		use_power(tmp_step_energy_drain)
 		return 1
+	return 0
+
+/obj/mecha/working/ripley/syndie/move_z(cardinal)
+	if (!thrusters) return 0
+	if (z > 4)
+		occupant << "\red There is nothing of interest in that direction."
+		return
+	switch(cardinal)
+		if (UP) // Going up!
+			if(z != 1) // If we aren't at the very top of the ship
+				var/turf/T = locate(x, y, z - 1)
+				// You can only jetpack up if there's space above, and you're sitting on either hull (on the exterior), or space
+				if(T && istype(T, /turf/space) && istype(loc, /turf/space))
+					step(src, cardinal)
+					return 1
+				else occupant << "\red You bump into the ship's plating."
+			else occupant << "\red The ship's gravity well keeps you in orbit!" // Assuming the ship starts on z level 1, you don't want to go past it
+
+		if (DOWN) // Going down!
+			if (z != 4 && z != 5) // If we aren't at the very bottom of the ship, or out in space
+				var/turf/T = locate(x, y, z + 1)
+				// You can only jetpack down if you're sitting on space and there's space down below, or hull
+				if(T && istype(T, /turf/space) && istype(loc, /turf/space))
+					step(src, cardinal)
+					return 1
+				else occupant << "\red You bump into the ship's plating."
+			else occupant << "\red The ship's gravity well keeps you in orbit!"
 	return 0

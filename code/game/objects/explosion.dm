@@ -27,7 +27,7 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 			message_admins("Explosion with size ([devastation_range], [heavy_impact_range], [light_impact_range]) in area [epicenter.loc.name]. (<a href=\"byond://?src=%admin_ref%;teleto=\ref[epicenter]\">Jump</a>)", admin_ref = 1)
 
 		defer_cables_rebuild++
-		stop_zones++
+		//stop_zones++
 
 		sleep(5 * tick_multiplier)
 
@@ -36,7 +36,6 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 		var/sound/distant_explosion = sound('explosionfar.ogg')
 		for(var/mob/M)
 			M << distant_explosion
-
 
 		//NEW EXPLOSION CODE - NICER (3D TOO!!) BLASTS
 		//epicenter.overlays += image('status_display.dmi', "epicenter")
@@ -198,7 +197,7 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 
 
 			defer_cables_rebuild --
-			stop_zones--
+			//stop_zones--
 			if (!defer_cables_rebuild)
 				HandleUNExplosionDamage()
 
@@ -236,7 +235,7 @@ proc/tg_explosion(turf/epicenter, devastation_range, heavy_impact_range, light_i
 		playsound(epicenter, "explosion", 100, 1, round(devastation_range,1) )
 
 		defer_cables_rebuild++
-		stop_zones++
+		//stop_zones++
 
 		//var/lighting_controller_was_processing = lighting_controller.processing	//Pause the lighting updates for a bit
 		//lighting_controller.processing = 0
@@ -269,7 +268,7 @@ proc/tg_explosion(turf/epicenter, devastation_range, heavy_impact_range, light_i
 		sleep(8)
 
 		defer_cables_rebuild --
-		stop_zones--
+		//stop_zones--
 		if (!defer_cables_rebuild)
 			HandleUNExplosionDamage()
 

@@ -1,3 +1,15 @@
+/obj/item/device/igniter
+	name = "igniter"
+	desc = "A small electronic device able to ignite combustable substances."
+	icon_state = "igniter"
+	var/status = 1.0
+	flags = FPRINT | TABLEPASS| CONDUCT
+	item_state = "electronic"
+	m_amt = 100
+	throwforce = 5
+	w_class = 1.0
+	throw_speed = 3
+	throw_range = 10
 
 /obj/item/device/igniter/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if ((istype(W, /obj/item/device/radio/signaler) && !( src.status )))
@@ -79,9 +91,9 @@
 		R.layer = 20
 		R.loc = user
 		src.add_fingerprint(user)
-	else if ((istype(W, /obj/item/device/healthanalyzer) && !( src.status )))
 
-		var/obj/item/assembly/anal_ignite/R = new /obj/item/assembly/anal_ignite( user ) // Hehehe anal
+	else if ((istype(W, /obj/item/device/healthanalyzer) && !( src.status )))
+		var/obj/item/assembly/anal_ignite/R = new /obj/item/assembly/anal_ignite( user ) // Hehehe anal ingiter. Butthurter?
 		W.loc = R
 		R.part1 = W
 		W.layer = initial(W.layer)

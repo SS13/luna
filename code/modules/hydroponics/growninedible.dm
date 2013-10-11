@@ -24,6 +24,17 @@
 /obj/item/weapon/grown/proc/changePotency(newValue) //-QualityVan
 	potency = newValue
 
+/obj/item/weapon/grown/corncob
+	name = "corn cob"
+	desc = "A reminder of meals gone by."
+	icon = 'icons/obj/harvest.dmi'
+	icon_state = "corncob"
+	item_state = "corncob"
+	w_class = 1.0
+	throwforce = 0
+	throw_speed = 4
+	throw_range = 20
+
 /obj/item/weapon/grown/log
 	name = "tower-cap log"
 	desc = "It's better than bad, it's good!"
@@ -38,11 +49,11 @@
 	plant_type = 2
 	origin_tech = "materials=1"
 	seed = "/obj/item/seeds/towermycelium"
-//	attack_verb = list("bashed", "battered", "bludgeoned", "whacked")
+	attack_verb = list("bashed", "battered", "bludgeoned", "whacked")
 
 /obj/item/weapon/grown/log/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
-	if(istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/hatchet) || (istype(W, /obj/item/weapon/twohanded/fireaxe) && W:wielded) || istype(W, /obj/item/weapon/melee/energy))
+	if(istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/hatchet) || /*(istype(W, /obj/item/weapon/twohanded/fireaxe) && W:wielded) ||*/ istype(W, /obj/item/weapon/melee/energy))
 		user.show_message("<span class='notice'>You make planks out of the [src]!</span>", 1)
 		for(var/i=0,i<2,i++)
 			var/obj/item/stack/sheet/wood/NG = new (user.loc)
@@ -85,7 +96,7 @@
 	throw_range = 3
 	plant_type = 0
 	seed = "/obj/item/seeds/novaflower"
-//	attack_verb = list("seared", "heated", "whacked", "steamed")
+	attack_verb = list("seared", "heated", "whacked", "steamed")
 	New()
 		..()
 		spawn(5)	//So potency can be set in the proc that creates these crops
@@ -136,5 +147,5 @@
 		spawn(5)	//So potency can be set in the proc that creates these crops
 			reagents.add_reagent("nutriment", 1)
 			reagents.add_reagent("pacid", round(potency, 1))
-			force = round((5+potency/2.5), 1)
+			force = round((5+potency/2), 1)
 

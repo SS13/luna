@@ -1,4 +1,9 @@
 /mob/living/carbon/human/handle_regular_hud_updates()
+
+	for(var/image/hud in client.images) //This is for HUDglasses
+		if(copytext(hud.icon_state,1,4) == "hud") //ugly, but icon comparison is worse, I believe
+			client.images.Remove(hud)
+
 	if (stat == DEAD || mutations & XRAY)
 		sight |= SEE_TURFS
 		sight |= SEE_MOBS
@@ -15,21 +20,34 @@
 		if(glasses.see_objs) sight |= SEE_OBJS
 		see_in_dark = glasses.see_in_dark
 		see_invisible = glasses.see_invisible
-	else if (istype(head, /obj/item/clothing/head/helmet/welding))
+
+	else if (istype(head, /obj/item/clothing/head/helmet/welding) && !head:up)
 		see_in_dark = 1
 	else if (stat != DEAD)
 		sight &= ~SEE_TURFS
 		sight &= ~SEE_MOBS
 		sight &= ~SEE_OBJS
-		if (dna && dna.mutantrace == "lizard")
-			see_in_dark = 3
-			see_invisible = 1
-		else
-			see_in_dark = 2
-			see_invisible = 0
+		if (dna)
+			if (dna.mutantrace == "lizard" || dna.mutantrace == "slime")
+				see_in_dark = 3
+				see_invisible = 1
+			else if (dna.mutantrace == "tajara" || dna.mutantrace == "shadow")
+				see_in_dark = 8
+				see_invisible = 1
+			else
+				see_in_dark = 2
+				see_invisible = 0
 
 	if (sleep) sleep.icon_state = text("sleep[]", sleeping)
 	if (rest) rest.icon_state = text("rest[]", resting)
+
+	if(istype(glasses, /obj/item/clothing/glasses/sunglasses/sechud))
+		var/obj/item/clothing/glasses/sunglasses/sechud/O = glasses
+		if(O.hud)		O.hud.process_hud(src)
+
+	else if(istype(glasses, /obj/item/clothing/glasses/hud))
+		var/obj/item/clothing/glasses/hud/O = glasses
+		O.process_hud(src)
 
 	if (healths)
 		if (stat != 2)
@@ -51,7 +69,7 @@
 		else
 			healths.icon_state = "health7"
 
-	if(pullin)	pullin.icon_state = "pull[pulling ? 1 : 0]"
+	if (pullin)	pullin.icon_state = "pull[pulling ? 1 : 0]"
 
 	if (toxin)	toxin.icon_state = "tox[toxins_alert ? 1 : 0]"
 	if (oxygen) oxygen.icon_state = "oxy[oxygen_alert ? 1 : 0]"
@@ -73,9 +91,9 @@
 			bodytemp.icon_state = "temp0"
 		if(295 to 300)
 			bodytemp.icon_state = "temp-1"
-		if(280 to 295)
+		if(285 to 295)
 			bodytemp.icon_state = "temp-2"
-		if(260 to 280)
+		if(280 to 285)
 			bodytemp.icon_state = "temp-3"
 		else
 			bodytemp.icon_state = "temp-4"
@@ -120,7 +138,7 @@
 			if (istype(glasses, /obj/item/clothing/glasses/meson))
 				client.screen += hud_used.lp_dither
 
-			if (istype(head, /obj/item/clothing/head/helmet/welding))
+			if (istype(head, /obj/item/clothing/head/helmet/welding) && !head:up)
 				client.screen += hud_used.welding
 
 	if (stat != 2)
@@ -237,7 +255,7 @@
 	if (intoxicated) intoxicated--
 	var/datum/organ/external/head/head = organs["head"]
 	if(head && src.real_name != "Unknown" && !src.face_dmg)
-		if(head.brute_dam >= 45 || head.burn_dam >= 45)
+		if((head.brute_dam + head.burn_dam) >= 60)
 			src.face_dmg = 1
 			src << "\red Your face has become disfigured."
 	for(var/datum/organ/external/temp in organs)
@@ -273,6 +291,7 @@
 				pale = 1
 				var/word = pick("dizzy","woosey","faint")
 				src << "\red You feel [word]"
+			adjustOxyLoss(3)
 			if(prob(1))
 				var/word = pick("dizzy","woosey","faint")
 				src << "\red You feel [word]"
@@ -280,13 +299,13 @@
 			if(!pale)
 				updatepale()
 				pale = 1
+			adjustOxyLoss(4)
 			eye_blurry += 6
 			if(prob(15))
 				paralysis += rand(1,3)
-		else if(lol <= 244 && lol > 122)
-			if(oxyloss <= 99)
-				oxyloss = 99
-		else if(lol <= 122)
+		else if(lol <= 244 && lol > 80)
+			adjustOxyLoss(8)
+		else if(lol <= 80)
 			death()
 			src.unlock_medal("We're all sold out on blood", 0, "You bled to death..", "easy")
 	if (eye_blind)

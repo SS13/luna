@@ -282,12 +282,12 @@
 			src.medicate_patient(src.patient)
 		return
 
-	else if(src.patient && (src.path.len) && (get_dist(src.patient,src.path[src.path.len]) > 2))
+	else if(src.patient && src.path && src.path.len && (get_dist(src.patient,src.path[src.path.len]) > 2))
 		src.path = new()
 		src.currently_healing = 0
 		src.last_found = world.time
 
-	if(src.patient && src.path.len == 0 && (get_dist(src,src.patient) > 1))
+	if(src.patient && src.path && src.path.len == 0 && (get_dist(src,src.patient) > 1))
 		spawn(0)
 			if (istype(src.loc, /turf/))
 				src.path = AStar(src.loc, get_turf(src.patient), /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 30,id=botcard, exclude=list(/obj/effect/landmark/alterations/nopath))
@@ -308,9 +308,8 @@
 					step_towards_3d(src, src.path[1])
 					src.path -= src.path[1]
 
-	if(src.path.len > 8 && src.patient)
-		src.frustration++
-
+		if(src.path.len > 8 && src.patient)
+			src.frustration++
 	return
 
 

@@ -14,6 +14,13 @@
 	weaken = 10
 	stutter = 12
 
+	on_hit(var/atom/target, var/blocked = 0)
+		if(!ismob(target) && !blocked >= 2 ) //Fully blocked by mob or collided with dense object - burst into sparks!
+			var/datum/effect/effect/system/spark_spread/sparks = new /datum/effect/effect/system/spark_spread
+			sparks.set_up(1, 1, src)
+			sparks.start()
+		..()
+
 
 /obj/item/projectile/energy/declone
 	name = "declown"
@@ -40,11 +47,22 @@
 	weaken = 10
 	stutter = 10
 
+/obj/item/projectile/beam/pulse/heavy
+	name = "heavy pulse laser"
+	icon_state = "pulse1_bl"
+	var/life = 20
+
+	Bump(atom/A)
+		A.bullet_act(src, def_zone)
+		src.life -= 10
+		if(life <= 0)
+			del(src)
+		return
 
 /obj/item/projectile/energy/bolt/large
-	name = "largebolt"
-	damage = 30
-
+	name = "large bolt"
+	damage = 33
+	weaken = 12
 
 /obj/item/projectile/energy/neurotoxin
 	name = "neuro"

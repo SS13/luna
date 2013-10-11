@@ -550,7 +550,7 @@
 		if(issilicon(user)) return
 		//check eye protection
 		var/safety = null
-		if (istype(user:head, /obj/item/clothing/head/helmet/welding) || istype(user:head, /obj/item/clothing/head/helmet/space)) safety = 2
+		if ((istype(user:head, /obj/item/clothing/head/helmet/welding) && !user:head:up) || istype(user:head, /obj/item/clothing/head/helmet/space)) safety = 2
 		else if (istype(user:glasses, /obj/item/clothing/glasses/sunglasses)) safety = 1
 		else if (istype(user:glasses, /obj/item/clothing/glasses/thermal)) safety = -1
 		else safety = 0

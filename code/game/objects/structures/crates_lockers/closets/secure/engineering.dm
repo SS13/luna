@@ -1,6 +1,6 @@
 /obj/structure/closet/secure_closet/engineering_chief
-	name = "Chief Engineer's Locker"
-	req_access = list(access_ce)
+	name = "Chief Engineer's locker"
+	req_access = list(access_heads)
 	icon_state = "securece1"
 	icon_closed = "securece"
 	icon_locked = "securece1"
@@ -12,20 +12,19 @@
 	New()
 		..()
 		sleep(2)
-		if(prob(50))
-			new /obj/item/weapon/storage/backpack/industrial(src)
-		else
-			new /obj/item/weapon/storage/backpack/satchel_eng(src)
-		new /obj/item/blueprints(src)
+		new /obj/item/weapon/storage/backpack/industrial(src)
+		//new /obj/item/blueprints(src)
 		new /obj/item/clothing/under/rank/chief_engineer(src)
-		new /obj/item/clothing/head/hardhat/white(src)
-		new /obj/item/clothing/head/welding(src)
+		new /obj/item/clothing/head/helmet/hardhat/white(src)
+		new /obj/item/clothing/head/helmet/welding(src)
 		new /obj/item/clothing/gloves/yellow(src)
 		new /obj/item/clothing/shoes/brown(src)
-		new /obj/item/weapon/cartridge/ce(src)
+		new /obj/item/device/pda/heads/ce(src)
 		new /obj/item/device/radio/headset/heads/ce(src)
 		new /obj/item/weapon/storage/toolbox/mechanical(src)
-		new /obj/item/clothing/suit/hazardvest(src)
+		new /obj/item/clothing/suit/storage/hazard(src)
+		new /obj/item/weapon/storage/belt/utility(src)
+		new /obj/item/clothing/glasses/meson(src)
 		new /obj/item/clothing/mask/gas(src)
 		new /obj/item/device/multitool(src)
 		new /obj/item/device/flash(src)
@@ -47,14 +46,17 @@
 	New()
 		..()
 		sleep(2)
+		new /obj/item/device/t_scanner(src)
+		new /obj/item/device/t_scanner(src)
+		new /obj/item/device/t_scanner(src)
 		new /obj/item/clothing/gloves/yellow(src)
 		new /obj/item/clothing/gloves/yellow(src)
 		new /obj/item/weapon/storage/toolbox/electrical(src)
 		new /obj/item/weapon/storage/toolbox/electrical(src)
 		new /obj/item/weapon/storage/toolbox/electrical(src)
-		new /obj/item/weapon/module/power_control(src)
-		new /obj/item/weapon/module/power_control(src)
-		new /obj/item/weapon/module/power_control(src)
+//		new /obj/item/weapon/module/power_control(src)
+//		new /obj/item/weapon/module/power_control(src)
+//		new /obj/item/weapon/module/power_control(src)
 		new /obj/item/device/multitool(src)
 		new /obj/item/device/multitool(src)
 		new /obj/item/device/multitool(src)
@@ -76,18 +78,20 @@
 	New()
 		..()
 		sleep(2)
-		new /obj/item/clothing/head/welding(src)
-		new /obj/item/clothing/head/welding(src)
-		new /obj/item/clothing/head/welding(src)
-		new /obj/item/weapon/weldingtool/largetank(src)
-		new /obj/item/weapon/weldingtool/largetank(src)
-		new /obj/item/weapon/weldingtool/largetank(src)
+		new /obj/item/clothing/head/helmet/welding(src)
+		new /obj/item/clothing/head/helmet/welding(src)
+		new /obj/item/clothing/head/helmet/welding(src)
+		new /obj/item/clothing/head/helmet/welding(src)
+		new /obj/item/weapon/weldingtool/industrial(src)
+		new /obj/item/weapon/weldingtool/industrial(src)
+		new /obj/item/weapon/weldingtool/industrial(src)
+		new /obj/item/weapon/weldingtool/industrial(src)
 		return
 
 
 
 /obj/structure/closet/secure_closet/engineering_personal
-	name = "Engineer's Locker"
+	name = "Engineer's locker"
 	req_access = list(access_engine_equip)
 	icon_state = "secureeng1"
 	icon_closed = "secureeng"
@@ -100,16 +104,17 @@
 	New()
 		..()
 		sleep(2)
-		if(prob(50))
-			new /obj/item/weapon/storage/backpack/industrial(src)
-		else
-			new /obj/item/weapon/storage/backpack/satchel_eng(src)
+		new /obj/item/weapon/storage/backpack/industrial(src)
 		new /obj/item/clothing/under/rank/engineer(src)
 		new /obj/item/clothing/shoes/orange(src)
+		new /obj/item/clothing/gloves/yellow(src)
+		new /obj/item/clothing/glasses/meson(src)
+		new /obj/item/weapon/storage/belt/utility(src)
 		new /obj/item/weapon/storage/toolbox/mechanical(src)
-//		new /obj/item/weapon/cartridge/engineering(src)
+		new /obj/item/device/pda/engineering(src)
+		new /obj/item/clothing/shoes/magnetic(src)
 		new /obj/item/device/radio/headset/headset_eng(src)
-		new /obj/item/clothing/suit/hazardvest(src)
+		new /obj/item/clothing/suit/storage/hazard(src)
 		new /obj/item/clothing/mask/gas(src)
 		new /obj/item/clothing/glasses/meson(src)
 		return

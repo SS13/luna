@@ -25,7 +25,7 @@
 
 /obj/structure/largecrate/mule
 	icon_state = "mulecrate"
-
+/*
 /obj/structure/largecrate/lisa
 	icon_state = "lisacrate"
 
@@ -61,4 +61,4 @@
 		var/num = rand(4, 6)
 		for(var/i = 0, i < num, i++)
 			new /mob/living/simple_animal/chick(loc)
-	..()
+	..()*/

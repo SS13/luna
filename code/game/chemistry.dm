@@ -7,29 +7,25 @@
 	w_class = 2.0
 	throw_speed = 4
 	throw_range = 20
+	flags =  FPRINT | TABLEPASS | CONDUCT | ONBELT
+	var/state = null
+	var/det_time = 20.0
 
 /obj/item/weapon/grenade/smokebomb
 	desc = "It is set to detonate in 2 seconds."
 	name = "smoke bomb"
-	var/state = null
-	var/det_time = 20.0
-	flags = FPRINT | TABLEPASS | ONBELT | USEDELAY
+	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT | USEDELAY
 	var/datum/effect/system/bad_smoke_spread/smoke
 
 /obj/item/weapon/grenade/incendiarygrenade
 	desc = "It is set to detonate in 3 seconds."
 	name = "incendiary grenade"
-	var/state = null
 	var/firestrength = 100
-	var/det_time = 20.0
-	flags =  FPRINT | TABLEPASS | CONDUCT | ONBELT
 
 /obj/item/weapon/grenade/mustardbomb
 	desc = "It is set to detonate in 4 seconds."
 	name = "mustard gas bomb"
-	var/state = null
-	var/det_time = 40.0
-	flags =  FPRINT | TABLEPASS | CONDUCT | ONBELT
+	det_time = 40.0
 	var/datum/effect/system/mustard_gas_spread/mustard_gas
 
 /obj/item/weapon/grenade/smokebomb/New()

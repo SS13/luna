@@ -49,6 +49,7 @@
 		cell.add_fingerprint(user)
 		src.cell = null
 		update_icon()
+		user.update_clothing()
 
 		user << "You remove the power cell"
 		return

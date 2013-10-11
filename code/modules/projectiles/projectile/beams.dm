@@ -43,11 +43,18 @@
 	damage = 60
 
 /obj/item/projectile/beam/emitter
-	name = "emitter beam"
+	name = "heavy beam"
 	icon_state = "emitter"
-	damage = 30
+	damage = 40
 
-/*
+	on_hit(var/atom/target, var/blocked = 0)
+		..()
+		if(istype(target, /turf/simulated/mineral))
+			var/turf/simulated/mineral/turf = target
+			turf.gets_drilled()
+		else if(istype(target, /turf/simulated/wall))
+			target.ex_act(3)
+
 /obj/item/projectile/bluetag
 	name = "lasertag beam"
 	icon_state = "bluelaser"
@@ -91,4 +98,4 @@
 			var/mob/living/carbon/human/M = target
 			if((istype(M.wear_suit, /obj/item/clothing/suit/bluetag))||(istype(M.wear_suit, /obj/item/clothing/suit/redtag)))
 				M.Weaken(5)
-		return 1*/
+		return 1

@@ -1,5 +1,5 @@
 /obj/machinery/walllocker
-	name = "Wall Locker"
+	name = "Wall locker"
 	icon = 'lockwall.dmi'
 	icon_state = "emerg"
 	anchored = 1
@@ -56,7 +56,7 @@
 		spawned_1 = 0 ; spawned_2 = 0 ; spawned_3 = 0
 
 /obj/machinery/walllocker/emerglocker
-	name = "Emergency Locker"
+	name = "Emergency locker"
 	desc = "It contains a set of three crowbars, oxygen tanks and masks"
 
 	item_1 = list(/obj/item/weapon/crowbar, /obj/item/weapon/crowbar, /obj/item/weapon/crowbar)

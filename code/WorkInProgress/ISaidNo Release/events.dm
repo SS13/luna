@@ -48,17 +48,17 @@ proc/randomevent_laws()
 	if (btype == 1)
 		// Vertical
 		while (count > 0)
-			var/obj/forcefield/event/B = new /obj/forcefield/event(locate(pickx,count,1))
+			var/obj/effect/forcefield/event/B = new /obj/effect/forcefield/event(locate(pickx,count,1))
 			B.icon_state = "spat-v"
 			count -= 1
 	else
 		// Horizontal
 		while (count > 0)
-			var/obj/forcefield/event/B = new /obj/forcefield/event(locate(count,picky,1))
+			var/obj/effect/forcefield/event/B = new /obj/effect/forcefield/event(locate(count,picky,1))
 			B.icon_state = "spat-h"
 			count -= 1
 	spawn(rand(600, 3000))
-		for(var/obj/forcefield/event/B in world) del(B)
+		for(var/obj/effect/forcefield/event/B in world) del(B)
 
 // the forcefield is literally just an inert blocker object
 
@@ -97,13 +97,13 @@ proc/randomevent_laws()
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
 		if (!W) return
 		if (!user) return
-		if (istype(W, /obj/item/weapon/axe)) del src
+		if (istype(W, /obj/item/weapon/melee/energy/axe)) del src
 		if (istype(W, /obj/item/weapon/circular_saw)) del src
 		if (istype(W, /obj/item/weapon/kitchen/utensil/knife)) del src
 		if (istype(W, /obj/item/weapon/scalpel)) del src
 		if (istype(W, /obj/item/weapon/screwdriver)) del src
 		if (istype(W, /obj/item/weapon/shard)) del src
-		if (istype(W, /obj/item/weapon/sword)) del src
+		if (istype(W, /obj/item/weapon/melee/energy/sword)) del src
 		if (istype(W, /obj/item/weapon/saw)) del src
 		if (istype(W, /obj/item/weapon/weldingtool)) del src
 		if (istype(W, /obj/item/weapon/wirecutters)) del src
@@ -117,7 +117,7 @@ proc/randomevent_laws()
 	var/dogrowth = 1
 	if (!istype(Vspread, /turf/simulated/floor)) dogrowth = 0
 	for(var/obj/O in Vspread)
-		if (istype(O, /obj/structure/window) || istype(O, /obj/forcefield) || istype(O, /obj/blob) || istype(O, /obj/alien/weeds) || istype(O, /obj/spacevine)) dogrowth = 0
+		if (istype(O, /obj/structure/window) || istype(O, /obj/effect/forcefield) || istype(O, /obj/blob) || istype(O, /obj/alien/weeds) || istype(O, /obj/spacevine)) dogrowth = 0
 		if (istype(O, /obj/machinery/door/))
 			if(O:p_open == 0 && prob(50)) O:open()
 			else dogrowth = 0

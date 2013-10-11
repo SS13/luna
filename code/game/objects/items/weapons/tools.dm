@@ -106,7 +106,7 @@ WELDINGTOOOL
 // WELDING TOOL
 
 /obj/item/weapon/weldingtool
-	name = "weldingtool"
+	name = "welding tool"
 	icon = 'items.dmi'
 	icon_state = "welder"
 	origin_tech = "engineering=1"
@@ -235,7 +235,7 @@ WELDINGTOOOL
 
 	if (istype(user,/mob/living/silicon/robot)) return
 
-	if (istype(user:head, /obj/item/clothing/head/helmet/welding) || istype(user:head, /obj/item/clothing/head/helmet/space))
+	if ((istype(user:head, /obj/item/clothing/head/helmet/welding) && !user:head:up) || istype(user:head, /obj/item/clothing/head/helmet/space))
 		safety = 2
 	else if (istype(user:glasses, /obj/item/clothing/glasses/sunglasses))
 		safety = 1
@@ -512,7 +512,7 @@ WELDINGTOOOL
 	if (istype(user,/mob/living/silicon/robot)) return
 	//check eye protection
 	var/safety = 1
-	if (istype(user:head, /obj/item/clothing/head/helmet/welding) || istype(user:head, /obj/item/clothing/head/helmet/space))
+	if ((istype(user:head, /obj/item/clothing/head/helmet/welding) && !user:head:up) || istype(user:head, /obj/item/clothing/head/helmet/space))
 		safety += 2
 	if (istype(user:glasses, /obj/item/clothing/glasses/sunglasses))
 		safety += 1

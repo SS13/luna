@@ -66,7 +66,7 @@
 /obj/machinery/optable/CanPass(atom/movable/O as mob|obj, target as turf)
 	if(!O)
 		return 0
-	if ((O.flags & 2 || istype(O, /obj/meteor)))
+	if ((O.flags & 2 || istype(O, /obj/effect/meteor)))
 		return 1
 	else
 		return 0

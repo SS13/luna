@@ -37,17 +37,19 @@ var/supply_shuttle_points = 50
 	desc = "Free-hanging flaps of hard plastic."
 	icon = 'stationobjs.dmi' //Change this.
 	icon_state = "plasticflaps"
-	density = 0
+	density = 1
 	opacity = 1
 	anchored = 1
 	layer = 4
 
 
 /obj/structure/plasticflaps/CanPass(atom/A, turf/T)
-	if (istype(A, /mob/living)) // You Shall Not Pass!
-		//var/mob/living/M = A
-		//if(!M.lying)			// unless you're lying down
-		return 0
+	if(istype(A, /mob/living)) // You Shall Not Pass!
+		var/mob/living/M = A
+		if(M.lying)	return 1	// unless you're lying down
+
+	if(istype(A, /obj)) return 1
+
 	return ..()
 
 
@@ -130,7 +132,7 @@ var/supply_shuttle_points = 50
 	var/shuttleat = supply_shuttle_at_station ? SUPPLY_STATION_AREATYPE : SUPPLY_DOCK_AREATYPE
 
 	for(var/turf/T in get_area_turfs(shuttleat) )
-		var/crate = locate(/obj/structure/crate) in T
+		var/crate = locate(/obj/structure/closet/crate) in T
 		if (crate)
 			del(crate)
 			supply_shuttle_points += SUPPLY_POINTSPERCRATE

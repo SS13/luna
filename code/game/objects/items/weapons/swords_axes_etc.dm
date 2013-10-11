@@ -2,31 +2,54 @@
 CONTAINS:
 SWORD
 AXE
-PICKAXE
 STUN BATON
-
+CLASSIC BATON
 */
 
+/*
+ * Sword
+ */
+
+/obj/item/weapon/melee/energy/sword
+	name = "energy sword"
+	desc = "May the force be within you."
+	icon_state = "sword0"
+	var/active = 0.0
+	force = 3.0
+	throwforce = 5.0
+	throw_speed = 1
+	throw_range = 5
+	w_class = 2.0
+	flags = FPRINT | TABLEPASS | NOSHIELD
+	origin_tech = "magnets=3;syndicate=4"
 
 
+/obj/item/weapon/melee/energy/sword/New()
+	item_color = pick("red", "blue", "green", "purple")
 
-// SWORD
-/obj/item/weapon/sword/attack(target as mob, mob/user as mob)
-	if(istype(target, /mob/living))
-		target:fireloss += 20
-	..()
+/obj/item/weapon/melee/energy/sword/IsShield()
+	return active
 
+//obj/item/weapon/melee/energy/sword/attack(target as mob, mob/user as mob)
+//	if(istype(target, /mob/living))
+//		target:AdjustFireLoss(10)
+//	..()
 
-/obj/item/weapon/sword/attack_self(mob/living/user as mob)
+/obj/item/weapon/melee/energy/sword/attack_self(mob/living/user as mob)
 	if ((user.mutations & CLUMSY) && prob(50))
 		user << "\red You accidentally cut yourself with the Sword."
 		user.adjustBruteLoss(5)
 		user.adjustFireLoss(5)
-	src.active = !( src.active )
-	if (src.active)
+	active = !active
+	if (active)
+		if(istype(src,/obj/item/weapon/melee/energy/sword/pirate))
+			icon_state = "cutlass1"
+		else
+			icon_state = "sword[item_color]"
+		playsound(user, 'sound/weapons/saberon.ogg', 50, 1)
 		user << "\blue The sword is now active."
 		src.force = 30
-		src.icon_state = "sword1"
+		throwforce = 20
 		if(src.blood_DNA)
 			var/icon/I = new /icon(initial(src.icon), src.icon_state)
 			I.Blend(new /icon('blood.dmi', "thisisfuckingstupid"),ICON_ADD)
@@ -38,23 +61,39 @@ STUN BATON
 	else
 		user << "\blue The sword can now be concealed."
 		src.force = 3
-		src.icon_state = "sword0"
+		if(istype(src,/obj/item/weapon/melee/energy/sword/pirate))
+			icon_state = "cutlass0"
+		else
+			icon_state = "sword0"
+		playsound(user, 'sound/weapons/saberoff.ogg', 50, 1)
 		if(src.blood_DNA)
 			var/icon/I = new /icon(initial(src.icon), src.icon_state)
 			I.Blend(new /icon('blood.dmi', "thisisfuckingstupid"),ICON_ADD)
 			I.Blend(new /icon('blood.dmi', "itemblood"),ICON_MULTIPLY)
 			I.Blend(new /icon(initial(src.icon), src.icon_state),ICON_UNDERLAY) //motherfucker
 			src.icon = I
-		src.w_class = 2
+		src.w_class = 1
 		src.slash = 0
 	src.add_fingerprint(user)
+	user.update_clothing()
 	return
 
 
+/obj/item/weapon/melee/energy/sword/pirate
+	name = "energy cutlass"
+	desc = "Arrrr matey."
+	icon_state = "cutlass0"
+
+/obj/item/weapon/melee/energy/sword/green/New()
+	item_color = "green"
+
+/obj/item/weapon/melee/energy/sword/red/New()
+	item_color = "red"
+
 // AXE
 
-/obj/item/weapon/axe
-	name = "Axe"
+/obj/item/weapon/melee/energy/axe
+	name = "energy axe"
 	desc = "An energised battle axe."
 	icon_state = "axe0"
 	var/active = 0.0
@@ -66,7 +105,7 @@ STUN BATON
 	w_class = 3.0
 	flags = FPRINT | CONDUCT | NOSHIELD | TABLEPASS
 
-/obj/item/weapon/axe/attack_self(mob/user as mob)
+/obj/item/weapon/melee/energy/axe/attack_self(mob/user as mob)
 	src.active = !( src.active )
 	if (src.active)
 		user << "\blue The axe is now energised."
@@ -79,42 +118,27 @@ STUN BATON
 		src.icon_state = "axe0"
 		src.w_class = 3
 	src.add_fingerprint(user)
+	user.update_clothing()
 	return
 
 
-// PICKAXE
-/*	Strumpetplaya - Commented this out as it conflicts with the mining pickaxe
-/obj/item/weapon/pickaxe
-	name = "Pickaxe"
-	desc = "An energised pickaxe."
-	icon_state = "pickaxe0"
-	var/active = 0.0
-	force = 6.0
-	throwforce = 2.0
-	throw_speed = 1
-	throw_range = 4
-	slash = 1
-	w_class = 3.0
-	flags = FPRINT | CONDUCT | NOSHIELD | TABLEPASS
-/obj/item/weapon/pickaxe/attack_self(mob/user as mob)
-	src.active = !( src.active )
-	if (src.active)
-		user << "\blue The pickaxe is now energised."
-		src.force = 8
-		src.icon_state = "pickaxe1"
-		src.w_class = 5
-	else
-		user << "\blue The pickaxe can now be concealed."
-		src.force = 6
-		src.icon_state = "pickaxe0"
-		src.w_class = 3
-	src.add_fingerprint(user)
-	return
-
-*/
 // STUN BATON
+/obj/item/weapon/melee/baton
+	name = "stunbaton"
+	desc = "A stun baton for hitting people with."
+	icon_state = "stunbaton"
+	item_state = "baton"
+	flags = FPRINT | ONBELT | TABLEPASS
+	force = 10
+	throwforce = 7
+	w_class = 3
+	var/charges = 10.0
+	origin_tech = "combat=2"
+	var/maximum_charges = 10.0
+	var/status = 0
 
-/obj/item/weapon/baton/update_icon()
+
+/obj/item/weapon/melee/baton/update_icon()
 	if(src.status)
 		icon_state = "stunbaton_active"
 	else
@@ -125,11 +149,11 @@ STUN BATON
 		I.Blend(new /icon('blood.dmi', "itemblood"),ICON_MULTIPLY)
 		I.Blend(new /icon(initial(src.icon), src.icon_state),ICON_UNDERLAY) //motherfucker
 		src.icon = I
-/obj/item/weapon/baton/attack_self(mob/user as mob)
+/obj/item/weapon/melee/baton/attack_self(mob/user as mob)
 	src.status = !( src.status )
 	if ((usr.mutations & CLUMSY) && prob(50))
-		usr << "\red You grab the stunbaton on the wrong side."
-		usr.paralysis += 60
+		usr << "\red You grab the stunbaton on the wrong side!"
+		usr.Stun(10)
 		return
 	if (src.status)
 		user << "\blue The baton is now on."
@@ -137,15 +161,15 @@ STUN BATON
 	else
 		user << "\blue The baton is now off."
 		playsound(src.loc, "sparks", 75, 1, -1)
-
+	user.update_clothing()
 	update_icon()
 	src.add_fingerprint(user)
 	return
 
-/obj/item/weapon/baton/attack(mob/M as mob, mob/user as mob)
+/obj/item/weapon/melee/baton/attack(mob/M as mob, mob/user as mob)
 	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << "\red You grab the stunbaton on the wrong side."
-		usr.weakened += 30
+		usr.Stun(10)
 		return
 	src.add_fingerprint(user)
 	var/mob/living/carbon/human/H = M
@@ -209,7 +233,7 @@ STUN BATON
 			playsound(src.loc, 'Genhit.ogg', 50, 1, -1)
 			if(isrobot(user))
 				var/mob/living/silicon/robot/R = user
-				R.cell.charge -= 20
+				R.cell.charge -= 400
 			else
 				charges--
 			if (M.weakened < 1 && (!(M.mutations & HULK)) )
@@ -223,7 +247,7 @@ STUN BATON
 			playsound(src.loc, 'Egloves.ogg', 50, 1, -1)
 			if(isrobot(user))
 				var/mob/living/silicon/robot/R = user
-				R.cell.charge -= 20
+				R.cell.charge -= 400
 			else
 				charges--
 			if (M.weakened < 10 && (!(M.mutations & HULK)) )
@@ -237,7 +261,7 @@ STUN BATON
 		for(var/mob/O in viewers(M))
 			if (O.client)	O.show_message("\red <B>[M] has been stunned with the stun baton by [user]!</B>", 1, "\red You hear someone fall", 2)
 
-/obj/item/weapon/classic_baton/attack(mob/living/M as mob, mob/living/user as mob)
+/obj/item/weapon/melee/classic_baton/attack(mob/living/M as mob, mob/living/user as mob)
 	if ((usr.mutations & CLUMSY) && prob(50))
 		usr << "\red You club yourself over the head."
 		usr.weakened = max(3 * force, usr.weakened)

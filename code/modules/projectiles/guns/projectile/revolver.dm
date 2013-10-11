@@ -11,7 +11,7 @@
 	special_check(var/mob/living/carbon/human/M)
 		if(caliber == initial(caliber))
 			return 1
-		if(prob(5))
+		if(prob(2))
 			M << "<span class='danger'>[src] blows up in your face.</span>"
 			M.take_organ_damage(0,20)
 			M.drop_item()

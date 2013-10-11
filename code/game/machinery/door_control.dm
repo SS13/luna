@@ -111,13 +111,13 @@
 
 	return
 
-/obj/machinery/door_contol/vent_control
+/obj/machinery/door_control/vent_control
 	name = "Remote Vent Control"
 	icon_state = "leverbig00"
 	desc = "A heavy hydraulic control switch for the core vents. Pushing it towards the reactor opens the vents, pulling it away from the reactor closes the vents."
-	var/icon_toggled = "leverbig01"
-	var/icon_normal = "leverbig0"
-	var/needspower = 0
+	icon_toggled = "leverbig01"
+	icon_normal = "leverbig0"
+	needspower = 0
 
 /obj/machinery/door_control/vent_control/attack_ai(mob/user as mob)
 	if (in_range(src, user) && get_dist(src, user) <= 1 && istype(user, /mob/living/silicon/robot))

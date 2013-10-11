@@ -431,7 +431,7 @@
 			PDNA.mutantvar = DNA.mutantvar
 			del W
 			del src
-		else if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		else if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			for(var/mob/O in viewers(user, null)) O.show_message(text("[] cuts [] into slices.", user, src), 1)
 			var/makeslices = 6
 			while (makeslices > 0)
@@ -472,7 +472,7 @@
 	edible = 0
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			for(var/mob/O in viewers(user, null)) O.show_message(text("[] cuts [] into slices.", user, src), 1)
 			var/makeslices = 6
 			while (makeslices > 0)
@@ -659,7 +659,7 @@
 		..()
 		src.planttype = new /datum/plant/pumpkin(src)
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			for(var/mob/O in viewers(user, null))
 				O.show_message(text("[] carefully and creatively carves [].", user, src), 1)
 			new /obj/item/clothing/head/pumpkin(user.loc)
@@ -976,7 +976,7 @@
 	amount = 1
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			user << "\blue You cut [src] into smaller pieces..."
 			for(var/i = 1, i <= 4, i++)
 				new /obj/item/weapon/reagent_containers/food/snacks/ingredient/dough_cookie(get_turf(src))
@@ -995,7 +995,7 @@
 			new /obj/item/weapon/reagent_containers/food/snacks/ingredient/pizza2(get_turf(src))
 			del W
 			del src
-		else if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		else if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			user << "\blue You cut [src] into smaller pieces..."
 			for(var/i = 1, i <= 3, i++)
 				new /obj/item/weapon/reagent_containers/food/snacks/ingredient/tortilla(get_turf(src))
@@ -1470,7 +1470,7 @@
 	var/slice_icon = "pizzaslice1"
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			if (src.sliced == 1)
 				user << "\red This has already been sliced."
 				return
@@ -1549,7 +1549,7 @@
 			return
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/sword))
+		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
 			for(var/mob/O in viewers(user, null))
 				O.show_message(text("[] cuts [] into slices.", user, src), 1)
 			var/makeslices = 6
@@ -1827,233 +1827,3 @@
 			W.item_state = "pumpkin"
 			del src
 */
-// Drinks
-
-/obj/item/weapon/reagent_containers/food/drinks/cola_bottle/lime
-	name = "Lime-Aid"
-	desc = "Antihol mixed with lime juice. A well-known cure for hangovers."
-	label = "limeaid"
-	labeled = 1
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("antihol", 20)
-		R.add_reagent("juice_lime", 20)
-
-/obj/item/weapon/reagent_containers/food/drinks/cola_bottle/bottledwater
-	name = "Decirprevo Bottled Water"
-	desc = "Bottled from our cool natural springs on Europa."
-	label = "water"
-	labeled = 1
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("water", 50)
-
-/* /obj/item/weapon/reagent_containers/food/drinks/cola_bottle/grones
-	name = "Grones Soda"
-	desc = "They make all kinds of flavors these days, good lord."
-	label = "grones"
-	heal_amt = 1
-	labeled = 1
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		var/flavor = rand(1,14)
-		switch(flavor)
-			if(1)
-				src.name = "Grones Soda - Wicked Sick Pumpkin Prolapse"
-				R.add_reagent("diarrhea", 10)
-			if(2)
-				src.name = "Grones Soda - Ballin' Banana Testicular Torsion"
-				R.add_reagent("urine", 10)
-			if(3)
-				src.name = "Grones Soda - Radical Roadkill Rampage"
-				R.add_reagent("blood", 10)
-			if(4)
-				src.name = "Grones Soda - Sweet Cherry Brain Haemorrhage"
-				R.add_reagent("impedrezine", 10)
-			if(5)
-				src.name = "Grones Soda - Awesome Asbestos Candy Apple"
-				R.add_reagent("lithium", 10)
-			if(6)
-				src.name = "Grones Soda - Salt-Free Senile Dementia"
-				R.add_reagent("mercury", 10)
-			if(7)
-				src.name = "Grones Soda - High Fructose Traumatic Stress Disorder"
-				R.add_reagent("cryptobiolin", 10)
-			if(8)
-				src.name = "Grones Soda - Tangy Dismembered Orphan Tears"
-				R.add_reagent("inaprovaline", 10)
-			if(9)
-				src.name = "Grones Soda - Chunky Infected Laceration Salsa"
-				R.add_reagent("anti_toxin", 10)
-			if(10)
-				src.name = "Grones Soda - Manic Depressive Multivitamin Dewberry"
-				R.add_reagent("hyperzine", 10)
-			if(11)
-				src.name = "Grones Soda - Anti-Bacterial Air Freshener"
-				R.add_reagent("spaceacillin", 10)
-			if(12)
-				src.name = "Grones Soda - Icy Fresh Social Incompetence"
-				R.add_reagent("THC", 10)
-			if(13)
-				src.name = "Grones Soda - Minty Restraining Order Pepper Spray"
-				R.add_reagent("capsaicin", 10)
-			if(14)
-				src.name = "Grones Soda - Cool Keratin Rush"
-				R.add_reagent("hairgrownium", 10)
-		R.add_reagent("cola", 20)
-*/
-/obj/item/weapon/reagent_containers/food/drinks/cola_bottle/orange
-	name = "Orange-Aid"
-	desc = "A vitamin tonic that promotes good eyesight."
-	label = "orangeaid"
-	heal_amt = 1
-	labeled = 1
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("imidazoline", 20)
-		R.add_reagent("juice_orange", 20)
-
-/*/obj/item/weapon/reagent_containers/food/drinks/beer
-	name = "Space Beer"
-	desc = "Beer. in space."
-	icon_state = "beer"
-	heal_amt = 1
-	g_amt = 40
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("beer", 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/wine
-	name = "Wine"
-	desc = "Not to be confused with pubbie tears."
-	icon_state = "wine"
-	heal_amt = 1
-	g_amt = 40
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("wine", 30)
-
-
-/obj/item/weapon/reagent_containers/food/drinks/cider
-	name = "Cider"
-	desc = "Made from apples."
-	icon_state = "cider"
-	heal_amt = 1
-	g_amt = 40
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("cider", 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/rum
-	name = "Rum"
-	desc = "Yo ho ho and all that."
-	icon_state = "rum"
-	heal_amt = 1
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("rum", 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/rum_spaced
-	name = "Spaced Rum"
-	desc = "Rum which has been exposed to cosmic radiation. Don't worry, radiation does everything!"
-	icon_state = "rum"
-	heal_amt = 1
-	New()
-		var/datum/reagents/R = new/datum/reagents(60)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("rum", 30)
-		R.add_reagent("yobihodazine", 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/mead
-	name = "Mead"
-	desc = "A pillager's tipple."
-	icon_state = "mead"
-	heal_amt = 1
-	g_amt = 40
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("mead", 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/vintage
-	name = "2110 Vintage"
-	desc = "A bottle marked '2110 Vintage'. ...wait, this isn't wine..."
-	icon_state = "mead"
-	heal_amt = 1
-	g_amt = 40
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("urine", 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/vodka
-	name = "Vodka"
-	desc = "Russian stuff. Pretty good quality."
-	icon_state = "vodka"
-	heal_amt = 1
-	g_amt = 60
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("vodka", 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/thegoodstuff
-	name = "Stinkeye's Special Reserve"
-	desc = "An old bottle labelled 'The Good Stuff'. This probably has enough kick to knock an elephant on its ass."
-	icon_state = "whiskey"
-	heal_amt = 1
-	g_amt = 60
-	New()
-		var/datum/reagents/R = new/datum/reagents(250)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("beer", 30)
-		R.add_reagent("wine", 30)
-		R.add_reagent("cider", 30)
-		R.add_reagent("vodka", 30)
-		R.add_reagent("ethanol", 30)
-		R.add_reagent("eyeofnewt", 30);
-
-/obj/item/weapon/reagent_containers/food/drinks/bojackson
-	name = "Bo Jack Daniel's"
-	desc = "Bo knows how to get you drunk, by diddley!"
-	icon_state = "spicedrum"
-	heal_amt = 1
-	g_amt = 40
-	New()
-		var/datum/reagents/R = new/datum/reagents(60)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("bojack", 60)
-
-/obj/item/weapon/reagent_containers/food/drinks/chickensoup
-	name = "Chicken Soup"
-	desc = "Got something to do with souls. Maybe. Do chickens even have souls?"
-	icon_state = "coffee"
-	heal_amt = 1
-	New()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("chickensoup", 30)
-		*/

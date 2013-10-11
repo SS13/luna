@@ -7,7 +7,7 @@
 
 /*
  * Fire protection
- */
+ *
 
 /obj/item/clothing/suit/fire
 	name = "firesuit"
@@ -40,21 +40,21 @@
 	item_state = "ro_suit"
 	w_class = 4//bulky item
 	slowdown = 1.5
-
+*/
 /*
  * Bomb protection
  */
 /obj/item/clothing/head/bomb_hood
 	name = "bomb hood"
-	desc = "Use in case of bomb."
+	desc = "Use in case of boom."
 	icon_state = "bombsuit"
-	flags = FPRINT|TABLEPASS|HEADCOVERSEYES|HEADCOVERSMOUTH|BLOCKHAIR
+	flags = FPRINT|TABLEPASS|HEADCOVERSEYES|HEADCOVERSMOUTH//|BLOCKHAIR
 	armor = list(melee = 40, bullet = 0, laser = 20,energy = 10, bomb = 100, bio = 0, rad = 0)
-	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES
-	cold_protection = HEAD
-	min_cold_protection_temperature = HELMET_MIN_TEMP_PROTECT
-	heat_protection = HEAD
-	max_heat_protection_temperature = HELMET_MAX_TEMP_PROTECT
+//	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES
+//	cold_protection = HEAD
+//	min_cold_protection_temperature = HELMET_MIN_TEMP_PROTECT
+//	heat_protection = HEAD
+//	max_heat_protection_temperature = HELMET_MAX_TEMP_PROTECT
 
 
 /obj/item/clothing/suit/bomb_suit
@@ -68,12 +68,12 @@
 	flags = FPRINT | TABLEPASS
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	slowdown = 2
-	armor = list(melee = 40, bullet = 0, laser = 20,energy = 10, bomb = 100, bio = 0, rad = 0)
-	flags_inv = HIDEJUMPSUIT
-	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	max_heat_protection_temperature = ARMOR_MAX_TEMP_PROTECT
-	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	min_cold_protection_temperature = ARMOR_MIN_TEMP_PROTECT
+	armor = list(melee = 40, bullet = 0, laser = 20,energy = 10, bomb = 100, bio = 20, rad = 20)
+//	flags_inv = HIDEJUMPSUIT
+//	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+//	max_heat_protection_temperature = ARMOR_MAX_TEMP_PROTECT
+//	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+//	min_cold_protection_temperature = ARMOR_MIN_TEMP_PROTECT
 
 
 
@@ -94,8 +94,8 @@
 	name = "radiation hood"
 	icon_state = "rad"
 	desc = "A hood with radiation protective properties. Label: Made with lead, do not eat insulation"
-	flags = FPRINT|TABLEPASS|HEADCOVERSEYES|HEADCOVERSMOUTH|BLOCKHAIR
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 60, rad = 100)
+	flags = FPRINT|TABLEPASS|HEADCOVERSEYES|HEADCOVERSMOUTH//|BLOCKHAIR
+	armor = list(melee = 10, bullet = 0, laser = 10,energy = 10, bomb = 0, bio = 60, rad = 100)
 
 
 /obj/item/clothing/suit/radiation
@@ -109,5 +109,5 @@
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency_oxygen)
 	slowdown = 1.5
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 60, rad = 100)
-	flags_inv = HIDEJUMPSUIT
+	armor = list(melee = 10, bullet = 10, laser = 10,energy = 20, bomb = 0, bio = 60, rad = 100)
+//	flags_inv = HIDEJUMPSUIT

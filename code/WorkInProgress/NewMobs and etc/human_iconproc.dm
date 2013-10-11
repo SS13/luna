@@ -101,7 +101,7 @@
 	if (w_uniform)
 		w_uniform.screen_loc = ui_iclothing
 		if (istype(w_uniform, /obj/item/clothing/under))
-			var/t1 = w_uniform.color
+			var/t1 = w_uniform.item_color
 			if (!t1)
 				t1 = icon_state
 
@@ -253,7 +253,7 @@
 		overlays += image("icon" = 'belt.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
 		belt.screen_loc = ui_belt
 
-	if ((wear_mask && !(wear_mask.see_face)) || (head && !(head.see_face))) // can't see the face
+	if ((wear_mask && !wear_mask.see_face) || (head && !head.see_face) || (head && head.flags_inv & HIDEFACE) || (wear_mask && wear_mask.flags_inv & HIDEFACE)) // can't see the face
 		if (wear_id)
 			if (istype(wear_id, /obj/item/weapon/card/id))
 				var/obj/item/weapon/card/id/id = wear_id
@@ -325,7 +325,7 @@
 			shielded = 1
 			break
 
-	for (var/obj/item/weapon/device/cloak/S in src)
+	for (var/obj/item/device/cloak/S in src)
 		if (S.active)
 			shielded = 2
 			break

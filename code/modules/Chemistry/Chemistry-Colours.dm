@@ -17,13 +17,13 @@
 	var/finalcolor = 0
 	for(var/datum/reagent/re in reagent_list) // natural color mixing bullshit/algorithm
 		if(!finalcolor)
-			rgbcolor = GetColors(re.color)
-			finalcolor = re.color
+			rgbcolor = GetColors(re.reagent_color)
+			finalcolor = re.reagent_color
 		else
 			var/newcolor[3]
 			var/prergbcolor[3]
 			prergbcolor = rgbcolor
-			newcolor = GetColors(re.color)
+			newcolor = GetColors(re.reagent_color)
 
 			rgbcolor[1] = (prergbcolor[1]+newcolor[1])/2
 			rgbcolor[2] = (prergbcolor[2]+newcolor[2])/2

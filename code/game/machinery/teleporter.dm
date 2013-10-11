@@ -119,7 +119,7 @@
 	else
 		tmploc = locate(tx, ty, destination.z)
 
-	if(tx == destturf.x && ty == destturf.y && (istype(destination.loc, /obj/structure/closet) || istype(destination.loc, /obj/secure_closet)))
+	if(tx == destturf.x && ty == destturf.y && istype(destination.loc, /obj/structure/closet))
 		tmploc = destination.loc
 
 	if(tmploc==null)

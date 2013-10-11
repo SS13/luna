@@ -296,6 +296,8 @@
 		src << "Only administrators may use this command."
 		return
 
+	if(!O) return
+
 	var/class
 	var/variable
 	var/var_value

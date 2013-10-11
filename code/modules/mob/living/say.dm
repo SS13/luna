@@ -51,15 +51,18 @@
 	var/alt_name = "" // In case your face is burnt or you're wearing a mask
 	if (istype(src, /mob/living/carbon/human) && (name != real_name || face_dmg))
 		if(istype(src:wear_id,/obj/item/weapon/card/id))
-			if (src:wear_id && src:wear_id:registered)
+			if (src:wear_id:registered)
 				alt_name = " (as [src:wear_id:registered])"
 			else
 				alt_name = " (as Unknown)"
+
 		else if(istype(src:wear_id,/obj/item/device/pda))
 			var/obj/item/device/pda/tempPda = src:wear_id
-			alt_name = " (as [tempPda.owner])"
-		else
-			alt_name = " (as Unknown)"
+			if(tempPda.owner)
+				alt_name = " (as [tempPda.owner])"
+			else
+				alt_name = " (as Unknown)"
+
 
 	var/italics = 0
 	var/message_range = null

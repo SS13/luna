@@ -32,8 +32,10 @@
 	if(playingall)
 		dat += "dat += <BR><a href=?src=\ref[src];stop=1>Stop Playback.</a>"
 	user << browse(dat,"window=recorder")
+
 /obj/item/weapon/recorder/proc/updatewindow(mob/user as mob)
 	src.attack_self(user)
+
 /obj/item/weapon/recorder/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/weapon/voicedisk/))
 		if(!src.disk)
@@ -138,7 +140,7 @@
 		playingall = 0
 		return
 
-/obj/item/weapon/voicedisk/
+/obj/item/weapon/voicedisk
 	name = "Voice Disk"
 	icon = 'items.dmi'
 	icon_state = "datadisk0"

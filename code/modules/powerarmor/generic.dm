@@ -143,7 +143,7 @@
 
 		if(helm && helm.on)
 			helm.on = 0
-			helm.icon_state = "powered0-[color]"
+			helm.icon_state = "powered0-[item_color]"
 //			item_state = "powered[on]-[color]"
 
 			user.ul_SetLuminosity(user.luminosity - helm:brightness_on)
@@ -212,7 +212,7 @@
 	item_state = "swat"
 	armor = list(melee = 40, bullet = 30, laser = 20,energy = 15, bomb = 25, bio = 10, rad = 10)
 	var/obj/item/clothing/suit/powered/parent
-	color = "syndie"
+	item_color = "syndie"
 
 	pickup(mob/user)
 		if(on)
@@ -222,7 +222,7 @@
 	dropped(mob/user)
 		if(on)
 			on = 0
-			icon_state = "powered0-[color]"
+			icon_state = "powered0-[item_color]"
 //			item_state = "powered[on]-[color]"
 
 			user.ul_SetLuminosity(user.luminosity - brightness_on)
@@ -282,7 +282,7 @@
 			return
 
 		on = !on
-		icon_state = "powered[on]-[color]"
+		icon_state = "powered[on]-[item_color]"
 //		item_state = "powered[on]-[color]"
 
 		if(on)	user.ul_SetLuminosity(user.luminosity + brightness_on)

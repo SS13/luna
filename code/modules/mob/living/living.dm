@@ -19,11 +19,6 @@
 
 /mob/living/var/maxHealth = 100
 
-/mob/living/movement_delay()
-	. = ..()
-	if(shoes)
-		if(shoes.type == /obj/item/clothing/shoes/magnetic) . += 4
-
 // ++++ROCKDTBEN++++ MOB PROCS -- Ask me before touching.
 // Stop! ... Hammertime! ~Carn
 // I touched them without asking... I'm soooo edgy ~Erro (added nodamage checks)
@@ -100,6 +95,26 @@
 
 /mob/living/proc/electrocute_act(var/shock_damage, var/obj/source, var/siemens_coeff = 1.0)
 	  return 0 //only carbon liveforms have this proc
+
+/mob/living/carbon/electrocute_act(var/shock_damage, var/obj/source, var/siemens_coeff = 1.0)
+	shock_damage *= siemens_coeff
+	if (shock_damage<1)
+		return 0
+	src.take_overall_damage(0,shock_damage)
+	//src.burn_skin(shock_damage)
+	//src.adjustFireLoss(shock_damage) //burn_skin will do this for us
+	//src.updatehealth()
+	src.visible_message(
+		"\red [src] was shocked by the [source]!", \
+		"\red <B>You feel a powerful shock course through your body!</B>", \
+		"\red You hear a heavy electrical crack." \
+	)
+//	if(src.stunned < shock_damage)	src.stunned = shock_damage
+	Stun(10)//This should work for now, more is really silly and makes you lay there forever
+//	if(src.weakened < 20*siemens_coeff)	src.weakened = 20*siemens_coeff
+	Weaken(10)
+	return shock_damage
+
 /*
 /mob/living/emp_act(severity)
 	var/list/L = src.get_contents()

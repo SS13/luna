@@ -21,7 +21,7 @@
 /obj/item/weapon/contraband/poster/New(turf/loc, given_serial = 0)
 	if(given_serial == 0)
 		serial_number = rand(1, NUM_OF_POSTER_DESIGNS)
-		resulting_poster = new(serial_number)
+		resulting_poster = new /obj/structure/sign/poster(serial_number)
 	else
 		serial_number = given_serial
 		//We don't give it a resulting_poster because if we called it with a given_serial it means that we're rerolling an already used poster.
@@ -29,13 +29,7 @@
 	..(loc)
 
 
-/*/obj/item/weapon/contraband/poster/attack(mob/M as mob, mob/user as mob)
-	src.add_fingerprint(user)
-	if(resulting_poster)
-		resulting_poster.add_fingerprint(user)
-	..()*/
-
-/*/obj/item/weapon/contraband/poster/attack(atom/A, mob/user as mob) //This shit is handled through the wall's attackby()
+/obj/item/weapon/contraband/poster/attack(atom/A, mob/user as mob) //This shit is handled through the wall's attackby()
 	if(istype(A, /turf/simulated/wall))
 		if(resulting_poster == null)
 			return
@@ -59,13 +53,13 @@
 			resulting_poster.loc = W //Looks like it's uncluttered enough. Place the poster
 			W.contents += resulting_poster
 
-			del(src)*/
+			del(src)
 
 
 
 //############################## THE ACTUAL DECALS ###########################
 
-obj/structure/sign/poster
+/obj/structure/sign/poster
 	name = "poster"
 	desc = "A large piece of space-resistant printed paper. It's considered contraband."
 	icon = 'icons/obj/contraband.dmi'
@@ -74,7 +68,7 @@ obj/structure/sign/poster
 	var/ruined = 0
 
 
-obj/structure/sign/poster/New(serial)
+/obj/structure/sign/poster/New(serial)
 	serial_number = serial
 
 	if(serial_number == loc)
@@ -118,7 +112,7 @@ obj/structure/sign/poster/New(serial)
 			desc = "Why are you still here?"
 	..()
 
-obj/structure/sign/poster/attackby(obj/item/I, mob/user)
+/obj/structure/sign/poster/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/weapon/wirecutters))
 		playsound(loc, 'sound/items/Wirecutter.ogg', 100, 1)
 		if(ruined)

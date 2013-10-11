@@ -9,7 +9,7 @@ DNA INJECTOR
 	var/t1 = input(user, "Please select a color:", "Locking Computer", null) in list( "red", "blue", "green", "yellow", "black", "white", "neutral" )
 	if ((user.equipped() != src || user.stat || user.restrained()))
 		return
-	src.color = t1
+	src.item_color = t1
 	src.icon_state = text("paint_[]", t1)
 	add_fingerprint(user)
 	return
@@ -26,7 +26,7 @@ DNA INJECTOR
 
 
 /obj/item/weapon/dnainjector/proc/inject(mob/M as mob)
-	M.radiation += rand(20,50)
+	M.radiation += rand(20,40)
 	if (dnatype == "ui")
 		if (!block) //isolated block?
 			if (ue) //unique enzymes? yes
@@ -46,12 +46,12 @@ DNA INJECTOR
 	if (dnatype == "se")
 		if (!block) //isolated block?
 			M.dna.struc_enzymes = dna
-			domutcheck(M, null)
-			uses--
 		else
 			M.dna.struc_enzymes = setblock(M.dna.struc_enzymes,block,dna,3)
-			domutcheck(M, null,1)
-			uses--
+
+		if(!type == "/obj/item/weapon/dnainjector") domutcheck(M, null, 1)
+		else domutcheck(M, null)
+		uses--
 	del(src)
 	return uses
 

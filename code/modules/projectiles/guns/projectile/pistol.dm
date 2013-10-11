@@ -146,7 +146,6 @@
 
 /obj/item/weapon/silencer
 	name = "silencer"
-	desc = "a silencer"
 	icon = 'icons/obj/gun.dmi'
 	icon_state = "silencer"
-	w_class = 2
+	w_class = 1

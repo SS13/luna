@@ -272,7 +272,7 @@
 	if(!src.operating) //in case of emag
 		src.operating = 1
 
-	animate("opening")
+	do_animate("opening")
 	sleep(10)
 	src.density = 0
 	update_icon()
@@ -343,7 +343,7 @@ About the new airlock wires panel:
 		if(AIRLOCK_WIRE_IDSCAN)
 			//Sending a pulse through this flashes the red light on the door (if the door has power).
 			if ((src.arePowerSystemsOn()) && (!(stat & NOPOWER)))
-				animate("deny")
+				do_animate("deny")
 		if (AIRLOCK_WIRE_MAIN_POWER1 || AIRLOCK_WIRE_MAIN_POWER2)
 			//Sending a pulse through either one causes a breaker to trip, disabling the door for 10 seconds if backup power is connected, or 1 minute if not (or until backup power comes back on, whichever is shorter).
 			src.loseMainPower()
@@ -586,7 +586,7 @@ proc/shock(mob/user, prb)
 	return
 
 
-/obj/machinery/door/airlock/animate(animation)
+/obj/machinery/door/airlock/do_animate(animation)
 	switch(animation)
 		if("opening")
 			if(overlays) overlays = null
@@ -1213,7 +1213,7 @@ proc/shock(mob/user, prb)
 		if ((src.density) && (!( src.welded ) && !( src.operating ) && ((!src.arePowerSystemsOn()) || (stat & NOPOWER)) && !( src.locked )))
 			spawn( 0 )
 				src.operating = 1
-				animate("opening")
+				do_animate("opening")
 
 				sleep(15)
 
@@ -1230,7 +1230,7 @@ proc/shock(mob/user, prb)
 			if ((!src.density) && (!( src.welded ) && !( src.operating ) && !( src.locked )))
 				spawn( 0 )
 					src.operating = 1
-					animate("closing")
+					do_animate("closing")
 
 					src.density = 1
 					sleep(15)
@@ -1269,7 +1269,7 @@ proc/shock(mob/user, prb)
 			user << "Attempting to hack into airlock. This may take some time."
 			sleep(100 * tick_multiplier)
 			// Alerting the AIs
-			var/list/cameras = list()
+/*			var/list/cameras = list()
 			for (var/obj/machinery/camera/C in src.loc.loc.contents) // getting all cameras in the area
 				cameras += C
 
@@ -1289,7 +1289,7 @@ proc/shock(mob/user, prb)
 				if (robotPlayer.stat != 2)
 					switch(alertoption)
 						if(2,3) robotPlayer.triggerUnmarkedAlarm("AirlockHacking", src.loc.loc)
-						if(1)   robotPlayer.triggerUnmarkedAlarm("AirlockHacking")
+						if(1)   robotPlayer.triggerUnmarkedAlarm("AirlockHacking")*/
 
 			// ...And done
 

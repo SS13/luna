@@ -64,17 +64,17 @@
 	if (!istype(pickedstart, /turf/space) || pickedstart.loc.name != "Space" ) //FUUUCK, should never happen.
 		goto AGAIN
 
-	var/obj/meteor/M
+	var/obj/effect/meteor/M
 
 	if(rand(50))
-		M = new /obj/meteor( pickedstart )
+		M = new /obj/effect/meteor( pickedstart )
 	else
-		M = new /obj/meteor/small( pickedstart )
+		M = new /obj/effect/meteor/small( pickedstart )
 	M.dest = new /obj(pickedgoal)
 	M.dest.name = "METEORTARGET_THIS_IS_A_HACK"
 	walk_towards(M, M.dest, 1)
 
-/obj/meteor
+/obj/effect/meteor
 	name = "meteor"
 	icon = 'meteor.dmi'
 	icon_state = "flaming"
@@ -83,18 +83,18 @@
 	var/hits = 1
 	var/obj/dest
 
-/obj/meteor/small
+/obj/effect/meteor/small
 	name = "small meteor"
 	icon_state = "smallf"
 
-/obj/meteor/Move()
+/obj/effect/meteor/Move()
 	var/turf/T = src.loc
 	if (istype(T, /turf))
 		T.hotspot_expose(METEOR_TEMPERATURE, 1000)
 	..()
 	return
 
-/obj/meteor/Bump(atom/A)
+/obj/effect/meteor/Bump(atom/A)
 	spawn(0)
 		for(var/mob/M in view(A, null))
 			if(!M.stat && !istype(M, /mob/living/silicon/ai)) //bad idea to shake an ai's view
@@ -110,13 +110,13 @@
 	return
 
 
-/obj/meteor/ex_act(severity)
+/obj/effect/meteor/ex_act(severity)
 
 	if (severity < 4)
 		del(src)
 	return
 
-/obj/meteor/Del()
+/obj/effect/meteor/Del()
 	if(src.dest.name == "METEORTARGET_THIS_IS_A_HACK")
 		del src.dest
 

@@ -149,9 +149,9 @@
 				flick("door_spark", src)
 
 		if(3.0)
-			if(prob(50))
+			if(prob(20))
 				src.forceopen()
-				src.operating = -1
+				//src.operating = -1
 				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(2, 1, src)
 				s.start()
@@ -164,7 +164,7 @@
 		icon_state = "door0"
 	return
 
-/obj/machinery/door/proc/animate(animation)
+/obj/machinery/door/proc/do_animate(animation)
 	switch(animation)
 		if("opening")
 			if(p_open)
@@ -190,7 +190,7 @@
 	if(!src.operating) //in case of emag
 		src.operating = 1
 
-	animate("opening")
+	do_animate("opening")
 	sleep(6)
 	src.density = 0
 	update_icon()
@@ -216,12 +216,11 @@
 		return
 	src.operating = 1
 
-	animate("closing")
+	do_animate("closing")
 	src.density = 1
 	spawn(4)
 		if(!istype(src, /obj/machinery/door/window))
 			for(var/mob/living/L in src.loc) // Crush mobs and move them out of the way
-
 				if(src.forcecrush) // Save an AI, crush a limb
 					var/limbname = pick("l arm", "r arm", "l hand","r hand", "l foot", "r foot")
 					var/limbdisplay
@@ -230,13 +229,12 @@
 						var/datum/organ/external/temp = L:organs["[organ]"]
 						if (istype(temp, /datum/organ/external) && temp.name == limbname)
 							limbdisplay = temp.display_name // Take the name for down below
-							temp.take_damage(60, 0) //OH GOD IT HURTS
+							temp.take_damage(40, 0) //OH GOD IT HURTS
 							break
 
 					L << "\red The airlock crushes your [limbdisplay]!"
 					for(var/mob/O in viewers(L, null))
 						O.show_message("\red The airlock crushes [L.name]'s [limbdisplay]!", 1)
-
 
 				else
 					L << "\red The airlock forces you out of the way!" //Lucky you
@@ -321,7 +319,7 @@
 		if(src.density)
 			var/area/A = user.loc.loc
 			if(A.name == "Escape Pod A" || A.name == "Escape Pod B" || A.name == "Space")
-				user.show_viewers(text("\blue [] opens the shuttle door.", user))
+				user.show_viewers(text("\blue [] opens the shuttle door!", user))
 				src.add_fingerprint(user)
 			open()
 		else

@@ -847,7 +847,7 @@
 			mask = /obj/item/clothing/mask/gas/swat
 			over = /obj/item/clothing/suit/armor/swat
 			back2 = /obj/item/weapon/gun/projectile
-			back1 = /obj/item/weapon/device/cloak
+			back1 = /obj/item/device/cloak
 			back3 = /obj/item/weapon/rcd
 			back4 = /obj/item/device/hacktool
 		if("Overseer")
@@ -866,7 +866,7 @@
 			back1 = /obj/item/weapon/handcuffs
 			back2 = /obj/item/weapon/gun/energy/laser
 		if("Prisoner Management")
-			uniform = /obj/item/clothing/under/lightred
+			uniform = /obj/item/clothing/under/color/lightred
 			shoes = /obj/item/clothing/shoes/red
 			gloves = /obj/item/clothing/gloves/latex
 			back1 = /obj/item/weapon/handcuffs

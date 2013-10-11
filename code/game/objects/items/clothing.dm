@@ -55,39 +55,6 @@ DEATH COMMANDO GAS MASK
 		..()
 	return
 
-/obj/item/clothing/head/cakehat/var/processing = 0
-
-/obj/item/clothing/head/cakehat/process()
-	if(!onfire)
-		processing_items.Remove(src)
-		return
-
-	var/turf/location = src.loc
-	if(istype(location, /mob/))
-		var/mob/living/carbon/human/M = location
-		if(M.l_hand == src || M.r_hand == src || M.head == src)
-			location = M.loc
-
-	if (istype(location, /turf))
-		location.hotspot_expose(SPARK_TEMP, 1)
-
-
-/obj/item/clothing/head/cakehat/attack_self(mob/user as mob)
-	if(status > 1)	return
-	src.onfire = !( src.onfire )
-	if (src.onfire)
-		src.force = 15
-		src.damtype = "fire"
-		src.icon_state = "cake1"
-
-		processing_items.Add(src)
-
-	else
-		src.force = 3
-		src.damtype = "brute"
-		src.icon_state = "cake0"
-	return
-
 
 /obj/item/clothing/under/chameleon/New()
 	..()
@@ -152,7 +119,7 @@ DEATH COMMANDO GAS MASK
 	name = A.name
 	icon_state = A.icon_state
 	item_state = A.item_state
-	color = A.color
+	item_color = A.item_color
 
 /obj/item/clothing/suit/swat_suit/death_commando
 	name = "Death Commando Suit"

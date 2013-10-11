@@ -150,7 +150,7 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 			var/obj/item/device/radio/R = src
 			R.loc = T
 			T.loc = usr
-			R.layer = 0
+			//R.layer = 0
 			if (usr.client)
 				usr.client.screen -= R
 			if (usr.r_hand == R)
@@ -464,6 +464,6 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 	..()*/
 
 /obj/item/device/radio/banana //Why is this even needed? So that it shows up as a banana in the chat log.
-	name = "Banana Phone"
+	name = "banana phone"
 	icon = 'items.dmi'
 	icon_state = "banana" //needs a new icon.

@@ -199,9 +199,9 @@
 		pl_effects()
 
 	// lets give them a fair bit of leeway so they don't just start dying
-	//as that may be realistic but it's no fun
-	if((bodytemperature > (T0C + 50)) || (bodytemperature < (T0C + 10)) && !istype(loc, /obj/machinery/atmospherics/unary/cryo_cell)) // Last bit is just disgusting, i know
-		if(environment.temperature > (T0C + 50) || (environment.temperature < (T0C + 10)))
+	// as that may be realistic but it's no fun
+	if(bodytemperature > (T0C + 50) || bodytemperature < (T0C + 10) && !istype(loc, /obj/machinery/atmospherics/unary/cryo_cell)) // Last bit is just disgusting, i know
+		if(environment.temperature > (T0C + 50) || environment.temperature < (T0C + 10) || bodytemperature > (T0C + 100))
 			var/transfer_coefficient
 
 			transfer_coefficient = 1
@@ -695,13 +695,13 @@
 	if(head && (head.body_parts_covered & HEAD))
 		thermal_protection += 0.2
 	if(wear_suit && (wear_suit.body_parts_covered & CHEST))
-		thermal_protection += 0.3
+		thermal_protection += 0.2
 	if(w_uniform && (w_uniform.body_parts_covered & CHEST))
 		thermal_protection += 0.1
 	if(wear_suit && (wear_suit.body_parts_covered & LEGS))
-		thermal_protection += 0.2
+		thermal_protection += 0.1
 	if(wear_suit && (wear_suit.body_parts_covered & ARMS))
-		thermal_protection += 0.2
+		thermal_protection += 0.1
 	if(wear_suit && (wear_suit.body_parts_covered & HANDS))
 		thermal_protection += 0.2
 	if(shoes && (shoes.body_parts_covered & FEET))
@@ -709,7 +709,7 @@
 	if(wear_suit && (wear_suit.flags & SUITSPACE))
 		thermal_protection += 3
 	if(head && (head.flags & HEADSPACE))
-		thermal_protection += 1
+		thermal_protection += 2
 	if(mutations & 2)
 		thermal_protection += 5
 
@@ -719,16 +719,16 @@
 	var/fire_prot = 0
 	if(head)
 		if(head.protective_temperature > temp)
-			fire_prot += (head.protective_temperature/10)
+			fire_prot += (head.protective_temperature/20)
 	if(wear_mask)
 		if(wear_mask.protective_temperature > temp)
-			fire_prot += (wear_mask.protective_temperature/10)
+			fire_prot += (wear_mask.protective_temperature/20)
 	if(glasses)
 		if(glasses.protective_temperature > temp)
-			fire_prot += (glasses.protective_temperature/10)
+			fire_prot += (glasses.protective_temperature/50)
 	if(ears)
 		if(ears.protective_temperature > temp)
-			fire_prot += (ears.protective_temperature/10)
+			fire_prot += (ears.protective_temperature/50)
 	if(wear_suit)
 		if(wear_suit.protective_temperature > temp)
 			fire_prot += (wear_suit.protective_temperature/10)
@@ -737,9 +737,9 @@
 			fire_prot += (w_uniform.protective_temperature/10)
 	if(gloves)
 		if(gloves.protective_temperature > temp)
-			fire_prot += (gloves.protective_temperature/10)
+			fire_prot += (gloves.protective_temperature/30)
 	if(shoes)
 		if(shoes.protective_temperature > temp)
-			fire_prot += (shoes.protective_temperature/10)
+			fire_prot += (shoes.protective_temperature/30)
 
 	return fire_prot

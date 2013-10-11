@@ -516,7 +516,7 @@ Code:
 								menu += "Calculating navigation path"
 							if(7)
 								menu += "Unable to locate destination"
-						var/obj/structure/crate/C = QC.botstatus["load"]
+						var/obj/structure/closet/crate/C = QC.botstatus["load"]
 						menu += "<BR>Current Load: [ !C ? "<i>none</i>" : "[C.name] (<A href='byond://?src=\ref[QC];op=unload'><i>unload</i></A>)" ]<BR>"
 						menu += "Destination: [!QC.botstatus["dest"] ? "<i>none</i>" : QC.botstatus["dest"] ] (<A href='byond://?src=\ref[QC];op=setdest'><i>set</i></A>)<BR>"
 						menu += "Power: [QC.botstatus["powr"]]%<BR>"
@@ -542,9 +542,6 @@ Code:
 					for (var/obj/item/weapon/mop/M in world)
 						var/turf/ml = get_turf(M)
 
-						if (ml.z != cl.z)
-							continue
-
 						ldat += "Mop - <b>\[[ml.x],[ml.y]\]</b> - [M.reagents.total_volume ? "Wet" : "Dry"]<br>"
 
 					if (!ldat)
@@ -558,9 +555,6 @@ Code:
 					for (var/obj/structure/mopbucket/B in world)
 						var/turf/bl = get_turf(B)
 
-						if (bl.z != cl.z)
-							continue
-
 						ldat += "Bucket - <b>\[[bl.x],[bl.y]\]</b> - Water level: [B.reagents.total_volume]/100<br>"
 
 					if (!ldat)
@@ -573,9 +567,6 @@ Code:
 					ldat = null
 					for (var/obj/machinery/bot/cleanbot/B in world)
 						var/turf/bl = get_turf(B)
-
-						if (bl.z != cl.z)
-							continue
 
 						ldat += "Cleanbot - <b>\[[bl.x],[bl.y]\]</b> - [B.on ? "Online" : "Offline"]<br>"
 

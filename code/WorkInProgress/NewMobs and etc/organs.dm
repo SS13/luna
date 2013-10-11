@@ -333,7 +333,7 @@
 	if(destroyed)
 		return 0
 	// make the target feel heavy pain
-	if(owner) owner.pain(display_name, (brute+burn)*3, 1)
+	if(owner && prob((brute+burn)*2)) owner.pain(display_name, (brute+burn)*2, 1)
 	if(slash)
 		var/chance = rand(1,5)
 		var/nux = brute * chance
@@ -451,13 +451,14 @@
 	if(internal)
 		broken = 0
 		perma_injury = 0
+		perma_dmg = 0
 	return update_icon()
 
 /datum/organ/external/proc/get_damage()	//returns total damage
-	return max(brute_dam + burn_dam - perma_injury,perma_injury)	//could use health?
+	return max(brute_dam + burn_dam,perma_dmg)	//could use health?
 
 /datum/organ/external/proc/get_damage_brute()
-	return max(brute_dam+perma_injury,perma_injury)
+	return max(brute_dam,perma_dmg)
 
 /datum/organ/external/proc/get_damage_fire()
 	return burn_dam

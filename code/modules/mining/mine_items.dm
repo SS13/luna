@@ -7,7 +7,7 @@
 	unacidable = 1
 	luminosity = 8
 
-/**********************Miner Lockers**************************
+/**********************Miner lockers**************************
 
 /obj/structure/closet/secure_closet/miner
 	name = "miner's equipment"
@@ -61,7 +61,7 @@
 	m_amt = 3750 //one sheet, but where can you make them?
 	var/digspeed = 40 //moving the delay to an item var so R&D can make improved picks. --NEO
 	origin_tech = "materials=1;engineering=1"
-//	attack_verb = list("hit", "pierced", "sliced", "attacked")
+	attack_verb = list("hit", "pierced", "sliced", "attacked")
 
 	hammer
 		name = "sledgehammer"

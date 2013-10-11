@@ -38,11 +38,6 @@
 	src.layer = 5
 	add_fingerprint(user)
 	return
-obj/item/weapon/cane
-	name = "Cane"
-	icon = 'items.dmi'
-	icon_state = "cane"
-	m_amt = 5
 
 /obj/item/weapon/meltedmetal
 	name = "Ruined metal"
@@ -160,7 +155,6 @@ obj/item/weapon/cane
 
 /obj/item/weapon/extinguisher/afterattack(atom/target, mob/user , flag)
 	//TODO; Add support for reagents in water.
-
 	if( istype(target, /obj/structure/reagent_dispensers/watertank) && get_dist(src,target) <= 1)
 		var/obj/o = target
 		o.reagents.trans_to(src, 50)
@@ -236,6 +230,40 @@ obj/item/weapon/cane
 	else
 		return ..()
 	return
+
+/obj/item/weapon/extinguisher/proc/move_z(cardinal, mob/user as mob)
+	if (safety) return 0
+	if (world.time < src.last_use + 20)	return 0
+
+	if (src.reagents.total_volume < 1)
+		usr << "\red \The [src] is empty."
+		return 0
+
+	if (user.z > 4)
+		user << "\red There is nothing of interest in that direction."
+		return 0
+
+	src.last_use = world.time
+	playsound(src.loc, 'sound/effects/extinguish.ogg', 75, 1, -3)
+	src.reagents.remove_any(5)
+
+	switch(cardinal)
+		if (UP) // Going up!
+			if(user.z != 1) // If we aren't at the very top of the ship
+				var/turf/T = locate(user.x, user.y, user.z - 1)
+				// You can only jetpack up if there's space above, and you're sitting on either hull (on the exterior), or space
+				if(T && istype(T, /turf/space) && istype(user.loc, /turf/space))
+					user.Move(T)
+				else user << "\red You bump into the ship's plating."
+			else user << "\red The ship's gravity well keeps you in orbit!" // Assuming the ship starts on z level 1, you don't want to go past it
+
+		if (DOWN) // Going down!
+			if (user.z != 4 && user.z != 5) // If we aren't at the very bottom of the ship, or out in space
+				var/turf/T = locate(user.x, user.y, user.z + 1)
+				// You can only jetpack down if you're sitting on space and there's space down below, or hull
+				if(T && istype(T, /turf/space) && istype(user.loc, /turf/space))
+					user.Move(T)
+			else user << "\red The ship's gravity well keeps you in orbit!"
 
 
 /obj/item/weapon/Bump(mob/M as mob)

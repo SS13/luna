@@ -66,9 +66,6 @@
 /obj/structure/window_pod/blob_act()
 	return
 
-/obj/structure/window_pod/bullet_act(flag)
-	return
-
 /obj/structure/window_pod/ex_act(severity)
 	return
 
@@ -81,12 +78,6 @@
 
 /obj/structure/window/meteorhit()
 	return
-
-/obj/structure/window_pod/CanPass(atom/movable/mover, turf/source, height=0, air_group=0)
-	if(istype(mover, /obj/beam))
-		return 1
-
-	return 0
 
 /obj/structure/window_pod/Move()
 	return 0

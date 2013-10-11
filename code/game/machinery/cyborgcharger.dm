@@ -5,7 +5,7 @@
 	density = 0
 	anchored = 1
 	dir = 4
-	var/powerrate = 20
+	var/powerrate = 5
 
 /obj/machinery/cyborgcharger/process()
 	if(powered())

@@ -31,7 +31,7 @@
 
 
 /obj/structure/closet/secure_closet/freezer/meat
-	name = "Meat Fridge"
+	name = "Refrigirator"
 	icon_state = "fridge1"
 	icon_closed = "fridge"
 	icon_locked = "fridge1"
@@ -43,9 +43,32 @@
 	New()
 		..()
 		sleep(2)
-		for(var/i = 0, i < 4, i++)
-			new /obj/item/weapon/reagent_containers/food/snacks/meat/monkey(src)
-		return
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/flour(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/plump(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/plump(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/plump(src)
+		new /obj/item/kitchen/egg_box(src)
+		new /obj/item/kitchen/egg_box(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/meatball(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/meatball(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/meatball(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/meatball(src)
 
 
 
@@ -67,12 +90,12 @@
 		for(var/i = 0, i < 5, i++)
 			new /obj/item/weapon/reagent_containers/food/drinks/soymilk(src)
 		for(var/i = 0, i < 2, i++)
-			new /obj/item/weapon/storage/fancy/egg_box(src)
+			new /obj/item/kitchen/egg_box(src)
 		return
 
 
 
-/obj/structure/closet/secure_closet/freezer/money
+/*obj/structure/closet/secure_closet/freezer/money
 	name = "Freezer"
 	icon_state = "fridge1"
 	icon_closed = "fridge"
@@ -92,12 +115,31 @@
 			new /obj/item/weapon/spacecash/c500(src)
 		for(var/i = 0, i < 6, i++)
 			new /obj/item/weapon/spacecash/c200(src)
-		return
+		return*/
 
+/obj/structure/closet/secure_closet/kitchen
+	name = "Kitchen Cabinet"
+	req_access = list(access_kitchen)
 
-
-
-
-
-
-
+/obj/structure/closet/secure_closet/kitchen/New()
+	..()
+	sleep(2)
+	new /obj/item/clothing/head/chefhat(src)
+	new /obj/item/clothing/head/chefhat(src)
+	new /obj/item/clothing/head/chefhat(src)
+	new /obj/item/clothing/under/rank/chef(src)
+	new /obj/item/clothing/under/rank/chef(src)
+	new /obj/item/clothing/under/rank/chef(src)
+	new /obj/item/clothing/suit/storage/chef(src)
+	new /obj/item/clothing/suit/storage/chef(src)
+	new /obj/item/clothing/suit/storage/chef(src)
+	new /obj/item/clothing/suit/storage/apron(src)
+	new /obj/item/clothing/suit/storage/apron(src)
+	new /obj/item/clothing/suit/storage/apron(src)
+	new /obj/item/weapon/storage/box/lglo(src)
+	new /obj/item/weapon/kitchen/utensil/knife(src)
+	new /obj/item/weapon/kitchen/utensil/knife(src)
+	new /obj/item/weapon/kitchen/utensil/knife(src)
+	new /obj/item/weapon/kitchen/rollingpin(src)
+	new /obj/item/weapon/kitchen/rollingpin(src)
+	new /obj/item/weapon/kitchen/rollingpin(src)

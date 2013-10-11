@@ -196,7 +196,7 @@ var/list/advance_cures = 	list(
 
 	if(properties && properties.len)
 
-		hidden = list( (properties["stealth"] > 2), (properties["stealth"] > 3) )
+		hidden = list( (properties["stealth"] > 2), 0 )
 		// The more symptoms we have, the less transmittable it is but some symptoms can make up for it.
 		SetSpread(Clamp(properties["transmittable"] - symptoms.len, BLOOD, AIRBORNE))
 		permeability_mod = max(Ceiling(0.4 * properties["transmittable"]), 1)

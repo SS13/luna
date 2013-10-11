@@ -430,11 +430,6 @@
 	name = "Hydroponics"
 	icon_state = "hydroponics"
 
-/obj/item/clothing/under/rank/hydro
-	name = "Hydroponics Jumpsuit"
-	icon_state = "hy_suit"
-	color = "hydro"
-
 /obj/machinery/plantpot
 	name = "plant pot"
 	desc = "A tub filled with soil capable of sustaining plantlife."

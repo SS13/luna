@@ -75,9 +75,6 @@
 	icon_state = "pipecoil3"
 	CoilColour = "pipe"
 	BaseName  = "Tubing"
-	ShortDesc = "A piece of hollow tubing"
-	LongDesc  = "A long piece of hollow tubing"
-	CoilDesc  = "A Spool of hollow tubing"
 	CableType = /obj/cabling/flexipipe
 	CanLayDiagonally = 0
 

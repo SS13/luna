@@ -1,3 +1,25 @@
+/obj/item/device/flash
+	name = "flash"
+	icon_state = "flash"
+	var/l_time = 1.0
+	var/shots = 5.0
+	throwforce = 5
+	w_class = 1
+	throw_speed = 4
+	throw_range = 10
+	flags = FPRINT | TABLEPASS | CONDUCT
+	item_state = "electronic"
+	var/status = 1
+	origin_tech = "magnets=2;combat=1"
+
+/obj/item/device/flash/light
+	name = "flashlight"
+	desc = "A hand-held emergency light."
+	icon = 'icons/obj/lighting.dmi'
+	icon_state = "flashlight"
+	item_state = "flashlight"
+	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
+
 
 /obj/item/device/flash/attack(mob/living/carbon/M as mob, mob/user as mob)
 	if ((usr.mutations & CLUMSY) && prob(50))
@@ -8,7 +30,7 @@
 		var/safety = null
 		if (istype(M, /mob/living/carbon/human))
 			var/mob/living/carbon/human/H = M
-			if (istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || istype(H.head, /obj/item/clothing/head/helmet/welding))
+			if (istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || (istype(H.head, /obj/item/clothing/head/helmet/welding) && !H.head:up))
 				safety = 1
 		if(isrobot(user))
 			spawn(0)
@@ -56,7 +78,7 @@
 
 /obj/item/device/flash/attack_self(mob/living/carbon/user as mob, flag)
 	if ((usr.mutations & CLUMSY) && prob(50))
-		usr << "\red The Flash slips out of your hand."
+		usr << "\red The flash slips out of your hand."
 		usr.drop_item()
 		return
 	if ( (world.time + 600) > src.l_time)
@@ -71,7 +93,7 @@
 	add_fingerprint(user)
 	src.shots--
 	playsound(src.loc, 'flash.ogg', 100, 1)
-	flick("flash2", src)
+	flick("[icon_state]2", src)
 	if(isrobot(user))
 		spawn(0)
 			var/atom/movable/overlay/animation = new(user.loc)
@@ -85,15 +107,15 @@
 	if (!( flag ))
 		for(var/mob/living/carbon/M in oviewers(3, null))
 			if (prob(50))
-				if (locate(/obj/item/weapon/device/cloak, M))
-					for(var/obj/item/weapon/device/cloak/S in M)
+				if (locate(/obj/item/device/cloak, M))
+					for(var/obj/item/device/cloak/S in M)
 						S.active = 0
 						S.icon_state = "shield0"
 			if (M.client)
 				var/safety = null
 				if (istype(M, /mob/living/carbon/human))
 					var/mob/living/carbon/human/H = M
-					if (istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || istype(H.head, /obj/item/clothing/head/helmet/welding))
+					if (istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || (istype(H.head, /obj/item/clothing/head/helmet/welding) && !H.head:up ))
 						safety = 1
 				if (!( safety ))
 					flick("flash", M.flash)

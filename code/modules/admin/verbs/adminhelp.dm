@@ -14,7 +14,7 @@
 		if (C.holder)
 			C.ctab_message("Admin", "\blue <b><font color=red>HELP: </font>[key_name(src, C.mob)](<A HREF='?src=\ref[C.holder];adminplayeropts=\ref[src]'>X</A>):</b> [msg]")
 			C << 'adminhelp_recieve.ogg'
-	usr << "Your message has been broadcast to administrators."
+	usr << "<font color='blue'>PM to-<b>Admins</b>: [msg]</font>"
 	log_admin("HELP: [key_name(src)]: [msg]")
 
 /*/client/proc/cmd_admin_pm(mob/M as mob in world)

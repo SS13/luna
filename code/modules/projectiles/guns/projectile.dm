@@ -35,6 +35,9 @@
 	AC.loc = get_turf(src) //Eject casing onto ground.
 	AC.desc += " This one is spent."	//descriptions are magic
 	if(AC.BB)
+		if(AC.reagents && AC.BB.reagents)
+			AC.reagents:trans_to(AC.BB, AC.reagents:total_volume) //For chemical darts
+			AC.reagents:delete()
 		in_chamber = AC.BB //Load projectile into chamber.
 		AC.BB.loc = src //Set projectile loc to gun.
 		AC.BB = null

@@ -46,7 +46,7 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 	throwforce = 5
 	throw_speed = 4
 	throw_range = 20
-	origin_tech = "magnets=2;syndicate=3"
+	origin_tech = "magnets=2;syndicate=3;bluespace=5"
 	m_amt = 100
 
 
@@ -95,9 +95,9 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 		if(text2num(href_list["cost"]) > uses) // Not enough crystals for the item
 			return 0
 
-		if(usr:mind && ticker.mode.traitors[usr:mind])
-			var/datum/traitorinfo/info = ticker.mode.traitors[usr:mind]
-			info.spawnlist += href_list["buy_item"]
+//		if(usr:mind && ticker.mode.traitors[usr:mind])
+//			var/datum/traitorinfo/info = ticker.mode.traitors[usr:mind]
+//			info.spawnlist += href_list["buy_item"]
 
 		uses -= text2num(href_list["cost"])
 

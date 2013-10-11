@@ -103,7 +103,7 @@
 						user << "<span class='notice'>[target] is empty.</span>"
 						return
 
-					if(!target.is_open_container() && !istype(target,/obj/structure/reagent_dispensers) /*&& !istype(target,/obj/item/weapon/slime_extract)*/)
+					if(!target.is_open_container() && !istype(target,/obj/structure/reagent_dispensers) && !istype(target,/obj/item/weapon/slime_extract))
 						user << "<span class='notice'>You cannot directly remove reagents from [target].</span>"
 						return
 
@@ -120,7 +120,7 @@
 					return
 				//if(istype(target, /obj/item/weapon/implantcase/chem)) return
 
-				if(!target.is_open_container() && !ismob(target) && !istype(target, /obj/item/weapon/reagent_containers/food) && !istype(target, /obj/item/weapon/slime_extract) && !istype(target, /obj/item/clothing/mask/cigarette) && !istype(target, /obj/item/weapon/cigpacket))
+				if(!target.is_open_container() && !ismob(target) && !istype(target, /obj/item/weapon/reagent_containers/food) && !istype(target, /obj/item/ammo_casing/shotgun/dart) && !istype(target, /obj/item/weapon/slime_extract) && !istype(target, /obj/item/clothing/mask/cigarette) && !istype(target, /obj/item/weapon/cigpacket))
 					user << "<span class='notice'>You cannot directly fill [target].</span>"
 					return
 				if(target.reagents.total_volume >= target.reagents.maximum_volume)

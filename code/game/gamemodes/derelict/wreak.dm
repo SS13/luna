@@ -119,4 +119,4 @@
 
 	for(var/obj/effect/landmark/derelict/o2crate/o2 in world)
 		if(prob(90))
-			new /obj/structure/crate/internals(o2.loc)
+			new /obj/structure/closet/crate/internals(o2.loc)

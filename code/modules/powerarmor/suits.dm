@@ -41,7 +41,7 @@
 	name = "Powered armor"
 	icon_state = "powered0-syndie"
 	desc = "Not for rookies."
-	color = "syndie"
+	item_color = "syndie"
 
 /obj/item/clothing/suit/powered/spawnable/syndie
 	name = "Powered armor"
@@ -54,7 +54,7 @@
 	name = "Powered armor"
 	icon_state = "powered0-deathsquad"
 	desc = "Not for rookies."
-	color = "deathsquad"
+	item_color = "deathsquad"
 
 /obj/item/clothing/suit/powered/spawnable/deathsquad
 	name = "Powered armor"

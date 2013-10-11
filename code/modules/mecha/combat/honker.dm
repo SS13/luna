@@ -2,7 +2,7 @@
 	desc = "Produced by \"Tyranny of Honk, INC\", this exosuit is designed as heavy clown-support. Used to spread the fun and joy of life. HONK!"
 	name = "H.O.N.K"
 	icon_state = "honker"
-	step_in = 2
+	step_in = 1
 	health = 250
 	deflect_chance = 60
 	internal_damage_threshold = 60
@@ -126,21 +126,19 @@
 		return
 	var/output = "<b>Honk-ON-Systems:</b><div style=\"margin-left: 15px;\">"
 	for(var/obj/item/mecha_parts/mecha_equipment/MT in equipment)
-		output += "[selected==MT?"<b id='\ref[MT]'>":"<a id='\ref[MT]' href='?src=\ref[src];select_equip=\ref[MT]'>"][MT.get_equip_info()][selected==MT?"</b>":"</a>"]<br>"
+		output += "<div id='\ref[MT]'>[MT.get_equip_info()]</div>"
 	output += "</div>"
 	return output
 
 
 
 /obj/mecha/combat/honker/mechstep(direction)
-	var/result = step(src,direction)
-	if(result)
-		if(!squeak)
-			playsound(src, "clownstep", 70, 1)
-			squeak = 1
-		else
-			squeak = 0
-	return result
+	if(!squeak)
+		playsound(src, "clownstep", 70, 1)
+		squeak = 1
+	else
+		squeak = 0
+	..()
 
 obj/mecha/combat/honker/Topic(href, href_list)
 	..()
@@ -152,9 +150,9 @@ obj/mecha/combat/honker/Topic(href, href_list)
 
 proc/rand_hex_color()
 	var/list/colors = list("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f")
-	var/color=""
+	var/thecolor=""
 	for (var/i=0;i<6;i++)
-		color = color+pick(colors)
-	return color
+		thecolor = thecolor+pick(colors)
+	return thecolor
 
 

@@ -84,7 +84,7 @@ datum/design/seccamera
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
 	build_path = "/obj/item/weapon/circuitboard/aicore"
-
+*/
 datum/design/aiupload
 	name = "Circuit Design (AI Upload)"
 	desc = "Allows for the construction of circuit boards used to build an AI Upload Console."
@@ -92,7 +92,7 @@ datum/design/aiupload
 	req_tech = list("programming" = 4)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
-	build_path = "/obj/item/weapon/circuitboard/computer/aiupload"
+	build_path = "/obj/item/weapon/circuitboard/computer/aiupload"/*
 
 datum/design/borgupload
 	name = "Circuit Design (Cyborg Upload)"
@@ -137,7 +137,7 @@ datum/design/scan_console
 	req_tech = list("programming" = 2, "biotech" = 3)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
-	build_path = "/obj/item/weapon/circuitboard/computer/scan_consolenew"
+	build_path = "/obj/item/weapon/circuitboard/machine/scan_consolenew"
 
 datum/design/comconsole
 	name = "Circuit Design (Communications)"
@@ -238,7 +238,7 @@ datum/design/clonecontrol
 	req_tech = list("programming" = 3, "biotech" = 3)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
-	build_path = "/obj/item/weapon/circuitboard/clonepod"
+	build_path = "/obj/item/weapon/circuitboard/machine/clonepod"
 
 datum/design/clonescanner
 	name = "Circuit Design (Cloning Scanner)"
@@ -247,7 +247,7 @@ datum/design/clonescanner
 	req_tech = list("programming" = 3, "biotech" = 3)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
-	build_path = "/obj/item/weapon/circuitboard/clonescanner"*/
+	build_path = "/obj/item/weapon/circuitboard/machine/clonescanner"*/
 
 datum/design/arcademachine
 	name = "Circuit Design (Arcade Machine)"
@@ -806,7 +806,7 @@ datum/design/mech_ccw_armor
 	desc = "Exosuit-mounted armor booster."
 	id = "mech_ccw_armor"
 	build_type = MECHFAB
-	req_tech = list("materials" = 5, "combat" = 4)
+	req_tech = list("materials" = 5, "combat" = 3)
 	build_path = "/obj/item/mecha_parts/mecha_equipment/anticcw_armor_booster"
 	category = "Exosuit Equipment"
 
@@ -815,7 +815,7 @@ datum/design/mech_proj_armor
 	desc = "Exosuit-mounted armor booster."
 	id = "mech_proj_armor"
 	build_type = MECHFAB
-	req_tech = list("materials" = 5, "combat" = 5, "engineering"=3)
+	req_tech = list("materials" = 5, "combat" = 4, "engineering"=3)
 	build_path = "/obj/item/mecha_parts/mecha_equipment/antiproj_armor_booster"
 	category = "Exosuit Equipment"
 
@@ -1106,7 +1106,7 @@ datum/design/super_cell
 	desc = "A power cell that holds 20000 units of energy"
 	id = "super_cell"
 	req_tech = list("powerstorage" = 3, "materials" = 2)
-	reliability_base = 75
+	reliability_base = 79
 	build_type = PROTOLATHE | MECHFAB
 	materials = list("$metal" = 700, "$glass" = 70)
 	build_path = "/obj/item/weapon/cell/super"
@@ -1117,11 +1117,20 @@ datum/design/hyper_cell
 	desc = "A power cell that holds 30000 units of energy"
 	id = "hyper_cell"
 	req_tech = list("powerstorage" = 5, "materials" = 4)
-	reliability_base = 70
+	reliability_base = 75
 	build_type = PROTOLATHE | MECHFAB
 	materials = list("$metal" = 400, "$gold" = 150, "$silver" = 150, "$glass" = 70)
 	build_path = "/obj/item/weapon/cell/hyper"
 	category = "Misc"
+
+datum/design/anomaly_cell
+	name = "Advanced Anomaly Power Cell"
+	id = "ano_cell"
+	req_tech = list("powerstorage" = 5, "bluespace" = 2, "magnets=4")
+	reliability_base = 70
+	build_type = PROTOLATHE
+	materials = list("$metal" = 400, "$gold" = 100, "$silver" = 200, "$glass" = 100)
+	build_path = "/obj/item/weapon/anobattery/adv"
 
 datum/design/light_replacer
 	name = "Light Replacer"
@@ -1246,7 +1255,7 @@ datum/design/mass_spectrometer
 	req_tech = list("biotech" = 2, "magnets" = 2)
 	build_type = PROTOLATHE
 	materials = list("$metal" = 30, "$glass" = 20)
-	reliability_base = 76
+	reliability_base = 80
 	build_path = "/obj/item/device/mass_spectrometer"
 
 datum/design/adv_mass_spectrometer
@@ -1255,8 +1264,8 @@ datum/design/adv_mass_spectrometer
 	id = "adv_mass_spectrometer"
 	req_tech = list("biotech" = 2, "magnets" = 4)
 	build_type = PROTOLATHE
-	materials = list("$metal" = 30, "$glass" = 20)
-	reliability_base = 74
+	materials = list("$metal" = 40, "$glass" = 20)
+	reliability_base = 78
 	build_path = "/obj/item/device/mass_spectrometer/adv"
 /*
 datum/design/mmi
@@ -1281,10 +1290,10 @@ datum/design/mmi_radio
 	build_path = "/obj/item/device/mmi/radio_enabled"
 	category = "Misc"
 */
-datum/design/synthetic_flash
+datum/design/flash
 	name = "Flash"
 	desc = "When a problem arises, SCIENCE is the solution."
-	id = "sflash"
+	id = "flash"
 	req_tech = list("magnets" = 3, "combat" = 2)
 	build_type = MECHFAB
 	materials = list("$metal" = 750, "$glass" = 750)
@@ -1345,7 +1354,7 @@ datum/design/chemsprayer
 	build_type = PROTOLATHE
 	materials = list("$metal" = 5000, "$glass" = 1000)
 	reliability_base = 100
-	build_path = "/obj/item/weapon/chemsprayer"
+	build_path = "/obj/item/weapon/reagent_containers/spray/chemsprayer"
 
 datum/design/rapidsyringe
 	name = "Rapid Syringe Gun"
@@ -1354,7 +1363,7 @@ datum/design/rapidsyringe
 	req_tech = list("combat" = 3, "materials" = 3, "engineering" = 3, "biotech" = 2)
 	build_type = PROTOLATHE
 	materials = list("$metal" = 5000, "$glass" = 1000)
-	build_path = "/obj/item/weapon/gun/syringe/rapidsyringe"
+	build_path = "/obj/item/weapon/gun/syringe/rapid"
 
 datum/design/largecrossbow
 	name = "Energy Crossbow"
@@ -1384,7 +1393,7 @@ datum/design/flora_gun
 	materials = list("$metal" = 2000, "$glass" = 500, "$uranium" = 500)
 	build_path = "/obj/item/weapon/gun/energy/floragun"
 
-datum/design/large_grenade
+/*datum/design/large_grenade
 	name = "Large Grenade"
 	desc = "A grenade that affects a larger area and use larger containers."
 	id = "large_Grenade"
@@ -1392,7 +1401,7 @@ datum/design/large_grenade
 	build_type = PROTOLATHE
 	materials = list("$metal" = 3000)
 	reliability_base = 79
-	build_path = "/obj/item/weapon/grenade/chem_grenade/large"
+	build_path = "/obj/item/weapon/grenade/chem_grenade/large"*/
 
 datum/design/smg
 	name = "Submachine Gun"
@@ -1509,7 +1518,7 @@ datum/design/bag_holding
 /////////////////HUDs////////////////////
 /////////////////////////////////////////
 
-/*datum/design/health_hud
+/datum/design/health_hud
 	name = "Health Scanner HUD"
 	desc = "A heads-up display that scans the humans in view and provides accurate data about their health status."
 	id = "health_hud"
@@ -1518,15 +1527,15 @@ datum/design/bag_holding
 	materials = list("$metal" = 50, "$glass" = 50)
 	build_path = "/obj/item/clothing/glasses/hud/health"
 
-datum/design/security_hud
-	name = "Security HUD"
+/datum/design/security_hud_sun
+	name = "Security HUD Sunglasses"
 	desc = "A heads-up display that scans the humans in view and provides accurate data about their ID status."
 	id = "security_hud"
-	req_tech = list("magnets" = 3, "combat" = 2)
+	req_tech = list("materials" = 2, "magnets" = 3, "combat" = 2)
 	build_type = PROTOLATHE
-	materials = list("$metal" = 50, "$glass" = 50)
-	build_path = "/obj/item/clothing/glasses/hud/security"
-	locked = 1*/
+	materials = list("$metal" = 50, "$glass" = 150)
+	build_path = "/obj/item/clothing/glasses/sunglasses/sechud"
+	locked = 1
 
 /////////////////////////////////////////
 //////////////////Test///////////////////

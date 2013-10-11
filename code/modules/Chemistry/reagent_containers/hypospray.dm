@@ -8,6 +8,7 @@
 	volume = 30
 	possible_transfer_amounts = null
 	flags = FPRINT | TABLEPASS | OPENCONTAINER | ONBELT
+	origin_tech = "biotech=4;materials=3"
 
 /obj/item/weapon/reagent_containers/hypospray/attack_paw(mob/user)
 	return attack_hand(user)
@@ -42,10 +43,11 @@
 /obj/item/weapon/reagent_containers/hypospray/autoinjector
 	name = "autoinjector"
 	desc = "A rapid and safe way to administer small amounts of drugs by untrained or trained personnel."
-	icon_state = "autoinjector1"
-	var/original_icon_state = "autoinjector"
-	amount_per_transfer_from_this = 15
-	volume = 15
+	icon_state = "autoinjector"
+	item_state = "pen"
+	origin_tech = "biotech=3;materials=3"
+	amount_per_transfer_from_this = 10
+	volume = 10
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/New()
 	..()
@@ -63,20 +65,11 @@
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/update_icon()
 	if(reagents.total_volume > 0)
-		icon_state = "[original_icon_state]1"
+		icon_state = "[initial(icon_state)]1"
 	else
-		icon_state = "[original_icon_state]0"
-
-/obj/item/weapon/reagent_containers/hypospray/autoinjector/examine()
-	..()
-	if(reagents && reagents.reagent_list.len)
-		for(var/datum/reagent/R in reagents.reagent_list)
-			usr << "\blue It currently has [R.volume] units of [R.name] stored."
-	else
-		usr << "\blue It is currently empty."
+		icon_state = "[initial(icon_state)]0"
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/minihypo
 	name = "mini hypospray"
 	desc = "Hypospray is a sterile, air-needle autoinjector for rapid administration of drugs to patients."
-	icon_state = "minihypo0"
-	original_icon_state = "minihypo"
+	icon_state = "minihypo"

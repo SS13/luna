@@ -71,6 +71,25 @@
 	..()
 
 
+/obj/item/proc/GetID()
+	return null
+
+/obj/proc/GetJobName()
+	if (!istype(src, /obj/item/device/pda) && !istype(src,/obj/item/weapon/card/id))
+		return
+
+	var/jobName
+
+	if(istype(src, /obj/item/device/pda))
+		if(src:id)
+			jobName = src:id:assignment
+	if(istype(src, /obj/item/weapon/card/id))
+		jobName = src:assignment
+
+	if(jobName in get_all_jobs())
+		return jobName
+	else
+		return "Unknown"
 
 /mob/proc/has_access(list/req_access)
 	if(req_access == null || !istype(req_access, /list) || req_access.len < 1)
@@ -272,7 +291,7 @@
 		if(access_captain)
 			return "Captain's Quarters"
 		if(access_all_personal_lockers)
-			return "Personal Locker"
+			return "Personal locker"
 		if(access_chapel_office)
 			return "Chapel Office"
 		if(access_tech_storage)
@@ -361,7 +380,7 @@
 		if(access_captain)
 			return "Captain's Quarters"
 		if(access_all_personal_lockers)
-			return "Personal Locker"
+			return "Personal locker"
 		if(access_chapel_office)
 			return "Chapel Office"
 		if(access_tech_storage)

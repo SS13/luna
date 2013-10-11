@@ -3,6 +3,7 @@
 	voice_name = "synthesized voice"
 	icon = 'mob.dmi'//
 	icon_state = "ai"
+	anchored = 1
 	var/network = "Luna"
 	var/obj/machinery/camera/current = null
 	var/list/connected_robots = list()

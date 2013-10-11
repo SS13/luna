@@ -33,7 +33,7 @@ turf/space
 		create_meteor(direction as num)
 			set src in world
 
-			var/obj/meteor/M = new( src )
+			var/obj/effect/meteor/M = new( src )
 			walk(M, direction,10)
 
 

@@ -1,5 +1,5 @@
 /datum/wires/vending
-	holder_type = /obj/machinery/vending
+	holder_type = /obj/machinery/vending_tg
 	wire_count = 4
 
 var/const/VENDING_WIRE_THROW = 1
@@ -19,11 +19,11 @@ var/const/VENDING_WIRE_IDSCAN = 8
 
 /datum/wires/vending/Interact(var/mob/living/user)
 	if(CanUse(user))
-		var/obj/machinery/vending/V = holder
+		var/obj/machinery/vending_tg/V = holder
 		V.attack_hand(user)
 
 /datum/wires/vending/GetInteractWindow()
-	var/obj/machinery/vending/V = holder
+	var/obj/machinery/vending_tg/V = holder
 	. += ..()
 	. += "<BR>The orange light is [V.seconds_electrified ? "on" : "off"].<BR>"
 	. += "The red light is [V.shoot_inventory ? "off" : "blinking"].<BR>"
@@ -31,7 +31,7 @@ var/const/VENDING_WIRE_IDSCAN = 8
 	. += "A [V.scan_id ? "purple" : "yellow"] light is on.<BR>"
 
 /datum/wires/vending/UpdatePulsed(var/index)
-	var/obj/machinery/vending/V = holder
+	var/obj/machinery/vending_tg/V = holder
 	switch(index)
 		if(VENDING_WIRE_THROW)
 			V.shoot_inventory = !V.shoot_inventory
@@ -43,7 +43,7 @@ var/const/VENDING_WIRE_IDSCAN = 8
 			V.scan_id = !V.scan_id
 
 /datum/wires/vending/UpdateCut(var/index, var/mended)
-	var/obj/machinery/vending/V = holder
+	var/obj/machinery/vending_tg/V = holder
 	switch(index)
 		if(VENDING_WIRE_THROW)
 			V.shoot_inventory = !mended

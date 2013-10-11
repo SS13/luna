@@ -9,7 +9,7 @@
 	icon_off = "hydrosecureoff"
 
 
-	New()
+/*	New()
 		..()
 		sleep(2)
 		switch(rand(1,2))
@@ -23,4 +23,17 @@
 		new /obj/item/clothing/head/greenbandana(src)
 		new /obj/item/weapon/minihoe(src)
 		new /obj/item/weapon/hatchet(src)
-		return
+		return*/
+
+/obj/structure/closet/secure_closet/hydroponics/New()
+	..()
+	sleep(2)
+	new /obj/item/device/pda/hydro(src)
+	new /obj/item/clothing/under/rank/hydroponics(src)
+	new /obj/item/clothing/shoes/black(src)
+	new /obj/item/clothing/gloves/black(src)
+	new /obj/item/weapon/storage/backpack(src)
+	new /obj/item/device/radio/headset(src)
+	new /obj/item/clothing/head/greenbandana(src)
+	new /obj/item/clothing/suit/storage/apron(src)
+	return

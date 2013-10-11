@@ -1,5 +1,3 @@
-
-
 /obj/item/clothing/head/centhat
 	name = "\improper CentComm. hat"
 	icon_state = "centcom"
@@ -12,13 +10,6 @@
 	desc = "A powdered wig."
 	icon_state = "pwig"
 	item_state = "pwig"
-
-/obj/item/clothing/head/that
-	name = "top-hat"
-	desc = "It's an amish looking hat."
-	icon_state = "tophat"
-	item_state = "that"
-	flags = FPRINT|TABLEPASS
 
 /obj/item/clothing/head/redcoat
 	name = "redcoat's hat"
@@ -150,13 +141,6 @@
 	icon_state = "bowler"
 	item_state = "bowler"
 	flags = FPRINT | TABLEPASS
-
-/obj/item/clothing/head/witchwig
-	name = "witch costume wig"
-	desc = "Eeeee~heheheheheheh!"
-	icon_state = "witch"
-	item_state = "witch"
-	flags = FPRINT | TABLEPASS | BLOCKHAIR
 
 /obj/item/clothing/head/chicken
 	name = "chicken suit head"

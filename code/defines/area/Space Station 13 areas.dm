@@ -586,7 +586,7 @@
 
 
 /area/crew_quarters/locker
-	name = "Locker Room"
+	name = "locker Room"
 	icon_state = "locker"
 
 /area/crew_quarters/laundry

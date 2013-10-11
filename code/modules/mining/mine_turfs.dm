@@ -411,7 +411,8 @@
 		W:Assimilate_Air()
 
 	W.levelupdate()
-	W.ul_SetOpacity(W.opacity)
+	W.opacity = !W.opacity //Dirty UltraLight hack
+	W.ul_SetOpacity(!W.opacity)
 	return W
 
 //////Assimilate Air//////

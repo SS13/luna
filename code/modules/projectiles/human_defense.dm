@@ -11,7 +11,7 @@ emp_act
 /mob/living/carbon/human/bullet_act(var/obj/item/projectile/P, var/def_zone)
 	if(istype(wear_suit, /obj/item/clothing/suit) && wear_suit:reflectchance)
 		if(istype(P, /obj/item/projectile/energy) || istype(P, /obj/item/projectile/beam))
-			var/reflectchance = wear_suit:reflectchance - round(P.damage/5)
+			var/reflectchance = wear_suit:reflectchance - round(P.damage/4)
 			if(!(def_zone in list("chest", "groin", "head")))
 				reflectchance /= 2
 			if(prob(reflectchance))

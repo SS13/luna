@@ -41,7 +41,7 @@
 /datum/data/vending_product
 	var/product_name = "generic"
 	var/product_path = null
-	//var/amount = 0
+	var/amount = 0
 	var/price = 0
 	var/display_color = "blue"
 
@@ -83,7 +83,6 @@
 					src.malfunction()
 					return
 				return
-		else
 	return
 
 /obj/machinery/vending/blob_act()
@@ -92,11 +91,9 @@
 			src.malfunction()
 			del(src)
 		return
-
 	return
 
 /obj/machinery/vending/proc/build_inventory(var/list/path_list,var/list/price_list,hidden=0)
-
 	for(var/p=1, p <= path_list.len ,p++)
 		var/checkpath = text2path(path_list[p])
 		if (!checkpath)
@@ -430,26 +427,26 @@
 
 //Somebody cut an important wire and now we're following a new definition of "pitch."
 /obj/machinery/vending/proc/throw_item()
-//	var/obj/throw_item = null
-//	var/mob/living/target = locate() in view(7,src)
-//	if(!target)
-//		return 0
-//
-//	for(var/datum/data/vending_product/R in src.product_records)
-//		if (R.amount <= 0) //Try to use a record that actually has something to dump.
-//			continue
-//		var/dump_path = text2path(R.product_path)
-//		if (!dump_path)
-//			continue
-//
-//		R.amount--
-//		throw_item = new dump_path(src.loc)
-//		break
-//
-//	spawn(0)
-//		throw_item.throw_at(target, 16, 3)
-//	src.visible_message("\red <b>[src] launches [throw_item.name] at [target.name]!</b>")
-//	return 1
+	var/obj/throw_item = null
+	var/mob/living/target = locate() in view(7,src)
+	if(!target)
+		return 0
+
+	for(var/datum/data/vending_product/R in src.product_records)
+		if (R.amount <= 0) //Try to use a record that actually has something to dump.
+			continue
+		var/dump_path = text2path(R.product_path)
+		if (!dump_path)
+			continue
+
+		R.amount--
+		throw_item = new dump_path(src.loc)
+		break
+
+	spawn(0)
+		throw_item.throw_at(target, 16, 3)
+	src.visible_message("\red <b>[src] launches [throw_item.name] at [target.name]!</b>")
+	return 1
 
 /obj/machinery/vending/proc/isWireColorCut(var/wireColor)
 	var/wireFlag = APCWireColorToFlag[wireColor]
@@ -498,10 +495,8 @@
 
 //"Borrowed" airlock shocking code.
 /obj/machinery/vending/proc/shock(mob/user, prb)
-
 	if(!prob(prb))
 		return 0
-
 	if(stat & (BROKEN|NOPOWER))		// unpowered, no shock
 		return 0
 
@@ -510,67 +505,6 @@
 
 
 
-
-
-
-
-
-
-/obj/machinery/vending/coffee
-	name = "Coffee Machine"
-	desc = "A Robust Coffee vending machine."
-	icon_state = "coffee"
-	icon_vend = "coffee-vend"
-	points = 10
-	product_paths = "/obj/item/weapon/reagent_containers/food/drinks/coffee"
-	//product_amounts = "25"
-	product_prices = "1"
-	vend_delay = 34
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "coffee"
-
-/obj/machinery/vending/snack
-	name = "Snack Machine"
-	desc = "All manner of tasty, but unhealthy snacks"
-	icon_state = "snack"
-	points = 10
-	product_paths = "/obj/item/weapon/reagent_containers/food/snacks/candy;/obj/item/weapon/reagent_containers/food/snacks/chips"
-	//product_amounts = "10;10"
-	product_prices = "1;1"
-	product_slogans = "Try our new nougat bar!;Twice the calories for half the price!"
-	product_hidden = "/obj/item/weapon/reagent_containers/food/snacks/donut"
-	hidden_prices = "1"
-	charge_type = "snack"
-
-/obj/machinery/vending/cart
-	name = "PTech"
-	desc = "Cartridges for PDAs"
-	icon_state = "cart"
-	icon_deny = "cart-deny"
-	points = 10
-	product_paths = "/obj/item/weapon/cartridge/medical;/obj/item/weapon/cartridge/engineering;/obj/item/weapon/cartridge/security;/obj/item/weapon/cartridge/janitor;/obj/item/weapon/cartridge/signal/toxins;/obj/item/device/pda/heads;/obj/item/weapon/cartridge/captain;/obj/item/weapon/cartridge/quartermaster"
-	//product_amounts = "10;10;10;10;10;10;10;10"
-	product_prices = "1;1;1;1;1;1;2;1"
-	product_slogans = ""
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "cart"
-
-/obj/machinery/vending/cigarette
-	name = "Cigarette Vendor"
-	desc = "If you want to get cancer, might as well do it in style"
-	icon_state = "cigs"
-	points = 10
-	product_paths = "/obj/item/weapon/cigpacket;/obj/item/weapon/lighter/random"
-	//product_amounts = "10;10"
-	product_prices = "1;1"
-	product_slogans = "Space cigs taste good like a cigarette should.;I'd rather toolbox than switch.;Smoke!;Don't believe the reports - smoke today!"
-	vend_delay = 34
-	product_hidden = "/obj/item/weapon/lighter/zippo"
-	hidden_prices = "2"
-	charge_type = "cigarette"
-
 /obj/machinery/vending/medical
 	name = "NanoMed Plus"
 	desc = "Medical Equipment dispenser."
@@ -578,7 +512,7 @@
 	icon_deny = "med-deny"
 	req_access_txt = "5"
 	points = 20
-	product_paths = "/obj/item/clothing/under/rank/medical;/obj/item/clothing/under/rank/chemist;/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/shoes/white;/obj/item/device/healthanalyzer;/obj/item/stack/medical/bruise_pack;/obj/item/stack/medical/ointment;/obj/item/stack/medical/bandaid;/obj/item/weapon/reagent_containers/glass/bottle/antitoxin;/obj/item/weapon/reagent_containers/glass/bottle/inaprovaline;/obj/item/weapon/reagent_containers/glass/bottle/stoxin;/obj/item/weapon/reagent_containers/syringe;/obj/item/weapon/tank/anesthetic;/obj/item/clothing/mask/medical;/obj/item/clothing/gloves/latex;/obj/item/weapon/storage/firstaid/regular;/obj/item/weapon/storage/firstaid/toxin;/obj/item/weapon/storage/firstaid/fire;/obj/item/weapon/storage/firstaid/o2"
+	product_paths = "/obj/item/clothing/under/rank/medical;/obj/item/clothing/under/rank/chemist;/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/shoes/white;/obj/item/device/healthanalyzer;/obj/item/stack/medical/bruise_pack;/obj/item/stack/medical/ointment;/obj/item/stack/medical/bandaid;/obj/item/weapon/reagent_containers/glass/bottle/antitoxin;/obj/item/weapon/reagent_containers/glass/bottle/inaprovaline;/obj/item/weapon/reagent_containers/glass/bottle/stoxin;/obj/item/weapon/reagent_containers/syringe;/obj/item/weapon/tank/anesthetic;/obj/item/clothing/mask/breath/medical;/obj/item/clothing/gloves/latex;/obj/item/weapon/storage/firstaid/regular;/obj/item/weapon/storage/firstaid/toxin;/obj/item/weapon/storage/firstaid/fire;/obj/item/weapon/storage/firstaid/o2"
 	//product_amounts = "4;4;4;4;12"
 	product_prices = "1;1;1;1;2;1;1;1;3;3;3;1;2;1;1;5;5;5;5"
 	product_hidden = "/obj/item/weapon/reagent_containers/pill/tox;/obj/item/weapon/reagent_containers/glass/bottle/toxin;/obj/item/weapon/reagent_containers/glass/bottle/chloralhydrate;/obj/item/weapon/gun/syringe"
@@ -605,7 +539,7 @@
 	icon_deny = "sec-deny"
 	req_access_txt = "1"
 	points = 10
-	product_paths = "/obj/item/clothing/under/color/red;/obj/item/clothing/under/ftech;/obj/item/clothing/under/det;/obj/item/clothing/suit/storage/det_suit;/obj/item/clothing/head/det_hat;/obj/item/clothing/head/helmet;/obj/item/clothing/suit/armor/vest;/obj/item/clothing/suit/storage/gearharness;/obj/item/weapon/storage/belt/security;/obj/item/device/radio/headset/headset_sec;/obj/item/clothing/glasses/sunglasses;/obj/item/weapon/handcuffs;/obj/item/weapon/baton;/obj/item/weapon/gun/energy/taser;/obj/item/weapon/grenade/flashbang;/obj/item/device/flash/*;/obj/item/weapon/storage/box/evidence*/"
+	product_paths = "/obj/item/clothing/under/color/red;/obj/item/clothing/under/rank/forensic_technician;/obj/item/clothing/under/rank/det;/obj/item/clothing/suit/storage/det_suit;/obj/item/clothing/head/det_hat;/obj/item/clothing/head/helmet;/obj/item/clothing/suit/armor/vest;/obj/item/clothing/suit/storage/gearharness;/obj/item/weapon/storage/belt/security;/obj/item/device/radio/headset/headset_sec;/obj/item/clothing/glasses/sunglasses;/obj/item/weapon/handcuffs;/obj/item/weapon/melee/baton;/obj/item/weapon/gun/energy/taser;/obj/item/weapon/grenade/flashbang;/obj/item/device/flash/*;/obj/item/weapon/storage/box/evidence*/"
 	//product_amounts = "8;5;4"
 	product_prices = "1;1;1;1;1;3;3;3;2;1;1;1;4;4;3;3;2"
 	product_hidden = "/obj/item/kitchen/donut_box"
@@ -631,17 +565,7 @@
 	desc = "Al the tools you need to blow up the ship."
 	req_access_txt = "7"
 	points = 10
-	product_paths = {"/obj/item/clothing/under/rank/scientist;
-					 /obj/item/clothing/suit/bio_suit;
-					 /obj/item/clothing/head/bio_hood;
-					 /obj/item/weapon/screwdriver;
-					 /obj/item/weapon/wrench;
-					 /obj/item/weapon/wirecutters;
-					 /obj/item/device/transfer_valve;
-					 /obj/item/device/igniter;
-					 /obj/item/device/timer;
-					 /obj/item/device/prox_sensor;
-					 /obj/item/device/radio/signaler"}
+	product_paths = {"/obj/item/clothing/under/rank/scientist;/obj/item/clothing/suit/bio_suit;/obj/item/clothing/head/bio_hood;/obj/item/weapon/screwdriver;/obj/item/weapon/wrench;/obj/item/weapon/wirecutters;/obj/item/device/transfer_valve;/obj/item/device/igniter;/obj/item/device/timer;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler"}
 	//product_amounts = "4;4;4;4;12"
 	product_prices = "1;2;2;1;1;1;3;1;1;1;1"
 	product_hidden = ""
@@ -655,26 +579,12 @@
 	icon_deny = "robotics-deny"
 	req_access_txt = "29"
 	points = 10
-	product_paths = "/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/under/rank/roboticist;/obj/item/weapon/cable_coil/power;/obj/item/device/flash;/obj/item/weapon/circuitboard/circuitry;/obj/item/weapon/cell/supercharged;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler;/obj/item/device/healthanalyzer;/obj/item/weapon/scalpel;/obj/item/weapon/circular_saw;/obj/item/weapon/tank/anesthetic;/obj/item/clothing/mask/medical;/obj/item/weapon/screwdriver;/obj/item/weapon/crowbar"
+	product_paths = "/obj/item/clothing/suit/storage/labcoat;/obj/item/clothing/under/rank/roboticist;/obj/item/weapon/cable_coil/power;/obj/item/device/flash;/obj/item/weapon/circuitboard/circuitry;/obj/item/weapon/cell/supercharged;/obj/item/device/prox_sensor;/obj/item/device/radio/signaler;/obj/item/device/healthanalyzer;/obj/item/weapon/scalpel;/obj/item/weapon/circular_saw;/obj/item/weapon/tank/anesthetic;/obj/item/clothing/mask/breath/medical;/obj/item/weapon/screwdriver;/obj/item/weapon/crowbar"
 	//product_amounts = "4;4;4;4;12"
 	product_prices = "1;1;1;1;1;3;2;2;2;4;4;2;1;1;1"
 	product_hidden = ""
 	hidden_prices = ""
 	charge_type = "robotics"
-
-/obj/machinery/vending/bar
-	name = "Brewmaster 9000"
-	desc = "The Brewmaster 9000 has just what you need to make your customers forget about, well... everything."
-	icon_state = "bar"
-	icon_deny = "bar-deny"
-	req_access_txt = "25"
-	points = 100
-	product_paths = {"/obj/item/weapon/reagent_containers/food/drinks/tea;/obj/item/weapon/reagent_containers/food/drinks/h_chocolate;/obj/item/weapon/reagent_containers/food/drinks/cola;/obj/item/weapon/reagent_containers/food/drinks/coffee;/obj/item/weapon/reagent_containers/food/drinks/thirteenloko;/obj/item/weapon/reagent_containers/food/drinks/tonic;/obj/item/weapon/reagent_containers/food/drinks/dry_ramen;/obj/item/weapon/reagent_containers/food/drinks/sodawater;/obj/item/weapon/reagent_containers/food/drinks/beer;/obj/item/weapon/reagent_containers/food/drinks/ale;/obj/item/weapon/reagent_containers/food/drinks/milk;/obj/item/weapon/reagent_containers/food/drinks/bottle/gin;/obj/item/weapon/reagent_containers/food/drinks/bottle/vodka;/obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla;/obj/item/weapon/reagent_containers/food/drinks/bottle/patron;/obj/item/weapon/reagent_containers/food/drinks/bottle/absinthe;/obj/item/weapon/reagent_containers/food/drinks/bottle/cognac;/obj/item/weapon/reagent_containers/food/drinks/bottle/cream;/obj/item/weapon/reagent_containers/food/drinks/bottle/kahlua;/obj/item/weapon/reagent_containers/food/drinks/bottle/limejuice;/obj/item/weapon/reagent_containers/food/drinks/bottle/orangejuice;/obj/item/weapon/reagent_containers/food/drinks/bottle/tomatojuice;/obj/item/weapon/reagent_containers/food/drinks/bottle/rum;/obj/item/weapon/reagent_containers/food/drinks/bottle/vermouth;/obj/item/weapon/reagent_containers/food/drinks/bottle/wine;/obj/item/weapon/reagent_containers/food/drinks/drinkingglass;/obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey"}
-	//product_amounts = "4;4;4;4;12"
-	product_prices = "2;2;2;2;2;2;2;2;2;2;2;5;5;5;5;5;5;2;5;2;2;2;5;5;5;1;5"
-	product_hidden = ""
-	hidden_prices = ""
-	charge_type = "bar"
 
 /obj/machinery/vending/kitchen
     name = "Kitchen Mate Plus"
@@ -683,12 +593,12 @@
     icon_deny = "kitchen-deny"
     req_access_txt = "28"
     points = 30
-    product_paths = {"/obj/item/clothing/under/chef;
+    product_paths = {"/obj/item/clothing/under/rank/chef;
 /obj/item/clothing/suit/storage/chef;
 /obj/item/clothing/head/chefhat;
 /obj/item/weapon/kitchen/utensil/knife;
 /obj/item/weapon/kitchen/rollingpin;
-/obj/item/weapon/reagent_containers/food/drinks/cola;
+/obj/item/weapon/reagent_containers/food/drinks/soda/cola;
 /obj/item/weapon/reagent_containers/food/drinks/coffee;
 /obj/item/kitchen/egg_box;
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/butterpack;

@@ -10,19 +10,10 @@
 	desc = "A vending machine packed full of tooth-rotting goodness."
 	icon_state = "soda"
 	points = 10
-	product_paths = "/obj/item/weapon/reagent_containers/food/drinks/cola;/obj/item/weapon/reagent_containers/food/drinks/cola_diet;/obj/item/weapon/reagent_containers/food/drinks/cola_apple;/obj/item/weapon/reagent_containers/food/drinks/cola_grape;/obj/item/weapon/reagent_containers/food/drinks/cola_strawberry;/obj/item/weapon/reagent_containers/food/drinks/cola_lemonlime;/obj/item/weapon/reagent_containers/food/drinks/cola_orange;/obj/item/weapon/reagent_containers/food/drinks/cola_rootbeer"
+	product_paths = "/obj/item/weapon/reagent_containers/food/drinks/soda/cola;/obj/item/weapon/reagent_containers/food/drinks/soda/cola_diet;/obj/item/weapon/reagent_containers/food/drinks/soda/cola_apple;/obj/item/weapon/reagent_containers/food/drinks/soda/cola_grape;/obj/item/weapon/reagent_containers/food/drinks/soda/cola_strawberry;/obj/item/weapon/reagent_containers/food/drinks/soda/cola_lemonlime;/obj/item/weapon/reagent_containers/food/drinks/soda/cola_orange;/obj/item/weapon/reagent_containers/food/drinks/soda/rootbeer"
 	//product_amounts = "25"
 	product_prices = "1;1;1;1;1;1;1;1"
 	vend_delay = 5
 	product_hidden = ""
 	hidden_prices = ""
 	charge_type = "soda"
-
-///datum/supply_packs/soda
-//	name = "Soda Charge"
-//	contains = list("/obj/item/weapon/vending_charge/soda")
-//	cost = 10
-//	containertype = "/obj/structure/crate"
-//	containername = "Soda machine charge crate"
-
-// charge moved to the file with the other charges so it isn't at the bottom of the list on the console

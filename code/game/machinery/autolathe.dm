@@ -95,7 +95,6 @@ var/global/list/autolathe_recipes_hidden = list( \
 	use_power = 1
 	idle_power_usage = 10
 	active_power_usage = 100
-	var/busy = 0
 
 	proc
 		wires_win(mob/user as mob)
@@ -163,11 +162,6 @@ var/global/list/autolathe_recipes_hidden = list( \
 		return
 
 	attackby(var/obj/item/O as obj, var/mob/user as mob)
-		if (stat)
-			return 1
-		if (busy)
-			user << "\red The autolathe is busy. Please wait for completion of previous operation."
-			return 1
 		if (istype(O, /obj/item/weapon/screwdriver))
 			if (!opened)
 				src.opened = 1
@@ -200,6 +194,9 @@ var/global/list/autolathe_recipes_hidden = list( \
 				user.set_machine(src)
 				interact(user)
 				return 1
+
+		if (stat)
+			return 1
 
 		if (src.m_amount + O.m_amt > max_m_amount)
 			user << "\red The autolathe is full. Please remove metal from the autolathe in order to insert more."
@@ -235,18 +232,15 @@ var/global/list/autolathe_recipes_hidden = list( \
 			user << "You insert [amount] sheet[amount>1 ? "s" : ""] to the autolathe."
 			stack.use(amount)
 		else
-			usr.before_take_item(O)
+			user.before_take_item(O)
 			O.loc = src
+			user << "You insert [O.name] into the autolathe."
 		icon_state = "autolathe"
-		busy = 1
 		use_power(max(1000, (m_amt+g_amt)*amount/10))
 		src.m_amount += m_amt * amount
 		src.g_amount += g_amt * amount
-		if (!istype(O, /obj/item/stack))
-			user << "You insert [O.name] into the autolathe."
 		if (O && O.loc == src)
 			del(O)
-		busy = 0
 		src.updateUsrDialog()
 
 	attack_paw(mob/user as mob)
@@ -262,69 +256,62 @@ var/global/list/autolathe_recipes_hidden = list( \
 			return
 		usr.set_machine(src)
 		src.add_fingerprint(usr)
-		if (!busy)
-			if(href_list["make"])
-				var/turf/T = get_step(src.loc, get_dir(src,usr))
-				var/obj/template = locate(href_list["make"])
-				var/multiplier = text2num(href_list["multiplier"])
-				if (!multiplier) multiplier = 1
-				var/power = max(2000, (template.m_amt+template.g_amt)*multiplier/5)
-				if(src.m_amount >= template.m_amt*multiplier && src.g_amount >= template.g_amt*multiplier)
-					busy = 1
+		if(href_list["make"])
+			var/obj/template = locate(href_list["make"])
+			var/multiplier = text2num(href_list["multiplier"])
+			if (!multiplier) multiplier = 1
+			var/power = max(2000, (template.m_amt+template.g_amt)*multiplier/5)
+			if(src.m_amount >= template.m_amt*multiplier && src.g_amount >= template.g_amt*multiplier)
+				use_power(power)
+				icon_state = "autolathe"
+				flick("autolathe_n",src)
+				spawn(16)
+					if(!(src.m_amount >= template.m_amt*multiplier && src.g_amount >= template.g_amt*multiplier)) return
 					use_power(power)
-					icon_state = "autolathe"
-					flick("autolathe_n",src)
-					spawn(16)
-						use_power(power)
-						spawn(16)
-							use_power(power)
-							src.m_amount -= template.m_amt*multiplier
-							src.g_amount -= template.g_amt*multiplier
-							if(src.m_amount < 0)
-								src.m_amount = 0
-							if(src.g_amount < 0)
-								src.g_amount = 0
-							var/obj/new_item = new template.type(T)
-							if (multiplier>1)
-								var/obj/item/stack/S = new_item
-								S.amount = multiplier
-							busy = 0
-							src.updateUsrDialog()
-			if(href_list["act"])
-				var/temp_wire = href_list["wire"]
-				if(href_list["act"] == "pulse")
-					if (!istype(usr.get_active_hand(), /obj/item/device/multitool))
-						usr << "You need a multitool!"
+					src.m_amount -= template.m_amt*multiplier
+					src.g_amount -= template.g_amt*multiplier
+					if(src.m_amount < 0)
+						src.m_amount = 0
+					if(src.g_amount < 0)
+						src.g_amount = 0
+					var/obj/new_item = new template.type(src.loc)
+					if (multiplier>1)
+						var/obj/item/stack/S = new_item
+						S.amount = multiplier
+					src.updateUsrDialog()
+		if(href_list["act"])
+			var/temp_wire = href_list["wire"]
+			if(href_list["act"] == "pulse")
+				if (!istype(usr.get_active_hand(), /obj/item/device/multitool))
+					usr << "You need a multitool!"
+				else
+					if(src.wires[temp_wire])
+						usr << "You can't pulse a cut wire."
 					else
-						if(src.wires[temp_wire])
-							usr << "You can't pulse a cut wire."
-						else
-							if(src.hack_wire == temp_wire)
-								src.hacked = !src.hacked
-								spawn(100) src.hacked = !src.hacked
-							if(src.disable_wire == temp_wire)
-								src.disabled = !src.disabled
-								src.shock(usr,50)
-								spawn(100) src.disabled = !src.disabled
-							if(src.shock_wire == temp_wire)
-								src.shocked = !src.shocked
-								src.shock(usr,50)
-								spawn(100) src.shocked = !src.shocked
-				if(href_list["act"] == "wire")
-					if (!istype(usr.get_active_hand(), /obj/item/weapon/wirecutters))
-						usr << "You need wirecutters!"
-					else
-						wires[temp_wire] = !wires[temp_wire]
 						if(src.hack_wire == temp_wire)
 							src.hacked = !src.hacked
+							spawn(100) src.hacked = !src.hacked
 						if(src.disable_wire == temp_wire)
 							src.disabled = !src.disabled
 							src.shock(usr,50)
+							spawn(100) src.disabled = !src.disabled
 						if(src.shock_wire == temp_wire)
 							src.shocked = !src.shocked
 							src.shock(usr,50)
-		else
-			usr << "\red The autolathe is busy. Please wait for completion of previous operation."
+							spawn(100) src.shocked = !src.shocked
+			if(href_list["act"] == "wire")
+				if (!istype(usr.get_active_hand(), /obj/item/weapon/wirecutters))
+					usr << "You need wirecutters!"
+				else
+					wires[temp_wire] = !wires[temp_wire]
+					if(src.hack_wire == temp_wire)
+						src.hacked = !src.hacked
+					if(src.disable_wire == temp_wire)
+						src.disabled = !src.disabled
+						src.shock(usr,50)
+					if(src.shock_wire == temp_wire)
+						src.shocked = !src.shocked
+						src.shock(usr,50)
 		src.updateUsrDialog()
 		return
 

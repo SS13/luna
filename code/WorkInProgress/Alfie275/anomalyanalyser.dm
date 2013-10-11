@@ -8,7 +8,7 @@
 	var/analysing = 0
 	var/spectral = 0
 	var/pause = 0
-	var/obj/item/weapon/anomalyfilter/f = null
+	var/obj/item/weapon/disk/anomalyfilter/f = null
 	var/obj/item/weapon/anomaly/a= null
 	var/maxid = 1
 
@@ -58,7 +58,7 @@
 				for(var/obj/machinery/anomaly/anomalyanalyser/an in world)
 					an.maxid = maxid
 				a.name = "Anomaly A-[a.id]"
-	if(istype(I,/obj/item/weapon/anomalyfilter))
+	if(istype(I,/obj/item/weapon/disk/anomalyfilter))
 		if(!f)
 			user << "You insert the [I.name]."
 			user.drop_item()
@@ -166,7 +166,7 @@
 	src.updateUsrDialog()
 	return
 
-/obj/item/weapon/anomalyfilter
+/obj/item/weapon/disk/anomalyfilter
 	name = "Spectral filter"
 	icon = 'items.dmi'
 	icon_state = "datadisk0"

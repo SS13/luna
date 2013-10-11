@@ -255,7 +255,7 @@
 
 /obj/machinery/vendingm/drink/SetPrice()
 	prices["/obj/item/weapon/reagent_containers/food/drinks/coffee"] = 0.5
-	prices["/obj/item/weapon/reagent_containers/food/drinks/cola"] = 0.4
+	prices["/obj/item/weapon/reagent_containers/food/drinks/soda/cola"] = 0.4
 
 /obj/machinery/vendingm/drink/Restock()
 	contents+=new/obj/item/weapon/reagent_containers/food/drinks/coffee()
@@ -265,12 +265,12 @@
 	contents+=new/obj/item/weapon/reagent_containers/food/drinks/coffee()
 	contents+=new/obj/item/weapon/reagent_containers/food/drinks/coffee()
 
-	contents+=new/obj/item/weapon/reagent_containers/food/drinks/cola()
-	contents+=new/obj/item/weapon/reagent_containers/food/drinks/cola()
-	contents+=new/obj/item/weapon/reagent_containers/food/drinks/cola()
-	contents+=new/obj/item/weapon/reagent_containers/food/drinks/cola()
-	contents+=new/obj/item/weapon/reagent_containers/food/drinks/cola()
-	contents+=new/obj/item/weapon/reagent_containers/food/drinks/cola()
+	contents+=new/obj/item/weapon/reagent_containers/food/drinks/soda/cola()
+	contents+=new/obj/item/weapon/reagent_containers/food/drinks/soda/cola()
+	contents+=new/obj/item/weapon/reagent_containers/food/drinks/soda/cola()
+	contents+=new/obj/item/weapon/reagent_containers/food/drinks/soda/cola()
+	contents+=new/obj/item/weapon/reagent_containers/food/drinks/soda/cola()
+	contents+=new/obj/item/weapon/reagent_containers/food/drinks/soda/cola()
 
 
 /obj/machinery/vendingm/snack

@@ -65,7 +65,7 @@ obj
 		else
 			return null
 
-/atom/proc/meteorhit(obj/meteor as obj)
+/atom/proc/meteorhit(obj/effect/meteor as obj)
 	return
 
 /atom/proc/emp_act(var/severity)

@@ -47,6 +47,9 @@
 		loaded -= AC //Remove casing from loaded list.
 		current_shell = AC
 		if(AC.BB)
+			if(AC.reagents && AC.BB.reagents)
+				AC.reagents:trans_to(AC.BB, AC.reagents:total_volume) //For chemical darts
+				AC.reagents:delete()
 			in_chamber = AC.BB //Load projectile into chamber.
 		update_icon()	//I.E. fix the desc
 		return 1
@@ -91,6 +94,9 @@
 		loaded -= AC //Remove casing from loaded list.
 
 		if(AC.BB)
+			if(AC.reagents && AC.BB.reagents)
+				AC.reagents:trans_to(AC.BB, AC.reagents:total_volume) //For chemical darts
+				AC.reagents:delete()
 			in_chamber = AC.BB //Load projectile into chamber.
 			AC.BB.loc = src //Set projectile loc to gun.
 			AC.BB = null //Remove the ammunition from the shell
@@ -121,7 +127,7 @@
 				user << "<span class='notice'>You load a shell into \the [src]!</span>"
 		A.update_icon()
 		update_icon()
-		if(istype(A, /obj/item/weapon/circular_saw) || istype(A, /obj/item/weapon/sword) || istype(A, /obj/item/weapon/weldingtool/plasmacutter))
+		if(istype(A, /obj/item/weapon/circular_saw) || istype(A, /obj/item/weapon/melee/energy/sword) || istype(A, /obj/item/weapon/weldingtool/plasmacutter))
 			user << "<span class='notice'>You begin to shorten the barrel of \the [src].</span>"
 			if(loaded.len)
 				afterattack(user, user)	//will this work?
@@ -133,9 +139,9 @@
 				icon_state = "sawnshotgun"
 				w_class = 3.0
 				item_state = "gun"
-				flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBELT
-				//slot_flags &= ~SLOT_BACK	//you can't sling it on your back
-				//slot_flags |= SLOT_BELT		//but you can wear it on your belt (poorly concealed under a trenchcoat, ideally)
+				flags &= ~ONBACK	//you can't sling it on your back
+				flags |= ONBELT		//but you can wear it on your belt (poorly concealed under a trenchcoat, ideally)
+				user << "<span class='warning'>You shorten the barrel of \the [src]!</span>"
+
 				name = "sawn-off shotgun"
 				desc = "Omar's coming!"
-				user << "<span class='warning'>You shorten the barrel of \the [src]!</span>"

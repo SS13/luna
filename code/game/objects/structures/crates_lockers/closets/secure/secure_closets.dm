@@ -32,7 +32,7 @@
 	for(var/obj/O in src)
 		O.emp_act(severity)
 	if(!broken)
-		if(prob(50/severity))
+		if(prob(90/severity))
 			src.locked = !src.locked
 			src.update_icon()
 		if(prob(20/severity) && !opened)
@@ -44,6 +44,15 @@
 	..()
 
 /obj/structure/closet/secure_closet/proc/togglelock(mob/user as mob)
+	if(rigged && locate(/obj/item/device/radio/electropack) in src)
+		if(isliving(user))
+			var/mob/living/L = user
+			if(L.electrocute_act(22, src))
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+				s.set_up(5, 1, src)
+				s.start()
+				return
+
 	if(src.allowed(user))
 		src.locked = !src.locked
 		for(var/mob/O in viewers(user, 3))
@@ -71,35 +80,44 @@
 	else if(src.broken)
 		user << "<span class='notice'>The locker appears to be broken.</span>"
 		return
-	else if((istype(W, /obj/item/weapon/card/emag)||istype(W, /obj/item/weapon/melee/energy/blade)) && !src.broken)
+	else if((istype(W, /obj/item/weapon/card/emag)) && !src.broken)
 		broken = 1
 		locked = 0
 		desc = "It appears to be broken."
 		icon_state = icon_off
 		flick(icon_broken, src)
-		if(istype(W, /obj/item/weapon/melee/energy/blade))
-			var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
-			spark_system.set_up(5, 0, src.loc)
-			spark_system.start()
-			playsound(src.loc, 'sound/weapons/blade1.ogg', 50, 1)
-			playsound(src.loc, "sparks", 50, 1)
-			for(var/mob/O in viewers(user, 3))
-				O.show_message("<span class='warning'>The locker has been sliced open by [user] with an energy blade!</span>", 1, "You hear metal being sliced and sparks flying.", 2)
-		else
-			for(var/mob/O in viewers(user, 3))
-				O.show_message("<span class='warning'>The locker has been broken by [user] with an electromagnetic card!</span>", 1, "You hear a faint electrical spark.", 2)
+		for(var/mob/O in viewers(user, 3))
+			O.show_message("<span class='warning'>The locker has been broken by [user] with an electromagnetic card!</span>", 1, "You hear a faint electrical spark.", 2)
+	else if(istype(W, /obj/item/weapon/weldingtool))
+		var/obj/item/weapon/weldingtool/WT = W
+		if(!WT.remove_fuel(0,user))
+			user << "<span class='notice'>You need more welding fuel to complete this task.</span>"
+			return
+		src.welded =! src.welded
+		src.update_icon()
+		for(var/mob/M in viewers(src))
+			M.show_message("<span class='warning'>[src] has been [welded?"welded shut":"unwelded"] by [user.name].</span>", 3, "You hear welding.", 2)
+	else if(istype(W, /obj/item/weapon/cable_coil))
+		if(rigged)
+			user << "<span class='notice'>[src] is already rigged!</span>"
+			return
+		if(!W:use(5)) return
+		user  << "<span class='notice'>You rig [src].</span>"
+		user.drop_item()
+		rigged = 1
+		return
+	else if(istype(W, /obj/item/device/radio/electropack) && rigged)
+		user  << "<span class='notice'>You attach [W] to [src].</span>"
+		user.drop_item()
+		W.loc = src
+		return
+	else if(istype(W, /obj/item/weapon/wirecutters) && rigged)
+		user  << "<span class='notice'>You cut away the wiring.</span>"
+		playsound(loc, 'sound/items/Wirecutter.ogg', 100, 1)
+		rigged = 0
+		return
 	else
-		if(istype(W, /obj/item/weapon/weldingtool))
-			var/obj/item/weapon/weldingtool/WT = W
-			if(!WT.remove_fuel(0,user))
-				user << "<span class='notice'>You need more welding fuel to complete this task.</span>"
-				return
-			src.welded =! src.welded
-			src.update_icon()
-			for(var/mob/M in viewers(src))
-				M.show_message("<span class='warning'>[src] has been [welded?"welded shut":"unwelded"] by [user.name].</span>", 3, "You hear welding.", 2)
-		else
-			togglelock(user)
+		togglelock(user)
 
 /obj/structure/closet/secure_closet/relaymove(mob/user as mob)
 	if(user.stat || !isturf(src.loc))
@@ -121,10 +139,20 @@
 			lastbang = world.time
 			for(var/mob/M in hearers(src, null))
 				M << "<FONT size=[max(0, 5 - get_dist(src, M))]>BANG, bang!</FONT>"
+		user.unlock_medal("It's a trap!", 0, "Get locked or welded into a locker...", "easy")
 	return
 
 /obj/structure/closet/secure_closet/attack_hand(mob/user as mob)
 	src.add_fingerprint(user)
+
+	if(rigged && locate(/obj/item/device/radio/electropack) in src)
+		if(isliving(user))
+			var/mob/living/L = user
+			if(L.electrocute_act(22, src))
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+				s.set_up(5, 1, src)
+				s.start()
+				return
 
 	if(!src.toggle())
 		return src.attackby(null, user)

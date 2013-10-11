@@ -35,7 +35,7 @@
 
 
 #define FLOOR_HEAT_TRANSFER_COEFFICIENT 0.08
-#define WALL_HEAT_TRANSFER_COEFFICIENT 0.03
+#define WALL_HEAT_TRANSFER_COEFFICIENT 0.0
 #define SPACE_HEAT_TRANSFER_COEFFICIENT 0.20 //a hack to partly simulate radiative heat
 #define OPEN_HEAT_TRANSFER_COEFFICIENT 0.40
 #define WINDOW_HEAT_TRANSFER_COEFFICIENT 0.10 //a hack for now
@@ -156,6 +156,8 @@ vs_control/var/FIRE_PLASMA_ENERGY_RELEASED_DESC = "Determines the temp increase 
 #define ONESIZEFITSALL			8192	// can be worn by fatties (or children? ugh)
 
 #define	NOREACT					16384 	//Reagents dont' react inside this container.
+
+#define BLOCKHAIR				32768	// temporarily removes the user's hair icon
 
 //flags for pass_flags
 #define PASSTABLE	1
@@ -331,3 +333,12 @@ var/const
 #define HAND_RIGHT	1024
 #define HANDS		1536
 #define FULL_BODY	2047
+
+// for secHUDs and medHUDs and variants. The number is the location of the image on the list hud_list of humans.
+#define HEALTH_HUD		1 // dead, alive, sick, health status
+#define STATUS_HUD		2 // a simple line rounding the mob's number health
+#define ID_HUD			3 // the job asigned to your ID
+#define WANTED_HUD		4 // wanted, released, parroled, security status
+#define IMPLOYAL_HUD	5 // loyality implant
+#define IMPCHEM_HUD		6 // chemical implant
+#define IMPTRACK_HUD	7 // tracking implant

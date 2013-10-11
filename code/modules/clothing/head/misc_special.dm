@@ -5,13 +5,13 @@
  *		Ushanka
  *		Pumpkin head
  *		Kitty ears
- *
  */
 
 /*
  * Welding mask
  */
-/obj/item/clothing/head/welding
+/obj/item/clothing/head/helmet/welding
+	see_face = 0.0
 	name = "welding helmet"
 	desc = "A head-mounted face cover designed to protect the wearer completely from space-arc eye."
 	icon_state = "welding"
@@ -22,13 +22,12 @@
 	var/up = 0
 	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	flags_inv = (HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE)
-	action_button_name = "Toggle Welding Helmet"
 
-/obj/item/clothing/head/welding/attack_self()
+/obj/item/clothing/head/helmet/welding/attack_self()
 	toggle()
 
 
-/obj/item/clothing/head/welding/verb/toggle()
+/obj/item/clothing/head/helmet/welding/verb/toggle()
 	set category = "Object"
 	set name = "Adjust welding mask"
 	set src in usr
@@ -46,7 +45,7 @@
 			flags_inv &= ~(HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE)
 			icon_state = "[initial(icon_state)]up"
 			usr << "You push the [src] up out of your face."
-		usr.update_inv_head(0)	//so our mob-overlays update
+		usr.update_clothing()	//so our mob-overlays update
 
 
 /*
@@ -59,8 +58,7 @@
 	flags = FPRINT|TABLEPASS|HEADCOVERSEYES
 	var/onfire = 0.0
 	var/status = 0
-	var/fire_resist = T0C+1300	//this is the max temp it can stand before you start to cook. although it might not burn away, you take damage
-	var/processing = 0 //I dont think this is used anywhere.
+//	var/fire_resist = T0C+1300	//this is the max temp it can stand before you start to cook. although it might not burn away, you take damage
 
 /obj/item/clothing/head/cakehat/process()
 	if(!onfire)
@@ -119,7 +117,7 @@
 	desc = "A jack o' lantern! Believed to ward off evil spirits."
 	icon_state = "hardhat0_pumpkin"//Could stand to be renamed
 	item_state = "hardhat0_pumpkin"
-	color = "pumpkin"
+	item_color = "pumpkin"
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES | HEADCOVERSMOUTH | BLOCKHAIR
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE
 	var/brightness_on = 2 //luminosity when on
@@ -130,23 +128,23 @@
 			user << "You cannot turn the light on while in this [user.loc]" //To prevent some lighting anomalities.
 			return
 		on = !on
-		icon_state = "hardhat[on]_[color]"
-		item_state = "hardhat[on]_[color]"
+		icon_state = "hardhat[on]_[item_color]"
+		item_state = "hardhat[on]_[item_color]"
 
-		if(on)	user.SetLuminosity(user.luminosity + brightness_on)
-		else	user.SetLuminosity(user.luminosity - brightness_on)
+		if(on)	user.ul_SetLuminosity(user.luminosity + brightness_on)
+		else	user.ul_SetLuminosity(user.luminosity - brightness_on)
 
 	pickup(mob/user)
 		if(on)
-			user.SetLuminosity(user.luminosity + brightness_on)
+			user.ul_SetLuminosity(user.luminosity + brightness_on)
 //			user.UpdateLuminosity()
-			SetLuminosity(0)
+			ul_SetLuminosity(0)
 
 	dropped(mob/user)
 		if(on)
-			user.SetLuminosity(user.luminosity - brightness_on)
+			user.ul_SetLuminosity(user.luminosity - brightness_on)
 //			user.UpdateLuminosity()
-			SetLuminosity(brightness_on)
+			ul_SetLuminosity(brightness_on)
 
 /*
  * Kitty ears
@@ -160,7 +158,7 @@
 	var/icon/mob2
 
 /obj/item/clothing/head/kitty/equipped(mob/user, slot)
-	if(user && slot == slot_head)
+	if(user && user:head == src)
 		update_icon(user)
 
 //ffffuck you kitty ears. this proc is a) retarded and b) seems to fail around fifty percent of the time. idgaf tbh

@@ -130,7 +130,7 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2,"hurt"=2, list("march" = 1,"r
 		M << "\red <B>Your equipment malfunctions.</B>" //Yeah, i realise that this WILL
 														//show if theyre not carrying anything
 														//that is affected. lazy.
-		for(var/obj/item/weapon/device/cloak/S in M)
+		for(var/obj/item/device/cloak/S in M)
 			S.active = 0
 			S.icon_state = "shield0"
 
@@ -154,8 +154,8 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2,"hurt"=2, list("march" = 1,"r
 			for(var/obj/item/device/flash/F in M) //Add something for the intercoms.
 				F.attack_self()
 
-		if (locate(/obj/item/weapon/baton, M))
-			for(var/obj/item/weapon/baton/B in M) //Add something for the intercoms.
+		if (locate(/obj/item/weapon/melee/baton, M))
+			for(var/obj/item/weapon/melee/baton/B in M) //Add something for the intercoms.
 				B.charges = 0
 
 		if(locate(/obj/item/clothing/under/chameleon, M))
@@ -164,11 +164,11 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2,"hurt"=2, list("march" = 1,"r
 				C.name = "psychedelic"
 				C.desc = "Groovy!"
 				C.icon_state = "psyche"
-				C.color = "psyche"
+				C.item_color = "psyche"
 				spawn(200)
 					C.name = "Black Jumpsuit"
 					C.icon_state = "bl_suit"
-					C.color = "black"
+					C.item_color = "black"
 					C.desc = null
 
 		M << "\red <B>BZZZT</B>"

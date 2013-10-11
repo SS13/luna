@@ -4,6 +4,7 @@
 	icon_state = "s-ninja"
 	item_state = "s-ninja"
 	siemens_coefficient = 0
+	heat_transfer_coefficient = 0.01
 	var/draining = 0
 	var/candrain = 0
 	var/mindrain = 200
@@ -14,7 +15,11 @@
 	name = "captain's gloves"
 	icon_state = "captain"
 	item_state = "egloves"
-	color = "captain"
+	item_color = "captain"
+	siemens_coefficient = 0
+
+	protective_temperature = 310
+	heat_transfer_coefficient = 0.90
 
 /obj/item/clothing/gloves/cyborg
 	desc = "beep boop borp"
@@ -31,6 +36,9 @@
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
 
+	protective_temperature = 1100
+	heat_transfer_coefficient = 0.01
+
 /obj/item/clothing/gloves/combat //Combined effect of SWAT gloves and insulated gloves
 	desc = "These tactical gloves are somewhat fire and impact resistant."
 	name = "combat gloves"
@@ -46,10 +54,16 @@
 	item_state = "lgloves"
 	siemens_coefficient = 0.30
 	permeability_coefficient = 0.01
-	color="white"
+	item_color="white"
 
+	redcoat
+		item_color = "redcoat"		//Exists for washing machines. Is not different from latex gloves in any way.
+	mime
+		item_color = "mime"			//Exists for washing machines. Is not different from latex gloves in any way.
 	cmo
-		color = "medical"		//Exists for washing machines. Is not different from latex gloves in any way.
+		item_color = "medical"		//Exists for washing machines. Is not different from latex gloves in any way.
+	rd
+		item_color = "director"		//Exists for washing machines. Is not different from latex gloves in any way.
 
 /obj/item/clothing/gloves/botanic_leather
 	desc = "These leather gloves protect against thorns, barbs, prickles, spikes and other harmful objects of floral origin."

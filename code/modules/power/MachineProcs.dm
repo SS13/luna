@@ -13,7 +13,7 @@
 /obj/machinery/proc/use_power(var/amount, var/chan=EQUIP) // defaults to Equipment channel
 	var/area/A = src.loc.loc		// make sure it's in an area
 	if(!A || !isarea(A))
-		return
+		return 0
 
 	A.master.use_power(amount, chan)
 

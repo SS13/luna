@@ -181,6 +181,7 @@
 		if(BRUTE) organ.take_damage(damage, 0)
 		if(BURN) organ.take_damage(0, damage)
 	updatehealth()
+	UpdateDamageIcon()
 	return 1
 
 /proc/check_zone(zone)

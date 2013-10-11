@@ -1,7 +1,7 @@
 #define AIRLOCK_CONTROL_RANGE 5
 
 // This code allows for airlocks to be controlled externally by setting an id_tag and comm frequency (disables ID access)
-obj/machinery/door/airlock
+/obj/machinery/door/airlock
 	var/id_tag
 	var/frequency
 	explosionstrength = 2
@@ -89,7 +89,7 @@ obj/machinery/door/airlock
 		if(radio_controller)
 			set_frequency(frequency)
 
-obj/machinery/airlock_sensor
+/obj/machinery/airlock_sensor
 	icon = 'airlock_machines.dmi'
 	icon_state = "airlock_sensor_off"
 	name = "Airlock Sensor"
@@ -156,7 +156,7 @@ obj/machinery/airlock_sensor
 		if(radio_controller)
 			set_frequency(frequency)
 
-obj/machinery/access_button
+/obj/machinery/access_button
 	icon = 'airlock_machines.dmi'
 	icon_state = "access_button_standby"
 	name = "Access Button"
@@ -202,7 +202,7 @@ obj/machinery/access_button
 		if(radio_controller)
 			set_frequency(frequency)
 
-obj/machinery/shieldsbutton
+/obj/machinery/shieldsbutton
 	name = "Toggle Shields"
 	icon = 'airlock_machines.dmi'
 	icon_state = "access_button_standby"

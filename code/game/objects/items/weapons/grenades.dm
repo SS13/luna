@@ -8,29 +8,15 @@ FLASHBANG
 /obj/item/weapon/grenade/flashbang
 	desc = "It is set to detonate in 3 seconds."
 	name = "flashbang"
-	icon = 'grenade.dmi'
-	icon_state = "flashbang"
-	var/state = null
-	var/det_time = 30.0
-	w_class = 2.0
-	item_state = "flashbang"
-	throw_speed = 4
-	throw_range = 20
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
+	det_time = 30
 	origin_tech = "materials=2;combat=1"
 
 /obj/item/weapon/grenade/emp
 	desc = "It is set to detonate in 5 seconds."
 	name = "emp grenade"
-	var/state = null
-	var/det_time = 50.0
-	w_class = 2.0
-	icon = 'grenade.dmi'
+	det_time = 50
 	icon_state = "emp"
 	item_state = "emp"
-	throw_speed = 4
-	throw_range = 20
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
 	origin_tech = "materials=2;magnets=3"
 
 /obj/item/weapon/grenade/emp/afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
@@ -115,7 +101,7 @@ FLASHBANG
 		M << "\red <B>Your equipment malfunctions.</B>" //Yeah, i realise that this WILL
 														//show if theyre not carrying anything
 														//that is affected. lazy.
-		for(var/obj/item/weapon/device/cloak/S in M)
+		for(var/obj/item/device/cloak/S in M)
 			S.active = 0
 			S.icon_state = "shield0"
 
@@ -146,8 +132,8 @@ FLASHBANG
 			for(var/obj/item/device/flash/F in M) //Add something for the intercoms.
 				F.attack_self()
 
-		if (locate(/obj/item/weapon/baton, M))
-			for(var/obj/item/weapon/baton/B in M) //Add something for the intercoms.
+		if (locate(/obj/item/weapon/melee/baton, M))
+			for(var/obj/item/weapon/melee/baton/B in M) //Add something for the intercoms.
 				B.charges = 0
 
 		if(locate(/obj/item/clothing/under/chameleon, M))
@@ -156,11 +142,11 @@ FLASHBANG
 				C.name = "psychedelic"
 				C.desc = "Groovy!"
 				C.icon_state = "psyche"
-				C.color = "psyche"
+				C.item_color = "psyche"
 				spawn(200)
 					C.name = "Black Jumpsuit"
 					C.icon_state = "bl_suit"
-					C.color = "black"
+					C.item_color = "black"
 					C.desc = null
 
 		M << "\red <B>BZZZT</B>"
@@ -324,8 +310,8 @@ FLASHBANG
 		T.hotspot_expose(SPARK_TEMP,125)
 
 	for(var/mob/living/carbon/M in viewers(T, null))
-		if (locate(/obj/item/weapon/device/cloak, M))
-			for(var/obj/item/weapon/device/cloak/S in M)
+		if (locate(/obj/item/device/cloak, M))
+			for(var/obj/item/device/cloak/S in M)
 				S.active = 0
 				S.icon_state = "shield0"
 		if ((get_dist(M, T) <= 2 || src.loc == M.loc || src.loc == M))

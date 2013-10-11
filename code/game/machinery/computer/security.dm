@@ -1,5 +1,4 @@
 /obj/machinery/computer/secure_data/attackby(obj/I, mob/user)
-	..()
 	if (istype(I, /obj/item/weapon/disk/data))
 		if (!src.diskette)
 			user.drop_item(I)
@@ -8,9 +7,62 @@
 			user << "You insert [I]."
 			src.updateUsrDialog()
 			return
+	else if(istype(I, /obj/item/weapon/paper/scan))
+		var/duplicate_check = 0
+		var/obj/item/weapon/paper/scan/report = I
+
+		for(var/datum/data/record/test in data_core.general)
+			if(test.fields["name"] == report.mname)
+				duplicate_check = 1
+				break
+
+		if(!duplicate_check)
+			var/datum/data/record/G = new /datum/data/record( )
+			var/datum/data/record/S = new /datum/data/record( )
+			var/datum/data/record/M = new /datum/data/record( )
+
+			G.fields["id"] = text("[]", add_zero(num2hex(rand(1, 1.6777215E7)), 6))
+			G.name = text("General Record #[G.fields["id"]]")
+			G.fields["name"] = report.mname
+			G.fields["rank"] = "Unassigned"
+			G.fields["sex"] = report.mgender
+			G.fields["age"] = report.age
+			G.fields["fingerprint"] = report.fingerprint
+			G.fields["p_stat"] = "Active"
+			G.fields["m_stat"] = "Stable"
+			data_core.general += G
+
+			M.fields["id"] = G.fields["id"]
+			M.name = text("Medical Record #[G.fields["id"]]")
+			M.fields["name"] = report.mname
+			M.fields["b_type"] = report.bloodtype
+			M.fields["bloodsample"] = report.dna
+			M.fields["mi_dis"] = "None"
+			M.fields["mi_dis_d"] = "No minor disabilities have been declared."
+			M.fields["ma_dis"] = "None"
+			M.fields["ma_dis_d"] = "No major disabilities have been diagnosed."
+			M.fields["alg"] = "None"
+			M.fields["alg_d"] = "No allergies have been detected in this patient."
+			M.fields["cdi"] = "None"
+			M.fields["cdi_d"] = "No diseases have been diagnosed at the moment."
+			M.fields["notes"] = "No notes."
+			data_core.medical += M
+
+			S.fields["id"] = G.fields["id"]
+			S.name = text("Security Record #[G.fields["id"]]")
+			S.fields["name"] = report.mname
+			S.fields["criminal"] = "None"
+			S.fields["mi_crim"] = "None"
+			S.fields["mi_crim_d"] = "No minor crime convictions."
+			S.fields["ma_crim"] = "None"
+			S.fields["ma_crim_d"] = "No major crime convictions."
+			S.fields["notes"] = "No notes."
+			data_core.security += S
+
+			user << "Data record created."
+			user << "Do not forget to update record's rank."
 	else
-		src.attack_hand(user)
-	return
+		..()
 
 /obj/machinery/computer/secure_data/attack_ai(mob/user as mob)
 	return src.attack_hand(user)

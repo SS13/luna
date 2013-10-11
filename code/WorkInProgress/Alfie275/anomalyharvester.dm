@@ -7,7 +7,7 @@
 	var/harvesting = 0
 	var/obj/item/weapon/anomaly/a = null
 	var/obj/item/weapon/anobattery/b = null
-	var/obj/item/weapon/anomalyfilter/f = null
+	var/obj/item/weapon/disk/anomalyfilter/f = null
 
 
 /obj/machinery/anomaly/anomalyharvester/attackby(var/obj/I as obj, var/mob/user as mob)
@@ -48,7 +48,7 @@
 			for(var/mob/M in viewers(src))
 				if(M == user)	continue
 				M.show_message("\blue [user.name] inserts the [a.name] in the [src.name]", 3)
-	if(istype(I,/obj/item/weapon/anomalyfilter))
+	if(istype(I,/obj/item/weapon/disk/anomalyfilter))
 		if(!f)
 			user << "You insert the filter."
 			user.drop_item()

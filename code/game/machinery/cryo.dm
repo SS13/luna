@@ -184,12 +184,12 @@
 						if(ishuman(occupant))
 							for(var/datum/organ/external/O in occupant:organs)
 								if(!O.destroyed && !O.robotic)//FIND BACK
-									if(occupant.bruteloss && prob(25)) O.heal_damage(1,0,0)
-									if(occupant.fireloss && prob(25)) O.heal_damage(0,1,0)
+									if(prob(5)) O.heal_damage(1,0,0)
+									if(prob(5)) O.heal_damage(0,1,0)
 						else
-							if(occupant.bruteloss && prob(25)) occupant.bruteloss = max(0, occupant.bruteloss - 1)
-							if(occupant.fireloss && prob(25)) occupant.fireloss = max(0, occupant.fireloss - 1)
-						if(occupant.toxloss && prob(25)) occupant.toxloss = max(0, occupant.toxloss - 1)
+							if(occupant.bruteloss && prob(5)) occupant.bruteloss = max(0, occupant.bruteloss - 1)
+							if(occupant.fireloss && prob(5)) occupant.fireloss = max(0, occupant.fireloss - 1)
+						if(occupant.toxloss && prob(5)) occupant.toxloss = max(0, occupant.toxloss - 1)
 
 				if(beaker && (next_trans == 0))
 					beaker:reagents.trans_to(occupant, 1, 10)

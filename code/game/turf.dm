@@ -103,8 +103,8 @@
 	W.dir = old_dir
 	W.icon_old = old_icon
 	if(old_icon) W.icon_state = old_icon
-	W.opacity = 1
-	W.ul_SetOpacity(0)
+	W.opacity = !W.opacity
+	W.ul_SetOpacity(!W.opacity)
 	W.levelupdate()
 
 	//var/icon/tempicon = icon_state
@@ -128,15 +128,15 @@
 	W.dir = old_dir
 	W.icon_old = old_icon
 	if(old_icon) W.icon_state = old_icon
-	W.opacity = 0
-	W.ul_SetOpacity(0)
+	W.opacity = !W.opacity
+	W.ul_SetOpacity(!W.opacity)
 	W.levelupdate()
 	return W
 
 /turf/proc/MakePlating()
 	var/turf/simulated/floor/plating/W = new /turf/simulated/floor/plating( locate(src.x, src.y, src.z) )
-	W.opacity = 0
-	W.ul_SetOpacity(0)
+	W.opacity = !W.opacity
+	W.ul_SetOpacity(!W.opacity)
 	W.levelupdate()
 	update_nearby_tiles()
 	return W
@@ -148,8 +148,8 @@
 	var/turf/simulated/floor/engine/E = new /turf/simulated/floor/engine( locate(src.x, src.y, src.z) )
 	E.dir = old_dir
 	E.icon_old = old_icon
-	E.opacity = 0
-	E.ul_SetOpacity(0)
+	E.opacity = !E.opacity
+	E.ul_SetOpacity(!E.opacity)
 	E.levelupdate()
 
 /turf/simulated/Entered(atom/A, atom/OL)
@@ -230,8 +230,8 @@
 	W.dir = old_dir
 	W.icon_old = old_icon
 	if(old_icon) W.icon_state = old_icon
-	W.opacity = 0
-	W.ul_SetOpacity(0)
+	W.opacity = !W.opacity
+	W.ul_SetOpacity(initial(W.opacity))
 	W.levelupdate()
 	new /obj/structure/lattice( locate(src.x, src.y, src.z) )
 
@@ -242,15 +242,15 @@
 
 /turf/proc/ReplaceWithWall()
 	var/turf/simulated/wall/S = new /turf/simulated/wall( locate(src.x, src.y, src.z) )
-	S.opacity = 1
-	S.ul_SetOpacity(1)
+//	S.opacity = 1
+	S.ul_UpdateLight()
 	update_nearby_tiles()
 	return S
 
 /turf/proc/ReplaceWithRWall()
 	var/turf/simulated/wall/r_wall/S = new /turf/simulated/wall/r_wall( locate(src.x, src.y, src.z) )
-	S.opacity = 1
-	S.ul_SetOpacity(1)
+	S.opacity = !S.opacity
+	S.ul_SetOpacity(!S.opacity)
 	update_nearby_tiles()
 	return S
 
@@ -318,7 +318,8 @@
 			else
 				dismantle_wall(1)
 		if(3.0)
-			dismantle_wall()
+			if (prob(20))
+				dismantle_wall()
 		else
 	return
 
@@ -367,7 +368,7 @@
 		return
 
 	if (thermite)
-		if(istype(W, /obj/item/weapon/sword) && W:active) ThermiteBurn(user)
+		if(istype(W, /obj/item/weapon/melee/energy/sword) && W:active) ThermiteBurn(user)
 		if(istype(W, /obj/item/device/flashlight/flare) && W:on) ThermiteBurn(user)
 
 	if (istype(W, /obj/item/weapon/weldingtool) && W:welding)
@@ -392,8 +393,8 @@
 			user << "\blue You disassembled the outer wall plating."
 			S.dismantle_wall()
 
-	if(istype(W,/obj/item/frame/light_fixture))
-		var/obj/item/frame/light_fixture/AH = W
+	if(istype(W,/obj/item/frame))
+		var/obj/item/frame/AH = W
 		AH.try_build(src)
 		return
 
@@ -423,8 +424,13 @@
 		usr << "\red You don't have the dexterity to do this!"
 		return
 
+	if(istype(W,/obj/item/frame))
+		var/obj/item/frame/AH = W
+		AH.try_build(src)
+		return
+
 	if (thermite)
-		if(istype(W, /obj/item/weapon/sword) && W:active) ThermiteBurn(user)
+		if(istype(W, /obj/item/weapon/melee/energy/sword) && W:active) ThermiteBurn(user)
 		if(istype(W, /obj/item/device/flashlight/flare) && W:on) ThermiteBurn(user)
 
 	if (istype(W, /obj/item/weapon/weldingtool) && W:welding)
@@ -839,7 +845,7 @@ turf/simulated/floor/proc/update_icon()
 				if(istype(M:shoes, /obj/item/clothing/shoes) && M:shoes.flags&NOSLIP)
 					prob_slip -= 10
 			prob_slip = round(prob_slip)
-			if (prob_slip < 5) //next to something, but they might slip off
+			if (prob_slip < 10) //next to something, but they might slip off
 				if (prob(prob_slip) )
 					M << "\blue <B>You slipped!</B>"
 					M.inertia_dir = M.last_move
@@ -868,7 +874,7 @@ turf/simulated/floor/proc/update_icon()
 
 	//Copied from old code
 	if (A.x <= 2 || A.x >= (world.maxx - 1) || A.y <= 2 || A.y >= (world.maxy - 1))
-		if(istype(A, /obj/meteor))
+		if(istype(A, /obj/effect/meteor))
 			del(A)
 			return
 
@@ -898,7 +904,7 @@ turf/simulated/floor/proc/update_icon()
 	if(level==Z_STATION)
 		return pick(1, 2, 3, 4)
 	else if(level==Z_SPACE)
-		return 5
+		return pick(5, 7)
 	return 1//Default
 
 	//Old function:

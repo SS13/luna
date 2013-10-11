@@ -9,6 +9,8 @@
 #define LIGHT_BROKEN 2
 #define LIGHT_BURNED 3
 
+/obj/item/frame/proc/try_build(turf/on_wall)
+	return
 
 /obj/item/frame/light_fixture
 	name = "light fixture frame"
@@ -27,7 +29,7 @@
 		return
 	..()
 
-/obj/item/frame/light_fixture/proc/try_build(turf/on_wall)
+/obj/item/frame/light_fixture/try_build(turf/on_wall)
 	if (get_dist(on_wall,usr)>1)
 		return
 	var/ndir = get_dir(usr,on_wall)
@@ -373,6 +375,12 @@
 
 // attack with item - insert light (if right type), otherwise try to break the light
 /obj/machinery/light/attackby(obj/item/W, mob/user)
+	if(istype(W, /obj/item/device/lightreplacer))
+		var/obj/item/device/lightreplacer/LR = W
+		if(isliving(user))
+			var/mob/living/U = user
+			LR.ReplaceLight(src, U)
+			return
 	if (istype(user, /mob/living/silicon))
 		return
 
@@ -445,9 +453,7 @@
 
 	else if(status != LIGHT_BROKEN && status != LIGHT_EMPTY)
 
-
-		if(prob(1+W.force * 5))
-
+		if(prob((1+W.force)*12))
 			user << "You hit the light, and it smashes!"
 			for(var/mob/M in viewers(src))
 				if(M == user)
@@ -507,8 +513,18 @@
 
 		if(prot > 0 || (user.mutations & 2))
 			user << "You remove the light [fitting]"
+		else if(istype(H) && H.a_intent == "hurt")
+			user << "You smash the light [fitting], but burn your hand on it!"
+
+			var/datum/organ/external/affecting = H.organs["[user.hand ? "l" : "r" ]_hand"]
+
+			affecting.take_damage( 2, 6 )		// 6 burn damage and 2 brute
+			broken()
+			H.UpdateDamageIcon()
+			H.updatehealth()
+			return				// if burned, don't remove the light
 		else
-			user << "You try to remove the light [fitting], but you burn your hand on it!"
+			user << "You try to remove the light [fitting], but burn your hand on it!"
 
 			var/datum/organ/external/affecting = H.organs["[user.hand ? "l" : "r" ]_hand"]
 

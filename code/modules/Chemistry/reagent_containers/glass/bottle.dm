@@ -98,7 +98,7 @@
 		..()
 		reagents.add_reagent("diethylamine", 30)
 
-/obj/item/weapon/reagent_containers/glass/bottle/flu_virion
+/obj/item/weapon/reagent_containers/glass/bottle/virus/flu_virion
 	name = "Flu virion culture bottle"
 	desc = "A small bottle. Contains H13N1 flu virion culture in synthblood medium."
 	icon_state = "bottle3"
@@ -108,7 +108,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/*obj/item/weapon/reagent_containers/glass/bottle/epiglottis_virion
+/*obj/item/weapon/reagent_containers/glass/bottle/virus/epiglottis_virion
 	name = "Epiglottis virion culture bottle"
 	desc = "A small bottle. Contains Epiglottis virion culture in synthblood medium."
 	icon_state = "bottle3"
@@ -118,7 +118,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)*/
 
-/obj/item/weapon/reagent_containers/glass/bottle/liver_enhance_virion
+/obj/item/weapon/reagent_containers/glass/bottle/virus/liver_enhance_virion
 	name = "Liver enhancement virion culture bottle"
 	desc = "A small bottle. Contains liver enhancement virion culture in synthblood medium."
 	icon_state = "bottle3"
@@ -128,7 +128,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/obj/item/weapon/reagent_containers/glass/bottle/hullucigen_virion
+/obj/item/weapon/reagent_containers/glass/bottle/virus/hullucigen_virion
 	name = "Hullucigen virion culture bottle"
 	desc = "A small bottle. Contains hullucigen virion culture in synthblood medium."
 	icon_state = "bottle3"
@@ -138,7 +138,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/obj/item/weapon/reagent_containers/glass/bottle/pierrot_throat
+/obj/item/weapon/reagent_containers/glass/bottle/virus/pierrot_throat
 	name = "Pierrot's Throat culture bottle"
 	desc = "A small bottle. Contains H0NI<42 virion culture in synthblood medium."
 	icon_state = "bottle3"
@@ -148,7 +148,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/obj/item/weapon/reagent_containers/glass/bottle/cold
+/obj/item/weapon/reagent_containers/glass/bottle/virus/cold
 	name = "Rhinovirus culture bottle"
 	desc = "A small bottle. Contains XY-rhinovirus culture in synthblood medium."
 	icon_state = "bottle3"
@@ -158,7 +158,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/obj/item/weapon/reagent_containers/glass/bottle/random
+/obj/item/weapon/reagent_containers/glass/bottle/virus/random
 	name = "Random culture bottle"
 	desc = "A small bottle. Contains a random disease."
 	icon_state = "bottle3"
@@ -168,7 +168,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/*obj/item/weapon/reagent_containers/glass/bottle/retrovirus
+/*obj/item/weapon/reagent_containers/glass/bottle/virus/retrovirus
 	name = "Retrovirus culture bottle"
 	desc = "A small bottle. Contains a retrovirus culture in a synthblood medium."
 	icon_state = "bottle3"
@@ -178,7 +178,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)*/
 
-/obj/item/weapon/reagent_containers/glass/bottle/dna_spread
+/obj/item/weapon/reagent_containers/glass/bottle/virus/dna_spread
 	name = "Retrovirus culture bottle"
 	desc = "A small bottle. Contains a retrovirus culture in a synthblood medium."
 	icon_state = "bottle3"
@@ -189,7 +189,7 @@
 		reagents.add_reagent("blood", 20, data)
 
 
-/obj/item/weapon/reagent_containers/glass/bottle/gbs
+/obj/item/weapon/reagent_containers/glass/bottle/virus/gbs
 	name = "GBS culture bottle"
 	desc = "A small bottle. Contains Gravitokinetic Bipotential SADS+ culture in synthblood medium."//Or simply - General BullShit
 	icon_state = "bottle3"
@@ -203,7 +203,7 @@
 		var/list/data = list("virus"= F)
 		R.add_reagent("blood", 20, data)
 
-/obj/item/weapon/reagent_containers/glass/bottle/fake_gbs
+/obj/item/weapon/reagent_containers/glass/bottle/virus/fake_gbs
 	name = "GBS culture bottle"
 	desc = "A small bottle. Contains Gravitokinetic Bipotential SADS- culture in synthblood medium."
 	icon_state = "bottle3"
@@ -213,7 +213,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/obj/item/weapon/reagent_containers/glass/bottle/rhumba_beat
+/obj/item/weapon/reagent_containers/glass/bottle/virus/rhumba_beat
 	name = "Rhumba Beat culture bottle"
 	desc = "A small bottle. Contains The Rhumba Beat culture in synthblood medium."
 	icon_state = "bottle3"
@@ -228,7 +228,7 @@
 		R.add_reagent("blood", 20, data)
 
 
-/obj/item/weapon/reagent_containers/glass/bottle/brainrot
+/obj/item/weapon/reagent_containers/glass/bottle/virus/brainrot
 	name = "Brainrot culture bottle"
 	desc = "A small bottle. Contains Cryptococcus Cosmosis culture in synthblood medium."
 	icon_state = "bottle3"
@@ -238,7 +238,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/obj/item/weapon/reagent_containers/glass/bottle/magnitis
+/obj/item/weapon/reagent_containers/glass/bottle/virus/magnitis
 	name = "Magnitis culture bottle"
 	desc = "A small bottle. Contains a small dosage of Fukkos Miracos."
 	icon_state = "bottle3"
@@ -248,7 +248,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
-/*obj/item/weapon/reagent_containers/glass/bottle/fakedeath
+/*obj/item/weapon/reagent_containers/glass/bottle/virus/fakedeath
 	name = "Fake Death culture bottle"
 	desc = "A small bottle. Contains a small dosage of MetG"
 	icon_state = "bottle3"
@@ -258,7 +258,7 @@
 		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)*/
 
-/*obj/item/weapon/reagent_containers/glass/bottle/wizarditis
+/obj/item/weapon/reagent_containers/glass/bottle/virus/wizarditis
 	name = "Wizarditis culture bottle"
 	desc = "A small bottle. Contains a sample of Rincewindus Vulgaris."
 	icon_state = "bottle3"
@@ -266,7 +266,7 @@
 		..()
 		var/datum/disease/F = new /datum/disease/wizarditis(0)
 		var/list/data = list("viruses"= list(F))
-		reagents.add_reagent("blood", 20, data)*/
+		reagents.add_reagent("blood", 20, data)
 
 /obj/item/weapon/reagent_containers/glass/bottle/pacid
 	name = "Polytrinic Acid Bottle"

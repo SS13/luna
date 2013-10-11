@@ -84,11 +84,32 @@
 
 
 /obj/item/ammo_casing/shotgun/dart
-	name = "shotgun darts"
+	name = "shotgun dart"
 	desc = "A dart for use in shotguns."
 	icon_state = "blshell" //someone, draw the icon, please.
-	projectile_type = "/obj/item/projectile/energy/dart"
-	m_amt = 12500
+	projectile_type = "/obj/item/projectile/bullet/dart"
+	m_amt = 7500
+	New()
+		..()
+		flags |= NOREACT
+		create_reagents(50)
+
+	attackby()
+		return
+
+/obj/item/ammo_casing/shotgun/dartpreloaded
+	name = "shotgun dart"
+	desc = "A dart for use in shotguns."
+	icon_state = "blshell" //someone, draw the icon, please.
+	projectile_type = "/obj/item/projectile/bullet/dart"
+	m_amt = 7500
+
+/obj/item/ammo_casing/shotgun/dartpreloaded/metalfoam
+	projectile_type = "/obj/item/projectile/bullet/dart/metalfoam"
+/obj/item/ammo_casing/shotgun/dartpreloaded/cleaner
+	projectile_type = "/obj/item/projectile/bullet/dart/cleaner"
+/obj/item/ammo_casing/shotgun/dartpreloaded/lube
+	projectile_type = "/obj/item/projectile/bullet/dart/lube"
 
 /obj/item/ammo_casing/a762
 	desc = "A 7.62 bullet casing."

@@ -21,37 +21,21 @@
 
 /obj/structure/closet/emcloset/New()
 	..()
+	if (prob(40)) new /obj/item/weapon/storage/toolbox/emergency(src)
+	if (prob(25)) new /obj/item/weapon/storage/firstaid/o2(src)
 
-	if (prob(40))
-		new /obj/item/weapon/storage/toolbox/emergency(src)
+	if (prob(10)) new /obj/item/weapon/tank/emergency_oxygen/engi(src)
+	else new  /obj/item/weapon/tank/emergency_oxygen(src)
+	new /obj/item/clothing/mask/breath(src)
 
-	switch (pickweight(list("small" = 40, "aid" = 25, "tank" = 20, "both" = 10, "nothing" = 4, "delete" = 1)))
-		if ("small")
-			new /obj/item/weapon/tank/emergency_oxygen(src)
-			new /obj/item/weapon/tank/emergency_oxygen(src)
+	if (prob(10)) new /obj/item/weapon/tank/emergency_oxygen/engi(src)
+	else new  /obj/item/weapon/tank/emergency_oxygen(src)
+	new /obj/item/clothing/mask/breath(src)
 
-		if ("aid")
-			new /obj/item/weapon/tank/emergency_oxygen(src)
-			new /obj/item/weapon/storage/firstaid/o2(src)
+	if (prob(10)) new /obj/item/weapon/tank/emergency_oxygen/engi(src)
+	else new  /obj/item/weapon/tank/emergency_oxygen(src)
+	new /obj/item/clothing/mask/breath(src)
 
-		if ("tank")
-			new /obj/item/weapon/tank/air(src)
-
-		if ("both")
-			new /obj/item/weapon/tank/emergency_oxygen(src)
-			new /obj/item/clothing/mask/breath(src)
-
-		if ("nothing")
-			// doot
-
-		// teehee
-		if ("delete")
-			del(src)
-
-		//If you want to re-add fire, just add "fire" = 15 to the pick list.
-		/*if ("fire")
-			new /obj/structure/closet/firecloset(src.loc)
-			del(src)*/
 
 /obj/structure/closet/emcloset/legacy/New()
 	new /obj/item/weapon/tank/oxygen(src)
@@ -60,7 +44,23 @@
 /*
  * Fire Closet
  */
+
 /obj/structure/closet/firecloset
+	name = "fire-safety closet"
+	desc = "It's a storage unit for fire-fighting supplies."
+	icon_state = "firecloset"
+	icon_closed = "firecloset"
+	icon_opened = "fireclosetopen"
+
+/obj/structure/closet/firecloset/New()
+	..()
+	new /obj/item/weapon/storage/toolbox/emergency(src)
+	new /obj/item/weapon/storage/toolbox/emergency(src)
+
+	new /obj/item/weapon/extinguisher(src)
+	new /obj/item/weapon/extinguisher(src)
+
+/*obj/structure/closet/firecloset
 	name = "fire-safety closet"
 	desc = "It's a storage unit for fire-fighting supplies."
 	icon_state = "firecloset"
@@ -136,7 +136,7 @@
 		new /obj/item/clothing/gloves/yellow(src)
 	if(prob(40))
 		new /obj/item/clothing/head/hardhat(src)
-
+*/
 
 /*
  * Radiation Closet
@@ -183,13 +183,13 @@
 	..()
 	sleep(2)
 	new /obj/item/clothing/suit/bomb_suit/security( src )
-	new /obj/item/clothing/under/rank/security( src )
-	new /obj/item/clothing/shoes/brown( src )
+	new /obj/item/clothing/under/color/red( src )
+	new /obj/item/clothing/shoes/jackboots( src )
 	new /obj/item/clothing/head/bomb_hood/security( src )
 
 /*
  * Hydrant
- */
+ *
 /obj/structure/closet/hydrant //wall mounted fire closet
 	name = "fire-safety closet"
 	desc = "It's a storage unit for fire-fighting supplies."
@@ -217,4 +217,4 @@
 	if(!opened)
 		icon_state = icon_closed
 	else
-		icon_state = icon_opened
+		icon_state = icon_opened*/

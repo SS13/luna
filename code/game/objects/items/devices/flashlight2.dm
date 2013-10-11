@@ -215,8 +215,8 @@
 
 /obj/item/clothing/head/helmet/hardhat/attack_self(mob/user)
 	on = !on
-	icon_state = "hardhat[on]_[color]"
-	item_state = "hardhat[on]_[color]"
+	icon_state = "hardhat[on]_[item_color]"
+	item_state = "hardhat[on]_[item_color]"
 
 	if(on)
 		user.ul_SetLuminosity(user.luminosity + 5)

@@ -113,7 +113,7 @@
 	desc = "Needs some butter!"
 	icon_state = "corn"
 	potency = 40
-	trash = /obj/item/weapon/corncob
+	trash = /obj/item/weapon/grown/corncob
 
 	New()
 		..()
@@ -403,7 +403,7 @@
 			reagents.add_reagent("nutriment", 1+round((potency / 6), 1))
 			bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/pumpkin
+/*obj/item/weapon/reagent_containers/food/snacks/grown/pumpkin
 	seed = "/obj/item/seeds/pumpkinseed"
 	name = "pumpkin"
 	desc = "It's large and scary."
@@ -422,7 +422,7 @@
 		user.show_message("<span class='notice'>You carve a face into [src]!</span>", 1)
 		new /obj/item/clothing/head/pumpkinhead (user.loc)
 		del(src)
-		return
+		return*/
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/lime
 	seed = "/obj/item/seeds/limeseed"
@@ -559,7 +559,7 @@
 		del(src)
 		return
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/killertomato
+/*obj/item/weapon/reagent_containers/food/snacks/grown/killertomato
 	seed = "/obj/item/seeds/killertomatoseed"
 	name = "killer-tomato"
 	desc = "I say to-mah-to, you say tom-mae-to... OH GOD IT'S EATING MY LEGS!!"
@@ -577,7 +577,7 @@
 	new /mob/living/simple_animal/tomato(user.loc)
 	del(src)
 
-	user << "<span class='notice'>You plant the killer-tomato.</span>"
+	user << "<span class='notice'>You plant the killer-tomato.</span>"*/
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/bloodtomato
 	seed = "/obj/item/seeds/bloodtomatoseed"
@@ -649,7 +649,7 @@
 			reagents.add_reagent("nutriment", 1+round((potency / 25), 1))
 			bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/grass
+/*obj/item/weapon/reagent_containers/food/snacks/grown/grass
 	seed = "/obj/item/seeds/grassseed"
 	name = "grass"
 	desc = "Green and lush."
@@ -663,7 +663,7 @@
 /obj/item/weapon/reagent_containers/food/snacks/grown/grass/attack_self(mob/user as mob)
 	user << "<span class='notice'>You prepare the astroturf.</span>"
 	new/obj/item/stack/tile/grass(user.loc)
-	del(src)
+	del(src)*/
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/kudzupod
 	seed = "/obj/item/seeds/kudzuseed"
@@ -797,7 +797,7 @@
 			reagents.add_reagent("nutriment", 2+round((potency / 10), 1))
 			bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/walkingmushroom
+/*obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/walkingmushroom
 	seed = "/obj/item/seeds/walkingmushroom"
 	name = "walking mushroom"
 	desc = "<I>Plumus Locomotus</I>: The beginning of the great walk."
@@ -814,7 +814,7 @@
 	new /mob/living/simple_animal/mushroom(user.loc)
 	del(src)
 
-	user << "<span class='notice'>You plant the walking mushroom.</span>"
+	user << "<span class='notice'>You plant the walking mushroom.</span>"*/
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/chanterelle
 	seed = "/obj/item/seeds/chantermycelium"
@@ -827,7 +827,7 @@
 			reagents.add_reagent("nutriment",1+round((potency / 25), 1))
 			bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/glowshroom
+/*obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/glowshroom
 	seed = "/obj/item/seeds/glowshroom"
 	name = "glowshroom cluster"
 	desc = "<I>Mycena Bregprox</I>: This species of mushroom glows in the dark."
@@ -873,7 +873,7 @@
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/glowshroom/dropped(mob/user)
 	user.ul_SetLuminosity(round(user.luminosity + (potency/10),1))
-	ul_SetLuminosity(round(potency/10,1))
+	ul_SetLuminosity(round(potency/10,1))*/
 
 //This object is just a transition object. All it does is make dosh and delete itself. -Cheridan
 /obj/item/weapon/reagent_containers/food/snacks/grown/money

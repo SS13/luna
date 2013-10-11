@@ -31,7 +31,7 @@
 	else
 		target = who
 		target_desc = get_target_desc(target)
-	world << "\red <B>HEAD OFFICE: [target_desc] is accused of attempting to start a Union and is now considered a threat to the station. Terminate the employee immediately.</b>"
+	world << "\red <B>HEAD OFFICE: [target_desc] is accused of attempting to start a Union and is now considered a threat to the ship. Terminate the employee immediately.</b>"
 	ticker.target = target
 
 	target.store_memory("Head office has ordered your downsizing. Watch out!", 0)

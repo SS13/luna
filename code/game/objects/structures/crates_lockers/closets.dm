@@ -12,8 +12,9 @@
 	var/wall_mounted = 0 //never solid (You can always pass over it)
 	var/health = 100
 	var/lastbang
-	var/storage_capacity = 30 //This is so that someone can't pack hundreds of items in a locker/crate
+	var/storage_capacity = 50 //This is so that someone can't pack hundreds of items in a locker/crate
 							  //then open it in a populated area to crash clients.
+	var/rigged = 0
 
 /obj/structure/closet/New()
 	..()
@@ -43,8 +44,8 @@
 
 /obj/structure/closet/proc/dump_contents()
 	//Cham Projector Exception
-	for(var/obj/effect/dummy/chameleon/AD in src)
-		AD.loc = src.loc
+	/*(for(var/obj/effect/dummy/chameleon/AD in src)
+		AD.loc = src.loc*/
 
 	for(var/obj/item/I in src)
 		I.loc = src.loc
@@ -82,11 +83,11 @@
 	var/itemcount = 0
 
 	//Cham Projector Exception
-	for(var/obj/effect/dummy/chameleon/AD in src.loc)
+	/*for(var/obj/effect/dummy/chameleon/AD in src.loc)
 		if(itemcount >= storage_capacity)
 			break
 		AD.loc = src
-		itemcount++
+		itemcount++*/
 
 	for(var/obj/item/I in src.loc)
 		if(itemcount >= storage_capacity)
@@ -128,51 +129,41 @@
 /obj/structure/closet/ex_act(severity)
 	switch(severity)
 		if(1)
-			for(var/atom/movable/A as mob|obj in src)//pulls everything out of the locker and hits it with an explosion
-				A.loc = src.loc
-				A.ex_act(severity++)
+			src.dump_contents()
 			del(src)
 		if(2)
 			if(prob(50))
-				for (var/atom/movable/A as mob|obj in src)
-					A.loc = src.loc
-					A.ex_act(severity++)
+				src.dump_contents()
 				del(src)
 		if(3)
 			if(prob(5))
-				for(var/atom/movable/A as mob|obj in src)
-					A.loc = src.loc
-					A.ex_act(severity++)
+				src.dump_contents()
 				del(src)
 
 /obj/structure/closet/bullet_act(var/obj/item/projectile/Proj)
 	health -= Proj.damage
 	..()
 	if(health <= 0)
-		for(var/atom/movable/A as mob|obj in src)
-			A.loc = src.loc
+		src.dump_contents()
 		del(src)
 
 	return
 
-/obj/structure/closet/attack_animal(mob/living/simple_animal/user as mob)
+/*obj/structure/closet/attack_animal(mob/living/simple_animal/user as mob)
 	if(user.wall_smash)
 		visible_message("\red [user] destroys the [src]. ")
 		for(var/atom/movable/A as mob|obj in src)
 			A.loc = src.loc
-		del(src)
+		del(src)*/
 
 // this should probably use dump_contents()
 /obj/structure/closet/blob_act()
 	if(prob(75))
-		for(var/atom/movable/A as mob|obj in src)
-			A.loc = src.loc
+		src.dump_contents()
 		del(src)
 
 /obj/structure/closet/meteorhit(obj/O as obj)
 	if(O.icon_state == "flaming")
-		for(var/mob/M in src)
-			M.meteorhit(O)
 		src.dump_contents()
 		del(src)
 
@@ -199,9 +190,28 @@
 
 		if(W)
 			W.loc = src.loc
-
-	else if(istype(W, /obj/item/weapon/packageWrap))
+	else if(istype(W, /obj/item/weapon/cable_coil))
+		if(rigged)
+			user << "<span class='notice'>[src] is already rigged!</span>"
+			return
+		if(!W:use(5)) return
+		user  << "<span class='notice'>You rig [src].</span>"
+		user.drop_item()
+		rigged = 1
 		return
+	else if(istype(W, /obj/item/device/radio/electropack) && rigged)
+		user  << "<span class='notice'>You attach [W] to [src].</span>"
+		user.drop_item()
+		W.loc = src
+		return
+	else if(istype(W, /obj/item/weapon/wirecutters) && rigged)
+		user  << "<span class='notice'>You cut away the wiring.</span>"
+		playsound(loc, 'sound/items/Wirecutter.ogg', 100, 1)
+		rigged = 0
+		return
+
+	/*else if(istype(W, /obj/item/weapon/packageWrap))
+		return*/
 	else if(istype(W, /obj/item/weapon/weldingtool))
 		var/obj/item/weapon/weldingtool/WT = W
 		if(!WT.remove_fuel(0,user))
@@ -250,14 +260,21 @@
 				M << text("<FONT size=[]>BANG, bang!</FONT>", max(0, 5 - get_dist(src, M)))
 			spawn(30)
 				lastbang = 0
-
+		user.unlock_medal("It's a trap!", 0, "Get locked or welded into a locker...", "easy")
 
 /obj/structure/closet/attack_paw(mob/user as mob)
 	return src.attack_hand(user)
 
 /obj/structure/closet/attack_hand(mob/user as mob)
 	src.add_fingerprint(user)
-
+	if(rigged && locate(/obj/item/device/radio/electropack) in src)
+		if(isliving(user))
+			var/mob/living/L = user
+			if(L.electrocute_act(22, src))
+				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+				s.set_up(5, 1, src)
+				s.start()
+				return
 	if(!src.toggle())
 		usr << "<span class='notice'>It won't budge!</span>"
 

@@ -71,19 +71,6 @@
 	projectile = /obj/item/projectile/beam/pulse/heavy
 	fire_sound = 'sound/weapons/marauder.ogg'
 
-
-/obj/item/projectile/beam/pulse/heavy
-	name = "heavy pulse laser"
-	icon_state = "pulse1_bl"
-	var/life = 20
-
-	Bump(atom/A)
-		A.bullet_act(src, def_zone)
-		src.life -= 10
-		if(life <= 0)
-			del(src)
-		return
-
 /obj/item/mecha_parts/mecha_equipment/weapon/energy/taser
 	name = "PBT \"Pacifier\" Mounted Taser"
 	icon_state = "mecha_taser"
@@ -290,7 +277,7 @@
 
 	throw_impact(atom/hit_atom)
 		if(primed)
-			explosion(hit_atom, 0, 0, 2, 4)
+			explosion(hit_atom, 0, 0, 3, 5)
 			del(src)
 		else
 			..()

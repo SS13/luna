@@ -34,6 +34,9 @@ FINGERPRINT CARD
 	src.add_fingerprint(user)
 	return
 
+/obj/item/weapon/card/id/GetID()
+	return src
+
 /obj/item/weapon/card/id/verb/read()
 	set src in usr
 

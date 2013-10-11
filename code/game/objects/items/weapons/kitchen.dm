@@ -101,7 +101,7 @@ SPOON
 		affecting.take_damage(10)
 		usr.paralysis += 2
 		return
-	if (M.stat < 2 && M.health < 50 && prob(90))
+	if (M.stat < 2 && prob(80))
 		var/mob/H = M
 		// ******* Check
 		if ((istype(H, /mob/living/carbon/human) && istype(H, /obj/item/clothing/head) && H.flags & 8 && prob(80)))
@@ -134,13 +134,15 @@ SPOON
 	icon_state = "knife"
 	slash = 1
 	var/butter = 0
-	throwforce = 6.0
+	force = 8.0
+	throwforce = 12.0
 
 /obj/item/weapon/kitchen/utensil/knife/attack(target as mob, mob/living/user as mob)
 	if ((user.mutations & CLUMSY) && prob(50))
 		user << "\red You accidentally cut yourself with the [src]."
-		user.adjustBruteLoss(20)
+		user.adjustBruteLoss(10)
 		return
+	..()
 
 
 // SPOON

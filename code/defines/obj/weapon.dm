@@ -15,31 +15,6 @@
 	origin_tech = "magnets=1;engineering=1"
 	throw_range = 20
 
-/obj/item/weapon/banana
-	name = "Banana"
-	desc = "A banana."
-	icon = 'items.dmi'
-	icon_state = "banana"
-	item_state = "banana"
-	throwforce = 0
-	w_class = 1.0
-	throw_speed = 4
-	throw_range = 20
-
-/obj/item/weapon/baton
-	name = "Stun Baton"
-	desc = "A stun baton for hitting people with."
-	icon_state = "stunbaton"
-	item_state = "baton"
-	flags = FPRINT | ONBELT | TABLEPASS
-	force = 10
-	throwforce = 7
-	w_class = 3
-	var/charges = 10.0
-	origin_tech = "combat=2"
-	var/maximum_charges = 10.0
-	var/status = 0
-
 /obj/item/weapon/bedsheet
 	name = "bedsheet"
 	icon = 'items.dmi'
@@ -68,7 +43,7 @@
 	var/list/files = list(  )
 
 /obj/item/weapon/card/data
-	name = "data disk"
+	name = "data card"
 	icon_state = "data"
 	var/function = "storage"
 	var/data = "null"
@@ -89,6 +64,8 @@
 	var/access = list()
 	var/registered = null
 	var/assignment = null
+/obj/item/weapon/card/id/attackby()
+	return
 
 /obj/item/weapon/card/id/gold
 	name = "identification card"
@@ -116,8 +93,9 @@
 		access = get_access("Captain")
 		..()
 
-/obj/item/weapon/device/cloak
+/obj/item/device/cloak
 	name = "cloaking device"
+	desc = "Use this to become invisible to the human eyesocket."
 	icon = 'device.dmi'
 	icon_state = "shield0"
 	var/active = 0.0
@@ -207,7 +185,7 @@
 	item_state = "nothing"
 	w_class = 5.0
 
-/obj/item/weapon/device/hand_tele
+/obj/item/device/hand_tele
 	name = "hand tele"
 	icon = 'device.dmi'
 	icon_state = "hand_tele"
@@ -221,7 +199,8 @@
 
 /obj/item/weapon/handcuffs
 	name = "handcuffs"
-	icon = 'items.dmi'
+	desc = "Use this to keep prisoners in line."
+	icon = 'icons/obj/items.dmi'
 	icon_state = "handcuff"
 	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
 	throwforce = 5
@@ -229,6 +208,14 @@
 	throw_speed = 2
 	throw_range = 5
 	m_amt = 500
+	origin_tech = "materials=1"
+
+/obj/item/weapon/handcuffs/cable
+	name = "cable restraints"
+	desc = "Looks like some cables tied together. Could be used to tie something up."
+	icon_state = "cuff_red"
+	item_state = "coil_red"
+	m_amt = 0
 
 /obj/item/weapon/caution
 	desc = "Caution! Wet Floor!"
@@ -247,7 +234,6 @@
 	name = "Paint Can"
 	icon = 'old_or_unused.dmi'
 	icon_state = "paint_neutral"
-	var/color = "neutral"
 	item_state = "paintcan"
 	w_class = 3.0
 
@@ -269,20 +255,13 @@
 	var/permeability_coefficient = 0.99
 	var/siemens_coefficient = 0.80
 
-	New()
-		processing_items += src
-		..()
-
-	Del()
-		processing_items -= src
-		..()
-
-	process()
-		var/turf/t = get_turf(src)
-		var/datum/gas_mixture/air_sample = t.return_air()
-		if(t.temperature>=1000||air_sample.temperature>=1000)
-			Del()
-
+/obj/item/weapon/paper/scan
+	var/mname
+	var/dna
+	var/age
+	var/bloodtype
+	var/fingerprint
+	var/mgender
 
 /obj/item/weapon/paper/Router_pass
 	name = "paper- 'NSV Luna Network Router Passwords'"
@@ -487,19 +466,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	w_class = 2.0
 	flags = FPRINT | TABLEPASS | NOSHIELD
 
-/obj/item/weapon/sword
-	name = "energy sword"
-	desc = "May the force be within you."
-	icon_state = "sword0"
-	var/active = 0.0
-	force = 3.0
-	throwforce = 5.0
-	throw_speed = 1
-	throw_range = 5
-	w_class = 2.0
-	flags = FPRINT | TABLEPASS | NOSHIELD
-	origin_tech = "magnets=3;syndicate=4"
-
 /obj/item/weapon/teleportation_scroll
 	name = "Teleportation Scroll"
 	desc = "A scroll for moving around."
@@ -655,18 +621,3 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	throw_range = 5
 	m_amt = 20000
 	g_amt = 10000
-
-/obj/item/weapon/mousetrap
-	name = "mousetrap"
-	desc = "A handy little spring-loaded trap for catching pesty rodents."
-	icon = 'weapons.dmi'
-	icon_state = "mousetrap"
-	item_state = "mousetrap"
-	w_class = 1
-	force = null
-	throwforce = null
-	var/armed = 0
-
-/obj/item/weapon/mousetrap/armed
-	icon_state = "mousetraparmed"
-	armed = 1

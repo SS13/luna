@@ -94,8 +94,8 @@
 						/obj/item/mecha_parts/mecha_equipment/tool/drill,
 						/obj/item/mecha_parts/mecha_equipment/tool/extinguisher,
 //						/obj/item/mecha_parts/mecha_equipment/tool/cable_layer,
-//						/obj/item/mecha_parts/mecha_equipment/tool/sleeper,
-//						/obj/item/mecha_parts/mecha_equipment/tool/syringe_gun,
+						/obj/item/mecha_parts/mecha_equipment/tool/sleeper,
+						/obj/item/mecha_parts/mecha_equipment/tool/syringe_gun,
 						/obj/item/mecha_parts/chassis/firefighter,
 //						/obj/item/mecha_parts/mecha_equipment/repair_droid,
 						/obj/item/mecha_parts/mecha_equipment/generator,
@@ -481,7 +481,7 @@
 	return output
 
 
-/obj/machinery/mecha_part_fabricator/proc/sync(silent=null)
+/obj/machinery/mecha_part_fabricator/proc/sync(silent=1)
 /*		if(queue.len)
 			if(!silent)
 				temp = "Error.  Please clear processing queue before updating!"
@@ -510,7 +510,7 @@
 			temp += "<a href='?src=\ref[src];clear_temp=1'>Return</a>"
 			src.updateUsrDialog()
 		if(i || tech_output)
-			src.visible_message("\icon[src] <b>[src]</b> beeps, \"Succesfully synchronized with R&D server. New data processed.\"")
+			src.visible_message("\icon[src] <b>[src]</b> beeps, \"Succesfully synchronized with R&D server. Processed [i] equipment designs.\"")
 	return
 
 /obj/machinery/mecha_part_fabricator/proc/get_resource_cost_w_coeff(var/obj/item/part as obj,var/resource as text, var/roundto=1)

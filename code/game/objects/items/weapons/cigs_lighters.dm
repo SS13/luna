@@ -6,8 +6,70 @@ ZIPPO
 CIGS
 */
 
+///////////
+//MATCHES//
+///////////
+/obj/item/weapon/match
+	name = "match"
+	desc = "A simple match stick, used for lighting fine smokables."
+	icon = 'icons/obj/cigarettes.dmi'
+	icon_state = "match_unlit"
+	var/lit = 0
+	var/smoketime = 15
+	w_class = 1.0
+	origin_tech = "materials=1"
+	attack_verb = list("burnt", "singed")
+
+/obj/item/weapon/match/process()
+	var/turf/location = get_turf(src)
+	smoketime--
+	if(smoketime < 1)
+		icon_state = "match_burnt"
+		lit = -1
+		processing_items.Remove(src)
+		return
+	if(location)
+		location.hotspot_expose(700, 5)
+		return
+
+/obj/item/weapon/match/dropped(mob/user as mob)
+	if(lit == 1)
+		lit = -1
+		damtype = "brute"
+		icon_state = "match_burnt"
+		item_state = "cigoff"
+		name = "burnt match"
+		desc = "A match. This one has seen better days."
+	return ..()
+
+/obj/item/weapon/storage/matches
+	name = "matchbox"
+	desc = "A small box of Plasma Premium Matches."
+	icon = 'icons/obj/cigarettes.dmi'
+	icon_state = "matchbox"
+	item_state = "zippo"
+	w_class = 1
+	flags = TABLEPASS | ONBELT
+//	slot_flags = SLOT_BELT
+
+	New()
+		..()
+		for(var/i=1; i <= 7; i++)
+			new /obj/item/weapon/match(src)
+
+	attackby(obj/item/weapon/match/W as obj, mob/user as mob)
+		if(istype(W) && W.lit == 0)
+			W.lit = 1
+			W.icon_state = "match_lit"
+			processing_items.Add(W)
+		W.update_icon()
+		return
+
+//////////////////
+//FINE SMOKABLES//
+//////////////////
 /obj/item/weapon/cigpacket
-	name = "Cigarette packet"
+	name = "cigarette packet"
 	desc = "The most popular brand of Space Cigarettes, sponsors of the Space Olympics."
 	icon = 'cigarettes.dmi'
 	icon_state = "cigpacket"
@@ -62,27 +124,16 @@ CIGS
 	item_state = "Dpacket"
 
 /obj/item/weapon/cigpacket/med
-	name = "Small cigarette packet"
-	desc = "This packet contains only two cigarettes."
-	icon_state = "cigpacket"
+	name = "\improper MediU packet"
 	allowreagents = 0
-	cigtypes = list(/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette,
-					/obj/item/clothing/mask/cigarette/med/o2,
+	cigtypes = list(/obj/item/clothing/mask/cigarette/med/o2,
 					/obj/item/clothing/mask/cigarette/med/fire,
 					/obj/item/clothing/mask/cigarette/med/brute,
 					/obj/item/clothing/mask/cigarette/med/tox)
-	cigcount = 2
 
 /obj/item/weapon/cigpacket/robust
-	name = "RobustCo packet"
-	desc = "A packet of six imported RobustCo battle sticks. A label on the packaging reads, \"Robuster's choise!\""
+	name = "\improper RobustCo packet"
+	desc = "A packet of six imported RobustCo combat sticks. A label on the packaging reads, \"Robuster's choise!\""
 	icon_state = "Dpacket"
 	item_state = "Dpacket"
 	allowreagents = 0
@@ -90,45 +141,11 @@ CIGS
 
 
 /obj/item/weapon/cigpacket/o2
-	name = "Cigarette packet"
-	desc = "A label on the packaging reads, \"In case of hazardous depressurization, smoke a cig!\""
+	name = "oxygarette packet"
 	allowreagents = 0
 	cigtypes = list(/obj/item/clothing/mask/cigarette/med/o2)
 
 #define ZIPPO_LUM 2
-/obj/item/weapon/match
-	name = "match"
-	desc = "A simple match stick, used for lighting fine smokables."
-	icon = 'icons/obj/cigarettes.dmi'
-	icon_state = "match_unlit"
-	var/lit = 0
-	var/smoketime = 5
-	w_class = 1.0
-	origin_tech = "materials=1"
-	attack_verb = list("burnt", "singed")
-
-/obj/item/weapon/match/process()
-	var/turf/location = get_turf(src)
-	smoketime--
-	if(smoketime < 1)
-		icon_state = "match_burnt"
-		lit = -1
-		processing_items.Remove(src)
-		return
-	if(location)
-		location.hotspot_expose(700, 5)
-		return
-
-/obj/item/weapon/match/dropped(mob/user as mob)
-	if(lit == 1)
-		lit = -1
-		damtype = "brute"
-		icon_state = "match_burnt"
-		item_state = "cigoff"
-		name = "burnt match"
-		desc = "A match. This one has seen better days."
-	return ..()
-
 //////////////////
 //FINE SMOKABLES//
 //////////////////
@@ -147,7 +164,7 @@ CIGS
 	var/icon_off = "cigoff"
 	var/type_butt = /obj/item/weapon/cigbutt
 	var/lastHolder = null
-	var/smoketime = 900
+	var/smoketime = 150
 	var/chem_volume = 20
 
 /obj/item/clothing/mask/cigarette/New()
@@ -185,8 +202,8 @@ CIGS
 		if(M.lit)
 			light("<span class='notice'>[user] lights their [name] with their [W].</span>")
 
-	else if(istype(W, /obj/item/weapon/sword))
-		var/obj/item/weapon/sword/S = W
+	else if(istype(W, /obj/item/weapon/melee/energy/sword))
+		var/obj/item/weapon/melee/energy/sword/S = W
 		if(S.active)
 			light("<span class='warning'>[user] swings their [W], barely missing their nose. They light their [name] in the process.</span>")
 
@@ -305,56 +322,48 @@ CIGS
 ////////////
 /obj/item/clothing/mask/cigarette/med
 	chem_volume = 30
-	smoketime = 150
+	smoketime = 200
 
 /obj/item/clothing/mask/cigarette/med/o2
 	desc = "A roll of tobacco and nicotine that can replace emergency oxygen tank."
-	icon_off = "cig_o_off"
-	icon_state = "cig_o_off"
 	New()
 		..()
 		reagents.add_reagent("dexalinp", 25)
 
 /obj/item/clothing/mask/cigarette/med/fire
 	desc = "A roll of tobacco and nicotine made special for firestarters."
-	icon_off = "cig_f_off"
-	icon_state = "cig_f_off"
 	New()
 		..()
-		reagents.add_reagent("dermaline", 15)
-		reagents.add_reagent("tricordrazine", 5)
+		reagents.add_reagent("dermaline", 12)
+		reagents.add_reagent("tricordrazine", 3)
 
 /obj/item/clothing/mask/cigarette/med/brute
 	desc = "A roll of tobacco and bicardine."
-	icon_off = "cig_b_off"
-	icon_state = "cig_b_off"
 	New()
 		..()
-		reagents.add_reagent("bicardine", 15)
-		reagents.add_reagent("tricordrazine", 5)
+		reagents.add_reagent("bicardine", 12)
+		reagents.add_reagent("tricordrazine", 3)
 
 /obj/item/clothing/mask/cigarette/med/tox
 	desc = "A roll of tobacco and nicotine."
-	icon_off = "cig_t_off"
-	icon_state = "cig_t_off"
 	New()
 		..()
-		reagents.add_reagent("anti_toxin", 15)
-		reagents.add_reagent("alkysine", 1)
+		reagents.add_reagent("anti_toxin", 12)
+		reagents.add_reagent("alkysine", 3)
 
 /obj/item/clothing/mask/cigarette/robust
 	name = "big cigarette"
 	desc = "A very robust roll of tobacco and nicotine."
 	icon_off = "cig_r_off"
 	icon_state = "cig_r_off"
-	chem_volume = 50
+	chem_volume = 45
 	smoketime = 200
 	New()
 		..()
-		reagents.add_reagent("bicardine", 10)
-		reagents.add_reagent("synaptizine", 10)
-		reagents.add_reagent("hyperzine", 10)
-		reagents.add_reagent("tricordrazine", 10)
+		reagents.add_reagent("bicardine", 9)
+		reagents.add_reagent("synaptizine", 9)
+		reagents.add_reagent("hyperzine", 9)
+		reagents.add_reagent("tricordrazine", 9)
 
 
 ////////////
@@ -413,7 +422,6 @@ CIGS
 	New()
 		..()
 		reagents.add_reagent("dexalinp", 250)
-		reagents.add_reagent("dexalin", 250)
 		reagents.add_reagent("bicardine", 250)
 		reagents.add_reagent("tricordrazine", 250)
 		reagents.add_reagent("anti_toxin", 250)
@@ -446,7 +454,6 @@ CIGS
 	New()
 		..()
 		reagents.add_reagent("LSD", 15)
-
 
 /obj/item/clothing/mask/cigarette/weed/black
 	desc = "There's a really strong odor coming from this..."
@@ -564,12 +571,12 @@ CIGS
 
 /obj/item/weapon/lighter/random
 	New()
-		var/color = pick("r","c","y","g")
-		icon_on = "lighter-[color]-on"
-		icon_off = "lighter-[color]"
+		var/lcolor = pick("r","c","y","g")
+		icon_on = "lighter-[lcolor]-on"
+		icon_off = "lighter-[lcolor]"
 		icon_state = icon_off
 
-/obj/item/weapon/lighter/attack_self(mob/living/user)
+/obj/item/weapon/lighter/attack_self(mob/living/carbon/user)
 	if(user.r_hand == src || user.l_hand == src)
 		if(!lit)
 			lit = 1
@@ -578,11 +585,17 @@ CIGS
 			if(istype(src, /obj/item/weapon/lighter/zippo) )
 				user.visible_message("<span class='rose'>Without even breaking stride, [user] flips open and lights [src] in one smooth movement.</span>")
 			else
-				if(prob(75))
+				if(prob(80))
 					user.visible_message("<span class='notice'>After a few attempts, [user] manages to light the [src].</span>")
-				else
+				else if(ishuman(user))
+					var/mob/living/carbon/human/H = user
 					user << "<span class='warning'>You burn yourself while lighting the lighter.</span>"
-					user.adjustFireLoss(2)
+
+					var/datum/organ/external/affecting = H.get_organ(pick("l_arm", "r_arm"))
+					if(affecting)
+						if(affecting.take_damage(0, 2))
+							H.UpdateDamageIcon(0)
+							H.updatehealth()
 					user.visible_message("<span class='notice'>After a few attempts, [user] manages to light the [src], they however burn their finger in the process.</span>")
 
 			user.ul_SetLuminosity(user.luminosity + 1)

@@ -130,6 +130,6 @@
 	else
 		traitor_name = "[chosentraitor.key] (character destroyed)"
 	if(check_win())
-		world << "<FONT size = 3><B>[traitor_name] has killed everyone else, and is the sole person alive on the station</B></FONT>"
+		world << "<FONT size = 3><B>[traitor_name] has killed everyone else, and is the sole person alive on the ship</B></FONT>"
 	else
 		world << "<FONT size = 3><B>[traitor_name] died before managing to become the sole person alive</B></FONT>"

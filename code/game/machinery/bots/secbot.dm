@@ -94,14 +94,15 @@
 		radio.listening = 0
 
 
-		contraband += /obj/item/weapon/gun/projectile
+		//contraband += /obj/item/weapon/gun/projectile/
+		contraband += /obj/item/weapon/gun/projectile/automatic/c20r
 		//contraband += /obj/item/weapon/c_tube //Toy sword ey, not on beepskies watch
-		contraband += /obj/item/weapon/sword
+		contraband += /obj/item/weapon/melee/energy/sword
 		contraband += /obj/item/device/chameleon
 		contraband += /obj/item/device/hacktool
 		contraband += /obj/item/device/powersink
-		contraband += /obj/item/weapon/staff
-		contraband += /obj/item/weapon/device/cloak
+		//contraband += /obj/item/weapon/staff
+		contraband += /obj/item/device/cloak
 
 /obj/machinery/bot/secbot/examine()
 	set src in view()
@@ -288,7 +289,6 @@ Auto Patrol: []"},
 					var/gotstuff
 					if(src.target:r_hand)
 						gotstuff = "Captured items from [src.target.name]: [src.target.r_hand.name]"
-						src.target:r_hand.name += " (Captured by [src.name] from [target.name])"
 						src.target:r_hand.moveto(src)
 
 					if(src.target:l_hand)
@@ -296,7 +296,6 @@ Auto Patrol: []"},
 							gotstuff = "Captured items from [src.target.name]: [src.target.l_hand.name]"
 						else
 							gotstuff += " and [src.target.l_hand.name]"
-							src.target:l_hand.name += " (Captured by [src.name] from [target.name])"
 							src.target:l_hand.moveto(src)
 
 					if(gotstuff)
@@ -344,11 +343,9 @@ Auto Patrol: []"},
 						if(secure_arrest)
 							if(src.target:belt)
 								var/obj/item/I = src.target:belt
-								I.name += " (Captured by [src.name] from [target.name])" //Might move this into something embedded within the item that the forenzics scanner can read
 								I.moveto(src)
 							if(src.target:back)
 								var/obj/item/I = src.target:back
-								I.name += " (Captured by [src.name] from [target.name])"
 								I.moveto(src)
 						///	if(src.target:wear_id)
 						//		var/obj/item/I = src.target:wear_id
@@ -356,15 +353,12 @@ Auto Patrol: []"},
 						//		I.moveto(src)
 							if(src.target:l_store)
 								var/obj/item/I = src.target:l_store
-								I.name += " (Captured by [src.name] from [target.name])"
 								I.moveto(src)
 							if(src.target:r_store)
 								var/obj/item/I = src.target:r_store
-								I.name += " (Captured by [src.name] from [target.name])"
 								I.moveto(src)
 							if(src.target:glasses)
 								var/obj/item/I = src.target:glasses
-								I.name += " (Captured by [src.name] from [target.name])"
 								I.moveto(src)
 							src.speak("Due to suspection of Syndicate affiliation, the person has been stripped of his gear.")
 
@@ -671,31 +665,41 @@ Auto Patrol: []"},
 	if((src.idcheck) || (isnull(perp:wear_id)) && (!istype(perp:wear_id, /obj/item/weapon/card/id/syndicate))) //Syndicate IDs mess with electronics, beepsky won't suspect a thing
 
 
-		for(var/obj/item/weapon/device/cloak/S in perp)
+		for(var/obj/item/device/cloak/S in perp)
 			if(S.active)
 				arrestreasons += "Carrying activated cloaking device"
 				secure_arrest = 1
 				return 10
 
 		for(var/obj in contraband) //Syndicate contraband... Hidden programming by NT means that beepsky WILL arrest on sight
-			if( istype(perp:belt,obj) || istype(perp.l_hand,obj) || istype(perp.r_hand,obj) /*|| istype(perp:wear_suit,obj)*/ )
+			var/found = 0
+			if(istype(perp:belt,obj) || istype(perp.l_hand,obj) || istype(perp.r_hand,obj))
+				found = 1
+			if(perp:l_hand && perp:l_hand.type == /obj/item/weapon/gun/projectile/)
+				found = 1
+			if(perp:r_hand && perp:r_hand.type == /obj/item/weapon/gun/projectile/)
+				found = 1
+			if(perp:belt && perp:belt.type == /obj/item/weapon/gun/projectile/)
+				found = 1
+			if(found)
 				arrestreasons += "Carrying syndicate contraband"
 				secure_arrest = 1
 				return 10
+
 
 		if(src.allowed(perp)) //Corrupt cops cannot exist beep boop // Except if they are carrying contraband
 			arrestreasons = list()
 			return 0
 
-		if(istype(perp:belt, /obj/item/weapon/gun) || istype(perp.belt, /obj/item/weapon/baton))
+		if(istype(perp:belt, /obj/item/weapon/gun) || istype(perp.belt, /obj/item/weapon/melee/baton))
 			arrestreasons += "Unauthorized weapon on belt [perp.belt.name]"
 			threatcount += 4
 
-		if(istype(perp.l_hand, /obj/item/weapon/gun) || istype(perp.l_hand, /obj/item/weapon/baton))
+		if(istype(perp.l_hand, /obj/item/weapon/gun) || istype(perp.l_hand, /obj/item/weapon/melee/baton))
 			arrestreasons += "Unauthorized weapon in left hand: [perp.l_hand.name]"
 			threatcount += 4
 
-		if(istype(perp.r_hand, /obj/item/weapon/gun) || istype(perp.r_hand, /obj/item/weapon/baton))
+		if(istype(perp.r_hand, /obj/item/weapon/gun) || istype(perp.r_hand, /obj/item/weapon/melee/baton))
 			arrestreasons += "Unauthorized weapon in right hand [perp.r_hand.name]"
 			threatcount += 4
 
@@ -796,7 +800,7 @@ Auto Patrol: []"},
 
 	new /obj/item/device/prox_sensor(Loc) // Dropping a prox sensor
 
-	var/obj/item/weapon/baton/B = new /obj/item/weapon/baton(Loc) // Dropping a baton, no charges
+	var/obj/item/weapon/melee/baton/B = new /obj/item/weapon/melee/baton(Loc) // Dropping a baton, no charges
 	B.charges = 0
 
 	if (prob(50)) // Dropping a robot left arm
@@ -874,7 +878,7 @@ Auto Patrol: []"},
 		src.overlays += image('aibots.dmi', "hs_arm")
 		del(W)
 
-	else if ((istype(W, /obj/item/weapon/baton)) && (src.build_step >= 3))
+	else if ((istype(W, /obj/item/weapon/melee/baton)) && (src.build_step >= 3))
 		src.build_step++
 		user << "You complete the Securitron! Beep boop."
 		var/obj/machinery/bot/secbot/S = new /obj/machinery/bot/secbot

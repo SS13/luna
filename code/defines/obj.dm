@@ -215,6 +215,7 @@
 	pressure_resistance = 50
 	var/slowdown = 0
 	var/canremove = 1
+	var/flags_inv
 	var/armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	var/list/allowed = null //suit storage stuff.
 	var/obj/item/master = null
@@ -234,34 +235,6 @@
 	w_class = 2.0
 	item_state = "electronic"
 	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT | USEDELAY
-
-
-/obj/item/device/flash
-	name = "flash"
-	icon_state = "flash"
-	var/l_time = 1.0
-	var/shots = 5.0
-	throwforce = 5
-	w_class = 1.0
-	throw_speed = 4
-	throw_range = 10
-	flags = FPRINT | TABLEPASS| CONDUCT
-	item_state = "electronic"
-	var/status = 1
-	origin_tech = "magnets=2;combat=1"
-
-/obj/item/device/igniter
-	name = "igniter"
-	desc = "A small electronic device able to ignite combustable substances."
-	icon_state = "igniter"
-	var/status = 1.0
-	flags = FPRINT | TABLEPASS| CONDUCT
-	item_state = "electronic"
-	m_amt = 100
-	throwforce = 5
-	w_class = 1.0
-	throw_speed = 3
-	throw_range = 10
 
 
 /obj/item/device/infra
@@ -314,6 +287,7 @@
 /obj/item/device/hacktool
 	name = "hacktool"
 	icon_state = "hacktool"
+	origin_tech = "magnets=2;engineering=5;syndicate=3"
 	flags = FPRINT | TABLEPASS | CONDUCT
 	force = 5.0
 	w_class = 2.0
@@ -388,7 +362,7 @@
 	icon = 'screen1.dmi'
 	icon_state = "x"
 
-/obj/mine
+/obj/effect/mine
 	name = "Mine"
 	desc = "I Better stay away from that thing."
 	density = 1
@@ -399,27 +373,27 @@
 	var/triggerproc = "explode" //name of the proc thats called when the mine is triggered
 	var/triggered = 0
 
-/obj/mine/dnascramble
+/obj/effect/mine/dnascramble
 	name = "Radiation Mine"
 	icon_state = "uglymine"
 	triggerproc = "triggerrad"
 
-/obj/mine/plasma
+/obj/effect/mine/plasma
 	name = "Plasma Mine"
 	icon_state = "uglymine"
 	triggerproc = "triggerplasma"
 
-/obj/mine/kick
+/obj/effect/mine/kick
 	name = "Kick Mine"
 	icon_state = "uglymine"
 	triggerproc = "triggerkick"
 
-/obj/mine/n2o
+/obj/effect/mine/n2o
 	name = "N2O Mine"
 	icon_state = "uglymine"
 	triggerproc = "triggern2o"
 
-/obj/mine/stun
+/obj/effect/mine/stun
 	name = "Stun Mine"
 	icon_state = "uglymine"
 	triggerproc = "triggerstun"
@@ -489,7 +463,7 @@
 		if(src.owner)
 			src.name = "[src.owner]'s brain"
 
-/obj/deskclutter
+/obj/effect/deskclutter
 	name = "desk clutter"
 	icon = 'items.dmi'
 	icon_state = "deskclutter"

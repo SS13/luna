@@ -48,6 +48,8 @@
 /mob/living/carbon/human/var/datum/organ/external/DEBUG_lfoot
 /mob/living/carbon/human/var/datum/reagents/vessel
 
+/mob/living/carbon/human/var/list/hud_list = list()
+
 /mob/living/carbon/human/dummy
 	real_name = "Test Dummy"
 	nodamage = 1
@@ -122,7 +124,7 @@
 	organs += r_leg
 	organs += l_foot
 	organs += r_foot
-	DEBUG_lfoot = l_foot
+	//DEBUG_lfoot = l_foot
 
 	var/g = "m"
 	if (gender == MALE)
@@ -148,6 +150,9 @@
 	// random infection :D
 	//if(prob(3)) infect_mob_random_lesser(src)	//theres an event for it now/again
 
+	for(var/i=0;i<7;i++) // 2 for medHUDs and 5 for secHUDs
+		hud_list += image('icons/mob/hud.dmi', src, "hudunknown")
+
 	update_clothing()
 
 	spawn(1) fixblood()
@@ -172,9 +177,9 @@
 			tmob.loc = oldloc
 			now_pushing = 0
 			return
-		if(istype(equipped(), /obj/item/weapon/baton)) // add any other item paths you think are necessary
+		if(istype(equipped(), /obj/item/weapon/melee/baton)) // add any other item paths you think are necessary
 			if(loc:ul_Luminosity() < 3 || blinded)
-				var/obj/item/weapon/baton/W = equipped()
+				var/obj/item/weapon/melee/baton/W = equipped()
 				if (world.time > lastDblClick+2)
 					lastDblClick = world.time
 					if(((prob(40)) || (prob(95) && mutations & CLUMSY)) && W.status)
@@ -213,21 +218,22 @@
 
 	if(reagents.has_reagent("nuka_cola")) return -1
 	if(reagents.has_reagent("hyperzine")) return -1
+	if(istype(get_turf(src), /turf/space)) return -1
 
 	var/health_deficiency = (health_full - health)
 	if(health_deficiency >= 40)
-		tally += (health_deficiency / 30)
+		tally += (health_deficiency / 40)
 
 	for(var/organ in list("l_leg","l_foot","r_leg","r_foot"))
 		var/datum/organ/external/o = organs["[organ]"]
-		if(o.broken) tally += 4
+		if(o.broken) tally += 2
 
 	if(wear_suit) tally += wear_suit.slowdown
 
 	if(shoes) tally += shoes.slowdown
 
 	if (bodytemperature < 283.222)
-		tally += (283.222 - bodytemperature) / 10 * 1.25
+		tally += (283.222 - bodytemperature) / 20 * 1.25
 
 	return tally
 
@@ -262,7 +268,7 @@
 			S.active = 0
 			S.icon_state = "shield0"
 
-	for(var/obj/item/weapon/device/cloak/S in src)
+	for(var/obj/item/device/cloak/S in src)
 		if (S.active)
 			shielded = 1
 			S.active = 0
@@ -428,48 +434,62 @@
 	return*/
 
 /mob/living/carbon/human/ex_act(severity)
-	flick("flash", flash)
+	if(!blinded)
+		flick("flash", flash)
+
+// /obj/item/clothing/suit/bomb_suit(src)
+// /obj/item/clothing/head/bomb_hood(src)
 
 	if (stat == 2 && client)
-		gib(1)
+		gib()
 		return
 
 	else if (stat == 2 && !client)
-		gibs(loc, virus)
+		gibs(loc, viruses)
 		del(src)
 		return
 
 	var/shielded = 0
-	for(var/obj/item/device/shield/S in src)
-		if (S.active)
-			shielded = 1
-			break
-
 	var/b_loss = null
 	var/f_loss = null
 	switch (severity)
 		if (1.0)
 			b_loss += 500
-			gib(1)
-			return
+			if (!prob(getarmor(null, "bomb")))
+				gib()
+				return
+			else
+				var/atom/target = get_edge_target_turf(src, get_dir(src, get_step_away(src, src)))
+				throw_at(target, 200, 4)
+			//return
+//				var/atom/target = get_edge_target_turf(user, get_dir(src, get_step_away(user, src)))
+				//user.throw_at(target, 200, 4)
 
 		if (2.0)
 			if (!shielded)
-				b_loss += 50
+				b_loss += 60
 
-			f_loss += 50
+			f_loss += 60
+
+			if (prob(getarmor(null, "bomb")))
+				b_loss = b_loss/1.5
+				f_loss = f_loss/1.5
 
 			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 30
 				ear_deaf += 120
+			if (prob(70) && !shielded)
+				Paralyse(10)
 
 		if(3.0)
 			b_loss += 30
-			if (prob(50) && !shielded)
-				paralysis += 10
+			if (prob(getarmor(null, "bomb")))
+				b_loss = b_loss/2
 			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 15
 				ear_deaf += 60
+			if (prob(50) && !shielded)
+				Paralyse(10)
 
 	for(var/organ in organs)
 		var/datum/organ/external/temp = organs[text("[]", organ)]
@@ -822,7 +842,7 @@
 			var/datum/organ/external/temp = organs[dam_zone]
 			if(temp.destroyed)
 				return
-			temp.take_damage((istype(O, /obj/meteor/small) ? 10 : 25), 30)
+			temp.take_damage((istype(O, /obj/effect/meteor/small) ? 10 : 25), 30)
 			UpdateDamageIcon()
 		updatehealth()
 	return
@@ -1626,7 +1646,7 @@
 							if("uniform")
 								message = text("\red <B>[] is trying to take off \a [] from []'s body!</B>", source, target.w_uniform, target)
 							if("pockets")
-								for(var/obj/item/weapon/mousetrap/MT in  list(target.l_store, target.r_store))
+								for(var/obj/item/device/assembly/mousetrap/MT in  list(target.l_store, target.r_store))
 									if(MT.armed)
 										for(var/mob/O in viewers(target, null))
 											if(O == source)

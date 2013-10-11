@@ -2,8 +2,6 @@
 CONTAINS:
 DONUT BOX
 EGG BOX
-YOUR MUMS BOX
-
 */
 
 
@@ -165,5 +163,3 @@ YOUR MUMS BOX
 		else
 			usr << text("There are [] eggs in the box.", n)
 	return
-
-

@@ -10,7 +10,7 @@
 /obj/item/projectile/bullet/weakbullet
 	damage = 10
 	stun = 5
-	weaken = 5
+	weaken = 10
 
 
 /obj/item/projectile/bullet/midbullet
@@ -46,3 +46,34 @@
 
 /obj/item/projectile/bullet/a762
 	damage = 25
+
+/obj/item/projectile/bullet/dart
+	name = "dart"
+	icon_state = "cbbolt"
+	damage = 6
+
+	New()
+		..()
+		flags |= NOREACT
+		create_reagents(50)
+
+	on_hit(var/atom/target, var/blocked = 0)
+		if(istype(target, /mob/living/carbon))
+			var/mob/living/carbon/M = target
+			reagents.trans_to(M, reagents.total_volume)
+		else
+			flags &= ~NOREACT
+			reagents.handle_reactions()
+		return 1
+
+/obj/item/projectile/bullet/dart/metalfoam
+	New()
+		..()
+		reagents.add_reagent("aluminium", 15)
+		reagents.add_reagent("foaming_agent", 5)
+		reagents.add_reagent("pacid", 5)
+
+/obj/item/projectile/bullet/dart/syringe
+	name = "syringe"
+	icon = 'chemical.dmi'
+	icon_state = "syringeproj"

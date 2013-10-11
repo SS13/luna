@@ -64,6 +64,7 @@
 					del(W)
 				buildstate++
 				icon_state = "4"
+
 /obj/structure/AIcore/proc/boot()
 	if(bb)
 		log_admin("Starting AI construct (1/2)")

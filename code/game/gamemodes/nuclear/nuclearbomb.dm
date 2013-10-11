@@ -1,3 +1,20 @@
+/obj/machinery/nuclearbomb
+	desc = "Uh oh."
+	name = "Nuclear Fission Explosive"
+	icon = 'stationobjs.dmi'
+	icon_state = "nuclearbomb0"
+	density = 1
+	var/deployable = 0.0
+	var/extended = 0.0
+	var/timeleft = 60.0
+	var/timing = 0.0
+	var/r_code = "ADMIN"
+	var/code = ""
+	var/yes_code = 0.0
+	var/safety = 1.0
+	var/obj/item/weapon/disk/nuclear/auth = null
+	flags = FPRINT
+
 /obj/machinery/nuclearbomb/process()
 	if (src.timing)
 		src.timeleft--
@@ -93,15 +110,15 @@
 				if (href_list["timer"])
 					if (src.timing == -1.0)
 						return
-					src.timing = !( src.timing )
+					src.timing = !src.timing
 					if (src.timing)
 						src.icon_state = "nuclearbomb2"
 					else
 						src.icon_state = "nuclearbomb1"
 				if (href_list["safety"])
-					src.safety = !( src.safety )
+					src.safety = !src.safety
 				if (href_list["anchor"])
-					src.anchored = !( src.anchored )
+					src.anchored = !src.anchored
 		src.add_fingerprint(usr)
 		for(var/mob/M in viewers(1, src))
 			if ((M.client && M.machine == src))
@@ -150,6 +167,6 @@
 		world << "<B>Everyone was killed by the nuclear blast! Resetting in 30 seconds!</B>"
 
 		sleep(300*tick_multiplier)
-		log_game("Rebooting due to nuclear destruction of station")
+		log_game("Rebooting due to nuclear destruction of ship")
 		world.Reboot()
 	return

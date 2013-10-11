@@ -14,7 +14,7 @@
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/recharged = 15
 	var/list/dispensable_reagents = list("hydrogen","lithium","carbon","nitrogen","oxygen","fluorine",
-	"sodium","aluminium","silicon","phosphorus","sulfur","chlorine","potassium","iron","copper","mercury","radium","water","ethanol","sugar","sacid","plasma")
+	"sodium","aluminium","silicon","phosphorus","sulfur","chlorine","potassium","iron","copper","mercury","radium","water","ethanol","sugar","sacid"/*,"plasma"*/)
 
 /obj/machinery/chem_dispenser/proc/recharge()
 	if(stat & (BROKEN|NOPOWER)) return
@@ -295,8 +295,8 @@
 				P.pixel_y = rand(-7, 7)
 				reagents.trans_to(P,30)
 			else
-			//	var/obj/item/weapon/reagent_containers/food/condiment/P = new/obj/item/weapon/reagent_containers/food/condiment(src.loc)
-			//	reagents.trans_to(P,50)
+				var/obj/item/weapon/reagent_containers/food/condiment/P = new/obj/item/weapon/reagent_containers/food/condiment(src.loc)
+				reagents.trans_to(P,50)
 
 	src.updateUsrDialog()
 	return
@@ -363,7 +363,6 @@
 	onclose(user, "chem_master")
 	return
 
-
 /obj/machinery/chem_master/proc/isgoodnumber(var/num)
 	if(isnum(num))
 		if(num > 200)
@@ -375,6 +374,10 @@
 		return num
 	else
 		return 0
+
+/obj/machinery/chem_master/condimaster
+	name = "CondiMaster 3000"
+	condi = 1
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -471,7 +474,7 @@
 			B.reagents.add_reagent("blood",20,data)
 			src.updateUsrDialog()
 			wait = 1
-			spawn(1000)
+			spawn(400)
 				src.wait = null
 		else
 			src.temp_html = "The replicator is not ready yet."
@@ -675,16 +678,22 @@
 		/obj/item/stack/sheet/mineral/clown = list("banana" = 20),
 		/obj/item/stack/sheet/mineral/silver = list("silver" = 20),
 		/obj/item/stack/sheet/mineral/gold = list("gold" = 20),
+
+		/obj/item/weapon/coin/plasma = list("plasma" = 5),
+		/obj/item/weapon/coin/uranium = list("uranium" = 5),
+		/obj/item/weapon/coin/clown = list("banana" = 5),
+		/obj/item/weapon/coin/silver = list("silver" = 5),
+		/obj/item/weapon/coin/gold = list("gold" = 5),
 //		/obj/item/weapon/grown/nettle = list("sacid" = 0),
 //		/obj/item/weapon/grown/deathnettle = list("pacid" = 0),
 //		/obj/item/weapon/grown/novaflower = list("capsaicin" = 0),
 
 		//Blender Stuff
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/soybeans = list("soymilk" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/tomato = list("ketchup" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/corn = list("cornoil" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/wheat = list("flour" = -5),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/cherries = list("cherryjelly" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/soybeans = list("soymilk" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/tomato = list("ketchup" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/corn = list("cornoil" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/wheat = list("flour" = -5),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/cherries = list("cherryjelly" = 0),
 
 
 
@@ -696,16 +705,16 @@
 	var/list/juice_items = list (
 
 		//Juicer Stuff
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/tomato = list("tomatojuice" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/carrot = list("carrotjuice" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/berries = list("berryjuice" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/banana = list("banana" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/potato = list("potato" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/lemon = list("lemonjuice" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/orange = list("orangejuice" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/lime = list("limejuice" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/watermelonslice = list("watermelonjuice" = 0),
-//		/obj/item/weapon/reagent_containers/food/snacks/grown/poisonberries = list("poisonberryjuice" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/tomato = list("tomatojuice" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/carrot = list("carrotjuice" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/berries = list("berryjuice" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/banana = list("banana" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/potato = list("potato" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/lemon = list("lemonjuice" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/orange = list("orangejuice" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/lime = list("limejuice" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/watermelonslice = list("watermelonjuice" = 0),
+		/obj/item/weapon/reagent_containers/food/snacks/grown/poisonberries = list("poisonberryjuice" = 0),
 	)
 
 
@@ -757,7 +766,7 @@
 			user << "You empty the plant bag into the All-In-One grinder."
 
 		src.updateUsrDialog()
-		return 0
+		return 0*/
 
 	if (!is_type_in_list(O, blend_items) && !is_type_in_list(O, juice_items))
 		user << "Cannot refine into a reagent."
@@ -767,7 +776,7 @@
 	O.loc = src
 	holdingitems += O
 	src.updateUsrDialog()
-	return 0*/
+	return 0
 
 /obj/machinery/reagentgrinder/attack_paw(mob/user as mob)
 	return src.attack_hand(user)
@@ -869,10 +878,10 @@
 			return 1
 	return 0
 
-/obj/machinery/reagentgrinder/proc/get_allowed_by_id(var/obj/item/weapon/grown/O)
-/*	for (var/i in blend_items)
+/obj/machinery/reagentgrinder/proc/get_allowed_by_id(var/obj/item/weapon/O)
+	for (var/i in blend_items)
 		if (istype(O, i))
-			return blend_items[i]*/
+			return blend_items[i]
 
 /obj/machinery/reagentgrinder/proc/get_allowed_snack_by_id(var/obj/item/weapon/reagent_containers/food/snacks/O)
 	for(var/i in blend_items)
@@ -891,7 +900,7 @@
 		return 5
 	else
 		return round(O.potency)
-
+*/
 /obj/machinery/reagentgrinder/proc/get_juice_amount(var/obj/item/weapon/reagent_containers/food/snacks/grown/O)
 	if (!istype(O))
 		return 5
@@ -899,13 +908,13 @@
 		return 5
 	else
 		return round(5*sqrt(O.potency))
-*/
+
 /obj/machinery/reagentgrinder/proc/remove_object(var/obj/item/O)
 	holdingitems -= O
 	del(O)
 
 /obj/machinery/reagentgrinder/proc/juice()
-/*	power_change()
+	power_change()
 	if(stat & (NOPOWER|BROKEN))
 		return
 	if (!beaker || (beaker && beaker.reagents.total_volume >= beaker.reagents.maximum_volume))
@@ -935,9 +944,9 @@
 				break
 
 		remove_object(O)
-*/
-/obj/machinery/reagentgrinder/proc/grind()
 
+
+/obj/machinery/reagentgrinder/proc/grind()
 	power_change()
 	if(stat & (NOPOWER|BROKEN))
 		return
@@ -995,6 +1004,18 @@
 			if (i == round(O.amount, 1))
 				remove_object(O)
 				break
+	//Coins
+	for (var/obj/item/weapon/coin/O in holdingitems)
+		var/allowed = get_allowed_by_id(O)
+		if (beaker.reagents.total_volume >= beaker.reagents.maximum_volume)
+			break
+		for (var/r_id in allowed)
+			var/space = beaker.reagents.maximum_volume - beaker.reagents.total_volume
+			var/amount = allowed[r_id]
+			beaker.reagents.add_reagent(r_id,min(amount, space))
+			if (space < amount)
+				break
+			remove_object(O)
 	//Plants
 /*	for (var/obj/item/weapon/grown/O in holdingitems)
 		if (beaker.reagents.total_volume >= beaker.reagents.maximum_volume)

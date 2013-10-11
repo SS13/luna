@@ -244,7 +244,7 @@
 							helm.armor[armorvar] = parent.reactive.togglearmor[armorvar]
 					if(parent.helm.on)
 						parent.helm.on = 0
-						parent.helm.icon_state = "powered0-[parent.helm.color]"
+						parent.helm.icon_state = "powered0-[parent.helm.item_color]"
 //						parent.item_state = "powered[on]-[color]"
 
 						user.ul_SetLuminosity(user.luminosity - parent.helm:brightness_on)

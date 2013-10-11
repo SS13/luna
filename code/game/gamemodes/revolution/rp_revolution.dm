@@ -39,7 +39,7 @@
 /obj/item/device/powersink:5:Power sink;
 /obj/item/weapon/cartridge/syndicate:3:Detomatix PDA cart;
 /obj/item/device/chameleon:4:Chameleon projector;
-/obj/item/weapon/sword:5:Energy sword;
+/obj/item/weapon/melee/energy/sword:5:Energy sword;
 /obj/item/weapon/pen/sleepypen:4:Sleepy pen;
 /obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;
 /obj/item/clothing/mask/gas/voice:3:Voice changer;
@@ -170,7 +170,7 @@
 				comm.messagetitle.Add("Cent. Com. Status Summary")
 				comm.messagetext.Add(intercepttext)
 		spawn(12000*tick_multiplier)
-			command_alert("Repeating the previous message over intercoms due to urgency. The station has enemy operatives onboard by the names of [reveal_rev_heads()], please arrest them at once.", "The revolution leaders have been determined.")
+			command_alert("Repeating the previous message over intercoms due to urgency. The ship has enemy operatives onboard by the names of [reveal_rev_heads()], please arrest them at once.", "The revolution leaders have been determined.")
 
 
 /datum/game_mode/rp_revolution/proc/reveal_rev_heads()

@@ -13,7 +13,6 @@
 	desc = "Blue Pride, Station Wide"
 	icon_state = "bluetag"
 	item_state = "bluetag"
-	blood_overlay_type = "armor"
 	body_parts_covered = CHEST
 	allowed = list (/obj/item/weapon/gun/energy/laser/bluetag)
 
@@ -22,9 +21,9 @@
 	desc = "Pew pew pew"
 	icon_state = "redtag"
 	item_state = "redtag"
-	blood_overlay_type = "armor"
 	body_parts_covered = CHEST
 	allowed = list (/obj/item/weapon/gun/energy/laser/redtag)
+
 
 /*
  * Costume
@@ -86,9 +85,9 @@
 	desc = "This robe commands authority."
 	icon_state = "judge"
 	item_state = "judge"
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | TABLEPASS
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
-	allowed = list(/obj/item/weapon/storage/fancy/cigarettes,/obj/item/weapon/spacecash)
+	allowed = list(/obj/item/weapon/cigpacket,/obj/item/weapon/spacecash)
 	flags_inv = HIDEJUMPSUIT
 
 
@@ -97,7 +96,6 @@
 	desc = "For some classy, murderous fun."
 	icon_state = "vest"
 	item_state = "wcoat"
-	blood_overlay_type = "armor"
 	body_parts_covered = CHEST
 
 
@@ -156,7 +154,7 @@
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 
 
-/obj/item/clothing/suit/holidaypriest
+/obj/item/clothing/suit/storage/holydaypriest
 	name = "holiday priest"
 	desc = "This is a nice holiday my son."
 	icon_state = "holidaypriest"
@@ -184,6 +182,8 @@
 	item_state = "straight_jacket"
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS|HANDS
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
+	slowdown = 15
+
 
 /obj/item/clothing/suit/ianshirt
 	name = "worn shirt"
@@ -192,7 +192,7 @@
 	item_state = "ianshirt"
 
 //Blue suit jacket toggle
-/obj/item/clothing/suit/suit/verb/toggle()
+/*obj/item/clothing/suit/suit/verb/toggle()
 	set name = "Toggle Jacket Buttons"
 	set category = "Object"
 	set src in usr
@@ -211,7 +211,7 @@
 	else
 		usr << "You button-up some imaginary buttons on your [src]."
 		return
-	usr.update_inv_wear_suit()
+	usr.update_inv_wear_suit()*/
 
 /obj/item/clothing/suit/xenos
 	name = "xenos suit"

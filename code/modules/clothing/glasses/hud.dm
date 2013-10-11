@@ -75,6 +75,7 @@
 /obj/item/clothing/glasses/hud/security
 	name = "Security HUD"
 	desc = "A heads-up display that scans the humans in view and provides accurate data about their ID status and security records."
+	origin_tech = "magnets=3;biotech=2;combat=2"
 	icon_state = "securityhud"
 
 /obj/item/clothing/glasses/hud/security/jensenshades
@@ -82,8 +83,8 @@
 	desc = "Polarized bioneural eyewear, designed to augment your vision."
 	icon_state = "jensenshades"
 	item_state = "jensenshades"
-	vision_flags = SEE_MOBS
-	invisa_view = 2
+//	vision_flags = SEE_MOBS
+//	invisa_view = 2
 
 /obj/item/clothing/glasses/hud/security/process_hud(var/mob/M)
 	if(!M)	return
@@ -97,7 +98,7 @@
 		if(perp.wear_id)
 			var/obj/item/weapon/card/id/I = perp.wear_id.GetID()
 			if(I)
-				perpname = I.registered_name
+				perpname = I.registered
 				holder.icon_state = "hud[ckey(I.GetJobName())]"
 				C.images += holder
 			else
@@ -135,10 +136,10 @@
 					holder = perp.hud_list[IMPTRACK_HUD]
 					holder.icon_state = "hud_imp_tracking"
 					C.images += holder
-				if(istype(I,/obj/item/weapon/implant/loyalty))
+/*				if(istype(I,/obj/item/weapon/implant/loyalty))
 					holder = perp.hud_list[IMPLOYAL_HUD]
 					holder.icon_state = "hud_imp_loyal"
-					C.images += holder
+					C.images += holder*/
 				if(istype(I,/obj/item/weapon/implant/chem))
 					holder = perp.hud_list[IMPCHEM_HUD]
 					holder.icon_state = "hud_imp_chem"

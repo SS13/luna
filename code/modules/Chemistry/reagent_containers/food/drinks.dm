@@ -65,8 +65,13 @@
 
 
 	afterattack(obj/target, mob/user , flag)
+		if(reagents.total_volume && istype(target, /turf))
+			user << "<span class='notice'>You splash the solution onto [target].</span>"
+			reagents.reaction(target, TOUCH)
+			spawn(5)
+				reagents.clear_reagents()
 
-		if(istype(target, /obj/structure/reagent_dispensers)) //A dispenser. Transfer FROM it TO us.
+		else if(istype(target, /obj/structure/reagent_dispensers)) //A dispenser. Transfer FROM it TO us.
 
 			if(!target.reagents.total_volume)
 				user << "\red [target] is empty."
@@ -186,17 +191,6 @@
 		src.pixel_x = rand(-10.0, 10)
 		src.pixel_y = rand(-10.0, 10)
 
-/obj/item/weapon/reagent_containers/food/drinks/tea
-	name = "Duke Purple Tea"
-	desc = "An insult to Duke Purple is an insult to the Space Queen! Any proper gentleman will fight you, if you sully this tea."
-	icon_state = "tea"
-	item_state = "coffee"
-	New()
-		..()
-		reagents.add_reagent("tea", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
-
 /obj/item/weapon/reagent_containers/food/drinks/ice
 	name = "Ice Cup"
 	desc = "Careful, cold ice, do not chew."
@@ -207,17 +201,6 @@
 		src.pixel_x = rand(-10.0, 10)
 		src.pixel_y = rand(-10.0, 10)
 
-/obj/item/weapon/reagent_containers/food/drinks/h_chocolate
-	name = "Dutch Hot Coco"
-	desc = "Made in Space South America."
-	icon_state = "tea"
-	item_state = "coffee"
-	New()
-		..()
-		reagents.add_reagent("hot_coco", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
-
 /obj/item/weapon/reagent_containers/food/drinks/dry_ramen
 	name = "Cup Ramen"
 	desc = "Just add 10ml water, self heats! A taste that reminds you of your school years."
@@ -225,18 +208,6 @@
 	New()
 		..()
 		reagents.add_reagent("dry_ramen", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
-
-/obj/item/weapon/reagent_containers/food/drinks/cola
-	name = "Space Cola"
-	desc = "Cola. in space."
-	icon_state = "cola"
-	New()
-		..()
-		reagents.add_reagent("cola", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
 
 /obj/item/weapon/reagent_containers/food/drinks/beer
 	name = "Space Beer"
@@ -245,8 +216,6 @@
 	New()
 		..()
 		reagents.add_reagent("beer", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
 
 /obj/item/weapon/reagent_containers/food/drinks/ale
 	name = "Magm-Ale"
@@ -256,70 +225,135 @@
 	New()
 		..()
 		reagents.add_reagent("ale", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
 
-/obj/item/weapon/reagent_containers/food/drinks/space_mountain_wind
+/obj/item/weapon/reagent_containers/food/drinks/soda
+	New()
+		..()
+		if(!src.pixel_x && src.pixel_y)
+			src.pixel_x = rand(-10.0, 10)
+			src.pixel_y = rand(-10.0, 10)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/cola_diet
+	name = "diet space cola"
+	desc = "Cola... in space! Now with extra self-confidence."
+	icon_state = "cola-blue"
+	heal_amt = 1
+	New()
+		..()
+		reagents.add_reagent("cola", 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/rootbeer
+	name = "Blastwave Beer"
+	desc = "Feel the nuke in your mouth with Blastwave Beer!"
+	icon_state = "cola-brown"
+	heal_amt = 1
+	New()
+		..()
+		reagents.add_reagent("beer", 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/cola_apple
+	name = "Andromeda Apple"
+	desc = "Look to the stars with Andromeda Apple!"
+	icon_state = "cola-green"
+	heal_amt = 1
+	New()
+		..()
+		reagents.add_reagent("cola", 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/cola_orange
+	name = "Orbital Orange"
+	desc = "Feel out-of-this-world with Orbital Orange!"
+	icon_state = "cola-orange"
+	heal_amt = 1
+	New()
+		..()
+		reagents.add_reagent("cola", 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/cola_grape
+	name = "Gravity Grape"
+	desc = "Feel the planetfall with Gravity Grape!"
+	icon_state = "cola-purple"
+	heal_amt = 1
+	New()
+		..()
+		reagents.add_reagent("cola", 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/cola_lemonlime
+	name = "Citrus Star"
+	desc = "Shoot to space with Citrus Star!"
+	icon_state = "cola-yellow"
+	heal_amt = 1
+	New()
+		..()
+		reagents.add_reagent("cola", 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/cola_strawberry
+	name = "Sirius Strawberry"
+	desc = "See stars with Sirius Strawberry!"
+	icon_state = "cola-pink"
+	heal_amt = 1
+	New()
+		..()
+		reagents.add_reagent("cola", 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/cola
+	name = "Space Cola"
+	desc = "Cola. in space."
+	icon_state = "cola"
+	New()
+		..()
+		reagents.add_reagent("cola", 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/soda/space_mountain_wind
 	name = "Space Mountain Wind"
 	desc = "Blows right through you like a space wind."
 	icon_state = "space_mountain_wind"
 	New()
 		..()
 		reagents.add_reagent("spacemountainwind", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
 
-/obj/item/weapon/reagent_containers/food/drinks/thirteenloko
+/obj/item/weapon/reagent_containers/food/drinks/soda/thirteenloko
 	name = "Thirteen Loko"
 	desc = "The CMO has advised crew members that consumption of Thirteen Loko may result in seizures, blindness, drunkeness, or even death. Please Drink Responsably."
 	icon_state = "thirteen_loko"
 	New()
 		..()
 		reagents.add_reagent("thirteenloko", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
 
-/obj/item/weapon/reagent_containers/food/drinks/dr_gibb
+/obj/item/weapon/reagent_containers/food/drinks/soda/dr_gibb
 	name = "Dr. Gibb"
 	desc = "A delicious mixture of 42 different flavors."
 	icon_state = "dr_gibb"
 	New()
 		..()
-		reagents.add_reagent("dr_gibb", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
+		reagents.add_reagent("dr_gibb", 20)
+		reagents.add_reagent("tomatojuice", 10)
 
-/obj/item/weapon/reagent_containers/food/drinks/starkist
+/obj/item/weapon/reagent_containers/food/drinks/soda/starkist
 	name = "Star-kist"
 	desc = "The taste of a star in liquid form. And, a bit of tuna...?"
 	icon_state = "starkist"
 	New()
 		..()
-		reagents.add_reagent("cola", 15)
-		reagents.add_reagent("orangejuice", 15)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
+		reagents.add_reagent("cola", 20)
+		reagents.add_reagent("orangejuice", 10)
 
-/obj/item/weapon/reagent_containers/food/drinks/space_up
+/obj/item/weapon/reagent_containers/food/drinks/soda/space_up
 	name = "Space-Up"
 	desc = "Tastes like a hull breach in your mouth."
 	icon_state = "space-up"
 	New()
 		..()
 		reagents.add_reagent("space_up", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
 
-/obj/item/weapon/reagent_containers/food/drinks/lemon_lime
+/obj/item/weapon/reagent_containers/food/drinks/soda/lemon_lime
 	name = "Lemon-Lime"
 	desc = "You wanted ORANGE. It gave you Lemon Lime."
 	icon_state = "lemon-lime"
 	New()
 		..()
-		reagents.add_reagent("lemon_lime", 30)
-		src.pixel_x = rand(-10.0, 10)
-		src.pixel_y = rand(-10.0, 10)
-
+		reagents.add_reagent("limejuice", 10)
+		reagents.add_reagent("lemon_lime", 20)
 
 /obj/item/weapon/reagent_containers/food/drinks/sillycup
 	name = "Paper Cup"
@@ -337,7 +371,7 @@
 		else
 			icon_state = "water_cup_e"
 
-/obj/item/weapon/reagent_containers/food/drinks/tonic
+/obj/item/weapon/reagent_containers/food/drinks/soda/tonic
 	name = "T-Borg's Tonic Water"
 	desc = "Quinine tastes funny, but at least it'll keep that Space Malaria away."
 	icon_state = "tonic"
@@ -345,7 +379,7 @@
 		..()
 		reagents.add_reagent("tonic", 50)
 
-/obj/item/weapon/reagent_containers/food/drinks/sodawater
+/obj/item/weapon/reagent_containers/food/drinks/soda/sodawater
 	name = "Soda Water"
 	desc = "A can of soda water. Why not make a scotch and soda?"
 	icon_state = "sodawater"
@@ -370,8 +404,81 @@
 	icon_state = "flask"
 	volume = 60
 
-/obj/item/weapon/reagent_containers/food/drinks/britcup
+// CUPS
+
+/obj/item/weapon/reagent_containers/food/drinks/cup
 	name = "cup"
+	icon = 'icons/obj/cup.dmi'
+	item_state = "coffee"
+	volume = 30
+	New()
+		..()
+		spawn(0)
+			update_icon()
+
+	on_reagent_change()
+		update_icon()
+
+	pickup(mob/user)
+		..()
+		update_icon()
+
+	dropped(mob/user)
+		..()
+		update_icon()
+
+	attack_hand()
+		..()
+		update_icon()
+
+/obj/item/weapon/reagent_containers/food/drinks/cup/update_icon()
+	overlays.Cut()
+
+	if(reagents.total_volume)
+		var/image/filling = image('icons/obj/reagentfillings.dmi', src, "cup")
+		filling.icon += mix_color_from_reagents(reagents.reagent_list)
+		overlays += filling
+
+/obj/item/weapon/reagent_containers/food/drinks/cup/britcup
 	desc = "A cup with the british flag emblazoned on it."
 	icon_state = "britcup"
-	volume = 30
+
+/obj/item/weapon/reagent_containers/food/drinks/cup/tea
+	name = "Duke Purple Tea"
+	desc = "An insult to Duke Purple is an insult to the Space Queen! Any proper gentleman will fight you, if you sully this tea."
+	icon_state = "tea"
+	New()
+		..()
+		reagents.add_reagent("tea", 30)
+		src.pixel_x = rand(-10.0, 10)
+		src.pixel_y = rand(-10.0, 10)
+
+/obj/item/weapon/reagent_containers/food/drinks/cup/h_chocolate
+	name = "Dutch Hot Coco"
+	desc = "Made in Space South America."
+	icon_state = "hotchocolate"
+	item_state = "coffee"
+	New()
+		..()
+		reagents.add_reagent("hot_coco", 30)
+		src.pixel_x = rand(-10.0, 10)
+		src.pixel_y = rand(-10.0, 10)
+
+/obj/item/weapon/reagent_containers/food/drinks/mug
+	name = "cup"
+	icon = 'icons/obj/cup.dmi'
+	icon_state = "big"
+	item_state = "coffee"
+
+	mesa/icon_state = "mesa"
+	lambda/icon_state = "lambda"
+	nt/icon_state = "nt"
+	power_b/icon_state = "power_b"
+	power_y/icon_state = "power_y"
+	med/icon_state = "med"
+	med_b/icon_state = "med_b"
+	soviet/icon_state = "soviet"
+	creeper/icon_state = "creeper"
+	cult/icon_state = "cult"
+	no1/icon_state = "no1"
+	death/icon_state = "death"

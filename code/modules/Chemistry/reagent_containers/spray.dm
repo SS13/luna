@@ -10,7 +10,7 @@
 	throw_speed = 2
 	throw_range = 10
 	amount_per_transfer_from_this = 10
-	volume = 250
+	volume = 200
 	possible_transfer_amounts = null
 
 
@@ -86,7 +86,7 @@
 
 /obj/item/weapon/reagent_containers/spray/cleaner/New()
 	..()
-	reagents.add_reagent("cleaner", 250)
+	reagents.add_reagent("cleaner", 200)
 
 //pepperspray
 /obj/item/weapon/reagent_containers/spray/pepper
@@ -113,8 +113,11 @@
 	throwforce = 3
 	w_class = 3.0
 	volume = 600
+	amount_per_transfer_from_this = 30
 	origin_tech = "combat=3;materials=3;engineering=3"
 
+/obj/item/weapon/reagent_containers/spray/chemsprayer/attack_self(var/mob/user)
+	return
 
 //this is a big copypasta clusterfuck, but it's still better than it used to be!
 /obj/item/weapon/reagent_containers/spray/chemsprayer/afterattack(atom/A as mob|obj, mob/user as mob)
@@ -203,6 +206,23 @@
 
 	..()
 
+
+//water flower
+/obj/item/weapon/reagent_containers/spray/waterflower
+	name = "water flower"
+	desc = "A seemingly innocent sunflower...with a twist."
+	icon = 'icons/obj/harvest.dmi'
+	icon_state = "sunflower"
+	item_state = "sunflower"
+	amount_per_transfer_from_this = 2
+	volume = 20
+
+/obj/item/weapon/reagent_containers/spray/waterflower/New()
+	..()
+	reagents.add_reagent("water", 20)
+
+/obj/item/weapon/reagent_containers/spray/waterflower/attack_self(var/mob/user) //Don't allow changing how much the flower sprays
+	return
 
 //Used by spraybottles.
 /obj/effect/decal/chempuff

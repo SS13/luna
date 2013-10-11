@@ -8,14 +8,14 @@
 	allowed = list(/obj/item/device/flashlight)
 	var/brightness_on = 5 //luminosity when on
 	var/on = 0
-	color = "engineering" //Determines used sprites: rig[on]-[color] and rig[on]-[color]2 (lying down sprite)
+	item_color = "engineering" //Determines used sprites: rig[on]-[color] and rig[on]-[color]2 (lying down sprite)
 
 	attack_self(mob/user)
 		if(!isturf(user.loc))
 			user << "You cannot turn the light on while in this [user.loc]" //To prevent some lighting anomalities.
 			return
 		on = !on
-		icon_state = "rig[on]-[color]"
+		icon_state = "rig[on]-[item_color]"
 //		item_state = "rig[on]-[color]"
 
 		if(on)	user.ul_SetLuminosity(user.luminosity + brightness_on)
@@ -47,7 +47,7 @@
 	desc = "A special helmet designed for work in a hazardous, low-pressure environment. Has thermal shielding."
 	icon_state = "rig0-atmospherics"
 	item_state = "atmo_helm"
-	color = "atmospherics"
+	item_color = "atmospherics"
 	armor = list(melee = 10, bullet = 5, laser = 10,energy = 5, bomb = 10, bio = 100, rad = 0)
 	protective_temperature = 30000
 //	heat_protection = HEAD
@@ -69,7 +69,7 @@
 	desc = "An advanced helmet designed for work in a hazardous, low pressure environment. Shines with a high polish."
 	icon_state = "rig0-white"
 	item_state = "ce_helm"
-	color = "white"
+	item_color = "white"
 	armor = list(melee = 40, bullet = 10, laser = 15,energy = 15, bomb = 50, bio = 100, rad = 90)
 	protective_temperature = 30000
 //	heat_protection = HEAD
@@ -83,7 +83,7 @@
 	slowdown = 0
 	armor = list(melee = 40, bullet = 10, laser = 15,energy = 15, bomb = 50, bio = 100, rad = 90)
 	protective_temperature = 30000
-	reflectchance = 10 //So shiny!
+	reflectchance = 20 //So shiny!
 //	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 //	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 
@@ -94,7 +94,7 @@
 	desc = "A special helmet designed for work in a hazardous, low pressure environment. Has reinforced plating."
 	icon_state = "rig0-mining"
 	item_state = "mining_helm"
-	color = "mining"
+	item_color = "mining"
 	armor = list(melee = 40, bullet = 5, laser = 10,energy = 5, bomb = 50, bio = 100, rad = 50)
 
 /obj/item/clothing/suit/space/rig/mining
@@ -113,7 +113,7 @@
 	desc = "An advanced helmet designed for work in special operations. Property of Gorlex Marauders."
 	icon_state = "rig0-syndi"
 	item_state = "syndie_helm"
-	color = "syndi"
+	item_color = "syndi"
 	armor = list(melee = 60, bullet = 50, laser = 30,energy = 15, bomb = 35, bio = 100, rad = 50)
 
 /obj/item/clothing/suit/space/rig/syndi
@@ -122,9 +122,8 @@
 	desc = "An advanced suit that protects against injuries during special operations. Property of Gorlex Marauders."
 	item_state = "syndie_hardsuit"
 	slowdown = 2
-	w_class = 3
 	armor = list(melee = 60, bullet = 50, laser = 30, energy = 15, bomb = 35, bio = 100, rad = 50)
-//	allowed = list(/obj/item/weapon/gun,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/melee/energy/sword,/obj/item/weapon/handcuffs,/obj/item/weapon/tank/emergency_oxygen)
+	allowed = list(/obj/item/weapon/gun,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/melee/energy/sword,/obj/item/weapon/handcuffs,/obj/item/weapon/tank)
 
 //Wizard Rig
 /obj/item/clothing/head/helmet/space/rig/wizard
@@ -132,7 +131,7 @@
 	desc = "A bizarre gem-encrusted helmet that radiates magical energies."
 	icon_state = "rig0-wiz"
 	item_state = "wiz_helm"
-	color = "wiz"
+	item_color = "wiz"
 	unacidable = 1 //No longer shall our kind be foiled by lone chemists with spray bottles!
 	armor = list(melee = 40, bullet = 20, laser = 20,energy = 20, bomb = 35, bio = 100, rad = 50)
 
@@ -142,11 +141,10 @@
 	desc = "A bizarre gem-encrusted suit that radiates magical energies."
 	item_state = "wiz_hardsuit"
 	slowdown = -1 //MAGIC!
-	w_class = 3
 	unacidable = 1
 	reflectchance = 20 //So shiny!
 	armor = list(melee = 40, bullet = 20, laser = 20,energy = 20, bomb = 35, bio = 100, rad = 50)
-	allowed = list(/obj/item/weapon/teleportation_scroll,/obj/item/weapon/tank/emergency_oxygen)
+	allowed = list(/obj/item/weapon/teleportation_scroll,/obj/item/weapon/tank)
 
 
 
@@ -156,7 +154,7 @@
 	desc = "A special helmet designed for work in a hazardous, low pressure environment. Built with lightweight materials for extra comfort."
 	icon_state = "rig0-medical"
 	item_state = "medical_helm"
-	color = "medical"
+	item_color = "medical"
 	armor = list(melee = 10, bullet = 5, laser = 10,energy = 5, bomb = 10, bio = 100, rad = 50)
 
 /obj/item/clothing/suit/space/rig/medical
@@ -174,7 +172,7 @@
 	desc = "A special helmet designed for work in a hazardous, low pressure environment. Has an additional layer of armor."
 	icon_state = "rig0-sec"
 	item_state = "sec_helm"
-	color = "sec"
+	item_color = "sec"
 	armor = list(melee = 30, bullet = 15, laser = 30,energy = 10, bomb = 10, bio = 100, rad = 50)
 
 /obj/item/clothing/suit/space/rig/security
@@ -183,5 +181,5 @@
 	desc = "A special suit that protects against hazardous, low pressure environments. Has an additional layer of armor."
 	item_state = "sec_hardsuit"
 	slowdown = 3
-//	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank, /obj/item/weapon/gun/energy,/obj/item/weapon/reagent_containers/spray/pepper,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs)
+	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank, /obj/item/weapon/gun/energy,/obj/item/weapon/reagent_containers/spray/pepper,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs)
 	armor = list(melee = 30, bullet = 15, laser = 30,energy = 10, bomb = 10, bio = 100, rad = 50)
