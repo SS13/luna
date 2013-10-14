@@ -700,6 +700,7 @@
 #include "code\modules\mob\living\carbon\alien\larva\life.dm"
 #include "code\modules\mob\living\carbon\human\ai.dm"
 #include "code\modules\mob\living\carbon\human\death.dm"
+#include "code\modules\mob\living\carbon\human\emote.dm"
 #include "code\modules\mob\living\carbon\human\hud.dm"
 #include "code\modules\mob\living\carbon\human\human_damage.dm"
 #include "code\modules\mob\living\carbon\human\limited.dm"

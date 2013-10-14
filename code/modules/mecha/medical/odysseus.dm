@@ -2,7 +2,7 @@
 	desc = "These exosuits are developed and produced by Vey-Med. (&copy; All rights reserved)."
 	name = "Odysseus"
 	icon_state = "odysseus"
-	step_in = 2
+	step_in = 4
 	max_temperature = 15000
 	health = 120
 	wreckage = /obj/structure/mecha_wreckage/odysseus
