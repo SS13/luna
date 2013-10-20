@@ -152,11 +152,11 @@
 	var/dat = ""
 
 	if(premium.len > 0)
-		dat += "<TT><b>Coin slot:</b></TT> "
+		dat += "<TT><b>Coin slot:</b> "
 		if (coin)
-			dat += "<TT>[coin]&nbsp;&nbsp;<a href='byond://?src=\ref[src];remove_coin=1'>Remove</A></TT>"
+			dat += "[coin] <a href='byond://?src=\ref[src];remove_coin=1'>Remove</A></TT><br><br>"
 		else
-			dat += "<i>No coin</i>&nbsp;&nbsp;<span class='linkOff'>Remove</span>"
+			dat += "No coin<br><br></TT>"
 	dat += "<TT><b>Select an item:</b></TT><br>"
 	dat += "<TABLE width=100%><TR><TD><TT><B>Product:</B></TT></TD> <TD><TT><B>Amount:</B></TT></TD><TD></TD></TR>"
 //	dat += "<div class='statusDisplay'>"

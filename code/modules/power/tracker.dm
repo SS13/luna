@@ -14,7 +14,6 @@
 
 	var/sun_angle = 0		// sun angle as set by sun datum
 
-
 	// called by datum/sun/calc_position() as sun's angle changes
 	proc/set_angle(var/angle)
 		sun_angle = angle
@@ -26,12 +25,14 @@
 		if(stat & NOPOWER)
 			return
 
-		// find all solar controls and update them
-		// currently, just update all controllers in world
-		// ***TODO: better communication system using network
-		for(var/obj/machinery/power/solar_control/C in world)
+		var/datum/UnifiedNetwork/Network = Networks[/obj/cabling/power]
+		if(!Network) return 0
+
+		for(var/obj/machinery/power/solar_control/C in Network.Nodes)
 			C.tracker_update(angle)
 
+		// Mow updates all controllers using network.
+		// It was updating all controllers in world before. -- ACCount
 
 	// timed process
 	// make sure we can draw power from the powernet

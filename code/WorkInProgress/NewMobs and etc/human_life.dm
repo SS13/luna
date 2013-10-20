@@ -545,14 +545,14 @@
 				emote("cough")
 				return
 	if (disabilities & 8)
-		if ((prob(10) && paralysis <= 1 && r_Tourette < 1))
-			stunned = max(10, stunned)
+		if ((prob(5) && !stunned && r_Tourette < 1))
 			spawn( 0 )
 				switch(rand(1, 3))
 					if(1)
 						emote("twitch")
 					if(2 to 3)
-						say("[prob(50) ? ";" : ""][pick("DWARFS","MAGMA","ARMOK","BERR","APPLES","SPACEMEN","NINJAS")]!")
+						say("[prob(50) ? ";" : ""][pick("SHIT", "PISS", "FUCK", "CUNT", "COCKSUCKER", "MOTHERFUCKER", "TITS")]!")
+						//it was pick("DWARFS","MAGMA","ARMOK","BERR","APPLES","SPACEMEN","NINJAS")
 				var/old_x = pixel_x
 				var/old_y = pixel_y
 				pixel_x += rand(-2,2)
@@ -560,6 +560,7 @@
 				sleep(2)
 				pixel_x = old_x
 				pixel_y = old_y
+				stunned = max(5, stunned)
 				return
 	if (disabilities & 16)
 		if (prob(10))

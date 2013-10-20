@@ -2170,7 +2170,7 @@ datum
 				M.drowsyness = max(0,M.drowsyness-3)
 				M.sleeping = max(0,M.sleeping - 2)
 				if (M.bodytemperature < 310)//310 is the normal bodytemp. 310.055
-					M.bodytemperature = min(310, M.bodytemperature + (10 * TEMPERATURE_DAMAGE_COEFFICIENT))
+					M.bodytemperature = min(310, M.bodytemperature + (35 * TEMPERATURE_DAMAGE_COEFFICIENT))
 
 				if(prob(20)) M.make_jittery(1)
 
@@ -2195,7 +2195,7 @@ datum
 				if(M.getToxLoss() && prob(20))
 					M.adjustToxLoss(-1)
 				if (M.bodytemperature < 310)  //310 is the normal bodytemp. 310.055
-					M.bodytemperature = min(310, M.bodytemperature + (20 * TEMPERATURE_DAMAGE_COEFFICIENT))
+					M.bodytemperature = min(310, M.bodytemperature + (30 * TEMPERATURE_DAMAGE_COEFFICIENT))
 				..()
 				return
 

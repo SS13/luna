@@ -23,10 +23,14 @@
 		while(cquery.NextRow())
 			var/list/row = cquery.GetRowData()
 			marks += row["rank"]
+
+	if(user.real_name == "Atarabashi Nihondzin") //EASTER EGG
+		mgender = "unknown"
+
 	var/text = {"
 	<center>Report</center><br>
 	Name: [mname]<br>
-	Sex: [gender]<br>
+	Sex: [mgender]<br>
 	Age: [age]<br>
 	Blood Type: [bloodtype]<br>
 	Fingerprint: [fingerprint]<br>

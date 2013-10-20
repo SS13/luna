@@ -254,8 +254,8 @@
 				emote("cough")
 				return
 	if (disabilities & 8)
-		if ((prob(10) && paralysis <= 1 && r_Tourette < 1))
-			stunned = max(10, stunned)
+		if ((prob(10) && !stunned && r_Tourette < 1))
+			stunned = max(5, stunned)
 			spawn( 0 )
 				switch(rand(1, 3))
 					if(1)

@@ -16,7 +16,7 @@ CIGS
 	icon_state = "match_unlit"
 	var/lit = 0
 	var/smoketime = 15
-	w_class = 1.0
+	w_class = 1
 	origin_tech = "materials=1"
 	attack_verb = list("burnt", "singed")
 
@@ -48,9 +48,10 @@ CIGS
 	icon = 'icons/obj/cigarettes.dmi'
 	icon_state = "matchbox"
 	item_state = "zippo"
-	w_class = 1
+	w_class = 2
 	flags = TABLEPASS | ONBELT
 //	slot_flags = SLOT_BELT
+	can_hold = list("/obj/item/weapon/match")
 
 	New()
 		..()
@@ -649,42 +650,3 @@ CIGS
 		user.ul_SetLuminosity(user.luminosity-1)
 		ul_SetLuminosity(1)
 	return
-
-/obj/item/toy
-	icon = 'icons/obj/toy.dmi'
-
-/obj/item/toy/minisingulo
-	name = "singularity engine"
-	desc = "A small but fully operational singularity engine. Can be used as lighter or disposal bin."
-	icon = 'icons/obj/toy.dmi'
-	icon_state = "singulo_base"
-	flags = TABLEPASS | CONDUCT | ONBELT
-	var/on = 0
-
-/obj/item/toy/minisingulo/New()
-	update_icon()
-
-/obj/item/toy/minisingulo/attack_self(mob/living/user)
-	if(user.r_hand == src || user.l_hand == src)
-		if(!on)
-			on = 1
-			user.visible_message("[user] launches the small singularity engine.")
-		else
-			on = 0
-			user.visible_message("[user] shuts off the small singularity engine.")
-		update_icon()
-	else
-		return ..()
-
-/obj/item/toy/minisingulo/update_icon()
-	overlays.Cut()
-	if(on)
-		overlays += "singulo_s"
-	overlays += "singulo_over"
-
-/obj/item/toy/minisingulo/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (on && W.w_class == 1)
-		user.visible_message("[user] stuffs [W] into the small singularity engine.")
-		W.Del()
-	else
-		return ..()

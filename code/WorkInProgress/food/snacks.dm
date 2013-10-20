@@ -1,6 +1,6 @@
-/obj/item/weapon/reagent_containers/food
-	var/heal_amt = 0
-	var/nutmod = 1
+/*obj/item/weapon/reagent_containers/food
+	var///heal_amt = 0
+	var///nutmod = 1
 	proc
 		heal(var/mob/M)
 			if(istype(M, /mob/living/carbon/human))
@@ -29,7 +29,7 @@
 	icon_state = null
 	var/amount = 3   //amount of bites
 	var/edible = 1   //can you eat this?
-	heal_amt = 0     //healing and nutrition value
+	//heal_amt = 0     //healing and nutrition value
 
 	New()
 		var/datum/reagents/R = new/datum/reagents(10)
@@ -91,6 +91,9 @@
 		return
 	afterattack(obj/target, mob/user , flag)
 		return
+*/
+/obj/item/weapon/reagent_containers/food/snacks/var/amount = 3
+
 
 // Determining place where to put the products after cutting them with a knife
 
@@ -108,50 +111,50 @@
 	name = "flour"
 	desc = "Some flour"
 	icon_state = "flour"
-	edible = 0
+	wrapped = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/sugar
 	name = "sugar"
 	desc = "Some sugar"
 	icon_state = "sugar"
-	edible = 0
+	wrapped = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/tomato
 	name = "tomato"
 	desc = "Better than ketchup."
 	icon_state = "tomato"
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/dough
 	name = "dough"
 	desc = "A dough."
 	icon_state = "dough"
-	edible = 0
+	wrapped = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/flatdough
 	name = "flat dough"
 	desc = "A flattened dough."
 	icon_state = "flat dough"
-	edible = 0
+	wrapped = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/noodles
 	name = "noodles"
 	desc = "Uncooked spaghetti."
 	icon_state = "spagetti"
-	edible = 0
+	wrapped = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/doughslice
 	name = "dough slice"
 	desc = "Make your magic."
 	icon_state = "doughslice"
-	edible = 0
+	wrapped = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/meat
 	name = " meat"
 	desc = "A raw meat slab."
 	icon_state = "meat"
-	edible = 0
+	wrapped = 1
 	var/subjectname = ""
 	var/subjectjob = null
 
@@ -159,19 +162,19 @@
 	name = "raw cutlet"
 	desc = "A thin piece of meat."
 	icon_state = "rawcutlet"
-	edible = 0
+	wrapped = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/rawmeatball
 	name = "raw meatball"
 	desc = "A raw meatball."
 	icon_state = "rawmeatball"
-	edible = 0
+	wrapped = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/egg
 	name = "egg"
 	desc = "Space chickens make them."
 	icon_state = "egg"
-	edible = 0
+	wrapped = 1
 
 ///////////////////////////////////////////////////////
 //                                                   //
@@ -184,33 +187,33 @@
 	desc = "Maybe you should cook it first?"
 	icon_state = "potato"
 	amount = 1
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/rawsticks
 	name = "raw potato sticks"
 	desc = "Maybe you should cook it first?"
 	icon_state = "rawsticks"
 	amount = 1
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/apple
 	name = "apple"
 	desc = "Lots of iron and vitamins."
 	icon_state = "apple"
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/fungi
 	name = "Space fungi"
 	desc = "Common space mushrooms which grow in any environment."
 	icon_state = "fungi"
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/plump
 	name = "Plump Helmets"
 	desc = "Mushrooms selectively bred to be alcoholic."
 	icon_state = "plump"
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		var/datum/reagents/R = new/datum/reagents(50)
 		reagents = R
@@ -228,7 +231,7 @@
 	desc = "Goes well with meat."
 	icon_state = "ketchup"
 	amount = 1
-	heal_amt = 1
+	//heal_amt = 1
 
 ///////////////////////////////////////////////////////
 //                                                   //
@@ -241,59 +244,53 @@
 	desc = "Sweet and sticky."
 	icon_state = "candycane"
 	amount = 1
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/sweetapple
 	name = "sweet apple"
 	desc = "Warm, sweet and healthy!"
 	icon_state = "sweetapple"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/pattyapple
 	name = "apple patty"
 	desc = "Like grandma's."
 	icon_state = "pattyapple"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/bun
 	name = "bun"
 	desc = "A base for any self-respecting burger."
 	icon_state = "bun"
 	amount = 2
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/flatbread
 	name = "flatbread"
 	desc = "Bland but filling."
 	icon_state = "flatbread"
 	amount = 3
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/waffles
 	name = "waffles"
 	desc = "Sweet waffles."
 	icon_state = "waffles"
 	amount = 3
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/donut
 	name = "donut"
 	desc = "Goes great with Robust Coffee."
 	icon_state = "donut1"
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		if(rand(1,3) == 1)
 			src.icon_state = "donut2"
 			src.name = "frosted donut"
-			src.heal_amt = 2
-	heal(var/mob/M)
-		if(istype(M, /mob/living/carbon/human) && M.job in list("Security Officer", "Head of Security", "Forensic Technician"))
-			src.heal_amt *= 2
-			..()
-			src.heal_amt /= 2
 
 ///////////////////////////////////////////////////////
 //                                                   //
@@ -306,105 +303,105 @@
 	desc = "Good as always."
 	icon_state = "frenchfries"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/bakedpotato
 	name = "baked potato"
 	desc = "It smells good."
 	icon_state = "bakedpotato"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/sbakedpotato
 	name = "sauced potatoes"
 	desc = "It smells and tastes great!"
 	icon_state = "sbakedpotato"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/spaghetti
 	name = "spaghetti"
 	desc = "Long and tasteless - 'Noodles'."
 	icon_state = "spaghetti"
 	amount = 2
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/sspaghetti
 	name = "sauced spaghetti"
 	desc = "Long and tasty - 'Tomato Noodles'."
 	icon_state = "sspaghetti"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/meatspaghetti
 	name = "spaghetti with meatballs"
 	desc = "A standard dinner - 'Spaghetti Monster'."
 	icon_state = "meatspaghetti"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/smeatspaghetti
 	name = "sauced spaghetti with meatballs"
 	desc = "A tasty dinner - 'Spaghetti Terror'."
 	icon_state = "smeatspaghetti"
 	amount = 2
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/boiledegg
 	name = "boiled egg"
 	desc = "Boiled in its own shell - 'Humpty Dumpty'."
 	icon_state = "boiled egg"
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/omelette
 	name = "omelette"
 	desc = "A filling breakfast dish for every scientist - 'Eggheads'."
 	icon_state = "omelette"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/somelette
 	name = "sauced omelette"
 	desc = "A saucy dish - 'Bloody Alien'."
 	icon_state = "somelette"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/steak
 	name = "steak"
 	desc = "A juicy meat steak."
 	icon_state = "meatstake"
 	amount = 3
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/ssteak
 	name = "sauced steak"
 	desc = "A sauced meat steak."
 	icon_state = "meatstake"
 	amount = 3
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/cutlet
 	name = "cutlet"
 	desc = "A tasty meat slice - 'Bacon'."
 	icon_state = "cutlet"
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/sausage
 	name = "sausage"
 	desc = "A sausage."
 	icon_state = "sausage"
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/meatball
 	name = "meatball"
 	desc = "A meatball."
 	icon_state = "meatball"
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 ///////////////////////////////////////////////////////
 //                                                   //
@@ -417,63 +414,63 @@
 	desc = "Unrelated to dogs."
 	icon_state = "hotdog"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/shotdog
 	name = "sauced hotdog"
 	desc = "Unrelated to dogs - 'Royal Hotdog'."
 	icon_state = "shotdog"
 	amount = 2
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/burger
 	name = "burger"
 	desc = "A fast way to become fat."
 	icon_state = "burger"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/sburger
 	name = "sauced burger"
 	desc = "A fast way to become fat - 'Space Burger'."
 	icon_state = "sburger"
 	amount = 2
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/hamburger
 	name = "hamburger"
 	desc = "A fast way to become fat."
 	icon_state = "hamburger"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/shamburger
 	name = "sauced hamburger"
 	desc = "A fast way to become fat - 'Star Hamburger'."
 	icon_state = "shamburger"
 	amount = 2
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/cheeseburger
 	name = "cheeseburger"
 	desc = "The cheese adds a good flavor."
 	icon_state = "cheeseburger"
 	amount = 2
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/scheeseburger
 	name = "saused cheeseburger"
 	desc = "The cheese adds a good flavor - 'Space Cheeseburger'."
 	icon_state = "scheeseburger"
 	amount = 2
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/taco
 	name = "taco"
 	desc = "Take a bite!"
 	icon_state = "taco"
 	amount = 2
-	heal_amt = 4
+	//heal_amt = 4
 
 ///////////////////////////////////////////////////////
 //                                                   //
@@ -486,7 +483,7 @@
 	desc = "Om nom nom."
 	icon_state = "pieapple"
 	amount = 3
-	heal_amt = 3
+	//heal_amt = 3
 
 
 
@@ -495,21 +492,21 @@
 	desc = "Om nom nom."
 	icon_state = "pieapple"
 	amount = 3
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pieshroom
 	name = "mushroom pie"
 	desc = "Eat fresh."
 	icon_state = "pieshroom"
 	amount = 3
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/piemeat
 	name = "meat pie"
 	desc = "Fat and filling."
 	icon_state = "piemeat"
 	amount = 3
-	heal_amt = 4
+	//heal_amt = 4
 
 ///////////////////////////////////////////////////////
 //                                                   //
@@ -522,98 +519,98 @@
 	desc = "A pizza with cheese and sauce."
 	icon_state = "pizza1"
 	amount = 4
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzaslice
 	name = "Pizza Margherita slice"
 	desc = "A slice of pizza with cheese and sauce."
 	icon_state = "pizzaslice1"
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzapotato
 	name = "Pizza Potati"
 	desc = "A pizza with cheese, potatoes and sauce."
 	icon_state = "pizza1"
 	amount = 4
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzapotatoslice
 	name = "Pizza Potati slice"
 	desc = "A slice of pizza with cheese, potato and sauce."
 	icon_state = "pizzaslice1"
 	amount = 1
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzashroom
 	name = "Pizza Funghi"
 	desc = "A pizza with cheese, sauce and mushrooms."
 	icon_state = "pizza2"
 	amount = 4
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzashroomslice
 	name = "Pizza Funghi slice"
 	desc = "A slice of pizza with cheese, sauce and mushrooms."
 	icon_state = "pizzaslice2"
 	amount = 1
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzameat
 	name = "Pizza al Prosciutto"
 	desc = "A pizza with cheese, sauce and sliced meat."
 	icon_state = "pizza3"
 	amount = 4
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzameatslice
 	name = "Pizza al Prosciutto slice"
 	desc = "A slice of pizza with cheese, sauce and sliced meat."
 	icon_state = "pizzaslice3"
 	amount = 1
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzameatshroom
 	name = "Pizza al Prosciutto e Funghi"
 	desc = "A pizza with cheese, sauce, sliced meat and mushrooms."
 	icon_state = "pizza4"
 	amount = 4
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzameatshroomslice
 	name = "Pizza al Prosciutto e Funghi slice"
 	desc = "A slice of pizza with cheese, sauce, mushrooms and sliced meat."
 	icon_state = "pizzaslice4"
 	amount = 1
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzasalami
 	name = "Pizza Pepperoni"
 	desc = "A pizza with cheese, sauce and salami."
 	icon_state = "pizza3"
 	amount = 4
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzasalamislice
 	name = "Pizza Pepperoni slice"
 	desc = "A slice of pizza with cheese, sauce and salami."
 	icon_state = "pizzaslice3"
 	amount = 1
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzasalamishroom
 	name = "Pizza Alla Diavola"
 	desc = "A spicy pizza with mushrooms, cheese, sauce and salami."
 	icon_state = "pizza4"
 	amount = 4
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/pizzasalamishroomslice
 	name = "Pizza Alla Diavola slice"
 	desc = "A slice of a spicy pizza with mushrooms, cheese, sauce and salami."
 	icon_state = "pizzaslice4"
 	amount = 1
-	heal_amt = 4
+	//heal_amt = 4
 
 // Cutting pizza
 
@@ -1008,7 +1005,7 @@
 	name = "loaf of bread"
 	desc = "A fine loaf of bread"
 	icon_state = "loaf4"
-	heal_amt = 2
+	//heal_amt = 2
 	amount = 6
 
 // the butterpack
@@ -1016,7 +1013,7 @@
 	name = "Butter pack"
 	desc = "A big pack of goodness."
 	icon_state = "butterpack"
-	edible = 0
+	wrapped = 1
 	amount = 5
 
 // the stick of salami
@@ -1024,7 +1021,7 @@
 	name = "salami stick"
 	desc = "Don't choke on this, find a knife."
 	icon_state = "salamistick3"
-	edible = 0
+	wrapped = 1
 	amount = 5
 
 // the head of cheese
@@ -1033,7 +1030,7 @@
 	desc = "Cut it with a knife."
 	icon = 'food.dmi'
 	icon_state = "bigcheese"
-	heal_amt = 3
+	//heal_amt = 3
 	amount = 1
 
 // *** Now icons for the stuff which goes on top of the bread slice ***
@@ -1047,7 +1044,7 @@
 	desc = "A well-made bread slice."
 	icon_state = "bread3"
 	stateontop = "bread1"
-	heal_amt = 1
+	//heal_amt = 1
 
 // a slice of salami
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/salami
@@ -1055,7 +1052,7 @@
 	desc = "A preserved meat."
 	icon_state = "salami"
 	stateontop = "salami3"
-	heal_amt = 1
+	//heal_amt = 1
 
 // a slice of cheese
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/cheese
@@ -1063,7 +1060,7 @@
 	desc = "Small enough to fit on a bread slice."
 	icon_state = "cheese"
 	stateontop = "cheese3"
-	heal_amt = 1
+	//heal_amt = 1
 
 // a slice of butter
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/butter
@@ -1071,14 +1068,14 @@
 	desc = "You need a butter to make sandwiches, right?"
 	icon_state = "butter"
 	stateontop = "butter3"
-	heal_amt = 0
+	//heal_amt = 0
 
 // bread and butter
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/butterbread
 	name = "bread and butter"
 	desc = "A base for a sandwich."
 	icon_state = "breadbutter"
-	heal_amt = 1
+	//heal_amt = 1
 
 
 // a cheese sandwich
@@ -1087,7 +1084,7 @@
 	desc = "Cheese and butter. Nice."
 	icon_state = "chsandwich"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 // a meat sandwich
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/msandwich
@@ -1095,7 +1092,7 @@
 	desc = "Fat but filling."
 	icon_state = "msandwich"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 // a salami sandwich
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/salsandwich
@@ -1103,7 +1100,7 @@
 	desc = "This is a salami sandwich.. Really, that's all... No strange spices mixed in."
 	icon_state = "salsandwich"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 // a sammich
 /obj/item/weapon/reagent_containers/food/snacks/breadsys/ontop/sammich
@@ -1111,7 +1108,7 @@
 	desc = "A great sandwich!"
 	icon_state = "sammich"
 	amount = 4
-	heal_amt = 4
+	//heal_amt = 4
 
 // *** Cutting sandwich-system containers into pieces ***
 
@@ -1212,8 +1209,8 @@
 	name = "candy"
 	desc = "Man, that looks good. I bet it's got nougat."
 	icon_state = "candy"
-	heal_amt = 1
-	nutmod = 0.1
+	//heal_amt = 1
+	//nutmod = 0.1
 
 /obj/item/weapon/reagent_containers/food/snacks/candy/MouseDrop(mob/user as mob)
 	return src.attack(user, user)
@@ -1222,8 +1219,8 @@
 	name = "chips"
 	desc = "Commander Riker's What-The-Crisps"
 	icon_state = "chips"
-	heal_amt = 2
-	nutmod = 0.1
+	//heal_amt = 2
+	//nutmod = 0.1
 
 /obj/item/weapon/reagent_containers/food/snacks/chips/MouseDrop(mob/user as mob)
 	return src.attack(user, user)
@@ -1233,23 +1230,21 @@
 	desc = "This burger gives off an air of awkwardness."
 	icon_state = "burger"
 	amount = 5
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/brainburger
 	name = "brainburger"
 	desc = "A strange looking burger. It looks almost sentient."
 	icon_state = "burger"
 	amount = 5
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/meatball
 	name = "meatball"
 	desc = "A great meal all round."
 	icon_state = "meatball"
 	amount = 1
-	heal_amt = 2
-	heal(var/mob/M)
-		..()
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/humanburger
 	name = "-burger"
@@ -1258,15 +1253,14 @@
 	desc = "A bloody burger."
 	icon_state = "burger"
 	amount = 5
-	heal_amt = 2
-	heal(var/mob/M)
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/monkeyburger
 	name = "monkeyburger"
 	desc = "The cornerstone of every nutritious breakfast."
 	icon_state = "burger"
 	amount = 5
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/roburger
 	name = "roburger"
@@ -1291,7 +1285,7 @@
 	name = "Dwarven Wine Biscuits"
 	desc = "WARNING: HIGH ALCOHOL CONTENT."
 	icon_state = "dwbiscuits"
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		var/datum/reagents/R = new/datum/reagents(100)
 		reagents = R

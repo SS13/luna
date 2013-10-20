@@ -91,7 +91,7 @@
 			user << "The coil is too long, you cannot add any more cable to it."
 			return
 
-		if( (C.amount + amount <= 30) )
+		if(C.amount + amount <= 30)
 			C.amount += amount
 			user << "You join the [name]s together."
 			C.update_icon()
@@ -99,8 +99,8 @@
 			return
 
 		else
-			user << "You transfer [30 - amount] lengths of cable from one coil to the other."
-			amount -= (30-C.amount)
+			user << "You transfer [30 - C.amount] lengths of cable from one coil to the other."
+			amount -= 30-C.amount
 			update_icon()
 			C.amount = 30
 			C.update_icon()

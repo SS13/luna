@@ -871,7 +871,7 @@ Panel: [ opened ? "<a href='byond://?src=\ref[src];opened=0'>Close</a>" : "<a hr
 		. = ..()
 	if ((s_active && !( s_active in contents ) ))
 		s_active.close(src)
-	return
+	return .
 
 /mob/living/silicon/robot/proc/self_destruct()
 	gib(1)

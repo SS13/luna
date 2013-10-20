@@ -1,3 +1,21 @@
+/obj/machinery/power/solar
+	name = "solar panel"
+	desc = "A solar electrical generator."
+	icon = 'power.dmi'
+	icon_state = "sp_base"
+	anchored = 1
+	density = 1
+	directwired = 1
+	var/health = 10.0
+	var/id = 1
+	var/obscured = 0
+	var/sunfrac = 0
+	var/adir = SOUTH
+	var/ndir = SOUTH
+	var/turn_angle = 0
+	var/obj/machinery/power/solar_control/control
+
+
 /obj/machinery/power/solar/New()
 	..()
 	spawn(10)
@@ -15,7 +33,7 @@
 /obj/machinery/power/solar/attackby(obj/item/weapon/W, mob/user)
 	..()
 	src.add_fingerprint(user)
-	src.health -= W.force
+	src.health -= W.force/3
 	src.healthcheck()
 	return
 
@@ -29,7 +47,6 @@
 		if(!(stat & BROKEN))
 			broken()
 		else
-			new /obj/item/weapon/shard(src.loc)
 			new /obj/item/weapon/shard(src.loc)
 			del(src)
 			return
@@ -59,12 +76,9 @@
 #define SOLARGENRATE 1500
 
 /obj/machinery/power/solar/process()
-
-	if(stat & BROKEN)
-		return
+	if(stat & BROKEN) return
 
 	var/datum/UnifiedNetwork/Network = Networks[/obj/cabling/power]
-
 	//return //TODO: FIX
 
 	if(!obscured)
@@ -82,6 +96,8 @@
 
 /obj/machinery/power/solar/proc/broken()
 	stat |= BROKEN
+	new /obj/item/weapon/shard(src.loc)
+	health = 0
 	update_icon()
 	return
 
@@ -106,14 +122,26 @@
 				broken()
 	return
 
-/obj/machinery/power/solar/blob_act()
-	if(prob(50))
-		broken()
-		src.density = 0
 
 
 
 
+/obj/machinery/power/solar_control
+	name = "solar panel controller"
+	desc = "A controller for solar panel arrays."
+	icon = 'computer.dmi'
+	icon_state = "solar"
+	anchored = 1
+	density = 1
+	directwired = 1
+	var/id = 1
+	var/cdir = 0
+	var/gen = 0
+	var/lastgen = 0
+	var/track = 2			// 0= off  1=timed  2=auto (tracker)
+	var/trackrate = 600		// 300-900 seconds
+	var/trackdir = 1		// 0 =CCW, 1=CW
+	var/nexttime = 0
 
 
 

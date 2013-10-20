@@ -1,15 +1,15 @@
-/*obj/item/projectile/ion
+/obj/item/projectile/ion
 	name = "ion bolt"
 	icon_state = "ion"
-	damage = 0
+	damage = 2
 	damage_type = BURN
-	nodamage = 1
 	flag = "energy"
 
 
 	on_hit(var/atom/target, var/blocked = 0)
 		empulse(target, 1, 1)
-		return 1 */
+		empulse(target, 1, 1)
+		return 1
 
 
 /obj/item/projectile/bullet/gyro

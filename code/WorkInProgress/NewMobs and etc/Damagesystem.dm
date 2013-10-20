@@ -216,9 +216,9 @@
 
 	if(zombie) return 6
 
-	if(reagents.has_reagent("nuka_cola")) return -1
-	if(reagents.has_reagent("hyperzine")) return -1
-	if(istype(get_turf(src), /turf/space)) return -1
+	if(reagents.has_reagent("nuka_cola")) return 0
+	if(reagents.has_reagent("hyperzine")) return 0
+	if(istype(get_turf(src), /turf/space)) return 0
 
 	var/health_deficiency = (health_full - health)
 	if(health_deficiency >= 40)
@@ -255,183 +255,6 @@
 				stat("Internal Atmosphere Info", internal.name)
 				stat("Tank Pressure", internal.air_contents.return_pressure())
 				stat("Distribution Pressure", internal.distribute_pressure)
-
-/*
-/mob/living/carbon/human/bullet_act(flag, A as obj)
-	var/shielded = 0
-
-	for(var/obj/item/device/shield/S in src)
-		if (S.active)
-			if (flag == "bullet")
-				return
-			shielded = 1
-			S.active = 0
-			S.icon_state = "shield0"
-
-	for(var/obj/item/device/cloak/S in src)
-		if (S.active)
-			shielded = 1
-			S.active = 0
-			S.icon_state = "shield0"
-
-	if (shielded && flag != "bullet")
-		src << "\blue Your shield was disturbed by a laser!"
-		if(paralysis <= 30)	paralysis = 30
-		updatehealth()
-
-	if (locate(/obj/item/weapon/grab, src))
-		var/mob/safe = null
-		if (istype(l_hand, /obj/item/weapon/grab))
-			var/obj/item/weapon/grab/G = l_hand
-			if ((G.state == 3 && get_dir(src, A) == dir))
-				safe = G.affecting
-
-		if (istype(r_hand, /obj/item/weapon/grab))
-			var/obj/item/weapon.grab/G = r_hand
-			if ((G.state == 3 && get_dir(src, A) == dir))
-				safe = G.affecting
-
-		if (safe)
-			return safe.bullet_act(flag, A)
-
-	if (flag == PROJECTILE_BULLET)
-
-		var/d = 51
-
-		if (istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armourrigvest))
-			if (prob(70))
-				show_message("\red Your armor absorbs the hit!", 4)
-				return
-			else
-				if (prob(40))
-					show_message("\red Your armor only softens the hit!", 4)
-					if (prob(20))
-						d = d / 2
-					d = d / 4
-		else
-			if (istype(wear_suit, /obj/item/clothing/suit/swat_suit))
-				if (prob(90))
-					show_message("\red Your armor absorbs the blow!", 4)
-					return
-				else
-					if (prob(90))
-						show_message("\red Your armor only softens the blow!", 4)
-						if (prob(60))
-							d = d / 2
-						d = d / 5
-		if (stat != 2)
-			var/organ = organs[ran_zone("chest")]
-			if (istype(organ, /datum/organ/external))
-				var/datum/organ/external/temp = organ
-				if(temp.destroyed)
-					return
-				temp.take_damage(d, 0)
-			UpdateDamageIcon()
-			updatehealth()
-			if (prob(50))
-				if(weakened <= 5)	weakened = 5
-		return
-
-	else if (flag == PROJECTILE_TASER)
-		if(zombie) return
-		if (istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armourrigvest))
-			if (prob(5))
-				show_message("\red Your armor absorbs the hit!", 4)
-				return
-		else
-			if (istype(wear_suit, /obj/item/clothing/suit/swat_suit))
-				if (prob(70))
-					show_message("\red Your armor absorbs the hit!", 4)
-					return
-		if (prob(75) && stunned <= 10)
-			stunned = 10
-		else
-			weakened = 10
-		if (stuttering < 10)
-			stuttering = 10
-
-	else if(flag == PROJECTILE_LASER)
-		var/d = 20
-		if (istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armourrigvest))
-			if (prob(40))
-				show_message("\red Your armor absorbs the hit!", 4)
-				return
-			else
-				if (prob(40))
-					show_message("\red Your armor only softens the hit!", 4)
-					if (prob(20))
-						d = d / 2
-					d = d / 2
-		else
-			if (istype(wear_suit, /obj/item/clothing/suit/swat_suit))
-				if (prob(70))
-					show_message("\red Your armor absorbs the blow!", 4)
-					return
-				else
-					if (prob(90))
-						show_message("\red Your armor only softens the blow!", 4)
-						if (prob(60))
-							d = d / 2
-						d = d / 2
-
-		if (!eye_blurry) eye_blurry = 4 //This stuff makes no sense but lasers need a buff.
-		if (prob(25)) stunned++
-
-		if (stat != 2)
-			var/organ = organs[ran_zone("chest")]
-			if (istype(organ, /datum/organ/external))
-				var/datum/organ/external/temp = organ
-				if(temp.destroyed)
-					return
-				temp.take_damage(d, 0)
-			UpdateDamageIcon()
-			updatehealth()
-			if (prob(25))
-				stunned = 1
-
-	else if(flag == PROJECTILE_PULSE)
-		var/d = 40
-		if (istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armourrigvest))
-			if (prob(20))
-				show_message("\red Your armor absorbs the hit!", 4)
-				return
-			else
-				if (prob(20))
-					show_message("\red Your armor only softens the hit!", 4)
-					if (prob(20))
-						d = d / 2
-					d = d / 2
-		else
-			if (istype(wear_suit, /obj/item/clothing/suit/swat_suit))
-				if (prob(50))
-					show_message("\red Your armor absorbs the blow!", 4)
-					return
-				else
-					if (prob(50))
-						show_message("\red Your armor only softens the blow!", 4)
-						if (prob(50))
-							d = d / 2
-						d = d / 2
-		if (stat != 2)
-			var/organ = organs[ran_zone("chest")]
-			if (istype(organ, /datum/organ/external))
-				var/datum/organ/external/temp = organ
-				if(temp.destroyed)
-					return
-				temp.take_damage(d, 0)
-			UpdateDamageIcon()
-			updatehealth()
-			if (prob(50))
-				stunned = min(stunned, 5)
-
-	else if(flag == PROJECTILE_BOLT)
-		toxloss += 3
-		radiation += 100
-		updatehealth()
-		stuttering += 5
-		drowsyness += 5
-
-	return*/
 
 /mob/living/carbon/human/ex_act(severity)
 	if(!blinded)
@@ -984,8 +807,8 @@
 		var/dam_zone = pick("head", "chest", "l_arm", "r_arm", "l_leg", "r_leg", "groin")
 
 		var/datum/organ/external/affecting = get_organ(ran_zone(dam_zone))
-		//var/armor_block = run_armor_check(affecting, "melee")
-		apply_damage(damage, BRUTE, affecting/*, armor_block*/)
+		var/armor_block = run_armor_check(affecting, "melee")
+		apply_damage(damage, BRUTE, affecting, armor_block)
 
 
 		if(M.powerlevel > 0)

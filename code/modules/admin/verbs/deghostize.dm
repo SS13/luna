@@ -156,7 +156,7 @@
 			new_character.equip_if_possible(new /obj/item/clothing/shoes/jackboots(new_character), new_character.slot_shoes)
 			new_character.equip_if_possible(new /obj/item/weapon/handcuffs(new_character), new_character.slot_in_backpack)
 			new_character.equip_if_possible(new /obj/item/weapon/handcuffs(new_character), new_character.slot_in_backpack)
-			new_character.equip_if_possible(new /obj/item/clothing/head/helmet/Secsoft(new_character), new_character.slot_head)
+			new_character.equip_if_possible(new /obj/item/clothing/head/helmet/secsoft(new_character), new_character.slot_head)
 			new_character.equip_if_possible(new /obj/item/clothing/gloves/red(new_character), new_character.slot_gloves)
 			new_character.equip_if_possible(new /obj/item/weapon/storage/backpack/security(new_character), new_character.slot_back)
 

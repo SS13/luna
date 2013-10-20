@@ -26,27 +26,27 @@
 	src.closer.icon_state = "x"
 	src.closer.layer = 20
 
-	spawn( 5 )
-		src.orient_objs(7, 8, 10, 7)
+	spawn(5)
+		src.orient_objs(4, 10, 4, 3)
+		//src.orient_objs(7, 8, 10, 7)
 		return
 
 	return
 
 // BubbleWrap - A box can be folded up to make card
 /obj/item/weapon/storage/attack_self(mob/user as mob)
-	if ( contents.len )
-		return
-	if ( !ispath(src.foldable) )
-		return
+	if(contents.len) return
+	if(!ispath(src.foldable)) return
+
 	var/found = 0
 	// Close any open UI windows first
 	for(var/mob/M in range(1))
 		if (M.s_active == src)
 			src.close(M)
-		if ( M == user )
+		if (M == user)
 			found = 1
-	if ( !found )	// User is too far away
-		return
+	if(!found) return	// User is too far away
+
 	// Now make the cardboard
 	user << "\blue You fold \the [src] flat."
 	new src.foldable(get_turf(src))
@@ -62,8 +62,7 @@
 			user << "\red This container cannot hold [W]."
 			return
 
-	if (src.contents.len >= 7)
-		return
+	if (src.contents.len >= 7) return
 
 	if (W.w_class >= w_class && !istype(src, /obj/item/weapon/storage/backpack/holding) || src.loc == W)
 		return
@@ -90,26 +89,26 @@
 
 
 
-/obj/item/weapon/storage/dropped(mob/user as mob)
+/*obj/item/weapon/storage/dropped(mob/living/user as mob)
 	src.orient_objs(7, 8, 10, 7)
-	return
+	return*/
 
 /obj/item/weapon/storage/MouseDrop(over_object, src_location, over_location)
 	..()
-	if ((over_object == usr && (in_range(src, usr) || usr.contents.Find(src))))
+	if (over_object == usr && (in_range(src, usr) || usr.contents.Find(src) ))
 		if (usr.s_active)
 			usr.s_active.close(usr)
 		src.show_to(usr)
 	return
 
-/obj/item/weapon/storage/attack_paw(mob/user as mob)
+/obj/item/weapon/storage/attack_paw(mob/living/user as mob)
 	playsound(src.loc, "rustle", 50, 1, -5)
 	return src.attack_hand(user)
 	return
 
-/obj/item/weapon/storage/attack_hand(mob/user as mob)
+/obj/item/weapon/storage/attack_hand(mob/living/user as mob)
 	playsound(src.loc, "rustle", 50, 1, -5)
-	if (src.loc == user)
+	if (src.loc == user && user:r_store != src && user:l_store != src)
 		if (user.s_active)
 			user.s_active.close(user)
 		src.show_to(user)
@@ -118,14 +117,13 @@
 		for(var/mob/M in range(1))
 			if (M.s_active == src)
 				src.close(M)
-			//Foreach goto(76)
 		src.orient2hud(user)
 	src.add_fingerprint(user)
 	return
 
 /obj/item/weapon/storage/proc/return_inv()
 
-	var/list/L = list(  )
+	var/list/L = list()
 
 	L += src.contents
 
@@ -138,6 +136,8 @@
 	return L
 
 /obj/item/weapon/storage/proc/show_to(mob/user as mob)
+	if(!user.client) return
+
 	for(var/obj/item/device/assembly/mousetrap/MT in src)
 		if(MT.armed)
 			for(var/mob/O in viewers(user, null))
@@ -149,9 +149,9 @@
 			MT.triggered(user, user.hand ? "l_hand" : "r_hand")
 			MT.layer = OBJ_LAYER
 			return
-	user.client.screen -= src.boxes
-	user.client.screen -= src.closer
-	user.client.screen -= src.contents
+
+	hide_from(user)
+
 	user.client.screen += src.boxes
 	user.client.screen += src.closer
 	user.client.screen += src.contents
@@ -159,9 +159,8 @@
 	return
 
 /obj/item/weapon/storage/proc/hide_from(mob/user as mob)
+	if(!user.client) return
 
-	if(!user.client)
-		return
 	user.client.screen -= src.boxes
 	user.client.screen -= src.closer
 	user.client.screen -= src.contents
@@ -174,9 +173,9 @@
 	return
 
 /obj/item/weapon/storage/proc/orient_objs(tx, ty, mx, my)
-
 	var/cx = tx
 	var/cy = ty
+
 	src.boxes.screen_loc = text("[],[] to [],[]", tx, ty, mx, my)
 	for(var/obj/O in src.contents)
 		O.screen_loc = text("[],[]", cx, cy)
@@ -185,20 +184,19 @@
 		if (cx > mx)
 			cx = tx
 			cy--
-		//Foreach goto(56)
-	src.closer.screen_loc = text("[],[]", mx, my)
+	src.closer.screen_loc = text("[mx],[my]")
 	return
 
 /obj/item/weapon/storage/proc/orient2hud(mob/user as mob)
-
 	if (src == user.l_hand)
 		src.orient_objs(3, 11, 3, 4)
+
+	else if (src == user.r_hand)
+		src.orient_objs(1, 11, 1, 4)
+
+	else if (src == user.back)
+		src.orient_objs(4, 10, 4, 3)
+
 	else
-		if (src == user.r_hand)
-			src.orient_objs(1, 11, 1, 4)
-		else
-			if (src == user.back)
-				src.orient_objs(4, 10, 4, 3)
-			else
-				src.orient_objs(4, 10, 4, 3)
+		src.orient_objs(4, 10, 4, 3)
 	return

@@ -7,7 +7,6 @@
 #define MELEE 1
 #define RANGED 2
 
-
 /obj/mecha
 	name = "Mecha"
 	desc = "Exosuit"
@@ -235,7 +234,7 @@
 	. = ..()
 	if(.)
 		events.fireEvent("onMove",get_turf(src))
-	return
+	return .
 
 /obj/mecha/relaymove(mob/user,direction)
 	if(user != src.occupant) //While not "realistic", this piece is player friendly.
@@ -292,7 +291,7 @@
 	var/result = step(src,direction)
 	if(result)
 		playsound(src,'sound/mecha/mechstep.ogg',40,1)
-	return 1
+	return result
 
 
 /obj/mecha/proc/move_z(cardinal)

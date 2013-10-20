@@ -32,7 +32,7 @@ mob/new_player
 			src.client.showmotd()
 		spawn(25)
 			new_player_panel()
-		src << "<b>We now have <a href='http://whoopshop.com/index.php/topic,1632.0.html'>guidelines</a>. Read them before playing or fear the wrath of the banhammer!"
+		//src << "<b>We now have <a href='http://whoopshop.com/index.php/topic,1632.0.html'>guidelines</a>. Read them before playing or fear the wrath of the banhammer!"
 		var/starting_loc = pick(newplayer_start)
 		loc = starting_loc
 		sight |= SEE_TURFS
@@ -47,7 +47,7 @@ mob/new_player
 		if(!preferences.savefile_load(src,0,1))
 			preferences.ShowChoices(src)
 
-		startup = sound('intro.wma', volume = 50)
+		startup = sound('lobby_music.ogg', volume = 30)
 		spawn(25)
 			src << startup
 

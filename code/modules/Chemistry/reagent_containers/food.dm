@@ -9,3 +9,4 @@
 		..()
 		pixel_x = rand(-5, 5)	//Randomizes postion slightly.
 		pixel_y = rand(-5, 5)
+		reagents.add_reagent("nutriment", 8)

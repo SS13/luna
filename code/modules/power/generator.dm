@@ -2,14 +2,25 @@
 
 /*/obj/machinery/power/generator/verb/set_amount(var/g as num)
 	set src in view(1)
-
 	gen_amount = g
-
 */
+
+/obj/machinery/power/generator
+	name = "generator"
+	desc = "A high efficiency thermoelectric generator."
+	icon_state = "teg"
+	anchored = 1
+	density = 1
+
+	var/obj/machinery/atmospherics/binary/circulator/circ1
+	var/obj/machinery/atmospherics/binary/circulator/circ2
+
+	var/lastgen = 0
+	var/lastgenlev = -1
+
 
 /obj/machinery/power/generator/New()
 	..()
-
 	spawn(5)
 		circ1 = locate(/obj/machinery/atmospherics/binary/circulator) in get_step(src,WEST)
 		circ2 = locate(/obj/machinery/atmospherics/binary/circulator) in get_step(src,EAST)
@@ -19,7 +30,6 @@
 		update_icon()
 
 /obj/machinery/power/generator/update_icon()
-
 	if(stat & (NOPOWER|BROKEN))
 		overlays = null
 	else
@@ -61,7 +71,6 @@
 			world << "POWER: [lastgen] W generated at [efficiency*100]% efficiency and sinks sizes [cold_air_heat_capacity], [hot_air_heat_capacity]"
 
 
-
 			AddPower(lastgen)
 	// update icon overlays only if displayed level has changed
 
@@ -84,9 +93,7 @@
 	interact(user)
 
 /obj/machinery/power/generator/attack_hand(mob/user)
-
 	add_fingerprint(user)
-
 	if(stat & (BROKEN|NOPOWER)) return
 
 	interact(user)
@@ -120,12 +127,10 @@
 
 /obj/machinery/power/generator/Topic(href, href_list)
 	..()
-
-	if( href_list["close"] )
+	if(href_list["close"])
 		usr << browse(null, "window=teg")
 		usr.machine = null
 		return 0
-
 	return 1
 
 /obj/machinery/power/generator/power_change()

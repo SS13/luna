@@ -1,13 +1,13 @@
 //Also contains /obj/structure/closet/body_bag because I doubt anyone would think to look for bodybags in /object/structures
 
-/obj/item/bodybag
+/obj/item/weapon/bodybag
 	name = "body bag"
 	desc = "A folded bag designed for the storage and transportation of cadavers."
 	icon = 'icons/obj/bodybag.dmi'
 	icon_state = "bodybag_folded"
 	w_class = 2
 
-/obj/item/bodybag/attack_self(mob/user)
+/obj/item/weapon/bodybag/attack_self(mob/user)
 		var/obj/structure/closet/body_bag/R = new /obj/structure/closet/body_bag(user.loc)
 		R.add_fingerprint(user)
 		del(src)
@@ -20,13 +20,13 @@
 
 	New()
 		..()
-		new /obj/item/bodybag(src)
-		new /obj/item/bodybag(src)
-		new /obj/item/bodybag(src)
-		new /obj/item/bodybag(src)
-		new /obj/item/bodybag(src)
-		new /obj/item/bodybag(src)
-		new /obj/item/bodybag(src)
+		new /obj/item/weapon/bodybag(src)
+		new /obj/item/weapon/bodybag(src)
+		new /obj/item/weapon/bodybag(src)
+		new /obj/item/weapon/bodybag(src)
+		new /obj/item/weapon/bodybag(src)
+		new /obj/item/weapon/bodybag(src)
+		new /obj/item/weapon/bodybag(src)
 
 
 /obj/structure/closet/body_bag
@@ -77,7 +77,7 @@
 		if(contents.len)
 			return 0
 		visible_message("<span class='notice'>[usr] folds up [src].</span>")
-		var/obj/item/bodybag/B = new /obj/item/bodybag(get_turf(src))
+		var/obj/item/weapon/bodybag/B = new /obj/item/weapon/bodybag(get_turf(src))
 		usr.put_in_hands(B)
 		del(src)
 

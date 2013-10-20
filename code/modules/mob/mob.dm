@@ -433,13 +433,33 @@ mob/verb/turnwest()
 /obj/proc/hide(h)
 	return
 
+/obj/item/weapon/grab
+	name = "grab"
+	icon = 'screen1.dmi'
+	icon_state = "grabbed"
+	var/obj/screen/grab/hud1 = null
+	var/mob/affecting = null
+	var/mob/assailant = null
+	var/state = 1
+	var/killing = 0
+	var/allow_upgrade = 1
+	var/last_suffocate = 1
+	layer = 21
+	abstract = 1
+	item_state = "nothing"
+	w_class = 5
+
 /obj/item/weapon/grab/proc/throw()
-	if(affecting)
-		var/grabee = affecting
-		spawn(0)
-			del(src)
-		return grabee
-	return null
+	if(!affecting)
+		spawn(0) del(src)
+		return null
+
+	if(!isturf(assailant.loc) || !isturf(affecting.loc) || assailant.loc != affecting.loc && get_dist(assailant, affecting) > 1)
+		spawn(0) del(src)
+		return null
+
+	spawn(0) del(src)
+	return affecting
 
 /obj/item/weapon/grab/proc/synch()
 	if (assailant.r_hand == src)
@@ -452,8 +472,7 @@ mob/verb/turnwest()
 	if(!assailant || !affecting)
 		del(src)
 		return
-	if ((!( isturf(assailant.loc) ) || (!( isturf(affecting.loc) ) || (assailant.loc != affecting.loc && get_dist(assailant, affecting) > 1))))
-		//SN src = null
+	if(!isturf(assailant.loc) || !isturf(affecting.loc) || assailant.loc != affecting.loc && get_dist(assailant, affecting) > 1)
 		del(src)
 		return
 	if (assailant.client)
@@ -463,11 +482,11 @@ mob/verb/turnwest()
 		assailant.pulling = null
 	if (state <= 2)
 		allow_upgrade = 1
-		if ((assailant.l_hand && assailant.l_hand != src && istype(assailant.l_hand, /obj/item/weapon/grab)))
+		if (assailant.l_hand && assailant.l_hand != src && istype(assailant.l_hand, /obj/item/weapon/grab))
 			var/obj/item/weapon/grab/G = assailant.l_hand
 			if (G.affecting != affecting)
 				allow_upgrade = 0
-		if ((assailant.r_hand && assailant.r_hand != src && istype(assailant.r_hand, /obj/item/weapon/grab)))
+		if (assailant.r_hand && assailant.r_hand != src && istype(assailant.r_hand, /obj/item/weapon/grab))
 			var/obj/item/weapon/grab/G = assailant.r_hand
 			if (G.affecting != affecting)
 				allow_upgrade = 0
@@ -487,9 +506,9 @@ mob/verb/turnwest()
 		else
 			hud1.icon_state = "!reinforce"
 	else
-		if (!( affecting.buckled ))
+		if (!affecting.buckled)
 			affecting.loc = assailant.loc
-	if ((killing && state == 3))
+	if (killing && state == 3)
 		if(prob(45)) affecting.stunned = max(3, affecting.stunned)
 		//affecting.paralysis = max(3, affecting.paralysis)
 		affecting.losebreath = min(affecting.losebreath + 2, 3)
@@ -498,17 +517,19 @@ mob/verb/turnwest()
 /obj/item/weapon/grab/proc/s_click(obj/screen/S as obj)
 	if (assailant.next_move > world.time)
 		return
-	if ((!( assailant.canmove ) || assailant.lying))
-		//SN src = null
+	if (!assailant.canmove  || assailant.lying)
 		del(src)
 		return
+	if(!isturf(assailant.loc) || !isturf(affecting.loc) || assailant.loc != affecting.loc && get_dist(assailant, affecting) > 1)
+		del(src)
+		return
+
 	switch(S.id)
 		if(1.0)
 			if (state >= 3)
-				if (!( killing ))
+				if (!killing )
 					for(var/mob/O in viewers(assailant, null))
 						O.show_message(text("\red [] has temporarily tightened his grip on []!", assailant, affecting), 1)
-						//Foreach goto(97)
 					assailant.next_move = world.time + 10
 					affecting.stunned = max(2, affecting.stunned)
 					//affecting.paralysis = max(1, affecting.paralysis)
@@ -519,15 +540,15 @@ mob/verb/turnwest()
 	return
 
 /obj/item/weapon/grab/proc/s_dbclick(obj/screen/S as obj)
-	if ((assailant.next_move > world.time && !( last_suffocate < world.time + 2 )))
+	if(assailant.next_move > world.time && !(last_suffocate < world.time + 2))
 		return
-	if ((!( assailant.canmove ) || assailant.lying))
+	if(!assailant.canmove || assailant.lying)
 		del(src)
 		return
 	switch(S.id)
 		if(1.0)
 			if (state < 2)
-				if (!( allow_upgrade ))
+				if (!allow_upgrade)
 					return
 				if (prob(75))
 					for(var/mob/O in viewers(assailant, null))
@@ -560,13 +581,13 @@ mob/verb/turnwest()
 
 					state = 3
 					icon_state = "grabbed+1"
-					if (!( affecting.buckled ))
+					if (!affecting.buckled)
 						affecting.loc = assailant.loc
 					hud1.icon_state = "disarm/kill"
 					hud1.name = "disarm/kill"
 				else
 					if (state >= 3)
-						killing = !( killing )
+						killing = !killing
 						if (killing)
 							for(var/mob/O in viewers(assailant, null))
 								O.show_message(text("\red [] has tightened his grip on []'s neck!", assailant, affecting), 1)

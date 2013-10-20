@@ -2,9 +2,10 @@
 	name = "jetpack (oxygen)"
 	desc = "A tank of compressed oxygen for use as propulsion in zero-gravity areas. Use with caution."
 	icon_state = "jetpack0"
-	var/on = 0.0
-	w_class = 4.0
+	w_class = 4
 	item_state = "jetpack0"
+	var/on = 0
+	var/stabilization_on = 0
 	var/jettype = ""
 	var/datum/effect/system/ion_trail_follow/ion_trail
 
@@ -37,7 +38,7 @@
 		var/mob/M = usr
 		if (!( istype(over_object, /obj/screen) ))
 			return ..()
-		if ((!( M.restrained() ) && !( M.stat ) && M.back == src))
+		if ((!M.restrained() && !M.stat && M.back == src))
 			if (over_object.name == "r_hand")
 				if (!( M.r_hand ))
 					M.u_equip(src)
@@ -54,9 +55,9 @@
 
 
 /obj/item/weapon/tank/jetpack/proc/allow_thrust(num, mob/living/user as mob)
-	if(!(src.on)) return 0
+	if(!src.on) return 0
 
-	if((num < 0.005 || src.air_contents.total_moles() < num))
+	if(num < 0.005 || src.air_contents.total_moles() < num)
 		src.ion_trail.stop()
 		return 0
 
@@ -101,13 +102,24 @@
 
 
 /obj/item/weapon/tank/jetpack/verb/toggle()
-	src.on = !( src.on )
+	set name = "Toggle Jetpack"
+	set category = "Object"
+	src.on = !src.on
 	src.icon_state = "jetpack[on][jettype]"
 	src.item_state = "jetpack[on][jettype]"
 	if(src.on)
 		src.ion_trail.start()
 	else
 		src.ion_trail.stop()
+
 	if(ishuman(loc))
 		loc:update_clothing()
+	usr << "You toggle the jetpack [on? "on":"off"]."
+	return
+
+/obj/item/weapon/tank/jetpack/verb/toggle_stabilisation()
+	set name = "Toggle Jetpack Stabilization"
+	set category = "Object"
+	src.stabilization_on = !src.stabilization_on
+	usr << "You toggle the stabilization [stabilization_on? "on":"off"]."
 	return

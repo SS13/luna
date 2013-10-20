@@ -25,6 +25,7 @@
 			nutrition--
 		/*if(mutations & 32 && m_intent == "run")
 			bodytemperature += 2*/
+	return .
 
 /mob/living/carbon/relaymove(var/mob/user, direction)
 	if(user in stomach_contents)
@@ -168,7 +169,7 @@
 	if(update_slimes)
 		for(var/mob/living/carbon/slime/M in view(1,src))
 			M.UpdateFeed(src)
-	return
+	return .
 
 
 

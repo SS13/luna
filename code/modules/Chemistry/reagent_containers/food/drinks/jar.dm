@@ -1,5 +1,3 @@
-
-
 ///jar
 
 /obj/item/weapon/reagent_containers/food/drinks/jar

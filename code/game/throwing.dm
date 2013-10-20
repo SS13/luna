@@ -28,7 +28,8 @@
 	item.loc = src.loc
 
 	if (istype(item, /obj/item/weapon/grab))
-		item = item:throw() //throw the person instead of the grab
+		var/obj/item/weapon/grab/G = item
+		item = G.throw() //throw the person instead of the grab
 
 	if(istype(item, /obj/item))
 		item:dropped(src) // let it know it's been dropped
@@ -36,6 +37,7 @@
 	//actually throw it!
 	if (item)
 		item.layer = initial(item.layer)
+		item.loc = src.loc
 		src.visible_message("\red [src] has thrown [item].")
 
 		if(istype(src.loc, /turf/space)) //they're in space, move em one space in the opposite direction

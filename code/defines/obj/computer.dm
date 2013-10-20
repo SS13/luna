@@ -27,29 +27,6 @@
 	var/obj/machinery/optable/table = null
 	var/id = 0.0
 
-/*
- *	Arcade -- An arcade cabinet.
- */
-
-/obj/machinery/computer/arcade
-	name = "arcade machine"
-	icon = 'computer.dmi'
-	icon_state = "arcade"
-	circuit = "/obj/item/weapon/circuitboard/computer/arcade"
-	var/enemy_name = "Space Villain"
-	var/temp = "Winners Don't Use Spacedrugs" //Temporary message, for attack messages, etc
-	var/player_hp = 30 //Player health/attack points
-	var/player_mp = 10
-	var/enemy_hp = 45 //Enemy health/attack points
-	var/enemy_mp = 20
-	var/gameover = 0
-	var/blocked = 0 //Player cannot attack/heal while set
-	brightnessred = 0
-	brightnessgreen = 2
-	brightnessblue = 0
-
-
-
 /obj/machinery/computer/aiupload
 	name = "AI Upload"
 	icon_state = "aiupload"

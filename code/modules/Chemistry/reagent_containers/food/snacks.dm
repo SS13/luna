@@ -42,20 +42,19 @@
 		return 0
 	if(istype(M, /mob/living/carbon))
 		if(M == user)								//If you're eating it yourself.
-			var/fullness = M.nutrition + (M.reagents.get_reagent_amount("nutriment") * 25)
-			if(wrapped)
-				M << "<span class='notice'>You can't eat wrapped food!</span>"
-				return 0
-			else if(fullness <= 50)
-				M << "<span class='notice'>You hungrily [eatverb] some of the [src] and gobble it down!</span>"
-			else if(fullness > 50 && fullness < 150)
-				M << "<span class='notice'>You hungrily begin to [eatverb] the [src].</span>"
-			else if(fullness > 150 && fullness < 350)
+			var/fullness = M.nutrition/2 + (M.reagents.get_reagent_amount("nutriment") * 25)
+			if(wrapped)	return 0
+
+			else if(fullness <= 100)
+				M << "<span class='notice'>You hungrily [eatverb] some of the [src.name] and gobble it down!</span>"
+			else if(fullness > 100 && fullness < 250)
+				M << "<span class='notice'>You hungrily begin to [eatverb] the [src.name].</span>"
+			else if(fullness > 250 && fullness < 550)
 				M << "<span class='notice'>You [eatverb] the [src].</span>"
-			else if(fullness > 350 && fullness < 550)
-				M << "<span class='notice'>You unwillingly [eatverb] a bit of the [src].</span>"
-			else if(fullness > 550)	// The more you eat - the more you can eat
-				M << "<span class='notice'>You cannot force any more of the [src] to go down your throat.</span>"
+			else if(fullness > 550 && fullness < 850)
+				M << "<span class='notice'>You unwillingly [eatverb] a bit of the [src.name].</span>"
+			else if(fullness > 850)	// The more you eat - the more you can eat
+				M << "<span class='notice'>You cannot force any more of the [src.name] to go down your throat.</span>"
 				return 0
 
 		if(reagents)								//Handle ingestion of the reagent.

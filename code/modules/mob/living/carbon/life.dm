@@ -212,7 +212,7 @@
 			if(wear_suit && (wear_suit.body_parts_covered & HEAD) && (environment.temperature < wear_suit.protective_temperature))
 				transfer_coefficient *= wear_suit.heat_transfer_coefficient
 
-			if(prob(80)) handle_temperature_damage(HEAD, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(60)) handle_temperature_damage(HEAD, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & CHEST) && (environment.temperature < wear_suit.protective_temperature))
@@ -220,7 +220,7 @@
 			if(w_uniform && (w_uniform.body_parts_covered & CHEST) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			if(prob(80)) handle_temperature_damage(CHEST, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(60)) handle_temperature_damage(CHEST, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & GROIN) && (environment.temperature < wear_suit.protective_temperature))
@@ -228,7 +228,7 @@
 			if(w_uniform && (w_uniform.body_parts_covered & GROIN) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			if(prob(80)) handle_temperature_damage(GROIN, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(60)) handle_temperature_damage(GROIN, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & LEGS) && (environment.temperature < wear_suit.protective_temperature))
@@ -236,7 +236,7 @@
 			if(w_uniform && (w_uniform.body_parts_covered & LEGS) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			if(prob(80)) handle_temperature_damage(LEGS, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(60)) handle_temperature_damage(LEGS, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & ARMS) && (environment.temperature < wear_suit.protective_temperature))
@@ -244,7 +244,7 @@
 			if(w_uniform && (w_uniform.body_parts_covered & ARMS) && (environment.temperature < w_uniform.protective_temperature))
 				transfer_coefficient *= w_uniform.heat_transfer_coefficient
 
-			if(prob(80)) handle_temperature_damage(ARMS, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(60)) handle_temperature_damage(ARMS, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & HANDS) && (environment.temperature < wear_suit.protective_temperature))
@@ -252,7 +252,7 @@
 			if(gloves && (gloves.body_parts_covered & HANDS) && (environment.temperature < gloves.protective_temperature))
 				transfer_coefficient *= gloves.heat_transfer_coefficient
 
-			if(prob(80)) handle_temperature_damage(HANDS, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(60)) handle_temperature_damage(HANDS, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 			transfer_coefficient = 1
 			if(wear_suit && (wear_suit.body_parts_covered & FEET) && (environment.temperature < wear_suit.protective_temperature))
@@ -260,7 +260,7 @@
 			if(shoes && (shoes.body_parts_covered & FEET) && (environment.temperature < shoes.protective_temperature))
 				transfer_coefficient *= shoes.heat_transfer_coefficient
 
-			if(prob(80)) handle_temperature_damage(FEET, environment.temperature, environment_heat_capacity*transfer_coefficient)
+			if(prob(60)) handle_temperature_damage(FEET, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
 	if(stat==2)
 		bodytemperature += 0.1*(environment.temperature - bodytemperature)*environment_heat_capacity/(environment_heat_capacity + 270000)
@@ -572,12 +572,12 @@
 				if(SA_pp > SA_sleep_min) // Enough to make us sleep as well
 					sleeping = max(sleeping, 2)
 				if(vsc.plc.N2O_HALLUCINATION)
-					hallucination += 12
+					hallucination += 6
 			else if(SA_pp > 0.01)	// There is sleeping gas in their lungs, but only a little, so give them a bit of a warning
 				if(prob(20))
 					emote(pick("giggle", "laugh"))
 				if(vsc.plc.N2O_HALLUCINATION)
-					hallucination += 8
+					hallucination++
 
 
 	if(breath.temperature > (T0C+66) && !(mutations & 2)) // Hot air hurts :(
@@ -600,6 +600,7 @@
 	if(nodamage)
 		return
 	var/discomfort = min(abs(exposed_temperature - bodytemperature)*(exposed_intensity)/2000000, 1.0) * vsc.TEMP_DMG
+	discomfort = discomfort*2
 
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src
@@ -608,43 +609,43 @@
 		switch(body_part)
 			if(HEAD)
 				org = H.get_organ("head")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("head", 0, 1.1*discomfort)
 			if(CHEST)
 				org = H.get_organ("chest")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("chest", 0, 1.4*discomfort)
 			if(GROIN)
 				org = H.get_organ("groin")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("groin", 0, 0.9*discomfort)
 			if(LEGS)
 				org = H.get_organ("l_leg")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("l_leg", 0, 0.4*discomfort)
 				org = H.get_organ("r_leg")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("r_leg", 0, 0.4*discomfort)
 			if(ARMS)
 				org = H.get_organ("l_arm")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("l_arm", 0, 0.3*discomfort)
 				org = H.get_organ("r_arm")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("r_arm", 0, 0.3*discomfort)
 			if(FEET)
 				org = H.get_organ("l_foot")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("l_foot", 0, 0.15*discomfort)
 				org = H.get_organ("r_foot")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("r_foot", 0, 0.15*discomfort)
 			if(HANDS)
 				org = H.get_organ("l_hand")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("l_hand", 0, 0.15*discomfort)
 				org = H.get_organ("r_hand")
-				if(!org.robotic)
+				if(!org.robotic && !prob(70))
 					TakeDamage("r_hand", 0, 0.15*discomfort)
 	else
 		switch(body_part)
@@ -690,56 +691,64 @@
 	return temp_change
 
 /mob/living/carbon/proc/get_thermal_protection()
-	var/thermal_protection = 1.0
+	var/thermal_protection = 0.3
 	//Handle normal clothing
 	if(head && (head.body_parts_covered & HEAD))
+		thermal_protection += (1-head.heat_transfer_coefficient)/6
 		thermal_protection += 0.2
+		if(head.flags & HEADSPACE)
+			thermal_protection += 1
+
 	if(wear_suit && (wear_suit.body_parts_covered & CHEST))
+		thermal_protection += (1-wear_suit.heat_transfer_coefficient)/2
+		thermal_protection += (1-wear_suit.gas_transfer_coefficient)/6
 		thermal_protection += 0.2
+		if(wear_suit.flags & SUITSPACE)
+			thermal_protection += 2
+
 	if(w_uniform && (w_uniform.body_parts_covered & CHEST))
 		thermal_protection += 0.1
 	if(wear_suit && (wear_suit.body_parts_covered & LEGS))
-		thermal_protection += 0.1
-	if(wear_suit && (wear_suit.body_parts_covered & ARMS))
-		thermal_protection += 0.1
-	if(wear_suit && (wear_suit.body_parts_covered & HANDS))
 		thermal_protection += 0.2
+	if(wear_suit && (wear_suit.body_parts_covered & ARMS))
+		thermal_protection += 0.2
+	if(wear_suit && (wear_suit.body_parts_covered & HANDS))
+		thermal_protection += 0.1
 	if(shoes && (shoes.body_parts_covered & FEET))
 		thermal_protection += 0.1
-	if(wear_suit && (wear_suit.flags & SUITSPACE))
-		thermal_protection += 3
-	if(head && (head.flags & HEADSPACE))
-		thermal_protection += 2
 	if(mutations & 2)
 		thermal_protection += 5
+	if(head && wear_suit && (wear_suit.flags & SUITSPACE) && (head.flags & HEADSPACE))
+		thermal_protection += 4
 
+	thermal_protection += (add_fire_protection(1))/1200
 	return thermal_protection
 
 /mob/living/carbon/proc/add_fire_protection(var/temp)
 	var/fire_prot = 0
-	if(head)
-		if(head.protective_temperature > temp)
-			fire_prot += (head.protective_temperature/20)
-	if(wear_mask)
-		if(wear_mask.protective_temperature > temp)
-			fire_prot += (wear_mask.protective_temperature/20)
-	if(glasses)
-		if(glasses.protective_temperature > temp)
-			fire_prot += (glasses.protective_temperature/50)
-	if(ears)
-		if(ears.protective_temperature > temp)
-			fire_prot += (ears.protective_temperature/50)
-	if(wear_suit)
-		if(wear_suit.protective_temperature > temp)
-			fire_prot += (wear_suit.protective_temperature/10)
-	if(w_uniform)
-		if(w_uniform.protective_temperature > temp)
-			fire_prot += (w_uniform.protective_temperature/10)
-	if(gloves)
-		if(gloves.protective_temperature > temp)
-			fire_prot += (gloves.protective_temperature/30)
-	if(shoes)
-		if(shoes.protective_temperature > temp)
-			fire_prot += (shoes.protective_temperature/30)
+
+	if(head && head.protective_temperature > temp)
+		fire_prot += (head.protective_temperature/30)
+
+	if(wear_mask && wear_mask.protective_temperature > temp)
+		fire_prot += (wear_mask.protective_temperature/40)
+
+	if(glasses && glasses.protective_temperature > temp)
+		fire_prot += (glasses.protective_temperature/60)
+
+	if(ears && ears.protective_temperature > temp)
+		fire_prot += (ears.protective_temperature/60)
+
+	if(wear_suit && wear_suit.protective_temperature > temp)
+		fire_prot += (wear_suit.protective_temperature/10)
+
+	if(w_uniform && w_uniform.protective_temperature > temp)
+		fire_prot += (w_uniform.protective_temperature/20)
+
+	if(gloves && gloves.protective_temperature > temp)
+		fire_prot += (gloves.protective_temperature/40)
+
+	if(shoes && shoes.protective_temperature > temp)
+		fire_prot += (shoes.protective_temperature/40)
 
 	return fire_prot

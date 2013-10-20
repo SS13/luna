@@ -291,7 +291,7 @@
 							// if set to 0, requires a 0-X cable on this turf
 
 /obj/machinery/power/terminal
-	name = "Terminal"
+	name = "terminal"
 	icon_state = "term"
 	desc = "An underfloor wiring terminal for power equipment"
 	level = 1
@@ -299,21 +299,8 @@
 	anchored = 1
 	directwired = 0		// must have a cable on same turf connecting to terminal
 
-/obj/machinery/power/generator
-	name = "Generator"
-	desc = "A high efficiency thermoelectric generator."
-	icon_state = "teg"
-	anchored = 1
-	density = 1
-
-	var/obj/machinery/atmospherics/binary/circulator/circ1
-	var/obj/machinery/atmospherics/binary/circulator/circ2
-
-	var/lastgen = 0
-	var/lastgenlev = -1
-
 /obj/machinery/power/generator_type2
-	name = "Thermo-Electric Generator"
+	name = "thermo-electric generator"
 	desc = "A high efficiency thermoelectric generator."
 	icon_state = "teg"
 	anchored = 1
@@ -328,7 +315,7 @@
 	var/lastgenlev = -1
 
 /obj/machinery/power/generator_type3
-	name = "Thermo-Electric Generator"
+	name = "thermo-electric generator"
 	desc = "A high efficiency thermoelectric generator."
 	icon_state = "teg"
 	anchored = 1
@@ -352,43 +339,9 @@
 	var/brightnessgreen = 0
 	var/brightnessblue = 0
 
-/obj/machinery/power/solar
-	name = "Solar Panel"
-	desc = "A solar electrical generator."
-	icon = 'power.dmi'
-	icon_state = "sp_base"
-	anchored = 1
-	density = 1
-	directwired = 1
-	var/health = 10.0
-	var/id = 1
-	var/obscured = 0
-	var/sunfrac = 0
-	var/adir = SOUTH
-	var/ndir = SOUTH
-	var/turn_angle = 0
-	var/obj/machinery/power/solar_control/control
-
-/obj/machinery/power/solar_control
-	name = "Solar Panel Controller"
-	desc = "A controller for solar panel arrays."
-	icon = 'computer.dmi'
-	icon_state = "solar"
-	anchored = 1
-	density = 1
-	directwired = 1
-	var/id = 1
-	var/cdir = 0
-	var/gen = 0
-	var/lastgen = 0
-	var/track = 2			// 0= off  1=timed  2=auto (tracker)
-	var/trackrate = 600		// 300-900 seconds
-	var/trackdir = 1		// 0 =CCW, 1=CW
-	var/nexttime = 0
-
 /obj/machinery/light_switch
 	desc = "A light switch"
-	name = "Light Switch"
+	name = "light switch"
 	icon = 'power.dmi'
 	icon_state = "light1"
 	anchored = 1.0
@@ -399,7 +352,7 @@
 
 /obj/machinery/crema_switch
 	desc = "Burn baby burn!"
-	name = "Crematorium Igniter"
+	name = "crematorium igniter"
 	icon = 'power.dmi'
 	icon_state = "crema_switch"
 	anchored = 1.0

@@ -15,7 +15,7 @@
 	new /obj/item/weapon/baton(src)
 	new /obj/item/device/flash(src)
 	new /obj/item/weapon/storage/box/grenades/flashbang(src)
-	new /obj/item/clothing/head/helmet/Secsoft(src)
+	new /obj/item/clothing/head/helmet/secsoft(src)
 	new /obj/item/weapon/storage/backpack/security(src)
 	return
 

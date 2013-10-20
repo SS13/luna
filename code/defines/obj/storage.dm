@@ -12,19 +12,19 @@
 	item_state = "clownpack"
 
 /obj/item/weapon/storage/backpack/medic
-	name = "Medical backpack"
+	name = "medical backpack"
 	desc = "It's a backpack especially designed for use in a sterile environment."
 	icon_state = "medicalpack"
 	item_state = "medicalpack"
 
 /obj/item/weapon/storage/backpack/security
-	name = "Security backpack"
+	name = "security backpack"
 	desc = "It's a very robust backpack."
 	icon_state = "securitypack"
 	item_state = "securitypack"
 
 /obj/item/weapon/storage/backpack/industrial
-	name = "Industrial backpack"
+	name = "industrial backpack"
 	desc = "It's a tough backpack for the daily grind of station life."
 	icon_state = "engiepack"
 	item_state = "engiepack"
@@ -36,15 +36,14 @@
 	item_state = "captainpack"
 
 /obj/item/weapon/storage/box
-	name = "Box"
+	name = "box"
 	icon_state = "box"
 	item_state = "syringe_kit"
 	foldable = /obj/item/stack/sheet/cardboard	//BubbleWrap
 
 /obj/item/weapon/storage/box/glass
-	name = "Glassware Box"
+	name = "glassware box"
 	icon_state = "beakerbox"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/glass/New()
 	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
@@ -83,7 +82,7 @@
 	w_class = 4.0
 
 /obj/item/weapon/storage/box/disk
-	name = "Data Disks"
+	name = "data disks"
 	icon_state = "id"
 	item_state = "syringe_kit"
 
@@ -92,9 +91,8 @@
 /obj/item/weapon/storage/box/disk/disks2
 
 /obj/item/weapon/storage/box/fcard
-	name = "Fingerprint Cards"
+	name = "fingerprint Cards"
 	icon_state = "id"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/fcard/New()
 	new /obj/item/weapon/f_card( src )
@@ -109,7 +107,6 @@
 
 /obj/item/weapon/storage/box/grenades
 	icon_state = "flashbang"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/grenades/teargas
 	name = "tear gas grenades (WARNING)"
@@ -181,7 +178,6 @@
 /obj/item/weapon/storage/box/gl
 	name = "prescription glasses"
 	icon_state = "id"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/gl/New()
 	new /obj/item/clothing/glasses/regular( src )
@@ -198,7 +194,6 @@
 	name = "spare handcuffs"
 	desc = "A box full of handcuffs."
 	icon_state = "handcuff"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/handcuffs/New()
 	new /obj/item/weapon/handcuffs( src )
@@ -214,7 +209,6 @@
 /obj/item/weapon/storage/box/id
 	name = "spare IDs"
 	icon_state = "id"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/id/New()
 	new /obj/item/weapon/card/id( src )
@@ -230,7 +224,6 @@
 /obj/item/weapon/storage/box/lglo
 	name = "latex gloves"
 	icon_state = "latex"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/lglo/New()
 	new /obj/item/clothing/gloves/latex( src )
@@ -246,7 +239,6 @@
 /obj/item/weapon/storage/box/dna_inject
 	name = "DNA-injectors"
 	icon_state = "syringe"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/dna_inject/New()
 	new /obj/item/weapon/dnainjector/h2m( src )
@@ -261,7 +253,6 @@
 /obj/item/weapon/storage/box/stma
 	name = "sterile masks"
 	icon_state = "sterile"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/stma/New()
 	new /obj/item/clothing/mask/surgical( src )
@@ -277,7 +268,6 @@
 /obj/item/weapon/storage/box/trackimp_kit
 	name = "Tracking Implant Kit"
 	icon_state = "implant"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/trackimp_kit/New()
 	new /obj/item/weapon/implantcase/tracking( src )
@@ -294,7 +284,6 @@
 /obj/item/weapon/storage/box/chemimp_kit
 	name = "Chemical Implant Kit"
 	icon_state = "implant"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/chemimp_kit/New()
 	new /obj/item/weapon/implantcase/chem( src )
@@ -312,7 +301,6 @@
 /obj/item/weapon/storage/box/daimp_kit
 	name = "Death Alarm Implant Kit"
 	icon_state = "implant"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/daimp_kit/New()
 	new /obj/item/weapon/implantcase/death_alarm( src )
@@ -329,7 +317,6 @@
 	name = "Pest-B-Gon mousetraps"
 	desc = "WARNING: Keep out of reach of children."
 	icon_state = "mousetraps"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/mousetraps/New()
 	new /obj/item/device/assembly/mousetrap( src )
@@ -345,7 +332,6 @@
 	name = "Donk-Pockets"
 	desc = "Remember to fully heat prior to serving.  Product will cool if not eaten within seven minutes."
 	icon_state = "donk_kit"
-	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/donkpocket/New()
 	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )

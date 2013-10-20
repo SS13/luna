@@ -1,6 +1,6 @@
 /obj/item/weapon/gun/energy/laser
 	name = "laser gun"
-	desc = "a basic weapon designed kill with concentrated energy bolts"
+	desc = "A basic weapon designed kill with concentrated energy rays."
 	icon_state = "laser"
 	item_state = "laser"
 	fire_sound = 'sound/weapons/Laser.ogg'
@@ -22,6 +22,11 @@
 
 /obj/item/weapon/gun/energy/laser/newlaser
 	icon_state = "laser_new"
+	charge_cost = 75
+
+/obj/item/weapon/gun/energy/laser/htec
+	icon_state = "laser_h"
+	charge_cost = 50
 
 /obj/item/weapon/gun/energy/laser/captain
 	icon_state = "caplaser"

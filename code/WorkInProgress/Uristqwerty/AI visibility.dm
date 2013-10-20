@@ -258,6 +258,7 @@ var/datum/cameranet/cameranet = new()
 	. = ..()
 	if(.)
 		cameranet.visibility(src)
+	return .
 
 /client/AIMove(n, direct, var/mob/living/silicon/ai/user)
 	if(eye == user.eyeobj)

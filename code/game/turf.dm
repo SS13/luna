@@ -181,33 +181,14 @@
 				if (!(M.m_intent == "run") && !(isobj(M:shoes) && M:shoes.flags&NOSLIP))
 					M.pulling = null
 					step(M, M.dir)
-					spawn(1) step(M, M.dir)
-					spawn(2) step(M, M.dir)
+//					spawn(1) step(M, M.dir)
+//					spawn(2) step(M, M.dir)
 					M:adjustBruteLoss(2)
 					M << "\blue You slipped on the floor!"
 					playsound(src.loc, 'slip.ogg', 50, 1, -3)
 					M.weakened = 12
 
 	..()
-
-/*turf/simulated/wall/bullet_act(flag,dir)
-	if (flag == PROJECTILE_TASER) //taser
-		var/dirs
-		if(dir == NORTH) //fugly code.
-			dirs = SOUTH
-		if(dir == SOUTH)
-			dirs = NORTH
-		if(dir == EAST || dir == NORTHEAST || dir == SOUTHEAST)
-			dirs = WEST
-		if(dir == WEST ||dir == NORTHWEST ||dir == SOUTHWEST )
-			dirs = EAST
-		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
-		var/datum/effect/effect/system/spark_spread/x = new /datum/effect/effect/system/spark_spread
-		var/turf/loc = get_step(src,dirs)
-		s.set_up(4, 1, loc)
-		x.set_up(1, 1, src)
-		x.start()
-		s.start()*/
 
 /turf/proc/ReplaceWithSpace()
 	if(!icon_old) icon_old = icon_state
@@ -809,66 +790,59 @@ turf/simulated/floor/proc/update_icon()
 
 /turf/space/Entered(atom/movable/A as mob|obj)
 	..()
-	if ((!(A) || src != A.loc || istype(null, /obj/beam)))
+	if (!A || src != A.loc || istype(A, /obj/item/projectile))
 		return
 
-	if (!(A.last_move))
+	if (!A.last_move)
 		return
 
-	if ((istype(A, /mob/) && src.x > 2 && src.x < (world.maxx - 1)))
+	if (istype(A, /mob/) && src.x > 2 && src.x < world.maxx - 1)
 		var/mob/M = A
+		var/prob_slip = 5
 
-		if ((!( M.handcuffed) && M.canmove))
-			var/prob_slip = 5
+		if (locate(/obj/structure/grille, oview(1, M)) || locate(/obj/structure/lattice, oview(1, M)) || locate(/turf/unsimulated, oview(1, M)) || locate(/turf/simulated, oview(1, M)))
+			if (!M.l_hand)
+				prob_slip -= 3
+			else if (M.l_hand.w_class <= 3)
+				prob_slip -= 2
+			else
+				prob_slip -= 0.5
 
-			if (locate(/obj/structure/grille, oview(1, M)) || locate(/obj/structure/lattice, oview(1, M)) )
-				if (!( M.l_hand ))
-					prob_slip -= 3
-				else if (M.l_hand.w_class <= 2)
-					prob_slip -= 1
+			if (!M.r_hand)
+				prob_slip -= 3
+			else if (M.r_hand.w_class <= 3)
+				prob_slip -= 2
+			else
+				prob_slip -= 0.5
 
-				if (!( M.r_hand ))
-					prob_slip -= 2
-				else if (M.r_hand.w_class <= 2)
-					prob_slip -= 1
-			else if (locate(/turf/unsimulated, oview(1, M)) || locate(/turf/simulated, oview(1, M)))
-				if (!( M.l_hand ))
-					prob_slip -= 3
-				else if (M.l_hand.w_class <= 2)
-					prob_slip -= 1
+		if (M.handcuffed || !M.canmove) //can't grab that wall
+			prob_slip = 5
 
-				if (!( M.r_hand ))
-					prob_slip -= 1
-				else if (M.r_hand.w_class <= 2)
-					prob_slip -= 0.5
-			if(istype(M,/mob/living))
-				if(istype(M:shoes, /obj/item/clothing/shoes) && M:shoes.flags&NOSLIP)
-					prob_slip -= 10
-			prob_slip = round(prob_slip)
-			if (prob_slip < 10) //next to something, but they might slip off
-				if (prob(prob_slip) )
-					M << "\blue <B>You slipped!</B>"
-					M.inertia_dir = M.last_move
-					step(M, M.inertia_dir)
-					return
-				else
-					M.inertia_dir = 0 //no inertia
-			else //not by a wall or anything, they just keep going
-				spawn(5)
-					if ((A && !( A.anchored ) && A.loc == src))
-						if(M.inertia_dir) //they keep moving the same direction
-							step(M, M.inertia_dir)
-						else
-							M.inertia_dir = M.last_move
-							step(M, M.inertia_dir)
-		else //can't move, they just keep going (COPY PASTED CODE WOO)
+		if(istype(M,/mob/living))
+			if(istype(M:back, /obj/item/weapon/tank/jetpack) && M:back:stabilization_on)
+				prob_slip = 0
+
+		prob_slip = round(prob_slip)
+
+		if (prob_slip < 5) //next to something, but they might slip off
+			if (prob(prob_slip) && !(istype(M:shoes, /obj/item/clothing/shoes) && M:shoes.flags&NOSLIP))
+				M << "\blue <B>You slipped!</B>"
+				M.inertia_dir = M.last_move
+				step(M, M.inertia_dir)
+				return
+			else
+				M.inertia_dir = 0 //no inertia
+
+		else //not by a wall or anything or can't move, they just keep going
 			spawn(5)
-				if ((A && !( A.anchored ) && A.loc == src))
-					if(M.inertia_dir) //they keep moving the same direction
-						step(M, M.inertia_dir)
-					else
+				if (A && !A.anchored && A.loc == src)
+					if(!M.inertia_dir && M.last_move) //they keep moving the same direction
 						M.inertia_dir = M.last_move
-						step(M, M.inertia_dir) //TODO: DEFERRED
+
+					if(!step(M, M.inertia_dir)) //Collided with something
+						M.inertia_dir = 0 //no inertia
+						M.last_move = 0   //no inertia at all
+
 //	if(ticker && ticker.mode && ticker.mode.name == "nuclear emergency")
 //		return
 

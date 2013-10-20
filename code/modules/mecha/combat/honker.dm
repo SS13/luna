@@ -133,14 +133,15 @@
 
 
 /obj/mecha/combat/honker/mechstep(direction)
-	if(!squeak)
+	var/result = step(src, direction)
+	if(!squeak && result)
 		playsound(src, "clownstep", 70, 1)
 		squeak = 1
 	else
 		squeak = 0
-	..()
+	return result
 
-obj/mecha/combat/honker/Topic(href, href_list)
+/obj/mecha/combat/honker/Topic(href, href_list)
 	..()
 	if (href_list["play_sound"])
 		switch(href_list["play_sound"])

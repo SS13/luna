@@ -76,6 +76,7 @@ proc/countJob(rank)
 	slot_in_backpack = 18
 
 
+
 /mob/living/carbon/human/proc/equip_if_possible(obj/item/weapon/W, slot) // since byond doesn't seem to have pointers, this seems like the best way to do this :/
 	//warning: icky code
 	var/equipped = 0

@@ -24,6 +24,5 @@
 	if(powered())
 		stat &= ~NOPOWER
 	else
-
 		stat |= NOPOWER
 	return

@@ -1,22 +1,27 @@
 /obj/item/weapon/gun/energy/ionrifle
 	name = "ion rifle"
-	desc = "A man portable anti-armor weapon designed to disable mechanical threats"
+	desc = "A man portable weapon designed to disable mechanical threats."
 	icon_state = "ionrifle"
 	fire_sound = 'sound/weapons/Laser.ogg'
 	origin_tech = "combat=2;magnets=4"
 	w_class = 5
-	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY
+	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBACK
 	slot_flags = SLOT_BACK
 	charge_cost = 100
 	projectile_type = "/obj/item/projectile/ion"
 
 /obj/item/weapon/gun/energy/ionrifle/emp_act(severity)
-	if(severity <= 2)
-		power_supply.use(round(power_supply.maxcharge / severity))
-		update_icon()
-	else
-		return
+	return 0 //EMP-proof!
 
+/obj/item/weapon/gun/energy/ionrifle/htec
+	icon_state = "ionrifle_h"
+	w_class = 3
+	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBELT
+	slot_flags = ONBELT
+	charge_cost = 150
+
+
+/*
 /obj/item/weapon/gun/energy/decloner
 	name = "biological demolecularisor"
 	desc = "A gun that discharges high amounts of controlled radiation to slowly break a target into component elements."
@@ -159,7 +164,7 @@ obj/item/weapon/gun/energy/staff
 	icon = 'icons/obj/bureaucracy.dmi'
 	icon_state = "pen"
 	item_state = "pen"
-	w_class = 1
+	w_class = 1*/
 
 
 /obj/item/weapon/gun/energy/mindflayer

@@ -10,7 +10,7 @@
 	w_class = 2.0
 
 /obj/item/weapon/shield/riot
-	name = "Riot shield"
+	name = "riot shield"
 	desc = "A shield adept at blocking blunt objects from connecting with the torso of the shield wielder."
 	icon = 'weapons.dmi'
 	icon_state = "riot"

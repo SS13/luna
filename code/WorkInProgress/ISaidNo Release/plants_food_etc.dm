@@ -289,7 +289,7 @@
 	name = "fruit or vegetable"
 	var/planttype = null
 	var/plantgenes = null
-	edible = 1
+	wrapped = 0
 	var/generation = 0
 
 	New()
@@ -299,7 +299,7 @@
 		src.pixel_y = rand(-8, 8)
 
 	attack(mob/M as mob, mob/user as mob, def_zone)
-		if (src.edible == 0)
+		if (src.wrapped == 1)
 			if (user == M)
 				user << "\red You can't just cram that in your mouth, you greedy beast!"
 				for(var/mob/O in viewers(user, null))
@@ -344,7 +344,7 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "tomato"
 	amount = 1
-	heal_amt = 1
+	//heal_amt = 1
 	throwforce = 0
 	force = 0
 	New()
@@ -352,8 +352,6 @@
 		src.planttype = new /datum/plant/tomato(src)
 
 /obj/item/weapon/reagent_containers/food/snacks/plant/tomato/explosive
-	name = "tomato"
-	desc = "You say tomato, I toolbox you."
 
 /obj/item/weapon/reagent_containers/food/snacks/plant/orange/
 	name = "orange"
@@ -361,7 +359,7 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "orange"
 	amount = 3
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		src.planttype = new /datum/plant/orange(src)
@@ -388,9 +386,7 @@
 	desc = "Bitter. Moreso."
 	icon_state = "orange"
 	amount = 3
-	heal_amt = 2
-	heal(var/mob/M)
-		M.r_Tourette += 5
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/plant/grape/
 	name = "grapes"
@@ -398,7 +394,7 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "grapes"
 	amount = 5
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		src.planttype = new /datum/plant/grape(src)
@@ -410,7 +406,7 @@
 	icon_state = "melon"
 	throwforce = 8
 	w_class = 3.0
-	edible = 0
+	wrapped = 1
 
 	New()
 		..()
@@ -457,7 +453,7 @@
 	throwforce = 0
 	w_class = 1.0
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 	New()
 		..()
@@ -469,7 +465,7 @@
 	icon_state = "george_melon"
 	throwforce = 0
 	w_class = 3.0
-	edible = 0
+	wrapped = 1
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
 		if (istype(W, /obj/item/weapon/melee/energy/axe) || istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/scalpel) || istype(W, /obj/item/weapon/melee/energy/sword))
@@ -497,9 +493,9 @@
 	throwforce = 5
 	w_class = 1.0
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
-	heal(var/mob/M)
+/*	heal(var/mob/M)
 		switch(rand(1,5))
 			if(1)
 				M << "\red What an explosive burst of flavor!"
@@ -526,7 +522,7 @@
 				M.paralysis += 5
 				M.stunned += 10
 				M.weakened += 10
-				M.stuttering += 20
+				M.stuttering += 20*/
 
 /obj/item/weapon/reagent_containers/food/snacks/plant/chili/
 	name = "chili pepper"
@@ -535,7 +531,7 @@
 	icon_state = "chili"
 	w_class = 1.0
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 	New()
 		..()
 		src.planttype = new /datum/plant/chili(src)
@@ -554,7 +550,7 @@
 	planttype = /datum/plant/chili
 	w_class = 1.0
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 	New()
 		..()
 		var/datum/reagents/R = new/datum/reagents(100)
@@ -563,11 +559,6 @@
 		R.my_atom = src
 		var/datum/plantgenes/DNA = src.plantgenes
 		R.add_reagent("cryostylane", DNA.potency)
-	heal(var/mob/M)
-		M:emote("shiver")
-		var/datum/plantgenes/DNA = src.plantgenes
-		M.bodytemperature -= DNA.potency
-		M << "\red You feel cold!"
 
 /obj/item/weapon/reagent_containers/food/snacks/plant/lettuce/
 	name = "lettuce leaf"
@@ -576,7 +567,7 @@
 	icon_state = "spinach"
 	w_class = 1.0
 	amount = 1
-	heal_amt = 1
+	//heal_amt = 1
 
 	New()
 		..()
@@ -588,16 +579,10 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "apple"
 	amount = 3
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		src.planttype = new /datum/plant/apple(src)
-	heal(var/mob/M)
-		M.bruteloss -= src.heal_amt
-		M.fireloss -= src.heal_amt
-		M.toxloss -= src.heal_amt
-		M.oxyloss -= src.heal_amt
-		M.brainloss -= src.heal_amt
 /* Strumpetplaya - commenting this out as it has components we don't support.
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
 		if(istype(W,/obj/item/stack/rods))
@@ -614,25 +599,12 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "banana"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 	New()
 		..()
 		src.planttype = new /datum/plant/banana(src)
-	heal(var/mob/M)
-		if (src.icon_state == "banana")
-			for(var/mob/O in viewers(M, null))
-				O.show_message(text("\red [] eats the banana without peeling it. What a dumb beast!", M), 1)
-			M.toxloss += 5 // banana peels are toxic!
-			del src
 	attack_self(var/mob/user as mob)
 		if (src.icon_state == "banana")
-			if(user.mutations & CLUMSY && prob(50))
-				for(var/mob/N in viewers(user, null))
-					if(N.client)
-						N.show_message(text("\red <B>[user] accidentally pokes their eye out with the banana."), 1)
-				user.eye_blurry += 5
-				user.weakened = max(3, user.weakened)
-				return
 			user << "\blue You peel the banana."
 			src.name = "banana"
 			src.icon_state = "banana-fruit"
@@ -645,7 +617,7 @@
 	icon_state = "carrot"
 	w_class = 1.0
 	amount = 3
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		src.planttype = new /datum/plant/carrot(src)
@@ -654,7 +626,7 @@
 	name = "pumpkin"
 	desc = "Spooky!"
 	icon_state = "pumpkin"
-	edible = 0
+	wrapped = 1
 	New()
 		..()
 		src.planttype = new /datum/plant/pumpkin(src)
@@ -671,7 +643,7 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "lime"
 	amount = 2
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		src.planttype = new /datum/plant/lime(src)
@@ -682,18 +654,18 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "lemon"
 	amount = 2
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		src.planttype = new /datum/plant/lime(src)
 
-/obj/item/weapon/reagent_containers/food/snacks/plant/slurryfruit/
+/obj/item/weapon/reagent_containers/food/snacks/plant/slurryfruit
 	name = "slurrypod"
 	desc = "An extremely poisonous, bitter fruit.  The slurrypod fruit is regarded as a delicacy in some outer colony worlds."
 	icon = 'hydroponics.dmi'
 	icon_state = "slurry"
 	amount = 1
-	heal_amt = -1
+	//heal_amt = -1
 
 	New()
 		..()
@@ -710,7 +682,7 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "slurrymut"
 	amount = 1
-	heal_amt = -1
+	//heal_amt = -1
 
 	New()
 		..()
@@ -728,7 +700,7 @@
 	icon = 'hydroponics.dmi'
 	icon_state = "potato"
 	amount = 1
-	heal_amt = 0
+	//heal_amt = 0
 	New()
 		..()
 		src.planttype = new /datum/plant/potato(src)
@@ -745,9 +717,6 @@
 				new /obj/item/weapon/reagent_containers/food/snacks/ingredient/chips(get_turf(src))
 				del src
 		else ..()
-
-	heal(var/mob/M)
-		M << "\red Raw potato tastes pretty nasty..."
 
 // Inedible Produce
 
@@ -874,19 +843,14 @@
 	name = "ingredient"
 	desc = "you shouldnt be able to see this"
 	amount = 1
-	heal_amt = 0
+	//heal_amt = 0
 
 /obj/item/weapon/reagent_containers/food/snacks/ingredient/meat/
 	name = "raw meat"
 	desc = "you shouldnt be able to see this either!!"
 	amount = 1
-	heal_amt = 0
+	//heal_amt = 0
 
-	heal(var/mob/M)
-		if (prob(33)) M << "\red You briefly think you probably shouldn't be eating raw meat."
-		/* Strumpetplaya - commenting this out as it has components we don't support.
-		if (prob(33)) M.contract_disease(new /datum/ailment/disease/food_poisoning, 1)
-		*/
 /obj/item/weapon/reagent_containers/food/snacks/ingredient/meat/humanmeat
 	name = "-meat"
 	desc = "A slab of meat."
@@ -935,21 +899,18 @@
 	desc = "Some kind of curdled milk product."
 	icon_state = "cheese"
 	amount = 2
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/ingredient/gcheese
 	name = "weird cheese"
 	desc = "Some kind of... gooey, messy, gloopy thing. Similar to cheese, but only in the looser sense of the word."
 	icon_state = "gcheese"
 	amount = 2
-	heal_amt = 1
+	//heal_amt = 1
 	New()
-		var/datum/reagents/R = new/datum/reagents(15)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("mercury", 5)
-		R.add_reagent("LSD", 5)
-		R.add_reagent("ethanol", 5)
+		reagents.add_reagent("mercury", 5)
+		reagents.add_reagent("LSD", 5)
+		reagents.add_reagent("ethanol", 5)
 /* Strumpetplaya - commenting this out as it has components we don't support.
 /obj/item/weapon/reagent_containers/food/snacks/ingredient/dough
 	name = "dough"
@@ -1032,10 +993,7 @@
 	desc = "Cook them up into some nice fries."
 	icon_state = "pchips"
 	amount = 6
-	heal_amt = 0
-
-	heal(var/mob/M)
-		M << "\red Raw potato tastes pretty nasty..."
+	//heal_amt = 0
 
 /obj/item/weapon/reagent_containers/food/snacks/soup
 	name = "soup"
@@ -1043,7 +1001,7 @@
 	icon_state = "gruel"
 	needspoon = 1
 	amount = 6
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/soup/tomato
 	name = "tomato soup"
@@ -1051,7 +1009,7 @@
 	icon_state = "tomsoup"
 	needspoon = 1
 	amount = 6
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/soup/chili
 	name = "chili con carne"
@@ -1059,7 +1017,7 @@
 	icon_state = "tomsoup"
 	needspoon = 1
 	amount = 6
-	heal_amt = 2
+	//heal_amt = 2
 
 	New()
 		..()
@@ -1071,7 +1029,7 @@
 	icon_state = "custard"
 	needspoon = 1
 	amount = 6
-	heal_amt = 2
+	//heal_amt = 2
 
 	New()
 		..()
@@ -1083,7 +1041,7 @@
 	icon_state = "tomsoup"
 	needspoon = 1
 	amount = 6
-	heal_amt = 2
+	//heal_amt = 2
 
 	New()
 		..()
@@ -1095,21 +1053,11 @@
 	icon_state = "hotchili"
 	needspoon = 1
 	amount = 2
-	heal_amt = 6
+	//heal_amt = 6
 
 	New()
 		..()
 		reagents.add_reagent("capsaicin", 150)
-
-	heal(var/mob/M)
-		if (prob(20))
-			if(istype(M, /mob/living/carbon))
-				var/mob/living/carbon/H = M
-				H << "\red Oh christ too hot!!!!"
-				/* Strumpetplaya - commenting this out as it has components we don't support.
-				H.burning += 25
-				*/
-		..()
 
 /obj/item/weapon/reagent_containers/food/snacks/soup/gruel
 	name = "gruel"
@@ -1117,10 +1065,7 @@
 	icon_state = "gruel"
 	needspoon = 1
 	amount = 6
-	heal_amt = 0
-
-	heal(var/mob/M)
-		if (prob(15)) M << "\red You feel depressed."
+	//heal_amt = 0
 
 /obj/item/weapon/reagent_containers/food/snacks/salad
 	name = "salad"
@@ -1128,11 +1073,7 @@
 	icon_state = "salad"
 	needfork = 1
 	amount = 4
-	heal_amt = 2
-
-	heal(var/mob/M)
-		if (istype(M, /mob/living/carbon/human))
-			if (M.nutrition > 200) M.nutrition -= 30
+	//heal_amt = 2
 
 // Condiments
 
@@ -1140,16 +1081,14 @@
 	name = "iron filings"
 	desc = "You probably shouldn't eat these."
 	icon_state = "ironfilings"
-	heal_amt = 0
+	//heal_amt = 0
 	amount = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/condiment
 	name = "condiment"
 	desc = "you shouldnt be able to see this"
 	amount = 1
-	heal_amt = 0
-	heal(var/mob/M)
-		M << "\red It's just not good enough on its own..."
+	//heal_amt = 0
 	afterattack(atom/target, mob/user, flag)
 		if (istype(target, /obj/item/weapon/reagent_containers/food/snacks/))
 			for(var/mob/O in viewers(user, null))
@@ -1204,12 +1143,6 @@
 	name = "cold sauce"
 	desc = "This isn't very hot at all!"
 	icon_state = "cold_sauce"
-	New()
-		..()
-		var/datum/reagents/R = new/datum/reagents(100)
-		reagents = R
-		R.maximum_volume = 100
-		R.my_atom = src
 
 	afterattack(atom/target, mob/user, flag)
 		if (istype(target, /obj/item/weapon/reagent_containers/food/snacks/))
@@ -1230,7 +1163,7 @@
 	icon_state = "custard"
 	needspoon = 1
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 // Food
 
@@ -1239,14 +1172,14 @@
 	desc = "Mmm, waffles"
 	icon_state = "waffles"
 	amount = 5
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/faggot
 	name = "meatball"
 	desc = "A great meal all round."
 	icon_state = "faggot"
 	amount = 1
-	heal_amt = 2
+	//heal_amt = 2
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
 		if (istype(W, /obj/item/weapon/reagent_containers/food/snacks/condiment/)) src.amount += 1
@@ -1257,7 +1190,7 @@
 	icon_state = "swede_mball"
 	needfork = 1
 	amount = 6
-	heal_amt = 2
+	//heal_amt = 2
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
 		if (istype(W, /obj/item/weapon/reagent_containers/food/snacks/condiment/)) src.amount += 1
@@ -1271,7 +1204,7 @@
 	desc = "A burger."
 	icon_state = "burger"
 	amount = 5
-	heal_amt = 2
+	//heal_amt = 2
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
 		if (istype(W, /obj/item/weapon/reagent_containers/food/snacks/condiment/)) src.amount += 1
@@ -1286,10 +1219,8 @@
 	desc = "A strange looking burger. It looks almost sentient."
 	icon_state = "brainburger"
 	New()
-		var/datum/reagents/R = new/datum/reagents(5)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("prions", 5)
+		..()
+		reagents.add_reagent("prions", 5)
 
 /obj/item/weapon/reagent_containers/food/snacks/burger/humanburger
 	name = "burger"
@@ -1297,10 +1228,10 @@
 	var/job = null
 	desc = "A bloody burger."
 	icon_state = "burger"
-	heal(var/mob/M)
-		if(src.job == "Clown")
-			M.unlock_medal("That Tasted Funny", 1)
-		..()
+//	heal(var/mob/M)
+//		if(src.job == "Clown")
+//			M.unlock_medal("That Tasted Funny", 1)
+//		..()
 
 /obj/item/weapon/reagent_containers/food/snacks/burger/monkeyburger
 	name = "monkeyburger"
@@ -1317,28 +1248,26 @@
 	desc = "The lettuce is the only organic component. Beep."
 	icon_state = "roburger"
 	amount = 3
-	heal_amt = 1
+	//heal_amt = 1
 	New()
-		var/datum/reagents/R = new/datum/reagents(5)
-		reagents = R
-		R.my_atom = src
-		R.add_reagent("nanites", 5)
+		..()
+		reagents.add_reagent("nanites", 5)
 
 /obj/item/weapon/reagent_containers/food/snacks/burger/synthburger
 	name = "burger"
 	desc = "A thoroughly artificial snack."
 	icon_state = "mburger"
 	amount = 5
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/burger/mysteryburger
 	name = "dubious burger"
 	desc = "A burger of indeterminate meat type."
 	icon_state = "brainburger"
 	amount = 5
-	heal_amt = 1
+	//heal_amt = 1
 
-	heal(var/mob/M)
+/*	heal(var/mob/M)
 		if(prob(8))
 			var/effect = rand(1,4)
 			switch(effect)
@@ -1357,76 +1286,51 @@
 				if(4)
 					M << "\red You bite down on a chunk of bone, hurting your teeth."
 					M.bruteloss += 2
-		..()
+		..()*/
 
 /obj/item/weapon/reagent_containers/food/snacks/chips
 	name = "chips"
 	desc = "Commander Riker's What-The-Crisps"
 	icon_state = "chips"
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/donut
 	name = "donut"
 	desc = "Goes great with Robust Coffee."
 	icon_state = "donut1"
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		if(rand(1,3) == 1)
 			src.icon_state = "donut2"
 			src.name = "frosted donut"
-			src.heal_amt = 2
-	heal(var/mob/M)
-		if(istype(M, /mob/living/carbon/human) && M.job in list("Security Officer", "Head of Security", "Forensic Technician"))
-			src.heal_amt *= 2
-			..()
-			src.heal_amt /= 2
 
 /obj/item/weapon/reagent_containers/food/snacks/mushroom
 	name = "space mushroom"
 	desc = "A mushroom cap of Space Fungus. Probably tastes pretty bad."
 	icon_state = "mushroom"
 	amount = 1
-	heal_amt = 0
-	heal(var/mob/M)
-		var/ranchance = rand(1,10)
-		if (ranchance == 1)
-			M << "\red You feel very sick."
-			M.reagents.add_reagent("cyanide", rand(1,5))
-		else if (ranchance <= 5 && ranchance != 1)
-			M << "\red That tasted absolutely FOUL."
-			/* Strumpetplaya - commenting this out as it has components we don't support.
-			M.contract_disease(new /datum/ailment/disease/food_poisoning, 1)
-			*/
-		else M << "\red Yuck!"
+	//heal_amt = 0
 
 /obj/item/weapon/reagent_containers/food/snacks/mushroom/amanita
 	name = "space mushroom"
 	desc = "A mushroom cap of Space Fungus. This one is quite different."
 	icon_state = "mushroom-M1"
 	amount = 1
-	heal_amt = 3
+	//heal_amt = 3
 	New()
 		..()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.maximum_volume = 50
-		R.my_atom = src
-		R.add_reagent("amanitin", rand(5,50))
+		reagents.add_reagent("amanitin", rand(5,50))
 
 /obj/item/weapon/reagent_containers/food/snacks/mushroom/psilocybin
 	name = "space mushroom"
 	desc = "A mushroom cap of Space Fungus. It's slightly more vibrant than usual."
 	icon_state = "mushroom-M2"
 	amount = 1
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
-		var/datum/reagents/R = new/datum/reagents(50)
-		reagents = R
-		R.maximum_volume = 50
-		R.my_atom = src
-		R.add_reagent("psylocybin", rand(5,50))
+		reagents.add_reagent("psylocybin", rand(5,50))
 
 // Foods
 
@@ -1435,7 +1339,7 @@
 	desc = "Human meat between two loaves of bread."
 	icon_state = "sandwich_m"
 	amount = 4
-	heal_amt = 2
+	//heal_amt = 2
 	var/hname = null
 	var/job = null
 
@@ -1444,28 +1348,28 @@
 	desc = "Meat between two loaves of bread."
 	icon_state = "sandwich_m"
 	amount = 4
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/sandwich/meat_s
 	name = "synthmeat sandwich"
 	desc = "Synthetic meat between two loaves of bread."
 	icon_state = "sandwich_m"
 	amount = 4
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/sandwich/cheese
 	name = "cheese sandwich"
 	desc = "Cheese between two loaves of bread."
 	icon_state = "sandwich_c"
 	amount = 4
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/pizza/
 	name = "plain pizza"
 	desc = "A plain cheese and tomato pizza."
 	icon_state = "pizza1"
 	amount = 6
-	heal_amt = 3
+	//heal_amt = 3
 	var/sliced = 0
 	var/slice_icon = "pizzaslice1"
 
@@ -1491,7 +1395,7 @@
 	desc = "Delightful meat toppings!"
 	icon_state = "pizza_m"
 	amount = 6
-	heal_amt = 4
+	//heal_amt = 4
 	slice_icon = "psliceM"
 
 /obj/item/weapon/reagent_containers/food/snacks/pizza/fung/
@@ -1499,7 +1403,7 @@
 	desc = "A pizza topped with some mushrooms."
 	icon_state = "pizza_v"
 	amount = 6
-	heal_amt = 4
+	//heal_amt = 4
 	slice_icon = "psliceV"
 
 /obj/item/weapon/reagent_containers/food/snacks/pizza/fung/psilocybin
@@ -1507,7 +1411,7 @@
 	desc = "A pizza topped with some mushrooms."
 	icon_state = "pizza_v"
 	amount = 6
-	heal_amt = 4
+	//heal_amt = 4
 
 	New()
 		var/datum/reagents/R = new/datum/reagents(60)
@@ -1522,7 +1426,7 @@
 	desc = "A pizza topped with some mushrooms."
 	icon_state = "pizza_v"
 	amount = 6
-	heal_amt = 4
+	//heal_amt = 4
 
 	New()
 		var/datum/reagents/R = new/datum/reagents(30)
@@ -1535,7 +1439,7 @@
 	desc = "I'm loafin' it!"
 	icon_state = "breadloaf"
 	amount = 1
-	heal_amt = 1
+	//heal_amt = 1
 
 	attack(mob/M as mob, mob/user as mob, def_zone)
 		if (user == M)
@@ -1564,7 +1468,7 @@
 	desc = "That's slice."
 	icon_state = "breadslice"
 	amount = 1
-	heal_amt = 1
+	//heal_amt = 1
 
 	New()
 		..()
@@ -1576,7 +1480,7 @@
 	desc = "Crispy cooked bread."
 	icon_state = "toast"
 	amount = 2
-	heal_amt = 1
+	//heal_amt = 1
 
 	New()
 		..()
@@ -1588,7 +1492,7 @@
 	desc = "A quick cheesy snack."
 	icon_state = "cheesetoast"
 	amount = 2
-	heal_amt = 2
+	//heal_amt = 2
 
 	New()
 		..()
@@ -1600,14 +1504,14 @@
 	desc = "Tasty, but not paticularly healthy."
 	icon_state = "cheeseburger"
 	amount = 6
-	heal_amt = 2
+	//heal_amt = 2
 /* Strumpetplaya - commenting this out as it has components we don't support.
 /obj/item/weapon/reagent_containers/food/snacks/burger/cheeseburger_m
 	name = "monkey cheese burger"
 	desc = "How very dadaist."
 	icon_state = "cheeseburger"
 	amount = 6
-	heal_amt = 2
+	//heal_amt = 2
 
 	heal(var/mob/M)
 		if(prob(3) && ishuman(M))
@@ -1624,7 +1528,7 @@
 	desc = "The king of burgers. You can feel your digestive system shutting down just LOOKING at it."
 	icon_state = "bigburger"
 	amount = 10
-	heal_amt = 5
+	//heal_amt = 5
 
 	heal(var/mob/M)
 		M.nutrition += 50
@@ -1648,7 +1552,7 @@
 	desc = "There are no words to describe the sheer unhealthiness of this abomination."
 	icon_state = "giantburger"
 	amount = 1
-	heal_amt = 50
+	//heal_amt = 50
 	throwforce = 10
 
 	heal(var/mob/M)
@@ -1673,14 +1577,14 @@
 	desc = "Lightly salted potato fingers."
 	icon_state = "fries"
 	amount = 6
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/steak_h
 	name = "steak"
 	desc = "Made of people."
 	icon_state = "steak"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 	var/hname = null
 	var/job = null
 
@@ -1689,21 +1593,21 @@
 	desc = "You'll go bananas for it."
 	icon_state = "steak"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/steak_s
 	name = "synth-steak"
 	desc = "And they thought processed food was artificial..."
 	icon_state = "steak"
 	amount = 2
-	heal_amt = 3
+	//heal_amt = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/bakedpotato
 	name = "baked potato"
 	desc = "Would go good with some cheese or steak."
 	icon_state = "bakedpotato"
 	amount = 6
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/pie/
 	name = "pie"
@@ -1726,14 +1630,14 @@
 	desc = "It smells delicious."
 	icon_state = "pie"
 	amount = 3
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/pie/pumpkin
 	name = "pumpkin pie"
 	desc = "An autumn favourite."
 	icon_state = "pumpie"
 	amount = 3
-	heal_amt = 4
+	//heal_amt = 4
 
 /obj/item/weapon/reagent_containers/food/snacks/pie/cream
 	name = "cream pie"
@@ -1744,7 +1648,7 @@
 	throwforce = 0
 	force = 0
 	amount = 2
-	heal_amt = 6
+	//heal_amt = 6
 
 /obj/item/weapon/reagent_containers/food/snacks/pie/ass
 	name = "asspie"
@@ -1754,7 +1658,7 @@
 	throwforce = 0
 	force = 0
 	amount = 3
-	heal_amt = 2
+	//heal_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/yoghurt/
 	name = "yoghurt"
@@ -1762,12 +1666,12 @@
 	icon_state = "yoghurt"
 	needspoon = 1
 	amount = 6
-	heal_amt = 1
+	//heal_amt = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/yoghurt/frozen
 	name = "frozen yoghurt"
 	desc = "A delightful tub of frozen yoghurt."
-	heal_amt = 2
+	//heal_amt = 2
 
 	New()
 		var/datum/reagents/R = new/datum/reagents(20)
@@ -1782,30 +1686,15 @@
 	desc = "How the hell did they manage to cook this abomination..?!"
 	icon_state = "yuck"
 	amount = 1
-	heal_amt = 0
-
-	heal(var/mob/M)
-		M << "\red Ugh! Eating that was a terrible idea!"
-		M.stunned += 2
-		M.weakened += 2
-		/* Strumpetplaya - commenting this out as it has components we don't support.
-		M.contract_disease(new /datum/ailment/disease/food_poisoning, 1)
-		*/
+	//heal_amt = 0
 
 /obj/item/weapon/reagent_containers/food/snacks/yuckburn
 	name = "smoldering mess"
 	desc = "This looks more like charcoal than food..."
 	icon_state = "burnt"
 	amount = 1
-	heal_amt = 0
+	//heal_amt = 0
 
-	heal(var/mob/M)
-		M << "\red Ugh! Eating that was a terrible idea!"
-		M.stunned += 2
-		M.weakened += 2
-		/* Strumpetplaya - commenting this out as it has components we don't support.
-		M.contract_disease(new /datum/ailment/disease/food_poisoning, 1)
-		*/
 // Misc Shit
 
 /* Strumpetplaya - commenting this out as it has components we don't support.

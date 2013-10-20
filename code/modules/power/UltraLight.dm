@@ -235,9 +235,9 @@ atom
 	movable
 		Move()
 			ul_Extinguish()
-			..()
+			. = ..()
 			ul_Illuminate()
-			return
+			return .
 
 turf
 	var

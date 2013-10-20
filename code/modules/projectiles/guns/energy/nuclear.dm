@@ -1,6 +1,6 @@
 /obj/item/weapon/gun/energy/gun
 	name = "energy gun"
-	desc = "A basic energy-based gun with two settings: Stun and kill."
+	desc = "A basic energy-based gun with two settings: stun and kill."
 	icon_state = "energystun100"
 	item_state = "gun"	//so the human update icon uses the icon_state instead.
 	fire_sound = 'sound/weapons/Taser.ogg'
@@ -33,6 +33,31 @@
 		user.update_clothing()
 
 
+/obj/item/weapon/gun/energy/gun/mini
+	desc = "A basic energy-based gun with two settings: stun and kill. This one is small enough to fit in pocket."
+	icon_state = "energy_ministun100"
+	modifystate = "energy_ministun"
+	charge_cost = 200
+	w_class = 2
+
+	attack_self(mob/living/user as mob)
+		switch(mode)
+			if(0)
+				mode = 1
+				charge_cost = 100
+				fire_sound = 'sound/weapons/Laser.ogg'
+				user << "\red [src.name] is now set to kill."
+				projectile_type = "/obj/item/projectile/beam"
+				modifystate = "energy_minikill"
+			if(1)
+				mode = 0
+				charge_cost = 100
+				fire_sound = 'sound/weapons/Taser.ogg'
+				user << "\red [src.name] is now set to stun."
+				projectile_type = "/obj/item/projectile/energy/electrode"
+				modifystate = "energy_ministun"
+		update_icon()
+		user.update_clothing()
 
 /obj/item/weapon/gun/energy/gun/nuclear
 	name = "Advanced Energy Gun"

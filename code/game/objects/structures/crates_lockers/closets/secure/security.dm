@@ -150,7 +150,7 @@
 		new /obj/item/clothing/gloves/red(src)
 		new /obj/item/weapon/handcuffs(src)
 		new /obj/item/clothing/head/helmet(src)
-		new /obj/item/clothing/head/helmet/Secsoft(src)
+		new /obj/item/clothing/head/helmet/secsoft(src)
 		new /obj/item/device/radio/headset/headset_sec(src)
 		new /obj/item/weapon/storage/belt/security(src)
 		new /obj/item/device/flash(src)

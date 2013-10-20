@@ -37,7 +37,7 @@
 	name = "Dwarven Wine"
 	desc = "Warning: highly toxic."
 	icon_state = "dwine"
-	heal_amt = 1
+	//heal_amt = 1
 	New()
 		..()
 		reagents.add_reagent("dwine", 50)

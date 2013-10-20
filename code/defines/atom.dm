@@ -138,7 +138,7 @@ obj
 	if ((A != src.loc && A && A.z == src.z))
 		src.last_move = get_dir(A, src.loc)
 		src.moved_recently = 1
-	return
+	return .
 ////////////
 
 
