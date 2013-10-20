@@ -111,15 +111,18 @@
 	return
 
 /obj/structure/table/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
-	if (istype(W, /obj/item/weapon/grab))
+	if (istype(W, /obj/item/weapon/grab) && get_dist(src,user)<2)
 		var/obj/item/weapon/grab/G = W
-		G.affecting.loc = src.loc
-		G.affecting.weakened = 5
-		for(var/mob/O in viewers(world.view, src))
-			if (O.client)
-				O << text("\red [] puts [] on the table.", G.assailant, G.affecting)
-		del(W)
+		if (istype(G.affecting, /mob/living))
+			if (G.state < 2)
+				G.affecting.loc = src.loc
+				G.affecting.weakened = 5
+				for(var/mob/O in viewers(world.view, src))
+					if (O.client)
+						O << text("\red [] puts [] on the table.", G.assailant, G.affecting)
+				del(W)
+			else
+				user << "\red You need a better grip to do that!"
 		return
 
 	if (istype(W, /obj/item/weapon/wrench))
