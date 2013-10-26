@@ -9,7 +9,7 @@
 	icon = 'aibots.dmi'
 	icon_state = "medibot0"
 	layer = 5.0
-	density = 1
+	density = 0
 	anchored = 0
 	req_access =list(access_medical)
 	var/health = 20

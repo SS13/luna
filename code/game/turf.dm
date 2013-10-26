@@ -878,7 +878,7 @@ turf/simulated/floor/proc/update_icon()
 	if(level==Z_STATION)
 		return pick(1, 2, 3, 4)
 	else if(level==Z_SPACE)
-		return pick(5, 7)
+		return pick(5, 8)
 	return 1//Default
 
 	//Old function:

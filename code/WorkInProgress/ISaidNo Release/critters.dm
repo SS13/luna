@@ -538,6 +538,65 @@
 		B.name = "ruined tomato"
 		del src
 
+/obj/critter/necromorph
+	name = "Necromorph"
+	desc = "Today, Space Station 13 - tomorrow, THE WORLD!"
+	icon_state = "nmorph"
+	density = 1
+	health = 15
+	aggressive = 1
+	defensive = 0
+	wanderer = 1
+	opensdoors = 1
+	atkcarbon = 1
+	atksilicon = 1
+	firevuln = 2
+	brutevuln = 2
+
+	seek_target()
+		src.anchored = 0
+		for (var/mob/living/C in view(src.seekrange,src))
+			if ((C.name == src.oldtarget_name) && (world.time < src.last_found + 100)) continue
+			if (istype(C, /mob/living/carbon/) && !src.atkcarbon) continue
+			if (istype(C, /mob/living/silicon/) && !src.atksilicon) continue
+			if (C.health < 0) continue
+			if (C.name == src.attacker) src.attack = 1
+			if (istype(C, /mob/living/carbon/) && src.atkcarbon) src.attack = 1
+			if (istype(C, /mob/living/silicon/) && src.atksilicon) src.attack = 1
+
+			if (src.attack)
+				src.target = C
+				src.oldtarget_name = C.name
+				for(var/mob/O in viewers(src, null))
+					O.show_message("\red <b>[src]</b> rushes at [C:name]!", 1)
+				//playsound(src.loc, pick('MEhunger.ogg', 'MEraaargh.ogg', 'MEruncoward.ogg', 'MEbewarecoward.ogg'), 50, 0)	Strumpetplaya - Not supported
+				src.task = "chasing"
+				break
+			else
+				continue
+
+	ChaseAttack(mob/M)
+		for(var/mob/O in viewers(src, null))
+			O.show_message("\red <B>[src]</B> viciously lunges at [M]!", 1)
+		if (prob(20)) M.stunned += rand(1,3)
+		M.bruteloss += rand(2,5)
+
+	CritterAttack(mob/M)
+		src.attacking = 1
+		for(var/mob/O in viewers(src, null))
+			O.show_message("\red <B>[src]</B> breaks [src.target]!", 1)
+		src.target:toxloss += 1
+		spawn(10)
+			src.attacking = 0
+
+	CritterDeath()
+		src.visible_message("<b>[src]</b> break apart")
+		src.alive = 0
+		playsound(src.loc, 'splat.ogg', 100, 1)
+		var/obj/effect/decal/cleanable/blood/gibs/B = new(src.loc)
+		B.name = "remains"
+		del src
+
 /obj/critter/spore
 	name = "plasma spore"
 	desc = "A barely intelligent colony of organisms. Very volatile."
