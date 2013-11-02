@@ -163,3 +163,21 @@ obj/item/weapon/kitchen/utensil/admin_spoon
 	throwforce = 20.0
 	throw_speed = 20
 	throw_range = 10
+
+
+
+/obj/item/weapon/butch
+	name = "butcher's cleaver"
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "butch"
+	desc = "A huge thing used for chopping and chopping up meat. This includes clowns and clown-by-products."
+	flags = FPRINT | TABLEPASS | CONDUCT
+	force = 15.0
+	w_class = 2.0
+	throwforce = 8.0
+	throw_speed = 3
+	throw_range = 6
+	m_amt = 12000
+	origin_tech = "materials=1"
+	hitsound = 'sound/weapons/bladeslice.ogg'
+	attack_verb = list("cleaved", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")

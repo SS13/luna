@@ -121,6 +121,13 @@
 	var/safety = 1
 	var/sprite_name = "fire_extinguisher"
 
+/obj/item/weapon/extinguisher/holy
+	name = "holy extinguisher"
+	desc = "A holy fire extinguisher."
+	icon = 'icons/obj/items.dmi'
+	icon_state = "holy_extinguisher0"
+	item_state = "holy_extinguisher"
+
 /obj/item/weapon/extinguisher/mini
 	name = "fire extinguisher"
 	desc = "A light and compact fibreglass-framed model fire extinguisher."
@@ -143,6 +150,13 @@
 	set src in usr
 
 	usr << text("\icon[] [] contains [] units of water left!", src, src.name, src.reagents.total_volume)
+	..()
+	return
+
+/obj/item/weapon/extinguisher/holy/examine()
+	set src in usr
+
+	usr << text("\icon[] [] contains [] units of holy water left!", src, src.name, src.reagents.total_volume)
 	..()
 	return
 

@@ -96,6 +96,16 @@
 	protective_temperature = 500
 	heat_transfer_coefficient = 0.10
 
+/obj/item/clothing/head/helmet/redhat
+	name = "red hat"
+	icon_state = "redwiz"
+	item_state = "redwizard"
+
+/obj/item/clothing/head/helmet/greenhat
+	name = "green hat"
+	icon_state = "greenwiz"
+	item_state = "greenwizard"
+
 /obj/item/clothing/head/helmet/riot
 	name = "riot helmet"
 	icon_state = "riot"

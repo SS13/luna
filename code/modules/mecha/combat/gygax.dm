@@ -28,6 +28,16 @@
 	max_equip = 4
 	step_energy_drain = 5
 
+/obj/mecha/combat/gygax/dark/scarered
+	desc = "It's just... Evil."
+	name = "Evil Gygax"
+	icon_state = "redgygax"
+
+/obj/mecha/combat/gygax/dark/scaregreen
+	desc = "It's just... Evil."
+	name = "Evil Gygax"
+	icon_state = "greengygax"
+
 /obj/mecha/combat/gygax/dark/New()
 	..()
 	var/obj/item/mecha_parts/mecha_equipment/ME = new /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/scattershot

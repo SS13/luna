@@ -1,3 +1,11 @@
+proc/random_name(gender, attempts_to_find_unique_name=10)
+	for(var/i=1, i<=attempts_to_find_unique_name, i++)
+		if(gender==FEMALE)	. = capitalize(pick(first_names_female)) + " " + capitalize(pick(last_names))
+		else				. = capitalize(pick(first_names_male)) + " " + capitalize(pick(last_names))
+
+		if(i != attempts_to_find_unique_name && !findname(.))
+			break
+
 /mob/living/carbon/human/name = "human"
 /mob/living/carbon/human/voice_name = "human"
 /mob/living/carbon/human/icon = 'mob.dmi'
@@ -47,6 +55,8 @@
 /mob/living/carbon/human/var/image/zombieimage = null
 /mob/living/carbon/human/var/datum/organ/external/DEBUG_lfoot
 /mob/living/carbon/human/var/datum/reagents/vessel
+
+/mob/living/carbon/human/var/gender_ambiguous = 0
 
 /mob/living/carbon/human/var/list/hud_list = list()
 
@@ -99,6 +109,11 @@
 	var/datum/organ/external/r_foot/r_foot = new /datum/organ/external/r_foot( src )
 	r_foot.owner = src
 	r_foot.parent = r_leg
+
+	internal_organs += new /obj/item/organ/appendix
+	internal_organs += new /obj/item/organ/heart
+	internal_organs += new /obj/item/organ/brain
+
 
 	//blood
 	organs["chest"] += chest
@@ -239,14 +254,14 @@
 
 /mob/living/carbon/human/Stat()
 	..()
-	if(ticker.mode.name == "AI malfunction")
+/*	if(ticker.mode.name == "AI malfunction")
 		if(ticker.mode:malf_mode_declared)
 			stat(null, "Time left: [ ticker.mode:AI_win_timeleft]")
 //	if(main_shuttle.online && main_shuttle.location < 2)
 //		var/timeleft = LaunchControl.timeleft()
 //		if (timeleft)
 //			stat(null, "ETA-[(timeleft / 60) % 60]:[add_zero(num2text(timeleft % 60), 2)]")
-
+*/
 	if (client.statpanel == "Status")
 		if (internal)
 			if (!internal.air_contents)

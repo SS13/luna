@@ -7,7 +7,7 @@
 
 //extract brain
 /datum/surgery_step/extract_brain
-	implements = list(/obj/item/weapon/hemostat = 100, /obj/item/weapon/crowbar = 55)
+	implements = list(/obj/item/weapon/surgical/hemostat = 100, /obj/item/weapon/crowbar = 55)
 	time = 64
 	var/obj/item/organ/brain/B = null
 
@@ -27,8 +27,8 @@
 		if(ishuman(target))
 			var/mob/living/carbon/human/H = target
 			H.update_hair(0)
-		user.attack_log += "\[[time_stamp()]\]<font color='red'> Debrained [target.name] ([target.ckey]) INTENT: [uppertext(user.a_intent)])</font>"
-		target.attack_log += "\[[time_stamp()]\]<font color='orange'> Debrained by [user.name] ([user.ckey]) (INTENT: [uppertext(user.a_intent)])</font>"
+		//user.attack_log += "\[[time_stamp()]\]<font color='red'> Debrained [target.name] ([target.ckey]) INTENT: [uppertext(user.a_intent)])</font>"
+		//target.attack_log += "\[[time_stamp()]\]<font color='orange'> Debrained by [user.name] ([user.ckey]) (INTENT: [uppertext(user.a_intent)])</font>"
 		log_attack("<font color='red'>[user.name] ([user.ckey]) debrained [target.name] ([target.ckey]) (INTENT: [uppertext(user.a_intent)])</font>")
 	else
 		user.visible_message("<span class='notice'>[user] can't find a brain in [target]!</span>")

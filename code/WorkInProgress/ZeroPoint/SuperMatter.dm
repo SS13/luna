@@ -21,6 +21,12 @@
 	var/const/warningtime = 50 	// Make the CORE OVERLOAD message repeat only every aprox. ?? seconds
 	var/lastwarning = 0			// Time in 1/10th of seconds since the last sent warning
 
+/obj/machinery/engine/supermatter/pumpkin
+	name = "evil pumpkin"
+	desc = "A strangely translucent and iridescent pumpkin.  \red You get headaches just from looking at it."
+	icon_state = "pumpkin"
+
+
 /obj/machinery/engine/klaxon
 	name = "Emergency Klaxon"
 	icon = 'engine.dmi'

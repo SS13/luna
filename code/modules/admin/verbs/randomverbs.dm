@@ -447,3 +447,12 @@ proc/remove_virus2(mob/by)
 		src.view = input("Select view range:", "FUCK YE", 7) in list(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
 	else
 		src.view = world.view
+
+/client/proc/revive_td()
+	set category = "Special Verbs"
+	set name = "Revive TD team"
+	set desc = "this smallgay don't know how to put this shit in secrets"
+
+	for(var/mob/living/carbon/human/H in world)
+		if(H.z == 6)
+			H.revive()

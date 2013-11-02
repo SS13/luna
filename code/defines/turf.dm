@@ -453,6 +453,9 @@
 	opacity = 1
 	density = 1
 
+/turf/unsimulated/wall/skull
+	icon_state = "skull"
+
 /turf/unsimulated/wall/other
 	icon_state = "r_wall"
 

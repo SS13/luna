@@ -24,7 +24,7 @@
 	else
 		user.visible_message("<span class='notice'>[user] has made a woman of [target]!</span>")
 		target.gender = FEMALE
-	target.regenerate_icons()
+	target.update_clothing()
 	return 1
 
 /datum/surgery_step/reshape_genitals/failure(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
@@ -32,5 +32,5 @@
 	H.gender_ambiguous = 1
 	user.visible_message("<span class='warning'>[user] mutilates [target]'s genitals beyond the point of recognition!</span>")
 	target.gender = pick(MALE, FEMALE)
-	target.regenerate_icons()
+	target.update_clothing()
 	return 1

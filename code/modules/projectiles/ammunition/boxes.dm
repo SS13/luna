@@ -6,6 +6,11 @@
 	max_ammo = 7
 	multiple_sprites = 1
 
+/obj/item/ammo_magazine/a357/seed
+	name = "bug of seeds"
+	desc = "A bug of pumpkin seeds."
+	icon_state = "seed"
+
 /obj/item/ammo_magazine/c38
 	name = "speed loader (.38)"
 	icon_state = "38"

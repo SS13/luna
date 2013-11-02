@@ -47,7 +47,7 @@ mob/new_player
 		if(!preferences.savefile_load(src,0,1))
 			preferences.ShowChoices(src)
 
-		startup = sound('lobby_music.ogg', volume = 30)
+		startup = sound('intro.wma', volume = 50)
 		spawn(25)
 			src << startup
 

@@ -35,7 +35,7 @@
 				break
 
 			var/obj/blob/B = pick(blobs)
-			if(B.z != 1)
+			if( B.z != (1 || 2 || 3 ||4) )
 				continue
 
 			for (var/atom/A in B.loc)
@@ -111,7 +111,10 @@
 			else
 				ground_zero = locate(45,45,1)
 
-			explosion(ground_zero, 100, 250, 500, 750, 1)
+			//explosion(ground_zero, 100, 250, 500, 750, 1)
+			for(var/client/C)
+				spawn(0)
+					C.station_explosion_cinematic()
 
 /datum/game_mode/blob/check_finished()
 	if(stage >= 4)

@@ -23,10 +23,6 @@
 					if(get_location_accessible(M, procedure.location))
 						M.surgeries += procedure
 						user.visible_message("<span class='notice'>[user] drapes [I] over [M]'s [procedure.location] to prepare for \an [procedure.name].</span>")
-
-						user.attack_log += "\[[time_stamp()]\]<font color='red'>Initiated a [procedure.name] on [M.name] ([M.ckey])</font>"
-						M.attack_log += "\[[time_stamp()]\]<font color='red'>[user.name] ([user.ckey]) initiated a [procedure.name]</font>"
-						log_attack([user.name] ([user.ckey]) initiated a [procedure.name] on [M.name] ([M.ckey])")
 						return 1
 					else
 						user << "<span class='notice'>You need to expose [M]'s [procedure.location] first.</span>"
@@ -38,7 +34,7 @@
 
 proc/get_location_modifier(mob/M)
 	var/turf/T = get_turf(M)
-	if(locate(/obj/structure/optable, T))
+	if(locate(/obj/machinery/optable, T))
 		return 1
 	else if(locate(/obj/structure/table, T))
 		return 0.9
@@ -62,7 +58,7 @@ proc/get_location_modifier(mob/M)
 			eyesmouth_covered |= I.flags
 		if(ishuman(C))
 			var/mob/living/carbon/human/H = C
-			for(var/obj/item/I in list(H.wear_suit, H.w_uniform, H.shoes, H.belt, H.gloves, H.glasses, H.head, H.ears))
+			for(var/obj/item/clothing/I in list(H.wear_suit, H.w_uniform, H.shoes, H.belt, H.gloves, H.glasses, H.head, H.ears))
 				covered_locations |= I.body_parts_covered
 				face_covered |= I.flags_inv
 				eyesmouth_covered |= I.flags

@@ -91,6 +91,14 @@
 	name = "Dark Gygax wreckage"
 	icon_state = "darkgygax-broken"
 
+/obj/structure/mecha_wreckage/gygax/dark/scarered
+	name = "pumpkin"
+	icon_state = "redgygax-broken"
+
+/obj/structure/mecha_wreckage/gygax/dark/scaregreen
+	name = "pumpkin"
+	icon_state = "greengygax-broken"
+
 /obj/structure/mecha_wreckage/marauder
 	name = "Marauder wreckage"
 	icon_state = "marauder-broken"

@@ -296,6 +296,7 @@
 			<A href='?src=\ref[src];c_mode2=takeover'>Hostile Takeover (Alpha)</A><br>
 			<A href='?src=\ref[src];c_mode2=Extend-A-Traitormongous'>Auto Traitor (Beta)</A><br>
 			<!-- <A href='?src=\ref[src];c_mode2=among'>Traitor among us (Beta)</A><br><br> -->
+			<A href='?src=\ref[src];c_mode2=changeling'>Changeling (Alpha)</A><br>
 			Now: [master_mode]\n"})
 			usr << browse(dat, "window=c_mode")
 
@@ -348,6 +349,8 @@
 					master_mode = "traitoramongus"*/
 				if("Extend-A-Traitormongous")
 					master_mode = "Extend-A-Traitormongous"
+				if("changeling")
+					master_mode = "changeling"
 				else
 			log_admin("[key_name(usr)] set the mode as [master_mode].")
 			message_admins("\blue [key_name_admin(usr)] set the mode as [master_mode].", 1)
@@ -457,6 +460,21 @@
 	if (href_list["tdome1"])
 		if ((src.rank in list( "Administrator", "Secondary Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
 			var/mob/M = locate(href_list["tdome1"])
+			if(istype(M, /mob/living/silicon/ai))
+				alert("AI has no buiseness at Thunderdome.", null, null, null, null, null)
+				return
+				//strip their stuff before they teleport into a TD
+			for(var/obj/item/W in M)
+				if (!istype(W,/datum/organ))
+					M.u_equip(W)
+					if (M.client)
+						M.client.screen -= W
+					if (W)
+						W.loc = M.loc
+						W.dropped(M)
+						W.layer = initial(W.layer)
+			M.paralysis += 5
+			sleep(5)	//so they black out before warping
 			// M.revive()
 			M.loc = pick(tdome1)
 			log_admin("[key_name(usr)] has sent [key_name(M)] to the thunderdome. (Team 1)")
@@ -466,6 +484,21 @@
 	if (href_list["tdome2"])
 		if ((src.rank in list( "Administrator", "Secondary Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
 			var/mob/M = locate(href_list["tdome2"])
+			if(istype(M, /mob/living/silicon/ai))
+				alert("AI has no buiseness at Thunderdome.", null, null, null, null, null)
+				return
+				//strip their stuff before they teleport into a TD
+			for(var/obj/item/W in M)
+				if (!istype(W,/datum/organ))
+					M.u_equip(W)
+					if (M.client)
+						M.client.screen -= W
+					if (W)
+						W.loc = M.loc
+						W.dropped(M)
+						W.layer = initial(W.layer)
+			M.paralysis += 5
+			sleep(5)	//so they black out before warping
 			// M.revive()
 			M.loc = pick(tdome2)
 			log_admin("[key_name(usr)] has sent [key_name(M)] to the thunderdome. (Team 2)")
@@ -1093,6 +1126,14 @@
 				if (ok)
 					world << text("<B>A secret has been activated by []!</B>", usr.key)
 		return
+
+				/*if("revive")
+					if (src.rank in list("Super Administrator", "Coder", "Host", "Primary Administrator"))
+						for(var/mob/living/carbon/human/H in world)
+							if(H.z == 6)
+								H.revive()
+		return
+*/
 
 	if (href_list["secretsadmin"])
 		if ((src.rank in list( "Moderator", "Secondary Administrator", "Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))

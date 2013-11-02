@@ -15,6 +15,8 @@
 /mob/living/var/obj/item/clothing/head/head = null
 /mob/living/var/obj/item/clothing/ears/ears = null
 
+/mob/living/var/list/surgeries = list()	//a list of surgery datums. generally empty, they're added when the player wants them.
+
 /mob/living/var/update_slimes = 1
 
 /mob/living/var/maxHealth = 100

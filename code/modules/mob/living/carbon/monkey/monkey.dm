@@ -57,6 +57,12 @@
 	var/datum/organ/external/r_foot/r_foot = new /datum/organ/external/r_foot( src )
 	r_foot.owner = src
 
+	internal_organs += new /obj/item/organ/appendix
+	internal_organs += new /obj/item/organ/heart
+	internal_organs += new /obj/item/organ/brain
+
+
+
 	organs["chest"] = chest
 	organs["groin"] = groin
 	organs["head"] = head

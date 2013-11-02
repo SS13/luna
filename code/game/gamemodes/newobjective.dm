@@ -3,7 +3,15 @@
 	for(var/o in typesof(/datum/objective/steal))
 		if(o != /datum/objective/steal)		//Make sure not to get a blank steal objective.
 			objectives += new o(null,job)
+	//objectives += GenerateAssassinate(job,traitor)
+	return objectives
 
+
+/proc/GetCObjectives(var/job,var/datum/mind/changeling)
+	var/list/datum/objective/objectives = list()
+	for(var/o in typesof(/datum/objective/steal))
+		if(o != /datum/objective/steal)		//Make sure not to get a blank steal objective.
+			objectives += new o(null,job)
 	//objectives += GenerateAssassinate(job,traitor)
 	return objectives
 
@@ -15,6 +23,16 @@
 			if(target && target.current)
 				missions +=	new /datum/objective/assassinate(null,job,target)
 	return missions
+
+/proc/GenerateCAssassinate(var/job,var/datum/mind/changeling)
+	var/list/datum/objective/assassinate/missions = list()
+
+	for(var/datum/mind/target in ticker.minds)
+		if(istype(target.current, /mob/living/carbon/human))
+			if(target && target.current)
+				missions +=	new /datum/objective/assassinate(null,job,target)
+	return missions
+
 /*
 /proc/GenerateFrame(var/job,var/datum/mind/traitor)
 	var/list/datum/objective/frame/missions = list()
@@ -30,6 +48,15 @@
 
 	for(var/datum/mind/target in ticker.minds)
 		if((target != traitor) && istype(target.current, /mob/living/carbon/human))
+			if(target && target.current)
+				missions +=	new /datum/objective/protection(null,job,target)
+	return missions
+
+/proc/GenerateCProtection(var/job,var/datum/mind/changeling)
+	var/list/datum/objective/frame/missions = list()
+
+	for(var/datum/mind/target in ticker.minds)
+		if(istype(target.current, /mob/living/carbon/human))
 			if(target && target.current)
 				missions +=	new /datum/objective/protection(null,job,target)
 	return missions
@@ -93,6 +120,66 @@
 	if(hasendgame == 0)
 		chosenobjectives += new /datum/objective/escape(null,job)
 	return chosenobjectives
+
+/proc/SelectChangelingObjectives(var/job,/var/datum/mind/changeling)
+	var/list/datum/objective/chosenobjectives = list()
+	var/list/datum/objective/theftobjectives = GetCObjectives(job,changeling)		//Separated all the objective types so they can be picked independantly of each other.
+	var/list/datum/objective/killobjectives = GenerateCAssassinate(job,changeling)
+	//var/list/datum/objective/frameobjectives = GenerateFrame(job,traitor)
+	var/list/datum/objective/protectobjectives = GenerateCProtection(job,changeling)
+	//var/points
+	var/totalweight
+	var/selectobj
+	var/conflict
+	chosenobjectives += new /datum/objective/absorb(null,job)
+
+	while(totalweight < 100)
+		selectobj = rand(1,100)	//Randomly determine the type of objective to be given.
+		if(!length(killobjectives) || !length(protectobjectives))	//If any of these lists are empty, just give them theft objectives.
+			var/datum/objective/objective = pick(theftobjectives)
+			chosenobjectives += objective
+			totalweight += objective.weight
+			theftobjectives -= objective
+		else switch(selectobj)
+			if(1 to 50)		//Theft Objectives (50% chance)
+				var/datum/objective/objective = pick(theftobjectives)
+				chosenobjectives += objective
+				totalweight += objective.weight
+				theftobjectives -= objective
+			if(51 to 90)	//Assassination Objectives (40% chance)
+				var/datum/objective/assassinate/objective = pick(killobjectives)
+				for(var/datum/objective/protection/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Assassinate somebody they need to Protect.
+					if(conflicttest.target == objective.target)
+						conflict = 1
+				if(!conflict)
+					chosenobjectives += objective
+					totalweight += objective.weight
+					killobjectives -= objective
+				conflict = 0
+			//if(86 to 95)	//Framing Objectives (10% chance) 	Removing fo now.
+			//	var/datum/objective/objective = pick(frameobjectives)
+			//	chosenobjectives += objective
+			//	totalweight += objective.weight
+			//	frameobjectives -= objective
+			if(91 to 100)	//Protection Objectives (10% chance)
+				var/datum/objective/protection/objective = pick(protectobjectives)
+				for(var/datum/objective/assassinate/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Protect somebody they need to Assassinate.
+					if(conflicttest.target == objective.target)
+						conflict = 1
+				if(!conflict)
+					chosenobjectives += objective
+					totalweight += objective.weight
+					protectobjectives -= objective
+				conflict = 0
+
+	var/hasendgame = 0
+	for(var/datum/objective/o in chosenobjectives)
+		if(o.type == /datum/objective/hijack)
+			hasendgame = 1
+	if(hasendgame == 0)
+		chosenobjectives += new /datum/objective/escape(null,job)
+	return chosenobjectives
+
 
 datum
 	objective
@@ -719,3 +806,20 @@ datum
 		*/
 		nuclear
 			explanation_text = "Destroy the station with a nuclear device."
+
+
+		absorb
+			var/num_to_eat //this is supposed to be semi-random but fuck it for now, this is alpha
+
+
+			proc/gen_num_to_eat()  //this doesn't work -- should work now, changed it a bit -- Urist
+				num_to_eat = rand (4,6)
+				explanation_text = "Absorb [num_to_eat] compatible genomes."
+				return num_to_eat
+
+			check_completion()
+				if(owner && owner.current && owner.current.absorbed_dna && ((owner.current.absorbed_dna.len - 1) >= num_to_eat))
+					return 1
+				else
+					return 0
+

@@ -601,3 +601,11 @@
 		loc.Entered(src)
 		return 1
 	return 0
+
+/atom/proc/add_vomit_floor(mob/living/carbon/M as mob, var/toxvomit = 0)
+	if( istype(src, /turf/simulated) )
+		var/obj/effect/decal/cleanable/vomit/this = new /obj/effect/decal/cleanable/vomit(src)
+
+		// Make toxins vomit look different
+		if(toxvomit)
+			this.icon_state = "vomittox_[pick(1,4)]"

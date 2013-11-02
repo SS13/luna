@@ -6,6 +6,8 @@
 /mob/living/carbon/var/list/stomach_contents = list()
 /mob/living/carbon/var/brain_op_stage = 0.0
 
+/mob/living/carbon/var/list/internal_organs	= list()	//List of /obj/item/organ in the mob. they don't go in the contents.
+
 /mob/living/carbon/var/oxygen_alert = 0
 /mob/living/carbon/var/toxins_alert = 0
 /mob/living/carbon/var/fire_alert = 0

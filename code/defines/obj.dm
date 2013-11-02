@@ -48,7 +48,20 @@
 /obj/proc/update_icon()
 	return
 
+/obj/pumpkin
+	name = "pumpkin"
+	desc = "It's just a pumpkin, nothing more. Really."
+	icon = ""
+	opacity = 0
+	density = 0
+	anchored = 1
+	icon = 'objects.dmi'
+	icon_state = "pumpkin1"
 
+/obj/pumpkin/curved
+	name = "curved pumpkin"
+	desc = "It's just a curved pumpkin, nothing more. Really."
+	icon_state = "pumpkin3"
 
 /obj/item/policetaperoll
 	name = "police tape roll"
@@ -462,6 +475,14 @@
 	spawn(5)
 		if(src.owner)
 			src.name = "[src.owner]'s brain"
+
+
+
+/obj/item/organ/brain/alien
+	name = "alien brain"
+	desc = "We barely understand the brains of terrestial animals. Who knows what we may find in the brain of such an advanced species?"
+	icon_state = "brain-alien"
+	origin_tech = "biotech=7"
 
 /obj/effect/deskclutter
 	name = "desk clutter"
