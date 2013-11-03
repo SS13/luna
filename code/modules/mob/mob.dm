@@ -3,6 +3,8 @@
 /mob/animate_movement = 2
 /mob/mouse_drag_pointer = MOUSE_ACTIVE_POINTER
 
+/mob/var/team = null
+
 /mob/var/mholder = null
 
 /mob/var/robot_talk_understand = 0

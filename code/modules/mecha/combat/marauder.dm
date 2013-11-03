@@ -21,6 +21,16 @@
 	force = 45
 	max_equip = 4
 
+/obj/mecha/combat/marauder/green
+	name = "Marauder"
+	icon_state = "gmarauder"
+
+
+/obj/mecha/combat/marauder/red
+	name = "Marauder"
+	icon_state = "rmarauder"
+
+
 /obj/mecha/combat/marauder/seraph
 	desc = "Heavy-duty, command-type exosuit. This is a custom model, utilized only by high-ranking military personnel."
 	name = "Seraph"

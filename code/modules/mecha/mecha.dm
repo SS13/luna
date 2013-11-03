@@ -482,49 +482,38 @@
 
 /obj/mecha/proc/destroy()
 	spawn()
-		go_out()
+		var/obj/mecha/mecha = src
+	//	var/mob/M = src.occupant
 		var/turf/T = get_turf(src)
-		tag = "\ref[src]" //better safe then sorry
-		if(loc)
-			loc.Exited(src)
-		loc = null
-		if(T)
-			if(istype(src, /obj/mecha/working/ripley/))
-				var/obj/mecha/working/ripley/R = src
-				if(R.cargo)
-					for(var/obj/O in R.cargo) //Dump contents of stored cargo
-						O.loc = T
-						R.cargo -= O
-						T.Entered(O)
-
-			if(prob(30))
-				explosion(T, 0, 0, 1, 3)
-			spawn(0)
-				if(wreckage)
-					var/obj/structure/mecha_wreckage/WR = new wreckage(T)
-					for(var/obj/item/mecha_parts/mecha_equipment/E in equipment)
-						if(E.salvageable && prob(30))
-							WR.crowbar_salvage += E
-							E.forceMove(WR)
-							E.equip_ready = 1
-							E.reliability = round(rand(E.reliability/3,E.reliability))
-						else
-							E.forceMove(T)
-							E.destroy()
-					if(cell)
-						WR.crowbar_salvage += cell
-						cell.forceMove(WR)
-						cell.charge = rand(0, cell.charge)
-					if(internal_tank)
-						WR.crowbar_salvage += internal_tank
-						internal_tank.forceMove(WR)
-				else
-					for(var/obj/item/mecha_parts/mecha_equipment/E in equipment)
-						E.forceMove(T)
-						E.destroy()
+		var/wreckage = src.wreckage
+		var/list/r_equipment = src.equipment
+		var/obj/item/weapon/cell/r_cell = src.cell
+		var/obj/machinery/portable_atmospherics/canister/r_canister = src.internal_tank
+		src = null
+		del(mecha)
+		if(prob(40))
+			explosion(T, 0, 0, 1, 3)
 		spawn(0)
-			del(src)
+			if(wreckage)
+				var/obj/structure/mecha_wreckage/WR = new wreckage(T)
+				for(var/obj/item/mecha_parts/mecha_equipment/E in r_equipment)
+					if(prob(30))
+						WR.crowbar_salvage += E
+						E.loc = WR
+						E.equip_ready = 1
+						E.reliability = rand(30,100)
+					else
+						E.loc = T
+						E.destroy()
+				if(r_cell)
+					WR.crowbar_salvage += r_cell
+					r_cell.loc = WR
+					r_cell.charge = rand(0, r_cell.charge)
+				if(r_canister)
+					WR.crowbar_salvage += r_canister
+					r_canister.loc = WR
 	return
+
 
 /obj/mecha/ex_act(severity)
 	src.log_message("Affected by explosion of severity: [severity].",1)
@@ -944,6 +933,9 @@
 	set category = "Exosuit Interface"
 	set src = usr.loc
 	set popup_menu = 0
+	if(src.loc.loc == /area/tdome)
+		usr << "\red No way to flee away."
+		return
 	if(usr!=src.occupant)
 		return
 	src.go_out()
@@ -953,23 +945,37 @@
 
 /obj/mecha/proc/go_out()
 	if(!src.occupant) return
-	var/atom/movable/mob_container
+	var/mob/mob_container
 	if(ishuman(occupant))
 		mob_container = src.occupant
 	else
 		return
-	if(mob_container.forceMove(src.loc))//ejecting mob container
-		src.log_message("[mob_container] moved out.")
-		occupant.reset_view()
-		/*
-		if(src.occupant.client)
-			src.occupant.client.eye = src.occupant.client.mob
-			src.occupant.client.perspective = MOB_PERSPECTIVE
-		*/
-		src.occupant << browse(null, "window=exosuit")
+
+	if(mob_container.loc.loc.loc == /area/tdome)
+		if(mob_container.team == 1)
+			mob_container.loc = pick(tdome1)
+		else
+			mob_container.loc = pick(tdome2)
+		var/mob/dead/observer/newghost = new/mob/dead/observer(mob_container.loc,null)
+		newghost.name = mob_container.real_name
+		newghost.real_name = mob_container.real_name
+		if(mob_container.client)
+			mob_container.client.mob = newghost
 		src.occupant = null
-		src.icon_state = initial(icon_state)+"-open"
 		src.dir = dir_in
+	else
+		if(mob_container.forceMove(src.loc))//ejecting mob container
+			src.log_message("[mob_container] moved out.")
+			occupant.reset_view()
+			/*
+			if(src.occupant.client)
+				src.occupant.client.eye = src.occupant.client.mob
+				src.occupant.client.perspective = MOB_PERSPECTIVE
+			*/
+			src.occupant << browse(null, "window=exosuit")
+			src.occupant = null
+			src.icon_state = initial(icon_state)+"-open"
+			src.dir = dir_in
 	return
 
 /////////////////////////

@@ -19,6 +19,13 @@
 	var/phasing_energy_drain = 200
 	max_equip = 4
 
+/obj/mecha/combat/phazon/green
+	name = "green Phazon"
+	icon_state = "gphaz"
+
+/obj/mecha/combat/phazon/red
+	name = "red Phazon"
+	icon_state = "rphaz"
 
 /obj/mecha/combat/phazon/New()
 	..()
@@ -88,3 +95,25 @@
 		send_byjax(src.occupant,"exosuit.browser","phasing_command","[phasing?"Dis":"En"]able phasing")
 		src.occupant_message("<font color=\"[phasing?"#00f\">En":"#f00\">Dis"]abled phasing.</font>")
 	return
+
+/obj/mecha/combat/phazon/red/get_commands()
+	var/output = {"<div class='wr'>
+						<div class='header'>Special</div>
+						<div class='links'>
+						<a href='?src=\ref[src];switch_damtype=1'>Change melee damage type</a><br>
+						</div>
+						</div>
+						"}
+	output += ..()
+	return output
+
+/obj/mecha/combat/phazon/green/get_commands()
+	var/output = {"<div class='wr'>
+						<div class='header'>Special</div>
+						<div class='links'>
+						<a href='?src=\ref[src];switch_damtype=1'>Change melee damage type</a><br>
+						</div>
+						</div>
+						"}
+	output += ..()
+	return output

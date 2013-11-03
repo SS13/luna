@@ -236,6 +236,7 @@ proc/remove_virus2(mob/by)
 		M.updatehealth()
 		M.buckled = initial(M.buckled)
 		M.handcuffed = initial(M.handcuffed)
+		M.face_dmg = 0
 		if (M.stat > 1)
 			M.stat=0
 		..()
@@ -454,5 +455,9 @@ proc/remove_virus2(mob/by)
 	set desc = "this smallgay don't know how to put this shit in secrets"
 
 	for(var/mob/living/carbon/human/H in world)
-		if(H.z == 6)
+		if(H.team == 1)
+			H.loc = pick(tdome1)
+		else
+			H.loc = pick(tdome2)
+		if(H.z == 7)
 			H.revive()

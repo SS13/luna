@@ -477,6 +477,7 @@
 			sleep(5)	//so they black out before warping
 			// M.revive()
 			M.loc = pick(tdome1)
+			M.team = 1
 			log_admin("[key_name(usr)] has sent [key_name(M)] to the thunderdome. (Team 1)")
 			message_admins("[key_name_admin(usr)] has sent [key_name_admin(M)] to the thunderdome. (Team 1)", 1)
 			M << "\blue You have been sent to the Thunderdome."
@@ -501,6 +502,7 @@
 			sleep(5)	//so they black out before warping
 			// M.revive()
 			M.loc = pick(tdome2)
+			M.team = 2
 			log_admin("[key_name(usr)] has sent [key_name(M)] to the thunderdome. (Team 2)")
 			message_admins("[key_name_admin(usr)] has sent [key_name_admin(M)] to the thunderdome. (Team 2)", 1)
 			M << "\blue You have been sent to the Thunderdome."

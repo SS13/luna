@@ -15,7 +15,7 @@
 
 
 /obj/structure/mopbucket/examine()
-	set src in usr
+	set src in view()
 	usr << text("\icon[] [] contains [] units of water left!", src, src.name, src.reagents.total_volume)
 	..()
 

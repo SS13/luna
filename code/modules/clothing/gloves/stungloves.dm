@@ -24,7 +24,6 @@
 			user.drop_item()
 			W.loc = src
 			cell = W
-			siemens_coefficient = 1
 			user << "<span class='notice'>You attach a cell to [src].</span>"
 			update_icon()
 		else

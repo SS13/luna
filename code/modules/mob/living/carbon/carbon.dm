@@ -261,3 +261,13 @@
 			contract_disease(D, 0, 1, CONTACT_HANDS)
 
 	return
+
+/mob/living/carbon/attackby(obj/item/I, mob/user)
+	if(lying || isslime(src))
+		if(surgeries.len)
+			if(user.a_intent == "help")
+				for(var/datum/surgery/S in surgeries)
+					if(S.next_step(user, src))
+						return 1
+
+	..()
