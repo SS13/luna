@@ -11,7 +11,7 @@
 	var/datum/hud/living/carbon/hud = null // hud
 
 /mob/dead/observer/New(turf/loc,mob/the_corpse)
-	invisibility = 10
+	invisibility = 0
 	sight |= SEE_TURFS | SEE_MOBS | SEE_OBJS | SEE_SELF
 	see_invisible = 15
 	ear_deaf = 0

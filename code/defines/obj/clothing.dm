@@ -106,6 +106,16 @@
 	icon_state = "greenwiz"
 	item_state = "greenwizard"
 
+/obj/item/clothing/head/helmet/pumpkinred
+	name = "red pumpkinhelm"
+	icon_state = "pumpkinhelmred"
+	item_state = "pumpkinhelmred"
+
+/obj/item/clothing/head/helmet/pumpkingreen
+	name = "green pumpkinhelm"
+	icon_state = "pumpkinhelmred"
+	item_state = "pumpkinhelmgreen"
+
 /obj/item/clothing/head/helmet/riot
 	name = "riot helmet"
 	icon_state = "riot"

@@ -71,7 +71,8 @@
 			/client/proc/editappear,
 			/client/proc/LSD_effect,
 			/client/proc/play_sound,
-			/proc/togglebuildmode
+			/proc/togglebuildmode,
+			/client/proc/revive_td
 			)
 
 	//Verbs for everyone super administrator and up.
