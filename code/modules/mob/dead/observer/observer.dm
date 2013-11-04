@@ -22,7 +22,7 @@
 	if(the_corpse)
 		corpse = the_corpse
 		real_name = corpse.real_name
-		name = corpse.real_name
+		name = "ghost"
 		verbs += /mob/dead/observer/proc/reenter_corpse
 
 /mob/proc/ghostize()

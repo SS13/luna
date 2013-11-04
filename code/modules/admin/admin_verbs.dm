@@ -72,7 +72,13 @@
 			/client/proc/LSD_effect,
 			/client/proc/play_sound,
 			/proc/togglebuildmode,
-			/client/proc/revive_td
+			/client/proc/revive_td,
+			/client/proc/tdparty,
+			/client/proc/tp_td,
+			/client/proc/g_op,
+			/client/proc/e_op,
+			/client/proc/c_op,
+			/client/proc/t_op
 			)
 
 	//Verbs for everyone super administrator and up.

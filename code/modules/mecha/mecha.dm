@@ -933,7 +933,8 @@
 	set category = "Exosuit Interface"
 	set src = usr.loc
 	set popup_menu = 0
-	if(src.loc.loc == /area/tdome)
+	var/turf/T = get_turf(src)
+	if(istype(T.loc, /area/tdome/tdomea))
 		usr << "\red No way to flee away."
 		return
 	if(usr!=src.occupant)
@@ -951,18 +952,18 @@
 	else
 		return
 
-	if(mob_container.loc.loc.loc == /area/tdome)
+	var/turf/T = get_turf(src)
+
+	if(istype(T.loc, /area/tdome/tdomea))
+		mob_container.stat = 2
 		if(mob_container.team == 1)
-			mob_container.loc = pick(tdome1)
-		else
 			mob_container.loc = pick(tdome2)
-		var/mob/dead/observer/newghost = new/mob/dead/observer(mob_container.loc,null)
-		newghost.name = mob_container.real_name
-		newghost.real_name = mob_container.real_name
-		if(mob_container.client)
-			mob_container.client.mob = newghost
+		else
+			mob_container.loc = pick(tdome1)
+
 		src.occupant = null
 		src.dir = dir_in
+
 	else
 		if(mob_container.forceMove(src.loc))//ejecting mob container
 			src.log_message("[mob_container] moved out.")
