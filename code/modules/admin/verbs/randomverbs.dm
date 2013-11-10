@@ -463,16 +463,31 @@ proc/remove_virus2(mob/by)
 	set name = "TD party"
 	set desc = "cause all so lazy"
 
-	var/t = 0
-	for(var/mob/living/carbon/human/H in world)
-		if(t)
-			H.loc = pick(tdome2)
-			H.team = 1
-			t = !t
-		else
-			H.loc = pick(tdome1)
-			H.team = 2
-			t = !t
+	switch(alert("Do you wanna party with Buonaparte?",,"Yes","No",))
+		if("Yes")
+			var/t = 0
+			for(var/mob/living/carbon/human/H in world)
+				for(var/obj/item/W in H)
+					if (!istype(W,/datum/organ))
+						H.u_equip(W)
+						if (H.client)
+							H.client.screen -= W
+						if (W)
+							W.loc = H.loc
+							W.dropped(H)
+							W.layer = initial(W.layer)
+					H.paralysis += 5
+					sleep(5)
+				if(t)
+					H.loc = pick(tdome2)
+					H.team = 1
+					t = !t
+				else
+					H.loc = pick(tdome1)
+					H.team = 2
+					t = !t
+		if("No")
+			return
 
 /client/proc/tp_td()
 	set category = "Roleplay"

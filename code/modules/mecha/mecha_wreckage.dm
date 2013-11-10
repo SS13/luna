@@ -126,10 +126,13 @@
 	name = "Ripley wreckage"
 	icon_state = "ripley-broken"
 
-/obj/structure/mecha_wreckage/ripley/shitty
+/obj/structure/mecha_wreckage/ripley/shittyg
 	name = "Frankenstein wreckage"
-	icon_state = "shit-broken"
+	icon_state = "blood"
 
+/obj/structure/mecha_wreckage/ripley/shittyr
+	name = "Frankenstein wreckage"
+	icon_state = "blood"
 
 /obj/structure/mecha_wreckage/ripley/New()
 	..()

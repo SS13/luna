@@ -10,10 +10,16 @@
 	var/cargo_capacity = 15
 
 
-/obj/mecha/working/ripley/shitty
+/obj/mecha/working/ripley/shittyg
 	desc = "You can't describe this awful... Mecha?"
 	name = "\"Frankenstein\""
-	icon_state = "shit"
+	icon_state = "shitg"
+	force = 15
+
+/obj/mecha/working/ripley/shittyr
+	desc = "You can't describe this awful... Mecha?"
+	name = "\"Frankenstein\""
+	icon_state = "shitgr"
 	force = 15
 
 /obj/mecha/working/ripley/firefighter

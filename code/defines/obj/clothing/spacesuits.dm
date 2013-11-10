@@ -39,6 +39,31 @@ obj/item/clothing/suit/space/ntsco
 	item_state = "syndicate"
 	slowdown = 0
 
+/obj/item/clothing/suit/space/syndicate/tdr
+	name = "red space suit"
+	desc = "Has a tag on it: Totally not property of a hostile corporation, honest!"
+	icon_state = "tdr"
+	item_state = "tdr"
+
+/obj/item/clothing/suit/space/syndicate/tdg
+	name = "green space suit"
+	desc = "Has a tag on it: Totally not property of a hostile corporation, honest!"
+	icon_state = "tdg"
+	item_state = "tdg"
+
+/obj/item/clothing/head/helmet/space/syndicate/tdrh
+	name = "red space helmet"
+	desc = "Has a tag on it: Totally not property of an enemy corporation, honest."
+	icon_state = "tdrh"
+	item_state = "tdrh"
+
+/obj/item/clothing/head/helmet/space/syndicate/tdgh
+	name = "green space helmet"
+	desc = "Has a tag on it: Totally not property of an enemy corporation, honest."
+	icon_state = "tdgh"
+	item_state = "tdgh"
+
+
 
 /obj/item/clothing/head/helmet/space/syndicate/green
 	name = "green space helmet"
