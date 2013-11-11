@@ -11,7 +11,7 @@
 	var/datum/hud/living/carbon/hud = null // hud
 
 /mob/dead/observer/New(turf/loc,mob/the_corpse)
-	invisibility = 0
+	invisibility = 15
 	sight |= SEE_TURFS | SEE_MOBS | SEE_OBJS | SEE_SELF
 	see_invisible = 15
 	ear_deaf = 0
@@ -22,7 +22,7 @@
 	if(the_corpse)
 		corpse = the_corpse
 		real_name = corpse.real_name
-		name = "ghost"
+		name = corpse.real_name
 		verbs += /mob/dead/observer/proc/reenter_corpse
 
 /mob/proc/ghostize()
