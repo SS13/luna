@@ -3,7 +3,7 @@
 	desc = "This spell inflicts a set of mutations and disabilities upon the target."
 
 	var/disabilities = 0 //bits
-	var/list/mutations = list() //mutation strings
+	var/list/mutations = 0 //bits
 	var/duration = 100 //deciseconds
 	/*
 		Disabilities
@@ -18,12 +18,12 @@
 /obj/effect/proc_holder/spell/targeted/genetic/cast(list/targets)
 
 	for(var/mob/living/target in targets)
-		target.mutations.Add(mutations)
+		target.mutations |= mutations
 		target.disabilities |= disabilities
-		target.update_mutations()	//update target's mutation overlays
+		target.update_clothing()	//update target's mutation overlays
 		spawn(duration)
-			target.mutations.Remove(mutations)
+			target.mutations &= ~mutations
 			target.disabilities &= ~disabilities
-			target.update_mutations()
+			target.update_clothing()
 
 	return

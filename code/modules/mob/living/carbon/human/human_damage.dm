@@ -7,7 +7,7 @@
 	fireloss	= 0
 	bruteloss	= 0
 	for(var/datum/organ/external/O in organs)	//hardcoded to streamline things a bit
-		if(!O.destroyed && !O.robotic)
+		if(O.status == ORGAN_INTACT)
 			bruteloss	+= O.brute_dam
 			fireloss	+= O.burn_dam
 	health = 100 - getOxyLoss() - getToxLoss() - fireloss - bruteloss
@@ -17,13 +17,13 @@
 /mob/living/carbon/human/getBruteLoss()
 	var/amount = 0
 	for(var/datum/organ/external/O in organs)
-		if(!O.destroyed) amount += O.brute_dam
+		if(O.status) amount += O.brute_dam
 	return amount
 
 /mob/living/carbon/human/getFireLoss()
 	var/amount = 0
 	for(var/datum/organ/external/O in organs)
-		if(!O.destroyed) amount += O.burn_dam
+		if(O.status) amount += O.burn_dam
 	return amount
 
 
@@ -59,8 +59,8 @@
 /mob/living/carbon/human/proc/get_damaged_organs(var/brute, var/burn, var/allow_robotic = 1)
 	var/list/datum/organ/external/parts = list()
 	for(var/datum/organ/external/O in organs)
-		if(!O.destroyed && ((brute && O.brute_dam) || (burn && O.burn_dam)))
-			if(!allow_robotic && O.robotic)
+		if(O.status && ((brute && O.brute_dam) || (burn && O.burn_dam)))
+			if(!allow_robotic && O.status == ORGAN_ROBOTIC)
 				continue
 			parts += O
 	return parts
@@ -69,8 +69,8 @@
 /mob/living/carbon/human/proc/get_damageable_organs(var/allow_robotic = 1)
 	var/list/datum/organ/external/parts = list()
 	for(var/datum/organ/external/O in organs)
-		if(!O.destroyed && (O.brute_dam + O.burn_dam < O.max_damage))
-			if(!allow_robotic && O.robotic)
+		if(O.status && (O.brute_dam + O.burn_dam < O.max_damage))
+			if(!allow_robotic && O.status == ORGAN_ROBOTIC)
 				continue
 			parts += O
 	return parts

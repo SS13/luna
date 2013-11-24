@@ -28,11 +28,18 @@
 /client/proc/mod_list_new_add_ass() //haha
 
 	var/class = "text"
-	class = input("What kind of variable?","Variable Type") as null|anything in list("text",
-		"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default")
+	if(src.holder && src.holder.marked_datum)
+		class = input("What kind of variable?","Variable Type") as null|anything in list("text",
+			"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default","marked datum ([holder.marked_datum.type])")
+	else
+		class = input("What kind of variable?","Variable Type") as null|anything in list("text",
+			"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default")
 
 	if(!class)
 		return
+
+	if(holder.marked_datum && class == "marked datum ([holder.marked_datum.type])")
+		class = "marked datum"
 
 	var/var_value = null
 
@@ -48,30 +55,19 @@
 			var_value = input("Enter type:","Type") as null|anything in typesof(/obj,/mob,/area,/turf)
 
 		if("reference")
-			switch(alert("Would you like to enter a specific object, or search for it from the world?","Choose!","Specifc UID (Hexadecimal number)", "Search"))
-				if("Specifc UID (Hexadecimal number)")
-					var/UID = input("Type in UID, without the leading 0x","Type in UID") as text|null
-					if(!UID) return
-					var/temp_variable = locate("\[0x[UID]\]")
-					if(!temp_variable)
-						usr << "ERROR.  Could not locate referenced object."
-						return
-					switch(alert("You have chosen [temp_variable], in [get_area(temp_variable)].  Are you sure?","You sure?","Yes","NONOCANCEL!"))
-						if("Yes")
-							var_value = temp_variable
-						if("NONOCANCEL!")
-							return
-				if("Search")
-					var_value = input("Select reference:","Reference") as null|mob|obj|turf|area in world
+			var_value = input("Select reference:","Reference") as null|mob|obj|turf|area in world
 
 		if("mob reference")
-			var_value = input("Select reference:","Reference") as null|mob in get_sorted_mobs()
+			var_value = input("Select reference:","Reference") as null|mob in world
 
 		if("file")
 			var_value = input("Pick file:","File") as null|file
 
 		if("icon")
 			var_value = input("Pick icon:","Icon") as null|icon
+
+		if("marked datum")
+			var_value = holder.marked_datum
 
 	if(!var_value) return
 
@@ -79,60 +75,58 @@
 
 
 /client/proc/mod_list_new_add(var/list/L)
+
 	var/class = "text"
-	class = input("What kind of variable?","Variable Type") as null|anything in list("text",
-		"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default")
+	if(src.holder && src.holder.marked_datum)
+		class = input("What kind of variable?","Variable Type") as null|anything in list("text",
+			"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default","marked datum ([holder.marked_datum.type])")
+	else
+		class = input("What kind of variable?","Variable Type") as null|anything in list("text",
+			"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default")
 
 	if(!class)
 		return
+
+	if(holder.marked_datum && class == "marked datum ([holder.marked_datum.type])")
+		class = "marked datum"
 
 	var/var_value = null
 
 	switch(class)
 
 		if("text")
-			var_value = input("Enter new text:","Text") as null|text
+			var_value = input("Enter new text:","Text") as text
 
 		if("num")
-			var_value = input("Enter new number:","Num") as null|num
+			var_value = input("Enter new number:","Num") as num
 
 		if("type")
 			var_value = input("Enter type:","Type") in typesof(/obj,/mob,/area,/turf)
 
 		if("reference")
-			switch(alert("Would you like to enter a specific object, or search for it from the world?","Choose!","Specifc UID (Hexadecimal number)", "Search"))
-				if("Specifc UID (Hexadecimal number)")
-					var/UID = input("Type in UID, without the leading 0x","Type in UID") as text|null
-					if(!UID) return
-					var/temp_variable = locate("\[0x[UID]\]")
-					if(!temp_variable)
-						usr << "ERROR.  Could not locate referenced object."
-						return
-					switch(alert("You have chosen [temp_variable], in [get_area(temp_variable)].  Are you sure?","You sure?","Yes","NONOCANCEL!"))
-						if("Yes")
-							var_value = temp_variable
-						if("NONOCANCEL!")
-							return
-				if("Search")
-					var_value = input("Select reference:","Reference") as null|mob|obj|turf|area in world
+			var_value = input("Select reference:","Reference") as mob|obj|turf|area in world
 
 		if("mob reference")
-			var_value = input("Select reference:","Reference") as null|mob in get_sorted_mobs()
+			var_value = input("Select reference:","Reference") as mob in world
 
 		if("file")
-			var_value = input("Pick file:","File") as null|file
+			var_value = input("Pick file:","File") as file
 
 		if("icon")
-			var_value = input("Pick icon:","Icon") as null|icon
+			var_value = input("Pick icon:","Icon") as icon
+
+		if("marked datum")
+			var_value = holder.marked_datum
 
 	if(!var_value) return
 
 	switch(alert("Would you like to associate a var with the list entry?",,"Yes","No"))
 		if("Yes")
 			L += var_value
-			L[var_value] = mod_list_new_add_ass() //haha
+			L[var_value] = mod_list_add_ass() //haha
 		if("No")
 			L += var_value
+
 
 /client/proc/mod_list_new(var/list/L)
 	if(!istype(L,/list)) src << "Not a List."
@@ -219,9 +213,17 @@
 		if(dir)
 			usr << "If a direction, direction is: [dir]"
 
+
 	var/class = "text"
-	class = input("What kind of variable?","Variable Type",default) as null|anything in list("text",
-		"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default")
+	if(src.holder && src.holder.marked_datum)
+		class = input("What kind of variable?","Variable Type",default) as null|anything in list("text",
+			"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default","marked datum ([holder.marked_datum.type])")
+	else
+		class = input("What kind of variable?","Variable Type",default) as null|anything in list("text",
+			"num","type","reference","mob reference", "icon","file","list","edit referenced object","restore to default")
+
+	if(holder.marked_datum && class == "marked datum ([holder.marked_datum.type])")
+		class = "marked datum"
 
 	if(!class)
 		return
@@ -287,6 +289,9 @@
 		if("icon")
 			variable = input("Pick icon:","Icon",variable) \
 				as null|icon
+
+		if("marked datum")
+			variable = holder.marked_datum
 
 	if(associative)
 		L[associative] = variable
@@ -506,6 +511,9 @@
 			var/var_new = input("Pick icon:","Icon",O.vars[variable]) as null|icon
 			if(var_new==null) return
 			O.vars[variable] = var_new
+
+		if("marked datum")
+			O.vars[variable] = holder.marked_datum
 
 	log_admin("[key_name(src)] modified [original_name]'s [variable] to [O.vars[variable]]")
 	message_admins("[key_name_admin(src)] modified [original_name]'s [variable] to [O.vars[variable]]", 1)

@@ -65,9 +65,9 @@
 			return
 		var/obj/item/weapon/card/id/I = W
 		if(!I || !I.registered)	return
-		if(src.allowed(user) || !src.registered_name || (istype(I) && (src.registered_name == I.registered)))
+		if(src.allowed(user) || !src.registered_name || (istype(I) && src.registered_name == I.registered))
 			//they can open all lockers, or nobody owns this, or they own this locker
-			src.locked = !( src.locked )
+			src.locked = !src.locked
 			if(src.locked)	src.icon_state = src.icon_locked
 			else	src.icon_state = src.icon_closed
 
@@ -76,6 +76,25 @@
 				src.desc = "Owned by [I.registered]."
 		else
 			user << "\red Access Denied"
+	else if(istype(W, /obj/item/device/pda))
+		if(src.broken)
+			user << "\red It appears to be broken."
+			return
+		var/obj/item/device/pda/P = W
+		if(!P || !P.owner) return
+
+		if(src.allowed(user) || !src.registered_name || (istype(P) && src.registered_name == P.owner))
+			//they can open all lockers, or nobody owns this, or they own this locker
+			src.locked = !src.locked
+			if(src.locked)	src.icon_state = src.icon_locked
+			else	src.icon_state = src.icon_closed
+
+			if(!src.registered_name)
+				src.registered_name = P.owner
+				src.desc = "Owned by [P.owner]."
+		else
+			user << "\red Access Denied"
+
 	else if(istype(W, /obj/item/weapon/card/emag) && !src.broken)
 		broken = 1
 		locked = 0

@@ -38,15 +38,15 @@
 				icon_state = "2"
 		if(2)
 			if(istype(W,/obj/item/weapon/cable_coil))
-				var/obj/item/weapon/cable_coil/Coil = W
-				if(!Coil.use(3))
+				var/obj/item/weapon/cable_coil/coil = W
+				if(!coil.use(3))
 					user << "Not enough cable."
 					return
 				user << "You wire up the inside of the [src]."
 				buildstate++
 				icon_state = "3"
 		if(3)
-			if(istype(W,/obj/item/brain))
+			if(istype(W,/obj/item/organ/brain))
 				user << "You place the [W] inside the [src]."
 				user.drop_item()
 				bb = W:owner

@@ -154,22 +154,31 @@
 
 /turf/simulated/Entered(atom/A, atom/OL)
 	if (istype(A,/mob/living/carbon))
-		var/mob/M = A
+		var/mob/living/carbon/M = A
 		if(M.lying)
+			if(src.wet == 2 || (src.wet == 1 && prob(40)))
+				M.pulling = null
+
+				spawn(4) step(M, M.dir)
+
+				playsound(src.loc, 'slip.ogg', 50, 1, -3)
+				M.weakened = 6*src.wet
+				if(src.wet == 2)
+					M:adjustBruteLoss(2)
+
 			return
 		if(istype(M, /mob/living/carbon/human) && istype(M:shoes, /obj/item/clothing/shoes/clown_shoes))
 			if(M.m_intent == "run")
 				if(M.footstep >= 2)
 					M.footstep = 0
-				else
-					M.footstep++
-				if(M.footstep == 0)
 					playsound(src, "clownstep", 50, 1) // this will get annoying very fast.
+				else
+					M.footstep++.
 			else
 				playsound(src, "clownstep", 20, 1)
-		switch (src.wet)
+		switch(src.wet)
 			if(1)
-				if ((M.m_intent == "run") && !(isobj(M:shoes) && M:shoes.flags&NOSLIP))
+				if(!(M.m_intent != "run" || (isobj(M:shoes) && M:shoes.flags&NOSLIP)))
 					M.pulling = null
 					M << "\blue You slipped on the wet floor!"
 					playsound(src.loc, 'slip.ogg', 50, 1, -3)
@@ -178,13 +187,11 @@
 					M.inertia_dir = 0
 					return
 			if(2) //lube
-				if (!(M.m_intent == "run") && !(isobj(M:shoes) && M:shoes.flags&NOSLIP))
+				if(!(M.m_intent != "run" && isobj(M:shoes) && M:shoes.flags&NOSLIP))
 					M.pulling = null
-					step(M, M.dir)
-//					spawn(1) step(M, M.dir)
-//					spawn(2) step(M, M.dir)
+					spawn(4) step(M, M.dir)
 					M:adjustBruteLoss(2)
-					M << "\blue You slipped on the floor!"
+					M << "\blue You slipped on the wet floor!"
 					playsound(src.loc, 'slip.ogg', 50, 1, -3)
 					M.weakened = 12
 
@@ -342,23 +349,25 @@
 	return
 
 /turf/simulated/wall/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
-	var/turf/simulated/wall/S = src
 	if (!(istype(usr, /mob/living/carbon/human) || ticker) && ticker.mode.name != "monkey")
 		usr << "\red You don't have the dexterity to do this!"
+		return
+
+	if(istype(W,/obj/item/frame))
+		var/obj/item/frame/AH = W
+		AH.try_build(src)
 		return
 
 	if (thermite)
 		if(istype(W, /obj/item/weapon/melee/energy/sword) && W:active) ThermiteBurn(user)
 		if(istype(W, /obj/item/device/flashlight/flare) && W:on) ThermiteBurn(user)
+		if(istype(W, /obj/item/weapon/weldingtool) && W:welding) ThermiteBurn(user)
 
-	if (istype(W, /obj/item/weapon/weldingtool) && W:welding)
+	else if (istype(W, /obj/item/weapon/weldingtool) && W:welding)
 		W:eyecheck(user)
 		var/turf/T = user.loc
-		if (!( istype(T, /turf) ))
+		if (!istype(T, /turf))
 			return
-
-		if (thermite) ThermiteBurn(user)
 
 		if (W:get_fuel() < 5)
 			user << "\blue You need more welding fuel to complete this task."
@@ -368,16 +377,9 @@
 		user << "\blue Now disassembling the outer wall plating."
 		playsound(src.loc, 'Welder.ogg', 100, 1)
 
-		sleep(100)
-
-		if ((user.loc == T && user.equipped() == W) && S)
+		if(do_after(100))
 			user << "\blue You disassembled the outer wall plating."
-			S.dismantle_wall()
-
-	if(istype(W,/obj/item/frame))
-		var/obj/item/frame/AH = W
-		AH.try_build(src)
-		return
+			dismantle_wall()
 
 	else
 		return attack_hand(user)
@@ -400,8 +402,7 @@
 	return
 
 /turf/simulated/wall/r_wall/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
-	if (!(istype(usr, /mob/living/carbon/human) || ticker) && ticker.mode.name != "monkey")
+	if (!istype(usr, /mob/living/carbon/human) && (ticker && ticker.mode.name != "monkey"))
 		usr << "\red You don't have the dexterity to do this!"
 		return
 
@@ -417,7 +418,7 @@
 	if (istype(W, /obj/item/weapon/weldingtool) && W:welding)
 		W:eyecheck(user)
 		var/turf/T = user.loc
-		if (!( istype(T, /turf) ))
+		if (!istype(T, /turf))
 			return
 
 		if (thermite) ThermiteBurn(user)
@@ -425,79 +426,63 @@
 		if (src.d_state == 2)
 			user << "\blue Slicing metal cover."
 			playsound(src.loc, 'Welder.ogg', 100, 1)
-			sleep(60)
-			if ((user.loc == T && user.equipped() == W))
+			if (do_after(60))
 				src.d_state = 3
 				user << "\blue You removed the metal cover."
 
-		else if (src.d_state == 5)
+		else if(src.d_state == 5)
 			user << "\blue Removing support rods."
 			playsound(src.loc, 'Welder.ogg', 100, 1)
-			sleep(100)
-			if ((user.loc == T && user.equipped() == W))
+			if(do_after(100))
 				src.d_state = 6
 				new /obj/item/stack/rods( src )
 				user << "\blue You removed the support rods."
 
-	else if (istype(W, /obj/item/weapon/wrench))
-		if (src.d_state == 4)
-			var/turf/T = user.loc
+	else if(istype(W, /obj/item/weapon/wrench))
+		if(src.d_state == 4)
 			user << "\blue Detaching support rods."
 			playsound(src.loc, 'Ratchet.ogg', 100, 1)
-			sleep(40)
-			if ((user.loc == T && user.equipped() == W))
+			if(do_after(40))
 				src.d_state = 5
 				user << "\blue You detach the support rods."
 
-	else if (istype(W, /obj/item/weapon/wirecutters))
-		if (src.d_state == 0)
+	else if(istype(W, /obj/item/weapon/wirecutters))
+		if(src.d_state == 0)
 			playsound(src.loc, 'Wirecutter.ogg', 100, 1)
 			src.d_state = 1
 			new /obj/item/stack/rods( src )
 
-	else if (istype(W, /obj/item/weapon/screwdriver))
-		if (src.d_state == 1)
-			var/turf/T = user.loc
+	else if(istype(W, /obj/item/weapon/screwdriver))
+		if(src.d_state == 1)
 			playsound(src.loc, 'Screwdriver.ogg', 100, 1)
 			user << "\blue Removing support lines."
-			sleep(40)
-			if ((user.loc == T && user.equipped() == W))
+			if (do_after(40))
 				src.d_state = 2
 				user << "\blue You removed the support lines."
 
-	else if (istype(W, /obj/item/weapon/crowbar))
-
-		if (src.d_state == 3)
-			var/turf/T = user.loc
+	else if(istype(W, /obj/item/weapon/crowbar))
+		if(src.d_state == 3)
 			user << "\blue Prying cover off."
 			playsound(src.loc, 'Crowbar.ogg', 100, 1)
-			sleep(100)
-			if ((user.loc == T && user.equipped() == W))
+			if(do_after(100))
 				src.d_state = 4
 				user << "\blue You removed the cover."
 
-		else if (src.d_state == 6)
-			var/turf/T = user.loc
+		else if(src.d_state == 6)
 			user << "\blue Prying outer sheath off."
 			playsound(src.loc, 'Crowbar.ogg', 100, 1)
-			sleep(100)
-			if ((user.loc == T && user.equipped() == W))
+			if(do_after(100))
 				user << "\blue You removed the outer sheath."
 				dismantle_wall()
 				return
 
-	else if ((istype(W, /obj/item/stack/sheet/metal)) && (src.d_state))
-		var/turf/T = user.loc
+	else if(istype(W, /obj/item/stack/sheet/metal) && src.d_state)
 		user << "\blue Repairing wall."
-		sleep(100)
-		if ((user.loc == T && user.equipped() == W))
+		if(do_after(100))
 			src.d_state = 0
 			src.icon_state = initial(src.icon_state)
 			user << "\blue You repaired the wall."
-			if (W:amount > 1)
-				W:amount--
-			else
-				del(W)
+			W:use(1)
 
 	if(src.d_state > 0)
 		src.icon_state = "r_wall-[d_state]"
@@ -800,20 +785,8 @@ turf/simulated/floor/proc/update_icon()
 		var/mob/M = A
 		var/prob_slip = 5
 
-		if (locate(/obj/structure/grille, oview(1, M)) || locate(/obj/structure/lattice, oview(1, M)) || locate(/turf/unsimulated, oview(1, M)) || locate(/turf/simulated, oview(1, M)))
-			if (!M.l_hand)
-				prob_slip -= 3
-			else if (M.l_hand.w_class <= 3)
-				prob_slip -= 2
-			else
-				prob_slip -= 0.5
-
-			if (!M.r_hand)
-				prob_slip -= 3
-			else if (M.r_hand.w_class <= 3)
-				prob_slip -= 2
-			else
-				prob_slip -= 0.5
+		if (locate(/obj/structure/grille, orange(1, M)) || locate(/obj/structure/lattice, orange(1, M)) || locate(/turf/unsimulated, orange(1, M)) || locate(/turf/simulated, orange(1, M)))
+			prob_slip = -5
 
 		if (M.handcuffed || !M.canmove) //can't grab that wall
 			prob_slip = 5
@@ -863,7 +836,7 @@ turf/simulated/floor/proc/update_icon()
 			A.y = 3
 
 		if(A.z == 5)
-			if(prob(33))
+			if(prob(30))
 				A.z = getZLevel(Z_SPACE)
 			else
 				A.z = getZLevel(Z_STATION)

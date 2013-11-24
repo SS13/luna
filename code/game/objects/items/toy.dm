@@ -100,7 +100,7 @@
 	icon_state = "revolver"
 	item_state = "gun"
 	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBELT
-//	slot_flags = SLOT_BELT
+	slot_flags = SLOT_BELT
 	w_class = 3.0
 	g_amt = 10
 	m_amt = 10
@@ -313,6 +313,7 @@
 			icon_state = "sword0"
 			item_state = "sword0"
 			w_class = 2
+		user.update_clothing()
 		add_fingerprint(user)
 		return
 
@@ -323,7 +324,7 @@
 	icon_state = "katana"
 	item_state = "katana"
 	flags = FPRINT | TABLEPASS | CONDUCT | ONBACK | ONBELT
-//	slot_flags = SLOT_BELT | SLOT_BACK
+	slot_flags = SLOT_BELT | SLOT_BACK
 	force = 5
 	throwforce = 5
 	w_class = 3
@@ -463,3 +464,75 @@
 		..()
 		for(var/i=1; i <= 7; i++)
 			new /obj/item/weapon/reagent_containers/glass/balloon(src)
+
+/obj/item/weapon/storage/box/toy/deathballoons
+	name = "water ballon box"
+	desc = "Seven ballons of death! Fill with water or acid, use for FUN!"
+	New()
+		..()
+		for(var/i=1; i <= 7; i++)
+			var/obj/item/weapon/reagent_containers/glass/balloon/B = new /obj/item/weapon/reagent_containers/glass/balloon(src)
+			B.unacidable = 1
+
+/*
+ * Toy C4
+ */
+/obj/item/toy/c4
+	name = "toy bomb"
+//	desc = "Used to put joy in specific areas without too much extra holes in your body."
+	icon = 'icons/obj/assemblies.dmi'
+	icon_state = "plastic-explosive0"
+	item_state = "plasticx"
+	flags = FPRINT | TABLEPASS | USEDELAY
+	w_class = 2
+	var/timer = 10
+	var/atom/target = null
+	var/overlayicon
+
+/obj/item/toy/c4/attack_self(mob/user as mob)
+	var/newtime = input(usr, "Please set the timer.", "Timer", 10) as num
+	if(user.get_active_hand() == src)
+		newtime = Clamp(newtime, 10, 600)
+		timer = newtime
+		user << "Timer set for [timer] seconds."
+
+/obj/item/toy/c4/afterattack(atom/target as obj|turf, mob/user as mob, flag)
+	if(!flag)
+		return
+	if (istype(target, /turf/unsimulated) || istype(target, /turf/simulated/shuttle) || istype(target, /obj/item/weapon/storage))
+		return
+	user << "Planting explosives..."
+	if(ismob(target))
+		user.visible_message("\red [user.name] is trying to plant some kind of toy on [target.name]!")
+
+	if(do_after(user, 50) && in_range(user, target))
+		user.drop_item()
+		src.target = target
+		loc = null
+
+		if (ismob(target))
+			user.visible_message("\red [user.name] finished planting a toy on [target.name]!")
+
+		overlayicon = image('icons/obj/assemblies.dmi', "plastic-explosive2")
+		target.overlays += overlayicon
+		user << "Toy has been planted. Timer counting down from [timer]."
+		spawn(timer*10)
+			explode(get_turf(target))
+
+/obj/item/toy/c4/proc/explode(var/turf/location)
+	if(!target)
+		target = src
+
+	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+	s.set_up(2, 0, location)
+	s.start()
+	new /obj/effect/decal/cleanable/ash(location)
+	location.visible_message("\red The [src.name] explodes!","\red You hear a snap!")
+	playsound(src, 'sound/effects/snap.ogg', 50, 1)
+
+	if(target)
+		target.overlays -= overlayicon
+	del(src)
+
+/obj/item/toy/c4/attack(mob/M as mob, mob/user as mob)
+	return

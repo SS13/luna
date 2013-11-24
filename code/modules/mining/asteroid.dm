@@ -61,7 +61,7 @@ proc/make_mining_asteroid_secret()
 			floortypes = list(/turf/simulated/floor,/turf/simulated/floor/engine)
 			treasureitems = list(/obj/item/device/mass_spectrometer/adv=1,/obj/item/clothing/glasses/hud/health=1,/obj/machinery/bot/medbot/mysterious=1)
 			fluffitems = list(/obj/effect/decal/cleanable/blood=5,/obj/item/organ/appendix=2,/obj/structure/closet/crate/freezer=2,
-							  /obj/structure/optable=1,/obj/item/weapon/scalpel=1,/obj/item/weapon/storage/firstaid/regular=3,
+							  /obj/structure/optable=1,/obj/item/weapon/surgical/scalpel=1,/obj/item/weapon/storage/firstaid/regular=3,
 							  /obj/item/weapon/tank/anesthetic=1, /obj/item/weapon/surgical_drapes=2)
 
 		if("cult")

@@ -1,31 +1,23 @@
 /obj/machinery/computer
 	name = "computer"
-	icon = 'computer.dmi'
+	icon = 'icons/obj/computer.dmi'
 	density = 1
 	anchored = 1.0
 	var/obj/item/weapon/circuitboard/computer/circuit = null //if circuit==null, computer can't disassemble
 	var/brightnessred = 2
 	var/brightnessgreen = 2
 	var/brightnessblue = 2
+
+/obj/machinery/computer/emp_act(severity)
+	if(prob(20/severity)) set_broken()
+	..()
+
 /*
 /obj/machinery/computer/airtunnel
 	name = "Air Tunnel Control"
 	icon = 'airtunnelcomputer.dmi'
 	icon_state = "console00"
 */
-
-/obj/machinery/computer/operating
-	name = "Operating Computer"
-	density = 1
-	anchored = 1.0
-	icon = 'computer.dmi'
-	icon_state = "operating"
-	circuit = "/obj/item/weapon/circuitboard/computer/operating"
-
-	var/mob/living/carbon/human/victim = null
-
-	var/obj/machinery/optable/table = null
-	var/id = 0.0
 
 /obj/machinery/computer/aiupload
 	name = "AI Upload"
@@ -75,35 +67,6 @@
 	brightnessred = 0
 	brightnessgreen = 0
 	brightnessblue = 2
-
-/obj/machinery/computer/communications
-	name = "Communications Console"
-	icon_state = "comm"
-	req_access = list(access_heads)
-	circuit = "/obj/item/weapon/circuitboard/computer/communications"
-	brightnessred = 0
-	brightnessgreen = 2
-	brightnessblue = 0
-	var/prints_intercept = 1
-	var/authenticated = 0
-	var/list/messagetitle = list()
-	var/list/messagetext = list()
-	var/currmsg = 0
-	var/aicurrmsg = 0
-	var/state = STATE_DEFAULT
-	var/aistate = STATE_DEFAULT
-	var/const
-		STATE_DEFAULT = 1
-		STATE_CALLSHUTTLE = 2
-		STATE_CANCELSHUTTLE = 3
-		STATE_MESSAGELIST = 4
-		STATE_VIEWMESSAGE = 5
-		STATE_DELMESSAGE = 6
-		STATE_STATUSDISPLAY = 7
-
-	var/status_display_freq = "1435"
-	var/stat_msg1
-	var/stat_msg2
 
 /obj/machinery/computer/data
 	name = "data"
@@ -221,11 +184,6 @@
 	circuit = "/obj/item/weapon/circuitboard/computer/teleporter"
 	var/obj/item/locked = null
 	var/id = null
-
-/obj/machinery/computer/teleporter/interserver
-	name = "Interserver Teleporter"
-	icon_state = "teleport"
-	var/addr = null
 
 /obj/machinery/computer/robotics
 	name = "Robotics Control"

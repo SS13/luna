@@ -25,6 +25,10 @@
 		explosionstrength = 1 //NEVER SET THIS BELOW 1
 		floorstrength = 6
 
+/turf/proc/Bless()
+	if(flags & NOJAUNT)
+		return
+	flags |= NOJAUNT
 
 /turf/space
 	icon = 'space.dmi'
@@ -76,6 +80,10 @@
 	icon_state = "engine"
 	thermal_conductivity = 0.025
 	heat_capacity = 325000
+
+/turf/simulated/floor/engine/cult
+	name = "engraved floor"
+	icon_state = "cult"
 
 /turf/simulated/floor/engine/vacuum
 	oxygen = 0
@@ -197,7 +205,7 @@
 		Enter(var/atom/movable/AM)
 			if (..()) //TODO make this check if gravity is active (future use) - Sukasa
 				spawn(1)
-					if(AM)
+					if(AM && !AM.anchored)
 						AM.Move(locate(x, y, z + 1))
 						if(AM.loc == locate(x, y, z + 1))
 							if (istype(AM, /mob))
@@ -212,12 +220,12 @@
 				if(locate(/obj/structure/lattice, src)) return
 				user << "\blue Constructing support lattice ..."
 				playsound(src.loc, 'Genhit.ogg', 50, 1)
-				new /obj/structure/lattice(loc)
+				new /obj/structure/lattice(src)
 				C:use(1)
 				return
 			if (istype(C, /obj/item/stack/tile/metal))
-				if(locate(/obj/structure/lattice, src))
-					var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
+				var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
+				if(L)
 					del(L)
 					playsound(src.loc, 'Genhit.ogg', 50, 1)
 					C:build(src)
@@ -319,6 +327,8 @@
 	walltype = "rwall"
 	explosionstrength = 4
 
+/turf/simulated/wall/r_wall/explosionproof/ex_act(severity)
+	return
 
 /turf/simulated/wall/mineral
 	name = "mineral wall"
@@ -382,20 +392,17 @@
 
 
 
-
 /turf/simulated/wall/cult
 	name = "wall"
 	desc = "The patterns engraved on the wall seem to shift as you try to focus on them. You feel sick"
 	icon_state = "cult"
 	walltype = "cult"
 
-
-
 /turf/simulated/wall/heatshield
 	thermal_conductivity = 0
 	opacity = 0
 	explosionstrength = 5
-	name = "Heat Shielding"
+	name = "heat shielding"
 	icon = 'thermal.dmi'
 	icon_state = "thermal"
 
@@ -452,9 +459,6 @@
 	icon_state = "riveted"
 	opacity = 1
 	density = 1
-
-/turf/unsimulated/wall/skull
-	icon_state = "skull"
 
 /turf/unsimulated/wall/other
 	icon_state = "r_wall"

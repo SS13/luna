@@ -16,6 +16,11 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 */
 
 /obj/item/device/uplink
+	name = "uplink module"
+	desc = "An electronic uplink system of unknown origin."
+	icon = 'module.dmi'
+	icon_state = "power_mod"
+
 	var/welcome 					// Welcoming menu message
 	var/menu_message = "" 			// The actual menu text
 	var/items						// List of items
@@ -23,10 +28,6 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 	var/uses 						// Numbers of crystals
 
 /obj/item/device/uplink/pda
-	name = "uplink module"
-	desc = "An electronic uplink system of unknown origin."
-	icon = 'module.dmi'
-	icon_state = "power_mod"
 	var/obj/item/device/pda/hostpda = null
 
 	var/orignote = null 		//Restore original notes when locked.
@@ -49,6 +50,67 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 	origin_tech = "magnets=2;syndicate=3;bluespace=5"
 	m_amt = 100
 
+/obj/item/device/uplink/headset
+	var/active = 0
+	var/obj/item/device/radio/hostradio = null
+
+/obj/item/device/uplink/headset/proc/unlock()
+	if(isnull(hostradio) || active)
+		return
+
+	hostradio.frequency = 1459
+	active = 1
+
+	generate_menu()
+
+	for(var/mob/M in viewers(1, hostradio.loc))
+		if(M.client && M.machine == hostradio)
+			M << "You hear a radio crackle!"
+			hostradio.attack_self(M)
+	return
+
+/obj/item/device/uplink/headset/proc/lock()
+	if(isnull(src.hostradio) || !active)
+		return
+
+	hostradio.frequency = 1459
+	active = 0
+
+	for(var/mob/M in viewers(1, hostradio.loc))
+		if(M.client && M.machine == hostradio)
+			hostradio.attack_self(M)
+	return
+
+/obj/item/device/uplink/headset/Topic(href, href_list)
+	if (usr.stat || usr.restrained())
+		return
+
+	var/mob/living/carbon/H = usr
+
+	if(!istype(H))
+		return
+
+	if (usr.contents.Find(src) || usr.contents.Find(hostradio) || (in_range(src, usr) && istype(src.loc, /turf)))
+		usr.machine = src
+
+		if(href_list["buy_item"])
+			if(..() == 1) // We can afford the item
+				var/path_obj = text2path(href_list["buy_item"])
+				var/item = new path_obj(get_turf(src.loc))
+				if(!istype(item, /obj/spawner))
+					if(!H.r_hand)
+						item:loc = H
+						H.r_hand = item
+						item:layer = 20
+					else if(!H.l_hand)
+						item:loc = H
+						H.l_hand = item
+						item:layer = 20
+				else // Spawners need to have del called on them to avoid leaving a marker behind
+					del item
+			src.attack_self(usr)
+			return
+	return
 
 /obj/item/device/uplink/New()
 	welcome = ticker.mode.uplink_welcome
@@ -58,8 +120,8 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 
 //Let's build a menu!
 /obj/item/device/uplink/proc/generate_menu()
-	src.menu_message = "<B>[src.welcome]</B><BR>"
-	src.menu_message += "Tele-Crystals left: [src.uses]<BR>"
+	src.menu_message = "<B>[welcome]</B><BR>"
+	src.menu_message += "Tele-Crystals left: [uses]<BR>"
 	src.menu_message += "<HR>"
 	src.menu_message += "<B>Request item:</B><BR>"
 	src.menu_message += "<I>Each item costs a number of tele-crystals as indicated by the number following their name.</I><BR>"
@@ -105,27 +167,26 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 
 
 /*
- *PDA uplink
+ * PDA uplink
  */
 
 //Syndicate uplink hidden inside a traitor PDA
 //Communicate with traitor through the PDA's note function.
 
 /obj/item/device/uplink/pda/proc/unlock()
-	if ((isnull(src.hostpda)) || (src.active))
+	if (isnull(src.hostpda) || src.active)
 		return
 
-	src.orignote = src.hostpda.note
-	src.active = 1
-	src.hostpda.mode = 5 //Switch right to the notes program
+	orignote = hostpda.note
+	active = 1
+	hostpda.mode = 1 //Switch right to the notes program
 
-	src.generate_menu()
+	generate_menu()
 	src.hostpda.note = src.menu_message
 
 	for (var/mob/M in viewers(1, src.hostpda.loc))
 		if (M.client && M.machine == src.hostpda)
 			src.hostpda.attack_self(M)
-
 	return
 
 /obj/item/device/uplink/pda/attack_self(mob/user as mob)
@@ -164,6 +225,7 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 	return
 
 
+
 /*
  *Portable radio uplink
  */
@@ -197,10 +259,10 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 
 	var/mob/living/carbon/human/H = usr
 
-	if (!( istype(H, /mob/living/carbon/human)))
+	if (!istype(H))
 		return 1
 
-	if ((usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf))))
+	if (usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf)))
 		usr.machine = src
 
 		if(href_list["buy_item"])

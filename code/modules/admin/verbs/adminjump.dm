@@ -2,15 +2,15 @@
 	set name = "Jump to Area"
 	set desc = "Area to jump to"
 	set category = "Admin"
+
 	if(!src.holder)
-		src << "Only administrators may use this command."
+		src << "Only administrators and ghosts may use this command."
 		return
 
 	if(config.allow_admin_jump)
 		if(!A)
 			return
 		usr.loc = pick(get_area_turfs(A))
-
 		log_admin("[key_name(usr)] jumped to [A]")
 		message_admins("[key_name_admin(usr)] jumped to [A]", 1)
 	else

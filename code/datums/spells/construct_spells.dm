@@ -14,10 +14,9 @@
 	invocation_type = "none"
 	range = 0
 	summon_type = list(/turf/simulated/floor/engine/cult)
-	centcomm_cancast = 0 //Stop crashing the server by spawning turfs on transit tiles
 
 /obj/effect/proc_holder/spell/aoe_turf/conjure/wall
-	name = "Lesser Construction"
+	name = "Wall Construction"
 	desc = "This spell constructs a cult wall"
 
 	school = "conjuration"
@@ -27,10 +26,9 @@
 	invocation_type = "none"
 	range = 0
 	summon_type = list(/turf/simulated/wall/cult)
-	centcomm_cancast = 0 //Stop crashing the server by spawning turfs on transit tiles
 
 /obj/effect/proc_holder/spell/aoe_turf/conjure/wall/reinforced
-	name = "Greater Construction"
+	name = "Reinforced Wall Construction"
 	desc = "This spell constructs a reinforced metal wall"
 
 	school = "conjuration"
@@ -39,12 +37,11 @@
 	invocation = "none"
 	invocation_type = "none"
 	range = 0
-	centcomm_cancast = 0 //Stop crashing the server by spawning turfs on transit tiles
 	delay = 50
 
 	summon_type = list(/turf/simulated/wall/r_wall)
 
-/obj/effect/proc_holder/spell/aoe_turf/conjure/soulstone
+/*obj/effect/proc_holder/spell/aoe_turf/conjure/soulstone
 	name = "Summon Soulstone"
 	desc = "This spell reaches into Nar-Sie's realm, summoning one of the legendary fragments across time and space"
 
@@ -55,7 +52,7 @@
 	invocation_type = "none"
 	range = 0
 
-	summon_type = list(/obj/item/device/soulstone)
+	summon_type = list(/obj/item/device/soulstone)*/
 
 
 /obj/effect/proc_holder/spell/aoe_turf/conjure/lesserforcewall
@@ -71,6 +68,14 @@
 	summon_type = list(/obj/effect/forcefield)
 	summon_lifespan = 50
 
+/obj/effect/forcefield
+	desc = "A magic wall."
+	name = "FORCEWALL"
+	icon = 'mob.dmi'
+	icon_state = "shield"
+	anchored = 1.0
+	opacity = 0
+	density = 1
 
 /obj/effect/proc_holder/spell/targeted/ethereal_jaunt/shift
 	name = "Phase Shift"
@@ -85,4 +90,3 @@
 	include_user = 1
 	phaseshift = 1
 	jaunt_duration = 50 //in deciseconds
-	centcomm_cancast = 0 //Stop people from getting to centcomm

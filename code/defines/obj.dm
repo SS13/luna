@@ -2,7 +2,6 @@
 	//var/datum/module/mod		//not used
 	var/m_amt = 0	// metal
 	var/g_amt = 0	// glass
-	var/w_amt = 0	// waster amounts
 
 	var/origin_tech = null	//Used by R&D to determine what research bonuses it grants.
 	var/reliability = 100	//Used by SOME devices to determine how reliable they are.
@@ -48,20 +47,7 @@
 /obj/proc/update_icon()
 	return
 
-/obj/pumpkin
-	name = "pumpkin"
-	desc = "It's just a pumpkin, nothing more. Really."
-	icon = ""
-	opacity = 0
-	density = 0
-	anchored = 1
-	icon = 'objects.dmi'
-	icon_state = "pumpkin1"
 
-/obj/pumpkin/curved
-	name = "curved pumpkin"
-	desc = "It's just a curved pumpkin, nothing more. Really."
-	icon_state = "pumpkin3"
 
 /obj/item/policetaperoll
 	name = "police tape roll"
@@ -105,14 +91,6 @@
 	anchored = 1
 	layer = 99
 	mouse_opacity = 0
-
-/obj/admins
-	name = "admins"
-	var/rank = null
-	var/owner = null
-	var/state = 1
-	//state = 1 for playing : default
-	//state = 2 for observing
 
 /obj/bhole
 	name = "black hole"
@@ -223,6 +201,7 @@
 	var/burning = null
 	var/hitsound = null
 	var/w_class = 3.0
+	var/slot_flags = 0
 	var/captured_by_securitron = 0
 	flags = FPRINT | TABLEPASS
 	pressure_resistance = 50
@@ -340,19 +319,31 @@
 	icon_state = "x2"
 	anchored = 1.0
 
+/obj/effect/landmark/tunderdome
+
 /obj/effect/landmark/derelict
 	name = "Derelict Info Node"
 
 	nodamage
+		name = "no damage"
 		icon_state = "blocked"
 
 	noblast
+		name = "no blast"
 		icon_state = "blocked"
 
 	o2crate
+		name = "internals crate"
 	o2canister
+		name = "air/o2 canister"
 	metal
+		name = "metal spawn"
 	glass
+		name = "glass spawn"
+	superpacman
+		name = "SuperPacman spawn"
+	supplycrate
+		name = "supply crate spawn"
 
 
 /obj/effect/landmark/alterations
@@ -454,35 +445,6 @@
 	icon = 'screen1.dmi'
 	icon_state = "x"
 	anchored = 1.0
-
-/obj/item/brain
-	name = "brain"
-	desc = "A piece of juicy meat found in a person's head."
-	icon = 'surgery.dmi'
-	icon_state = "brain2"
-	flags = TABLEPASS
-	force = 1.0
-	w_class = 1.0
-	throwforce = 1.0
-	throw_speed = 3
-	throw_range = 5
-	origin_tech = "biotech=3"
-
-	var/mob/living/carbon/human/owner = null
-
-/obj/item/brain/New()
-	..()
-	spawn(5)
-		if(src.owner)
-			src.name = "[src.owner]'s brain"
-
-
-
-/obj/item/organ/brain/alien
-	name = "alien brain"
-	desc = "We barely understand the brains of terrestial animals. Who knows what we may find in the brain of such an advanced species?"
-	icon_state = "brain-alien"
-	origin_tech = "biotech=7"
 
 /obj/effect/deskclutter
 	name = "desk clutter"

@@ -15,8 +15,8 @@
 	// remove fighting items to avoid too much fighting zombies
 	// encourage running :)
 	for(var/obj/item/weapon/gun/G in world) del G
-	for(var/obj/item/weapon/scalpel/S in world) del S
-	for(var/obj/item/weapon/circular_saw/C in world) del C
+	for(var/obj/item/weapon/surgical/scalpel/S in world) del S
+	for(var/obj/item/weapon/surgical/circular_saw/C in world) del C
 
 	// make the mode more scary by deleting all radios
 	for(var/obj/item/device/radio/R in world) del R

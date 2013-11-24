@@ -1,29 +1,36 @@
-/mob/living/var/t_plasma = null
-/mob/living/var/t_oxygen = null
-/mob/living/var/t_sl_gas = null
-/mob/living/var/t_n2 = null
-/mob/living/var/now_pushing = null
-/mob/living/var/cameraFollow = null
-/mob/living/var/lasthandcuff = null
-/mob/living/var/obj/item/clothing/suit/wear_suit = null
-/mob/living/var/obj/item/clothing/under/w_uniform = null
-///mob/living/carbon/human/var/obj/item/device/radio/w_radio = null
-/mob/living/var/obj/item/clothing/shoes/shoes = null
-/mob/living/var/obj/item/weapon/belt = null
-/mob/living/var/obj/item/clothing/gloves/gloves = null
-/mob/living/var/obj/item/clothing/glasses/glasses = null
-/mob/living/var/obj/item/clothing/head/head = null
-/mob/living/var/obj/item/clothing/ears/ears = null
+/mob/living/
+	var/t_plasma = null
+	var/t_oxygen = null
+	var/t_sl_gas = null
+	var/t_n2 = null
+	var/now_pushing = null
+	var/cameraFollow = null
+	var/lasthandcuff = null
 
-/mob/living/var/list/surgeries = list()	//a list of surgery datums. generally empty, they're added when the player wants them.
+	var/obj/item/clothing/suit/wear_suit = null
+	var/obj/item/clothing/under/w_uniform = null
+	var/obj/item/clothing/shoes/shoes = null
+	var/obj/item/weapon/belt = null
+	var/obj/item/clothing/gloves/gloves = null
+	var/obj/item/clothing/glasses/glasses = null
+	var/obj/item/clothing/head/head = null
+	var/obj/item/clothing/ears/ears = null
 
-/mob/living/var/update_slimes = 1
+	var/list/surgeries = list()	//a list of surgery datums. generally empty, they're added when the player wants them.
 
-/mob/living/var/maxHealth = 100
+	var/update_slimes = 1
+
+	var/maxHealth = 100
 
 // ++++ROCKDTBEN++++ MOB PROCS -- Ask me before touching.
 // Stop! ... Hammertime! ~Carn
 // I touched them without asking... I'm soooo edgy ~Erro (added nodamage checks)
+
+/mob/living/emp_act(severity)
+	var/list/L = src.get_contents()
+	for(var/obj/O in L)
+		O.emp_act(severity)
+	..()
 
 /mob/living/proc/getBruteLoss()
 	return bruteloss
@@ -112,10 +119,16 @@
 		"\red You hear a heavy electrical crack." \
 	)
 //	if(src.stunned < shock_damage)	src.stunned = shock_damage
-	Stun(10)//This should work for now, more is really silly and makes you lay there forever
+	Stun(10 * siemens_coeff)//This should work for now, more is really silly and makes you lay there forever
 //	if(src.weakened < 20*siemens_coeff)	src.weakened = 20*siemens_coeff
-	Weaken(10)
+	Weaken(10 * siemens_coeff)
 	return shock_damage
+
+/mob/living/carbon/human/electrocute_act(var/shock_damage, var/obj/source, var/siemens_coeff = 1.0)
+	if(gloves)
+		siemens_coeff = gloves.siemens_coefficient
+	..()
+
 
 /*
 /mob/living/emp_act(severity)

@@ -8,21 +8,34 @@
 
 /datum/surgery_step/proc/try_op(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
 	var/success = 0
+	//world << "try op"
+	if(surgery.current_organ && surgery.current_organ.status != surgery.organ_status_must_be)
+		//world << "organ status changed"
+		surgery.complete(target)
+		return 0
+
 	if(accept_hand)
+		//world << "accept_hand"
 		if(!tool)
+			//world << "and no tool"
 			success = 1
 	if(accept_any_item)
+		//world << "accept_any_item"
 		if(tool && tool_check(user, tool))
+			world << "and item is valid"
 			success = 1
 	else
 		for(var/path in implements)
+			//world << "[tool.type] [path]"
 			if(istype(tool, path))
+				//world << "success"
 				implement_type = path
-				if(tool_check(user, tool))
+				if(tool_check(user, tool, target_zone))
 					success = 1
 
 	if(success)
-		if(target_zone == surgery.location)
+		//world << "try op success [target_zone] [surgery.current_location]"
+		if(target_zone == surgery.current_location || !surgery.current_location)
 			if(get_location_accessible(target, target_zone))
 				initiate(user, target, target_zone, tool, surgery)
 				return 1
@@ -35,7 +48,7 @@
 /datum/surgery_step/proc/initiate(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
 	surgery.step_in_progress = 1
 
-	preop(user, target, target_zone, tool)
+	preop(user, target, target_zone, tool, surgery)
 	if(do_after(user, time))
 
 		var/advance = 0
@@ -74,5 +87,5 @@
 	return 0
 
 
-/datum/surgery_step/proc/tool_check(mob/user, obj/item/tool)
+/datum/surgery_step/proc/tool_check(mob/user, obj/item/tool, var/target_zone)
 	return 1

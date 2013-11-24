@@ -364,7 +364,7 @@
 	src.desc = initial(src.desc)
 	if(being_built)
 		src.being_built.Move(get_step(src,EAST))
-		src.visible_message("\icon[src] <b>[src]</b> beeps, \"The [src.being_built] is complete\".")
+		src.visible_message("\icon[src] <b>[src]</b> beeps, \"[src.being_built] is complete\".")
 		src.being_built = null
 	src.updateUsrDialog()
 	return 1

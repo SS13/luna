@@ -44,8 +44,8 @@
 	client.screen -= hud_used.druggy
 	client.screen -= hud_used.vimpaired
 
-	if ((blind && stat != 2))
-		if ((blinded))
+	if (blind && stat != 2)
+		if(blinded)
 			blind.layer = 18
 		else
 			blind.layer = 0

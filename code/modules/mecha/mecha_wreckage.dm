@@ -92,26 +92,16 @@
 	icon_state = "darkgygax-broken"
 
 /obj/structure/mecha_wreckage/gygax/dark/scarered
-	name = "Evil Gygax wreckage"
+	name = "pumpkin"
 	icon_state = "redgygax-broken"
 
 /obj/structure/mecha_wreckage/gygax/dark/scaregreen
-	name = "Evil Gygax wreckage"
+	name = "pumpkin"
 	icon_state = "greengygax-broken"
 
 /obj/structure/mecha_wreckage/marauder
 	name = "Marauder wreckage"
 	icon_state = "marauder-broken"
-
-/obj/structure/mecha_wreckage/marauder/red
-	name = "Marauder wreckage"
-	icon_state = "rm-broken"
-
-
-/obj/structure/mecha_wreckage/marauder/green
-	name = "Marauder wreckage"
-	icon_state = "gm-broken"
-
 
 /obj/structure/mecha_wreckage/mauler
 	name = "Mauler Wreckage"
@@ -125,14 +115,6 @@
 /obj/structure/mecha_wreckage/ripley
 	name = "Ripley wreckage"
 	icon_state = "ripley-broken"
-
-/obj/structure/mecha_wreckage/ripley/shittyg
-	name = "Frankenstein wreckage"
-	icon_state = "blood"
-
-/obj/structure/mecha_wreckage/ripley/shittyr
-	name = "Frankenstein wreckage"
-	icon_state = "blood"
 
 /obj/structure/mecha_wreckage/ripley/New()
 	..()
@@ -215,13 +197,7 @@
 
 /obj/structure/mecha_wreckage/phazon
 	name = "Phazon wreckage"
-	icon_state = "gphaz-broken"
-
-/obj/structure/mecha_wreckage/phazon/red
-	name = "Phazon wreckage"
-	icon_state = "rphaz-broken"
-
-/obj/structure/mecha_wreckage/phazon/green
+	icon_state = "phazon-broken"
 
 
 /obj/structure/mecha_wreckage/odysseus

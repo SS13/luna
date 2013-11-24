@@ -96,26 +96,6 @@
 	protective_temperature = 500
 	heat_transfer_coefficient = 0.10
 
-/obj/item/clothing/head/helmet/redhat
-	name = "red hat"
-	icon_state = "redwiz"
-	item_state = "redwizard"
-
-/obj/item/clothing/head/helmet/greenhat
-	name = "green hat"
-	icon_state = "greenwiz"
-	item_state = "greenwizard"
-
-/obj/item/clothing/head/helmet/pumpkinred
-	name = "red pumpkinhelm"
-	icon_state = "pumpkinhelmred"
-	item_state = "pumpkinhelmred"
-
-/obj/item/clothing/head/helmet/pumpkingreen
-	name = "green pumpkinhelm"
-	icon_state = "pumpkinhelmred"
-	item_state = "pumpkinhelmgreen"
-
 /obj/item/clothing/head/helmet/riot
 	name = "riot helmet"
 	icon_state = "riot"
@@ -145,12 +125,6 @@
 	name = "yellow cap"
 	icon_state = "cargosoft"
 	item_state = "cargosoft"
-	flags = FPRINT | TABLEPASS
-
-/obj/item/clothing/head/helmet/HoS
-	name = "HoS helmet"
-	icon_state = "hoscap"
-	item_state = "that"
 	flags = FPRINT | TABLEPASS
 
 /obj/item/clothing/head/helmet/secsoft
@@ -214,7 +188,8 @@
 	desc = "A close-fitting mask that can be connected to an air supply but does not work very well in hard vacuum."
 	icon_state = "breath"
 	item_state = "breath"
-	flags = FPRINT | MASKCOVERSMOUTH | MASKINTERNALS
+	body_parts_covered = 0
+	flags = FPRINT | MASKINTERNALS
 	w_class = 2
 	protective_temperature = 420
 	heat_transfer_coefficient = 0.90
@@ -399,12 +374,47 @@
 	item_state = "wcoat"
 	body_parts_covered = CHEST|GROIN|ARMS
 
-/obj/item/clothing/suit/storage/hos
-	name = "HoS coat"
+/obj/item/clothing/suit/storage/armor/hos
+	name = "armored coat"
+	desc = "A greatcoat enchanced with a special alloy for some protection and style."
 	icon_state = "hos"
 	item_state = "hos"
-	body_parts_covered = CHEST|GROIN|ARMS
+	armor = list(melee = 15, bullet = 5, laser = 10, energy = 5, bomb = 5, bio = 0, rad = 0)
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
+	flags_inv = HIDEJUMPSUIT
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+
+/obj/item/clothing/head/helmet/HoS
+	name = "Head of Security Hat"
+	desc = "The hat of the Head of Security. For showing the officers who's in charge."
+	icon_state = "hoscap"
+	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+	armor = list(melee = 20, bullet = 10, laser = 15,energy = 10, bomb = 10, bio = 10, rad = 0)
+	flags_inv = HIDEEARS
+
+//Jensen gear
+/obj/item/clothing/head/helmet/HoS/jensen
+	name = "dermal armor patch"
+	desc = "It implants nicely in your head."
+	armor = list(melee = 80, bullet = 60, laser = 50,energy = 10, bomb = 25, bio = 10, rad = 0)
+	icon_state = "dermal"
+	item_state = "dermal"
+	canremove = 0
+
+/obj/item/clothing/under/rank/head_of_security/jensen
+	desc = "You never asked for anything that stylish."
+	name = "head of security's jumpsuit"
+	icon_state = "jensen"
+	item_state = "jensen"
+	item_color = "jensen"
+
+/obj/item/clothing/suit/storage/armor/hos/jensen
+	name = "armored trenchoat"
+	desc = "A trenchoat augmented with a special alloy for some protection and style"
+	armor = list(melee = 65, bullet = 30, laser = 50, energy = 10, bomb = 25, bio = 0, rad = 0)
+	icon_state = "jensencoat"
+	item_state = "jensencoat"
+	flags_inv = 0
 
 /obj/item/clothing/suit/warden_jacket
 	name = "warden jacket"
@@ -440,7 +450,7 @@
 	body_parts_covered = CHEST|GROIN
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
 
-/obj/item/clothing/suit/storage/armourrigvest
+/obj/item/clothing/suit/storage/armor/rigvest
 	name = "armor rig vest"
 	desc = "An important looking armor vest, outfitted with pockets."
 	icon_state = "armourrigvest"
@@ -548,6 +558,18 @@
 	desc = null
 	origin_tech = "syndicate=3"
 	var/list/clothing_choices = list()
+
+	emp_act(severity)
+		name = "psychedelic"
+		desc = "Groovy!"
+		icon_state = "psyche"
+		item_color = "psyche"
+		spawn(200)
+			name = "Black Jumpsuit"
+			icon_state = "bl_suit"
+			item_color = "black"
+			desc = null
+		..()
 
 /obj/item/clothing/under/chameleon/all
 

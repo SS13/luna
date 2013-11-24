@@ -1,3 +1,18 @@
+/obj/machinery/emp_act(severity)
+	if(use_power && stat == 0)
+		use_power(7500/severity)
+
+		var/obj/effect/overlay/pulse2 = new/obj/effect/overlay ( src.loc )
+		pulse2.icon = 'icons/effects/effects.dmi'
+		pulse2.icon_state = "empdisable"
+		pulse2.name = "emp sparks"
+		pulse2.anchored = 1
+		pulse2.dir = pick(cardinal)
+
+		spawn(10)
+			pulse2.delete()
+	..()
+
 /obj/machinery/alarm
 	name = "alarm"
 	icon = 'monitors.dmi'
@@ -70,6 +85,10 @@
 	var/timing = 0.0
 	var/lockdownbyai = 0
 	anchored = 1.0
+
+/obj/machinery/firealarm/emp_act(severity)
+	if(prob(50/severity)) alarm()
+	..()
 
 /obj/machinery/partyalarm
 	name = "Party Button"
@@ -266,11 +285,6 @@
 	name = "hub"
 	icon_state = "tele0"
 
-/obj/machinery/teleport/hub/interserver
-	name = "Interserver Hub"
-	icon_state = "tele0"
-	var/teleing = 0
-
 /obj/machinery/teleport/station
 	name = "station"
 	icon_state = "controller"
@@ -289,15 +303,6 @@
 	var/netnum = 0
 	var/directwired = 1		// by default, power machines are connected by a cable in a neighbouring turf
 							// if set to 0, requires a 0-X cable on this turf
-
-/obj/machinery/power/terminal
-	name = "terminal"
-	icon_state = "term"
-	desc = "An underfloor wiring terminal for power equipment"
-	level = 1
-	var/obj/machinery/power/master = null
-	anchored = 1
-	directwired = 0		// must have a cable on same turf connecting to terminal
 
 /obj/machinery/power/generator_type2
 	name = "thermo-electric generator"

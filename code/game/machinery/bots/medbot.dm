@@ -9,7 +9,7 @@
 	icon = 'aibots.dmi'
 	icon_state = "medibot0"
 	layer = 5.0
-	density = 0
+	density = 1
 	anchored = 0
 	req_access =list(access_medical)
 	var/health = 20
@@ -51,7 +51,7 @@
 	icon_state = "firstaid_arm"
 	var/build_step = 0
 	var/created_name = "Medibot" //To preserve the name if it's a unique medbot I guess
-	var/skin = null //Same as medbot, set to tox or ointment for the respective kits.
+	var/skin = null //Same as medkit, set to tox or ointment for the respective bots.
 	w_class = 3.0
 
 	New()

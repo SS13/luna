@@ -1,15 +1,26 @@
-/proc/attempt_initiate_surgery(obj/item/I, mob/living/M, mob/user)
+/proc/attempt_initiate_surgery(obj/item/I, mob/living/carbon/M, mob/living/user)
 	if(istype(M))
+		var/target_zone = user:zone_sel.selecting
+		var/datum/organ/external/target_organ = M.organs[target_zone]
+
 		if(M.lying || isslime(M))	//if they're prone or a slime
 			var/list/all_surgeries = surgeries_list.Copy()
 			var/list/available_surgeries = list()
 			for(var/i in all_surgeries)
 				var/datum/surgery/S = all_surgeries[i]
 
+				if(!(target_zone in S.locations))
+					continue
+
+				if(target_organ && target_organ.status != S.organ_status_must_be)
+					continue
+
 				if(locate(S.type) in M.surgeries)
 					continue
+
 				if(S.target_must_be_dead && M.stat != DEAD)
 					continue
+
 				for(var/path in S.species)
 					if(istype(M, path))
 						available_surgeries[S.name] = S
@@ -20,12 +31,15 @@
 				var/datum/surgery/S = available_surgeries[P]
 				var/datum/surgery/procedure = new S.type
 				if(procedure)
-					if(get_location_accessible(M, procedure.location))
+					if(get_location_accessible(M, target_zone))
 						M.surgeries += procedure
-						user.visible_message("<span class='notice'>[user] drapes [I] over [M]'s [procedure.location] to prepare for \an [procedure.name].</span>")
+						procedure.current_location = target_zone
+						if(target_organ)
+							procedure.current_organ = target_organ
+						user.visible_message("<span class='notice'>[user] drapes [I] over [M]'s [parse_zone(target_zone)] to prepare for \an [procedure.name].</span>")
 						return 1
 					else
-						user << "<span class='notice'>You need to expose [M]'s [procedure.location] first.</span>"
+						user << "<span class='notice'>You need to expose [M]'s [target_zone] first.</span>"
 						return 1	//return 1 so we don't slap the guy in the dick with the drapes.
 			else
 				return 1	//once the input menu comes up, cancelling it shouldn't hit the guy with the drapes either.
@@ -37,13 +51,13 @@ proc/get_location_modifier(mob/M)
 	if(locate(/obj/machinery/optable, T))
 		return 1
 	else if(locate(/obj/structure/table, T))
-		return 0.9
+		return 0.8
 	else if(locate(/obj/structure/stool/bed/roller, T))
 		return 0.9
 	else if(locate(/obj/structure/stool/bed, T))
-		return 0.8
+		return 0.6
 	else
-		return 0.5
+		return 0.4
 
 
 /proc/get_location_accessible(mob/M, location)

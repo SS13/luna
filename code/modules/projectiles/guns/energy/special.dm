@@ -17,7 +17,7 @@
 	icon_state = "ionrifle_h"
 	w_class = 3
 	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBELT
-	slot_flags = ONBELT
+	slot_flags = SLOT_BELT
 	charge_cost = 150
 
 

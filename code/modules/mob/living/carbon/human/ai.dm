@@ -22,7 +22,7 @@
 	name = "Zombie"
 	real_name = "Zombie"
 	desc = "A zombie, looks pretty scary!"
-	a_intent = "hurt"
+	a_intent = "harm"
 	density = 1
 	var/list/path = new/list()
 

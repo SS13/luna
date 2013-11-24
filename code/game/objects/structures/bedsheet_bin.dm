@@ -17,10 +17,17 @@ LINEN BINS
 	w_class = 1.0
 	item_color = "white"
 
-/*
+/obj/item/weapon/bedsheet/ex_act(severity)
+	if (severity <= 2)
+		del(src)
+		return
+	return
+
 /obj/item/weapon/bedsheet/attack(mob/living/M, mob/user)
-	if(!attempt_initiate_surgery(src, M, user))
-		..()*/
+	if(user.a_intent == "help")
+		if(attempt_initiate_surgery(src, M, user))
+			return 1
+	..()
 
 /obj/item/weapon/bedsheet/attack_self(mob/user as mob)
 	user.drop_item()
@@ -30,7 +37,6 @@ LINEN BINS
 		layer = initial(layer)
 	add_fingerprint(user)
 	return
-
 
 /obj/item/weapon/bedsheet/blue
 	icon_state = "sheetblue"

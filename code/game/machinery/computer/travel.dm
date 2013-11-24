@@ -66,6 +66,3 @@
 	use_power(500)
 	src.updateDialog()
 	return
-
-
-

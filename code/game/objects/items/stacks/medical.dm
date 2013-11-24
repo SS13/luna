@@ -15,27 +15,13 @@
 /obj/item/stack/medical/proc/AddReagents(mob/living/carbon/human/M as mob)
 	return
 
-/obj/item/stack/medical/attack(mob/living/carbon/M as mob, mob/user as mob)
+/obj/item/stack/medical/attack(mob/living/carbon/M as mob, mob/living/user as mob)
 	if (check_health && M.health < 0)
 		return
 
 	if (!istype(M))
 		user << "\red \The [src] cannot be applied to [M]!"
 		return 1
-
-	if (user)
-		if (M != user)
-			for (var/mob/O in viewers(M, null))
-				O.show_message("\red [M] has been applied with [src] by [user]", 1)
-		else
-			var/t_himself = "itself"
-			if (user.gender == MALE)
-				t_himself = "himself"
-			else if (user.gender == FEMALE)
-				t_himself = "herself"
-
-			for (var/mob/O in viewers(M, null))
-				O.show_message("\red [M] applied [src] on [t_himself]", 1)
 
 	if (ishuman(M))
 		var/mob/living/carbon/human/H = M
@@ -63,7 +49,7 @@
 				if (!istype(affecting, /datum/organ/external) || affecting:burn_dam <= 0)
 					affecting = H.organs["groin"]
 
-		if(affecting.robotic || affecting.destroyed)
+		if(affecting.status != ORGAN_INTACT)
 			return
 
 		if (affecting.heal_damage(src.heal_brute, src.heal_burn))
@@ -72,9 +58,23 @@
 			H.UpdateDamage()
 		AddReagents(M)
 	else
-		M:adjustBruteLoss(src.heal_brute/2)
-		M:adjustFireLoss(src.heal_burn/2)
+		M:adjustBruteLoss(-src.heal_brute/2)
+		M:adjustFireLoss(-src.heal_burn/2)
 	M.updatehealth()
+
+	if(user)
+		if (M != user)
+			for (var/mob/O in viewers(M, null))
+				O.show_message("\red [M] has been applied with [src] by [user]", 1)
+		else
+			var/t_himself = "itself"
+			if (user.gender == MALE)
+				t_himself = "himself"
+			else if (user.gender == FEMALE)
+				t_himself = "herself"
+
+			for (var/mob/O in viewers(M, null))
+				O.show_message("\red [M] applied [src] on [t_himself]", 1)
 
 	use(1)
 

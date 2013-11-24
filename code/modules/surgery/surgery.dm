@@ -4,7 +4,16 @@
 	var/list/steps = list()
 	var/step_in_progress = 0
 	var/list/species = list(/mob/living/carbon/human)
-	var/location = "chest"
+
+	var/list/locations = list("chest")				// possible locations of this surgery type
+	var/current_location = null						// location of current surgery
+	var/datum/organ/external/current_organ = null	// external organ (limb on /tg/) of current surgery
+
+	var/organ_status_must_be = ORGAN_INTACT
+	// Possible vars:
+	//	ORGAN_INTACT
+	//	ORGAN_DESTROYED
+	//	ORGAN_ROBOTIC
 	var/target_must_be_dead = 0
 
 
@@ -32,12 +41,6 @@
 
 
 //TODO
-//specific steps for some surgeries (fluff text)
-//R&D researching new surgeries (especially for non-humans)
-//surgeries (not steps) that can be initiated on any body part (corresponding with damage locations)
-//more interesting failure options
 //randomised complications
-//more surgeries!
 //add a probability modifier for the state of the surgeon- health, twitching, etc. blindness, god forbid.
 //helper for converting a zone_sel.selecting to body part (for damage)
-//combine hands/feet into the arms

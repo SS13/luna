@@ -147,6 +147,8 @@ proc/listclearnulls(list/list)
 
 //Reverses the order of items in the list
 /proc/reverselist(var/list/input)
+	if(!input) return
+
 	var/list/output = list()
 	for(var/i = input.len; i >= 1; i--)
 		output += input[i]
@@ -154,8 +156,8 @@ proc/listclearnulls(list/list)
 
 //Randomize: Return the list in a random order
 /proc/shuffle(var/list/shufflelist)
-	if(!shufflelist)
-		return
+	if(!shufflelist) return
+
 	var/list/new_list = list()
 	var/list/old_list = shufflelist.Copy()
 	while(old_list.len)

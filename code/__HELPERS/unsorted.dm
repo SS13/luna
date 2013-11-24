@@ -816,6 +816,7 @@ proc/anim(turf/location as turf,target as mob|obj,a_icon,a_icon_state as text,fl
 	//		 into the new area will not be moved.
 
 	if(!A || !src) return 0
+	//world << "moving [src.type] to [A.type], [turftoleave]"
 
 	stop_zones = 1
 
@@ -873,7 +874,6 @@ proc/anim(turf/location as turf,target as mob|obj,a_icon,a_icon_state as text,fl
 			for (var/turf/B in refined_trg)
 				var/datum/coords/C_trg = refined_trg[B]
 				if(C_src.x_pos == C_trg.x_pos && C_src.y_pos == C_trg.y_pos)
-
 					var/old_dir1 = T.dir
 					var/old_icon_state1 = T.icon_state
 					var/old_zone = T.zone
@@ -903,24 +903,16 @@ proc/anim(turf/location as turf,target as mob|obj,a_icon,a_icon_state as text,fl
 
 
 					if(turftoleave)
-
 						var/turf/ttl = new turftoleave(T)
-
 						var/area/AR2 = ttl.loc
-
-
 
 						if(AR2.ul_Lighting)
 							ttl.opacity = !ttl.opacity
 							ttl.ul_SetOpacity(!ttl.opacity)
 
 						fromupdate += ttl
-
 					else
-						if (locate(T.x,T.y,(T.z + 1)) && (!istype(locate(T.x,T.y,(T.z + 1)), /turf/space)))
-							T.ReplaceWithHull()
-						else
-							T.ReplaceWithOpen()
+						T.ReplaceWithHull()
 
 					refined_src -= T
 					refined_trg -= B
@@ -1160,6 +1152,7 @@ proc/get_mob_with_client_list()
 	else if (zone == "r_leg") return "right leg"
 	else if (zone == "l_foot") return "left foot"
 	else if (zone == "r_foot") return "right foot"
+
 	else return zone
 
 
@@ -1278,13 +1271,13 @@ var/global/list/common_tools = list(
 		istype(W, /obj/item/weapon/match)            		      || \
 		istype(W, /obj/item/clothing/mask/cigarette) 		      || \
 		istype(W, /obj/item/weapon/wirecutters)                   || \
-		istype(W, /obj/item/weapon/circular_saw)                  || \
+		istype(W, /obj/item/weapon/surgical/circular_saw)                  || \
 		istype(W, /obj/item/weapon/melee/energy/sword)            || \
 		istype(W, /obj/item/weapon/melee/energy/blade)            || \
 		istype(W, /obj/item/weapon/shovel)                        || \
 		istype(W, /obj/item/weapon/kitchenknife)                  || \
 		istype(W, /obj/item/weapon/butch)						  || \
-		istype(W, /obj/item/weapon/scalpel)                       || \
+		istype(W, /obj/item/weapon/surgical/scalpel)                       || \
 		istype(W, /obj/item/weapon/kitchen/utensil/knife)         || \
 		istype(W, /obj/item/weapon/shard)                         || \
 		istype(W, /obj/item/weapon/broken_bottle)				  || \

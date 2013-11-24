@@ -145,13 +145,23 @@
 		src.hud = new/obj/item/clothing/glasses/hud/security(src)
 		return
 
+/obj/item/clothing/glasses/sunglasses/sechud/jensenshades
+	name = "augmented shades"
+	desc = "Polarized bioneural eyewear, designed to augment your vision."
+	icon_state = "jensenshades"
+	item_state = "jensenshades"
+	origin_tech = "materials=2;magnets=4;syndicate=4"
+	see_mobs = 1
+	see_in_dark = 4
+	see_invisible = 2
+	canremove = 0
 
 /obj/item/clothing/glasses/thermal
 	name = "Optical Thermal Scanner"
 	desc = "Thermals in the shape of glasses."
 	icon_state = "thermal"
 	item_state = "thermal"
-	origin_tech = "magnets=4"
+	origin_tech = "materials=2;magnets=4;syndicate=4"
 
 	see_mobs = 1
 	see_in_dark = 4
@@ -160,12 +170,12 @@
 	emp_act(severity)
 		if(istype(src.loc, /mob/living/carbon/human))
 			var/mob/living/carbon/human/M = src.loc
-			M << "\red The Optical Thermal Scanner overloads and blinds you!"
 			if(M.glasses == src)
-				M.eye_blind = 4
-				M.eye_blurry = 6
+				M << "\red The Optical Thermal Scanner overloads and blinds you!"
+				M.eye_blind = 8
+				M.eye_blurry = 16
 				M.disabilities |= NEARSIGHTED
-				spawn(100)
+				spawn(300)
 					M.disabilities &= ~NEARSIGHTED
 		..()
 
@@ -173,7 +183,6 @@
 	name = "Optical Meson Scanner"
 	desc = "Used for seeing walls, floors, and stuff through anything."
 	icon_state = "meson"
-	origin_tech = "magnets=4;syndicate=4"
 
 /obj/item/clothing/glasses/thermal/monocle
 	name = "thermoncle"

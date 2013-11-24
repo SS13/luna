@@ -40,8 +40,8 @@
 /obj/item/weapon/cartridge/syndicate:3:Detomatix PDA cart;/obj/item/device/chameleon:4:Chameleon projector;
 /obj/item/weapon/melee/energy/sword:5:Energy sword;/obj/item/weapon/pen/sleepypen:4:Sleepy pen;
 /obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;/obj/item/clothing/mask/gas/voice:3:Voice changer;
-/obj/item/weapon/aiModule/freeform:3:Freeform AI module;/obj/item/weapon/syndie/c4explosive:4:Low power explosive charge, with detonator);
-/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge, with detonator;/obj/item/weapon/reagent_containers/pill/cyanide:4:Cyanide Pill"}
+/obj/item/weapon/aiModule/freeform:3:Freeform AI module;/obj/item/weapon/syndie/c4explosive:4:Low power explosive charge;
+/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge;/obj/item/weapon/reagent_containers/pill/cyanide:4:Cyanide Pill"}
 
 	uplink_uses = 0
 

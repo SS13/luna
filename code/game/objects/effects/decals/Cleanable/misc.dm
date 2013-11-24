@@ -63,6 +63,9 @@
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "cobweb1"
 
+/obj/effect/decal/cleanable/cobweb/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	del(src)
+
 /obj/effect/decal/cleanable/molten_item
 	name = "gooey grey mass"
 	desc = "It looks like a melted... something."

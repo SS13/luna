@@ -206,6 +206,9 @@ client
 
 		body += "<div align='center'><b><font size='1'>[formatted_type]</font></b>"
 
+		if(src.holder && src.holder.marked_datum && src.holder.marked_datum == D)
+			body += "<br><font size='1' color='red'><b>Marked Object</b></font>"
+
 		body += "</div>"
 
 		body += "</div></td>"
@@ -235,7 +238,7 @@ client
 		body += "<option value>---</option>"
 
 		if(ismob(D))
-//			body += "<option value='byond://?src=\ref[src];give_spell=\ref[D]'>Give Spell</option>"
+			body += "<option value='byond://?src=\ref[src];give_spell=\ref[D]'>Give Spell</option>"
 //			body += "<option value='byond://?src=\ref[src];ninja=\ref[D]'>Make Space Ninja</option>"
 //			body += "<option value='byond://?src=\ref[src];godmode=\ref[D]'>Toggle Godmode</option>"
 			body += "<option value='byond://?src=\ref[src];build_mode=\ref[D]'>Toggle Build Mode</option>"
@@ -463,7 +466,7 @@ client
 			if(!src.holder)
 				return
 			src.holder.show_player_panel(MOB)
-			href_list["datumrefresh"] = href_list["mob_player_panel"]
+			href_list["datumrefresh"] = href_list["mob_player_panel"]*/
 		else if (href_list["give_spell"])
 			if(!href_list["give_spell"])
 				return
@@ -476,7 +479,17 @@ client
 				return
 			src.give_spell(MOB)
 			href_list["datumrefresh"] = href_list["give_spell"]
-		else if (href_list["ninja"])
+
+		else if(href_list["give_disease"])
+			var/mob/M = locate(href_list["give_disease"])
+			if(!istype(M))
+				usr << "This can only be used on instances of type /mob"
+				return
+
+			src.give_disease(M)
+			href_list["datumrefresh"] = href_list["give_spell"]
+
+/*		else if (href_list["ninja"])
 			if(!href_list["ninja"])
 				return
 			var/mob/MOB = locate(href_list["ninja"])
@@ -536,9 +549,9 @@ client
 			if(!src.holder)
 				return
 			if(usr.client)
-				usr.client.cmd_admin_drop_everything(MOB)*/
+				usr.client.cmd_admin_drop_everything(MOB)
 
-/*		else if (href_list["direct_control"])
+		else if (href_list["direct_control"])
 			if(!href_list["direct_control"])
 				return
 			var/mob/MOB = locate(href_list["direct_control"])
@@ -614,7 +627,7 @@ client
 				return
 			src.cmd_admin_emp(A)
 			href_list["datumrefresh"] = href_list["emp"]*/
-/*		else if (href_list["mark_object"])
+		else if (href_list["mark_object"])
 			if(!href_list["mark_object"])
 				return
 			var/datum/D = locate(href_list["mark_object"])
@@ -623,7 +636,7 @@ client
 			if(!src.holder)
 				return
 			src.holder.marked_datum = D
-			href_list["datumrefresh"] = href_list["mark_object"]*/
+			href_list["datumrefresh"] = href_list["mark_object"]
 		else if (href_list["rotatedatum"])
 			if(!href_list["rotatedir"])
 				return

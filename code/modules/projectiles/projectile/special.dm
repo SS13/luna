@@ -11,6 +11,48 @@
 		empulse(target, 1, 1)
 		return 1
 
+/obj/item/projectile/energy/teleshot
+	nodamage = 1
+	name = "teleshot"
+
+/obj/item/projectile/energy/teleshot/on_hit(var/atom/A, var/blocked = 0)
+	var/failchance = 5
+	var/obj/item/target = null
+
+	if(istype(shot_from, /obj/item/weapon/gun/energy/teleport_gun))
+		var/obj/item/weapon/gun/energy/teleport_gun/T = shot_from
+		target = T.target
+		failchance = 100 - T.reliability
+
+	if(target == null)
+		var/list/turfs = list(	)
+		for(var/turf/T in orange(10, src))
+			if(T.x>world.maxx-4 || T.x<4)	continue	//putting them at the edge is dumb
+			if(T.y>world.maxy-4 || T.y<4)	continue
+			turfs += T
+		if(turfs)
+			target = pick(turfs)
+	if(!target)
+		del(src)
+		return
+	spawn(0)
+		if(A)
+			var/turf/T = get_turf(A)
+			for(var/atom/movable/M in T)
+				if(istype(M, /obj/effects)) //sparks don't teleport
+					continue
+				if (M.anchored)
+					continue
+				if (istype(M, /atom/movable))
+					var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+					s.set_up(5, 1, M)
+					s.start()
+					if(prob(failchance)) //oh dear a problem, put em in deep space
+						do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy -5), getZLevel(Z_SPACE)), 0)
+					else
+						do_teleport(M, target, 1)
+		del(src)
+	return	..()
 
 /obj/item/projectile/bullet/gyro
 	name ="explosive bolt"

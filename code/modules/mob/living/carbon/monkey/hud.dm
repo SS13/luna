@@ -52,7 +52,7 @@
 	using = new h_type( src )
 	using.name = "act_intent"
 	using.dir = SOUTHWEST
-	using.icon_state = (mymob.a_intent == "hurt" ? "harm" : mymob.a_intent)
+	using.icon_state = mymob.a_intent
 	using.screen_loc = ui_acti
 	using.layer = 20
 	adding += using
@@ -263,7 +263,7 @@
 	intents += using
 	//ICONS
 	using = new h_type( src )
-	using.name = "hurt"
+	using.name = "harm"
 	using.icon_state = "harm"
 	using.screen_loc = "15:-11,15"
 	using.layer = 19

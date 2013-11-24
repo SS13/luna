@@ -32,6 +32,25 @@
 	item_state = "r_hands"
 	siemens_coefficient = 1
 
+/obj/item/clothing/mask/gas/pig
+	name = "pig mask"
+	desc = "A rubber pig mask."
+	icon_state = "pig"
+	item_state = "pig"
+	flags = FPRINT|TABLEPASS|BLOCKHAIR
+	flags_inv = HIDEFACE
+	w_class = 2
+
+/obj/item/clothing/mask/gas/horsehead
+	name = "horse head mask"
+	desc = "A mask made of soft vinyl and latex, representing the head of a horse."
+	icon_state = "horsehead"
+	item_state = "horsehead"
+	flags = FPRINT|TABLEPASS|BLOCKHAIR
+	flags_inv = HIDEFACE
+	w_class = 2
+	var/voicechange = 0
+
 /obj/item/clothing/mask/gas/cyborg
 	name = "cyborg visor"
 	desc = "Beep boop"

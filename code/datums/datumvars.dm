@@ -4,9 +4,11 @@ client
 		set name = "View Variables"
 		//set src in world
 
+		if(!D) return
 
 		var/title = ""
 		var/body = ""
+
 
 		if (istype(D, /atom))
 			var/atom/A = D

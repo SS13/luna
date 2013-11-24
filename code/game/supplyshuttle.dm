@@ -33,7 +33,7 @@ var/supply_shuttle_points = 50
 
 
 /obj/structure/plasticflaps //HOW DO YOU CALL THOSE THINGS ANYWAY
-	name = "Plastic flaps"
+	name = "plastic flaps"
 	desc = "Free-hanging flaps of hard plastic."
 	icon = 'stationobjs.dmi' //Change this.
 	icon_state = "plasticflaps"
@@ -43,10 +43,12 @@ var/supply_shuttle_points = 50
 	layer = 4
 
 
-/obj/structure/plasticflaps/CanPass(atom/A, turf/T)
+/obj/structure/plasticflaps/CanPass(atom/movable/A, target, height=0, air_group=0)
 	if(istype(A, /mob/living)) // You Shall Not Pass!
 		var/mob/living/M = A
 		if(M.lying)	return 1	// unless you're lying down
+
+	if(air_group) return 0 //AIRTIGHT
 
 	if(istype(A, /obj)) return 1
 

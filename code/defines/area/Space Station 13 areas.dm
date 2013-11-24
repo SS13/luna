@@ -82,14 +82,6 @@
 	luminosity = 1
 	ul_Lighting = 0
 
-/area/MechZone
-	name = "Mechanical Battle Zone"
-	icon_state = "start"
-	applyalertstatus = 0
-	requires_power = 0
-	luminosity = 1
-	ul_Lighting = 0
-
 /area/adminsafety
 	name = "Admin safe zone"
 	icon_state = "start"
@@ -723,10 +715,10 @@
 /area/tdome
 	name = "Thunderdome"
 	icon_state = "medbay"
+	requires_power = 1
+
+/area/tdome
 	applyalertstatus = 0
-	requires_power = 0
-	luminosity = 1
-	ul_Lighting = 0
 
 /area/tdome/tdome1
 	name = "Thunderdome (Team 1)"
@@ -943,7 +935,7 @@
 	name = "Wizard's Den"
 	icon_state = "yellow"
 	requires_power = 0
-
+	ul_Lighting = 0
 
 /area/quartermaster/office
 	name = "Quartermaster's Office"

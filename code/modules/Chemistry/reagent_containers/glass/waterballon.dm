@@ -1,6 +1,7 @@
 /*
  * Water Balloons
  */
+
 /obj/item/weapon/reagent_containers/glass/balloon
 	name = "water balloon"
 	desc = "A translucent balloon. There's nothing in it."
@@ -8,13 +9,14 @@
 	item_state = "balloon-empty"
 	icon = 'icons/obj/toy.dmi'
 	volume = 10
+	unacidable = 0 // if set to 1, no acid
 
 /obj/item/weapon/reagent_containers/glass/balloon/attack(mob/living/carbon/human/M as mob, mob/user as mob)
 	return
 
 /obj/item/weapon/reagent_containers/glass/balloon/on_reagent_change()
 	update_icon()
-	if(reagents.has_reagent("pacid", 1))
+	if(reagents.has_reagent("pacid", 1) && !unacidable)
 		visible_message("The acid chews through [src]!","You hear a splash.")
 		for(var/turf/splashturf in range(1,get_turf(src.loc)))
 			reagents.reaction(splashturf)
@@ -29,6 +31,7 @@
 			reagents.reaction(splashturf)
 			for(var/atom/A in splashturf)
 				reagents.reaction(A)
+				if(unacidable) reagents.reaction(A) // x2 fun!
 
 		icon_state = "burst"
 		sleep(5)

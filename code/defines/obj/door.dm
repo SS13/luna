@@ -36,6 +36,9 @@
 	icon_state = "pdoor1"
 	var/id = 1.0
 
+/obj/machinery/door/poddoor/ex_act(severity)
+	return
+
 /obj/machinery/door/window
 	name = "Interior Door"
 	icon = 'windoor.dmi'

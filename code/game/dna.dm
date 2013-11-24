@@ -302,63 +302,63 @@
 
 	M.disabilities = 0
 	M.sdisabilities = 0
+	var/oldmut = M.mutations
 	M.mutations = 0
 
 	M.see_in_dark = 2
 	M.see_invisible = 0
 
-
 	if(ismuton(NOBREATHBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mNobreath))
 			M << "\blue You stop breathing"
 			M.mutations |= mNobreath
 	if(ismuton(REMOTEVIEWBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mRemote))
 			M << "\blue Your mind expands"
 			M.mutations |= mRemote
 	if(ismuton(REGENERATEBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mRegen))
 			M << "\blue You feel strange"
 			M.mutations |= mRegen
 	if(ismuton(INCREASERUNBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mRun))
 			M << "\blue You feel quick"
 			M.mutations |= mRun
 	if(ismuton(REMOTETALKBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mRemotetalk))
 			M << "\blue You expand your mind outwards"
 			M.mutations |= mRemotetalk
 	if(ismuton(MORPHBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mMorph))
 			M.mutations |= mMorph
 			M << "\blue Your skin feels strange"
 	if(ismuton(BLENDBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mBlend))
 			M.mutations |= mBlend
 			M << "\blue You feel alone"
 	if(ismuton(HALLUCINATIONBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mHallucination))
 			M.mutations |= mHallucination
 			M << "\blue Your mind says 'Hello'"
 	if(ismuton(NOPRINTSBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mFingerprints))
 			M.mutations |= mFingerprints
 			M << "\blue Your fingers feel numb"
 	if(ismuton(SHOCKIMMUNITYBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mShock))
 			M.mutations |= mShock
 			M << "\blue You feel strange"
 	if(ismuton(SMALLSIZEBLOCK,M))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & mSmallsize))
 			M << "\blue Your skin feels rubbery"
 			M.mutations |= mSmallsize
 
 
 
 	if (isblockon(getblock(M.dna.struc_enzymes, HULKBLOCK,3),HULKBLOCK))
-		if(inj || prob(15))
+		if(inj || prob(15) || (oldmut & HULK))
 			M << "\blue Your muscles hurt."
-			M.mutations |= 8
+			M.mutations |= HULK
 	if (isblockon(getblock(M.dna.struc_enzymes, HEADACHEBLOCK,3),HEADACHEBLOCK))
 		M.disabilities |= 2
 		M << "\red You get a headache."
@@ -381,26 +381,26 @@
 		M.disabilities |= 8
 		M << "\red You twitch."
 	if (isblockon(getblock(M.dna.struc_enzymes, XRAYBLOCK,3),XRAYBLOCK))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & XRAY))
 			M << "\blue The walls suddenly disappear."
 			M.sight |= (SEE_MOBS|SEE_OBJS|SEE_TURFS)
 			M.see_in_dark = 8
 			M.see_invisible = 2
-			M.mutations |= 4
+			M.mutations |= XRAY
 	if (isblockon(getblock(M.dna.struc_enzymes, NERVOUSBLOCK,3),NERVOUSBLOCK))
 		M.disabilities |= 16
 		M << "\red You feel nervous."
 	if (isblockon(getblock(M.dna.struc_enzymes, FIREBLOCK,3),FIREBLOCK))
-		if(inj || prob(30))
+		if(inj || prob(30) || (oldmut & COLD_RESISTANCE))
 			M << "\blue Your body feels warm."
-			M.mutations |= 2
+			M.mutations |= COLD_RESISTANCE
 	if (isblockon(getblock(M.dna.struc_enzymes, BLINDBLOCK,3),BLINDBLOCK))
 		M.sdisabilities |= 1
 		M << "\red You can't seem to see anything."
 	if (isblockon(getblock(M.dna.struc_enzymes, TELEBLOCK,3),TELEBLOCK))
-		if(inj || prob(20))
+		if(inj || prob(20) || (oldmut & TK))
 			M << "\blue You feel smarter."
-			M.mutations |= 1
+			M.mutations |= TK
 	if (isblockon(getblock(M.dna.struc_enzymes, DEAFBLOCK,3),DEAFBLOCK))
 		M.sdisabilities |= 4
 		M.ear_deaf = 1
@@ -464,7 +464,7 @@
 		O.oxyloss += M.oxyloss
 		O.fireloss += M.fireloss
 		O.stat = M.stat
-		O.a_intent = "hurt"
+		O.a_intent = "harm"
 		for (var/obj/item/weapon/implant/I in implants)
 			I.loc = O
 			I.implanted = O

@@ -19,7 +19,6 @@
 
 //Process Loop
 /obj/machinery/shielding/capacitor/process()
-
 	if(stat & BROKEN)
 		charge = 0
 		update_icon()

@@ -37,7 +37,7 @@
 	desc = "A basic energy-based gun with two settings: stun and kill. This one is small enough to fit in pocket."
 	icon_state = "energy_ministun100"
 	modifystate = "energy_ministun"
-	charge_cost = 200
+	charge_cost = 150
 	w_class = 2
 
 	attack_self(mob/living/user as mob)
@@ -60,7 +60,7 @@
 		user.update_clothing()
 
 /obj/item/weapon/gun/energy/gun/nuclear
-	name = "Advanced Energy Gun"
+	name = "advanced energy gun"
 	desc = "An energy gun with an experimental miniaturized reactor."
 	icon_state = "nucgun"
 	item_state = "nucgun"

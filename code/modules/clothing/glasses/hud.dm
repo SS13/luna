@@ -78,14 +78,6 @@
 	origin_tech = "magnets=3;biotech=2;combat=2"
 	icon_state = "securityhud"
 
-/obj/item/clothing/glasses/hud/security/jensenshades
-	name = "Augmented shades"
-	desc = "Polarized bioneural eyewear, designed to augment your vision."
-	icon_state = "jensenshades"
-	item_state = "jensenshades"
-//	vision_flags = SEE_MOBS
-//	invisa_view = 2
-
 /obj/item/clothing/glasses/hud/security/process_hud(var/mob/M)
 	if(!M)	return
 	if(!M.client)	return

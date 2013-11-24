@@ -136,6 +136,13 @@ datum/controller/game_controller
 		world << "\red \b Unified Networks created in [(world.timeofday - start_network_creation)/10] seconds!"
 		diary << "Unified Networks created in [time2text(world.timeofday, "hh:mm.ss")]. It took [(world.timeofday-start_network_creation)/10] seconds."
 
+		//Surgeries
+		for(var/path in typesof(/datum/surgery))
+			if(path == /datum/surgery)
+				continue
+			var/datum/surgery/S = new path()
+			surgeries_list[S.name] = S
+
 		world << "\red \b Initializations complete."
 
 		/*var/list/l = new /list
@@ -227,7 +234,7 @@ datum/controller/game_controller
 			O:process()
 
 		for(var/datum/disease/Disease in active_diseases)
-			ticker_debug = Disease.type
+			ticker_debug = "disease [Disease.type] processing"
 			Disease.process()
 
 		//tgrid.Tick(0) // Part of Alfie's travel code

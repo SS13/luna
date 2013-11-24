@@ -1,4 +1,14 @@
-/obj/admins/var/showadminmessages = 1
+/obj/admins
+	name = "admins"
+	var/rank = null
+	var/owner = null
+	var/state = 1
+	//state = 1 for playing : default
+	//state = 2 for observing
+
+	var/showadminmessages = 1
+	var/datum/marked_datum
+
 ////////////////////////////////
 /proc/message_admins(var/text, var/admin_ref = 0)
 	var/rendered = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message\">[text]</span></span>"
@@ -296,7 +306,6 @@
 			<A href='?src=\ref[src];c_mode2=takeover'>Hostile Takeover (Alpha)</A><br>
 			<A href='?src=\ref[src];c_mode2=Extend-A-Traitormongous'>Auto Traitor (Beta)</A><br>
 			<!-- <A href='?src=\ref[src];c_mode2=among'>Traitor among us (Beta)</A><br><br> -->
-			<A href='?src=\ref[src];c_mode2=changeling'>Changeling (Alpha)</A><br>
 			Now: [master_mode]\n"})
 			usr << browse(dat, "window=c_mode")
 
@@ -349,8 +358,6 @@
 					master_mode = "traitoramongus"*/
 				if("Extend-A-Traitormongous")
 					master_mode = "Extend-A-Traitormongous"
-				if("changeling")
-					master_mode = "changeling"
 				else
 			log_admin("[key_name(usr)] set the mode as [master_mode].")
 			message_admins("\blue [key_name_admin(usr)] set the mode as [master_mode].", 1)
@@ -460,24 +467,8 @@
 	if (href_list["tdome1"])
 		if ((src.rank in list( "Administrator", "Secondary Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
 			var/mob/M = locate(href_list["tdome1"])
-			if(istype(M, /mob/living/silicon/ai))
-				alert("AI has no buiseness at Thunderdome.", null, null, null, null, null)
-				return
-				//strip their stuff before they teleport into a TD
-			for(var/obj/item/W in M)
-				if (!istype(W,/datum/organ))
-					M.u_equip(W)
-					if (M.client)
-						M.client.screen -= W
-					if (W)
-						W.loc = M.loc
-						W.dropped(M)
-						W.layer = initial(W.layer)
-			M.paralysis += 5
-			sleep(5)	//so they black out before warping
 			// M.revive()
-			M.loc = pick(tdome2)
-			M.team = 1
+			M.loc = pick(tdome1)
 			log_admin("[key_name(usr)] has sent [key_name(M)] to the thunderdome. (Team 1)")
 			message_admins("[key_name_admin(usr)] has sent [key_name_admin(M)] to the thunderdome. (Team 1)", 1)
 			M << "\blue You have been sent to the Thunderdome."
@@ -485,24 +476,8 @@
 	if (href_list["tdome2"])
 		if ((src.rank in list( "Administrator", "Secondary Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
 			var/mob/M = locate(href_list["tdome2"])
-			if(istype(M, /mob/living/silicon/ai))
-				alert("AI has no buiseness at Thunderdome.", null, null, null, null, null)
-				return
-				//strip their stuff before they teleport into a TD
-			for(var/obj/item/W in M)
-				if (!istype(W,/datum/organ))
-					M.u_equip(W)
-					if (M.client)
-						M.client.screen -= W
-					if (W)
-						W.loc = M.loc
-						W.dropped(M)
-						W.layer = initial(W.layer)
-			M.paralysis += 5
-			sleep(5)	//so they black out before warping
 			// M.revive()
-			M.loc = pick(tdome1)
-			M.team = 2
+			M.loc = pick(tdome2)
 			log_admin("[key_name(usr)] has sent [key_name(M)] to the thunderdome. (Team 2)")
 			message_admins("[key_name_admin(usr)] has sent [key_name_admin(M)] to the thunderdome. (Team 2)", 1)
 			M << "\blue You have been sent to the Thunderdome."
@@ -1128,14 +1103,6 @@
 				if (ok)
 					world << text("<B>A secret has been activated by []!</B>", usr.key)
 		return
-
-				/*if("revive")
-					if (src.rank in list("Super Administrator", "Coder", "Host", "Primary Administrator"))
-						for(var/mob/living/carbon/human/H in world)
-							if(H.z == 6)
-								H.revive()
-		return
-*/
 
 	if (href_list["secretsadmin"])
 		if ((src.rank in list( "Moderator", "Secondary Administrator", "Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
@@ -1805,7 +1772,13 @@
 			if(!istype(affecting, /datum/organ/external))    continue
 			affecting.heal_damage(1000, 1000)    //fixes getting hit after ingestion, killing you when game updates organ health
 			affecting.broken = 0
-			affecting.destroyed = 0
+			affecting.status = ORGAN_INTACT
+
+			if(!getbrain(H)) // In case you was debrained or decapitated
+				var/obj/item/organ/brain/brain = new /obj/item/organ/brain()
+				H.internal_organs += brain
+				brain.owner = H
+
 			for(var/datum/organ/external/wound/W in affecting.wounds)
 				W.stopbleeding()
 		H.vessel = new/datum/reagents(560)
@@ -1824,7 +1797,7 @@
 	src.updatehealth()
 	src.buckled = initial(src.buckled)
 	src.handcuffed = initial(src.handcuffed)
-	if(src.stat > 1) src.stat=0
+	src.stat = 0
 	..()
 	return
 

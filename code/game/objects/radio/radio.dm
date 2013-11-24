@@ -4,20 +4,20 @@
 	suffix = "\[3\]"
 	icon_state = "walkietalkie"
 	item_state = "walkietalkie"
-	var
-		last_transmission
-		frequency = 1459 //common chat
-		traitor_frequency = 0 //tune to frequency to unlock traitor supplies
-		obj/item/device/radio/patch_link = null
-		// /obj/item/weapon/syndicate_uplink/traitorradio = null
-		var/obj/item/device/uplink/radio/traitorradio = null
-		wires = WIRE_SIGNAL | WIRE_RECEIVE | WIRE_TRANSMIT
-		b_stat = 0
-		broadcasting = 0
-		listening = 1
-		freerange = 0 // 0 - Sanitize frequencies, 1 - Full range
-		list/channels = list() //see communications.dm for full list. First channes is a "default" for :h
+
+	var/last_transmission
+	var/frequency = 1459 //common chat
+	var/traitor_frequency = 0 //tune to frequency to unlock traitor supplies
+	var/obj/item/device/radio/patch_link = null
+	var/obj/item/device/uplink/headset/uplink = null
+	var/wires = WIRE_SIGNAL | WIRE_RECEIVE | WIRE_TRANSMIT
+	var/b_stat = 0
+	var/broadcasting = 0
+	var/listening = 1
+	var/freerange = 0 // 0 - Sanitize frequencies, 1 - Full range
+	var/list/channels = list() //see communications.dm for full list. First channes is a "default" for :h
 //			"Example" = FREQ_LISTENING|FREQ_BROADCASTING
+
 	flags = FPRINT | CONDUCT | TABLEPASS | ONBELT
 	throw_speed = 2
 	throw_range = 9
@@ -87,6 +87,12 @@
 
 	for (var/ch_name in channels)
 		dat+=text_sec_channel(ch_name, channels[ch_name])
+
+	if(uplink && uplink.active)
+		dat += "<BR><BR>"
+		dat += uplink.menu_message
+		dat += "<A href='byond://?src=\ref[src];uplink_lock=1'>Lock</A><BR>"
+
 	dat+={"[text_wires()]</TT></body></html>"}
 	user << browse(dat, "window=radio")
 	onclose(user, "radio")
@@ -142,27 +148,15 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 			new_frequency = sanitize_frequency(new_frequency)
 		set_frequency(new_frequency)
 
-		if (traitor_frequency && frequency == traitor_frequency)
-			usr.machine = null
-			usr << browse(null, "window=radio")
-			// now transform the regular radio, into a (disguised)syndicate uplink!
-			var/obj/item/device/uplink/radio/T = traitorradio
-			var/obj/item/device/radio/R = src
-			R.loc = T
-			T.loc = usr
-			//R.layer = 0
-			if (usr.client)
-				usr.client.screen -= R
-			if (usr.r_hand == R)
-				usr.u_equip(R)
-				usr.r_hand = T
-			else
-				usr.u_equip(R)
-				usr.l_hand = T
-			R.loc = T
-			T.layer = 20
-			T.attack_self(usr)
+		if (traitor_frequency && uplink && frequency == traitor_frequency)
+			uplink.unlock()
 			return
+
+	else if (href_list["uplink_lock"])
+		if (uplink)
+			uplink.lock()
+			return
+
 	else if (href_list["talk"])
 		broadcasting = text2num(href_list["talk"])
 	else if (href_list["listen"])

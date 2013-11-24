@@ -1,8 +1,7 @@
 /mob/living/carbon/human/update_clothing()
 	..()
 
-	if (monkeyizing)
-		return
+	if (monkeyizing) return
 
 	overlays = null
 
@@ -36,31 +35,6 @@
 			update_face()
 		if(!stand_icon || !lying_icon)
 			update_body()
-
-	if(organs)
-		var/datum/organ/external/rhand = organs["r_hand"]
-		var/datum/organ/external/rarm = organs["r_arm"]
-
-		var/datum/organ/external/lhand = organs["l_hand"]
-		var/datum/organ/external/larm = organs["l_arm"]
-
-		var/datum/organ/external/rleg = organs["r_leg"]
-		var/datum/organ/external/rfoot = organs["r_foot"]
-
-		var/datum/organ/external/lleg = organs["l_leg"]
-		var/datum/organ/external/lfoot = organs["l_foot"]
-
-		if (rhand.robotic && rarm.robotic)
-			overlays += image("icon" = 'human.dmi', "icon_state" = "cyberarm_right[!lying ? "_s" : "_l"]")
-
-		if (lhand.robotic && larm.robotic)
-			overlays += image("icon" = 'human.dmi', "icon_state" = "cyberarm_left[!lying ? "_s" : "_l"]")
-
-		if (rfoot.robotic && rleg.robotic)
-			overlays += image("icon" = 'human.dmi', "icon_state" = "cyberleg_right[!lying ? "_s" : "_l"]")
-
-		if (lfoot.robotic && lleg.robotic)
-			overlays += image("icon" = 'human.dmi', "icon_state" = "cyberleg_left[!lying ? "_s" : "_l"]")
 
 
 	if(buckled)
@@ -97,6 +71,10 @@
 		if (face_standing)
 			overlays += face_standing
 
+	for(var/datum/organ/external/org in organs)
+		if(org.status == ORGAN_ROBOTIC && ((org.name != "r_arm" && org.name != "l_arm") || !w_uniform))
+			overlays += image("icon" = 'robolimbs.dmi', "icon_state" = "[org.name][lying ? "_l" : ""]")
+
 	// Uniform
 	if (w_uniform)
 		w_uniform.screen_loc = ui_iclothing
@@ -108,7 +86,7 @@
 			if(!lying)
 				var/datum/organ/external/rhand = organs["r_hand"]
 				var/datum/organ/external/lhand = organs["l_hand"]
-				var/iconx = text("[][][][]",t1, (!(lying) ? "_s" : "_l"),(rhand.destroyed ? "_rhand" : null),(lhand.destroyed ? "_lhand" : null))
+				var/iconx = text("[][][][]",t1, (!(lying) ? "_s" : "_l"),(!rhand.status ? "_rhand" : null),(!lhand.status ? "_lhand" : null))
 				overlays += image('uniform.dmi',"[iconx]",MOB_LAYER)
 			else
 				var/iconx = "[t1]_l"
@@ -124,26 +102,25 @@
 		client.screen -= hud_used.intents
 		client.screen -= hud_used.mov_int
 
-
 	//Screenlocs for these slots are handled by the huds other_update()
 	//because theyre located on the 'other' inventory bar.
 
 	// Gloves
-	if (gloves)
+	if(gloves)
 		var/datum/organ/external/rhand = organs["r_hand"]
 		var/datum/organ/external/lhand = organs["l_hand"]
 		var/t1 = gloves.item_state
 		if (!t1)
 			t1 = gloves.icon_state
 		if(!lying)
-			if(!rhand.destroyed)
+			if(rhand.status)
 				overlays += image('hands.dmi',"[t1]_rhand",MOB_LAYER)
-			if(!lhand.destroyed)
+			if(lhand.status)
 				overlays += image('hands.dmi',"[t1]_lhand",MOB_LAYER)
 		else
-			if(!rhand.destroyed)
+			if(rhand.status)
 				overlays += image('hands.dmi',"[t1]2_rhand",MOB_LAYER)
-			if(!lhand.destroyed)
+			if(lhand.status)
 				overlays += image('hands.dmi',"[t1]2_lhand",MOB_LAYER)
 		if (gloves.blood_DNA)
 			var/icon/stain_icon = icon('blood.dmi', "bloodyhands[!lying ? "" : "2"]")
@@ -193,7 +170,7 @@
 	if (wear_suit)
 		if (istype(wear_suit, /obj/item/clothing/suit))
 			var/t1 = wear_suit.icon_state
-			overlays += image("icon" = 'suit.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
+			overlays += image("icon" = 'suit.dmi', "icon_state" = text("[][]", t1, (!lying ? null : "2")), "layer" = MOB_LAYER)
 		if (wear_suit.blood_DNA)
 			var/icon/stain_icon = null
 			if (istype(wear_suit, /obj/item/clothing/suit/armor/vest || /obj/item/clothing/suit/wcoat || /obj/item/clothing/suit/armor/a_i_a_ptank))
@@ -209,7 +186,7 @@
 				handcuffed.loc = loc
 				handcuffed.layer = initial(handcuffed.layer)
 				handcuffed = null
-			if ((l_hand || r_hand))
+			if (l_hand || r_hand)
 				var/h = hand
 				hand = 1
 				drop_item()
@@ -229,7 +206,7 @@
 	if (wear_mask)
 		if (istype(wear_mask, /obj/item/clothing/mask))
 			var/t1 = wear_mask.icon_state
-			overlays += image("icon" = 'mask.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
+			overlays += image("icon" = 'mask.dmi', "icon_state" = text("[][]", t1, (!lying ? null : "2")), "layer" = MOB_LAYER)
 			if (!istype(wear_mask, /obj/item/clothing/mask/cigarette))
 				if (wear_mask.blood_DNA)
 					var/icon/stain_icon = icon('blood.dmi', "maskblood[!lying ? "" : "2"]")
@@ -311,10 +288,10 @@
 		client.screen += contents
 
 	if (r_hand)
-		overlays += image("icon" = 'items_righthand.dmi', "icon_state" = r_hand.item_state ? r_hand.item_state : r_hand.icon_state, "layer" = MOB_LAYER+1)
+		overlays += image("icon" = 'items_righthand.dmi', "icon_state" = r_hand.item_state ? r_hand.item_state : r_hand.icon_state, "layer" = MOB_LAYER+0.1)
 		r_hand.screen_loc = ui_rhand
 	if (l_hand)
-		overlays += image("icon" = 'items_lefthand.dmi', "icon_state" = l_hand.item_state ? l_hand.item_state : l_hand.icon_state, "layer" = MOB_LAYER+1)
+		overlays += image("icon" = 'items_lefthand.dmi', "icon_state" = l_hand.item_state ? l_hand.item_state : l_hand.icon_state, "layer" = MOB_LAYER+0.1)
 		l_hand.screen_loc = ui_lhand
 
 
@@ -396,7 +373,7 @@
 	if(organs)
 		var/datum/organ/external/org = organs["head"]
 		if(org)
-			if(org.destroyed)
+			if(!org.status)
 				del(face_standing)
 				del(face_lying)
 				return
@@ -441,7 +418,5 @@
 	del(mouth_s)
 	del(facial_l)
 	del(facial_s)
-	//del(hair_l)
-	//del(hair_s)
 	del(eyes_l)
 	del(eyes_s)

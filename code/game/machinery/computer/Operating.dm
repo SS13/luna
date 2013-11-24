@@ -1,3 +1,16 @@
+/obj/machinery/computer/operating
+	name = "Operating Computer"
+	density = 1
+	anchored = 1.0
+	icon = 'computer.dmi'
+	icon_state = "operating"
+	circuit = "/obj/item/weapon/circuitboard/computer/operating"
+
+	var/mob/living/carbon/human/victim = null
+
+	var/obj/machinery/optable/table = null
+	var/id = 0.0
+
 /obj/machinery/computer/operating/New()
 	..()
 	spawn(100)
@@ -43,7 +56,7 @@
 <B>Toxins Damage:</B> [src.victim.toxloss]<BR>
 <B>Fire Damage:</B> [src.victim.getFireLoss()]<BR>
 <B>Suffocation Damage:</B> [src.victim.oxyloss]<BR>
-<B>Patient Status:</B> [src.victim.stat ? "Non-responsive" : "Stable"]<BR>
+<B>Patient Status:</B> [src.victim.stat ? "Non-responsive" : "Stable"]<BR><BR>
 "}
 	else
 		src.victim = null

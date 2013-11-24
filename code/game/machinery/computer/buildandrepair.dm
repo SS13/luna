@@ -122,6 +122,9 @@
 /obj/item/weapon/circuitboard/computer/mecha_control
 	name = "Circuit Board (Exosuit Control Console)"
 	computertype = "/obj/machinery/computer/mecha"
+/obj/item/weapon/circuitboard/computer/prisoner
+	name = "Circuit board (Prisoner Management Console)"
+	computertype = "/obj/machinery/computer/prisoner"
 
 /obj/structure/frame
 	density = 1

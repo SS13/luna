@@ -183,3 +183,29 @@
 	slowdown = 3
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank, /obj/item/weapon/gun/energy,/obj/item/weapon/reagent_containers/spray/pepper,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs)
 	armor = list(melee = 30, bullet = 15, laser = 30,energy = 10, bomb = 10, bio = 100, rad = 50)
+
+
+//TD Rigs
+/obj/item/clothing/suit/space/rig/tdome
+	desc = "A special suit that protects against hazardous, low pressure environments. Has an additional layer of armor."
+	armor = list(melee = 5, bullet = 15, laser = 30,energy = 10, bomb = 10, bio = 100, rad = 50)
+
+/obj/item/clothing/suit/space/rig/tdome/red
+	name = "red space suit"
+	icon_state = "tdr"
+
+/obj/item/clothing/suit/space/rig/tdome/green
+	name = "green space suit"
+	icon_state = "tdg"
+
+/obj/item/clothing/head/helmet/space/rig/tdome
+	desc = "A special helmet designed for work in a hazardous, low pressure environment. Has an additional layer of armor."
+	armor = list(melee = 5, bullet = 15, laser = 30,energy = 10, bomb = 10, bio = 100, rad = 50)
+
+/obj/item/clothing/head/helmet/space/rig/tdome/red
+	name = "red space helmet"
+	icon_state = "tdrh"
+
+/obj/item/clothing/head/helmet/space/rig/tdome/green
+	name = "green space helmet"
+	icon_state = "tdgh"

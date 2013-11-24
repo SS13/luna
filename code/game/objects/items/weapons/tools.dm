@@ -112,7 +112,7 @@ WELDINGTOOOL
 	origin_tech = "engineering=1"
 	var/welding = 0.0
 	var/status = 0	//flamethrower construction :shobon:
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | TABLEPASS | CONDUCT
 	force = 3.0
 	throwforce = 5.0
 	throw_speed = 1
@@ -450,7 +450,8 @@ WELDINGTOOOL
 	origin_tech = "materials=4;plasmatech=3;engineering=3"
 	desc = "A rock cutter that uses bursts of hot plasma. You could use it to cut limbs off of xenos! Or, you know, mine stuff."
 	flags = FPRINT | TABLEPASS| CONDUCT | OPENCONTAINER
-	force = 7.0
+	force = 7
+	slash = 0
 	m_amt = 4500
 	g_amt = 300
 
@@ -471,7 +472,6 @@ WELDINGTOOOL
 
 /obj/item/weapon/weldingtool/plasmacutter/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	return
-
 
 // return fuel amount
 /obj/item/weapon/weldingtool/plasmacutter/get_fuel()
@@ -503,6 +503,7 @@ WELDINGTOOOL
 			src.welding = 0
 			src.force = 7
 			src.damtype = "brute"
+			slash = 0
 		var/turf/location = user.loc
 		if (istype(location, /turf))
 			location.hotspot_expose(SPARK_TEMP, 50, 1)
@@ -551,10 +552,50 @@ WELDINGTOOOL
 			return 0
 		user << "\blue You will now cut when you attack."
 		src.force = 25
+		slash = 1
 		src.damtype = "fire"
 		processing_items.Add(src)
 	else
 		user << "\blue Not cutting anymore."
 		src.force = 7
+		slash = 0
 		src.damtype = "brute"
 	return
+
+
+/obj/item/weapon/weldingtool/attack(mob/living/carbon/M as mob, mob/living/user as mob)
+	if(!ishuman(M) || !ishuman(user) || user.a_intent != "help")
+		return ..()
+
+	var/mob/living/carbon/human/H = M
+	var/mob/living/carbon/human/user2 = user
+
+	var/t = user2.zone_sel.selecting
+	var/datum/organ/external/affecting = H.organs[t]
+
+	if(t in list("eyes", "mouth", "groin", "chest") || !affecting)
+		return ..()
+
+	if(affecting.status != ORGAN_ROBOTIC)
+		return ..()
+
+	if(remove_fuel(2, user))
+		if(M != user)
+			for(var/mob/O in viewers(M, null))
+				O.show_message("\red [user] has fixed some dents on [M]'s robotic [affecting.display_name].", 1)
+		else
+			var/t_himself = "it's"
+			if(user.gender == MALE)
+				t_himself = "his"
+			else if (user.gender == FEMALE)
+				t_himself = "her's"
+
+			for (var/mob/O in viewers(M, null))
+				O.show_message("\red [M] has fixed some dents on [t_himself] robotic [affecting.display_name].", 1)
+
+		if (affecting.heal_damage(10, 0))
+			H.UpdateDamageIcon()
+		else
+			H.UpdateDamage()
+
+		M.updatehealth()

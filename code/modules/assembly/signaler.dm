@@ -5,7 +5,7 @@
 	item_state = "signaler"
 	m_amt = 1000
 	g_amt = 200
-	w_amt = 100
+
 	origin_tech = "magnets=1"
 	wires = WIRE_RECEIVE | WIRE_PULSE | WIRE_RADIO_PULSE | WIRE_RADIO_RECEIVE
 
@@ -110,8 +110,10 @@
 
 		var/time = time2text(world.realtime,"hh:mm:ss")
 		var/turf/T = get_turf(src)
-		if(usr.key)
+		if(usr && usr.key)
 			lastsignalers.Add("[time] <B>:</B> [usr.key] used [src] @ location ([T.x],[T.y],[T.z]) <B>:</B> [format_frequency(frequency)]/[code]")
+		else
+			lastsignalers.Add("[time] <B>:</B> UNKNOWN/ASSEMBLY used [src] @ location ([T.x],[T.y],[T.z]) <B>:</B> [format_frequency(frequency)]/[code]")
 
 		return
 /*

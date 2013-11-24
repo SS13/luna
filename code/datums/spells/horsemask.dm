@@ -11,29 +11,32 @@
 	invocation_type = "shout"
 	range = 7
 	selection_type = "range"
-	var/list/compatible_mobs = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
+	var/list/compatible_mobs = list(/mob/living/carbon/human, /mob/living/carbon/human/dummy)
 
 /obj/effect/proc_holder/spell/targeted/horsemask/cast(list/targets, mob/user = usr)
 	if(!targets.len)
 		user << "<span class='notice'>No target found in range.</span>"
 		return
 
-	var/mob/living/carbon/target = targets[1]
+	var/mob/living/carbon/human/target = targets[1]
 
 	if(!(target.type in compatible_mobs))
 		user << "<span class='notice'>It'd be stupid to curse [target] with a horse's head!</span>"
 		return
 
-	if(!(target in oview(range)))//If they are not  in overview after selection.
+	if(!(target in oview(range)))//If they are not in overview after selection.
 		user << "<span class='notice'>They are too far away!</span>"
 		return
 
-	var/obj/item/clothing/mask/horsehead/magichead = new /obj/item/clothing/mask/horsehead
+	var/obj/item/clothing/mask/gas/horsehead/magichead = new /obj/item/clothing/mask/gas/horsehead
 	magichead.canremove = 0		//curses!
+	magichead.unacidable = 1	//curses!
 	magichead.flags_inv = null	//so you can still see their face
 	magichead.voicechange = 1	//NEEEEIIGHH
-	target.visible_message(	"<span class='danger'>[target]'s face  lights up in fire, and after the event a horse's head takes its place!</span>", \
+	target.visible_message(	"<span class='danger'>[target]'s face lights up in fire, and after the event a horse's head takes its place!</span>", \
 							"<span class='danger'>Your face burns up, and shortly after the fire you realise you have the face of a horse!</span>")
-	target.equip_to_slot(magichead, slot_wear_mask)
+	del target.wear_mask
+	target.equip_if_possible(magichead, target.slot_wear_mask)
+	target.update_clothing()
 
 	flick("e_flash", target.flash)

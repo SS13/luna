@@ -165,7 +165,7 @@
 		M << "You cannot attack people before the game has started."
 		return
 
-	if (M.a_intent == "hurt")
+	if (M.a_intent == "harm")
 		if (istype(M.wear_mask, /obj/item/clothing/mask/muzzle))
 			return
 		if (health > 0)
@@ -263,7 +263,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.cell))
+			if (M.a_intent == "harm" && !(M.gloves && M.gloves.cell))
 				var/damage = rand(1, 9)
 
 				if (prob(90))

@@ -25,7 +25,7 @@
 	examine()
 		set src in view()
 		..()
-		if (!(usr in view(2)) && usr!=src.loc) return
+		if (!usr in view(2) && usr!=src.loc) return
 		usr << "\blue It contains:"
 		if(reagents && reagents.reagent_list.len)
 			for(var/datum/reagent/R in reagents.reagent_list)
@@ -38,7 +38,7 @@
 		set category = "Object"
 		set src in view(1)
 		var/N = input("Amount per transfer from this:","[src]") as null|anything in possible_transfer_amounts
-		if (N)
+		if(N)
 			amount_per_transfer_from_this = N
 
 	ex_act(severity)
@@ -81,7 +81,7 @@
 	icon_state = "hvwatertank"
 	New()
 		..()
-		reagents.add_reagent("water",1000)
+		reagents.add_reagent("water",2000)
 
 /obj/structure/reagent_dispensers/fueltank
 	name = "fueltank"
@@ -94,11 +94,10 @@
 
 
 	bullet_act(var/obj/item/projectile/Proj)
-		if(1)
-		//if(istype(Proj ,/obj/item/projectile/beam)||istype(Proj,/obj/item/projectile/bullet))
-		//	message_admins("[key_name_admin(Proj.firer)] triggered a fueltank explosion.")
-		//	log_game("[key_name(Proj.firer)] triggered a fueltank explosion.")
-			explosion(src.loc,-1,0,3)
+		if(istype(Proj ,/obj/item/projectile/beam)||istype(Proj,/obj/item/projectile/bullet))
+			message_admins("[key_name_admin(Proj.firer)] triggered a fueltank explosion.")
+			log_game("[key_name(Proj.firer)] triggered a fueltank explosion.")
+			explosion(src.loc,-1,0,2)
 			if(src)
 				del(src)
 
@@ -120,6 +119,13 @@
 		..()
 		reagents.add_reagent("fuel",1000)
 
+	bullet_act(var/obj/item/projectile/Proj)
+		if(istype(Proj ,/obj/item/projectile/beam)||istype(Proj,/obj/item/projectile/bullet))
+			message_admins("[key_name_admin(Proj.firer)] triggered a fueltank explosion.")
+			log_game("[key_name(Proj.firer)] triggered a fueltank explosion.")
+			explosion(src.loc,-1,0,3)
+			if(src)
+				del(src)
 
 /obj/structure/reagent_dispensers/peppertank
 	name = "Pepper Spray Refiller"
@@ -156,7 +162,7 @@
 		reagents.add_reagent("beer",1000)
 
 /obj/structure/reagent_dispensers/beerkeg/blob_act()
-	explosion(src.loc,0,3,5,7,10)
+	explosion(src.loc,-1,0,1)
 	del(src)
 
 /obj/structure/reagent_dispensers/virusfood
@@ -165,7 +171,34 @@
 	icon_state = "virusfoodtank"
 	amount_per_transfer_from_this = 10
 	anchored = 1
+	density = 0
 
 	New()
 		..()
 		reagents.add_reagent("virusfood", 1000)
+
+
+/obj/structure/reagent_dispensers/thunderdome
+	icon_state = "virusfoodtank"
+	amount_per_transfer_from_this = 1000
+	possible_transfer_amounts = null
+	anchored = 1
+	density = 0
+
+/obj/structure/reagent_dispensers/thunderdome/acid
+	icon_state = "peppertank"
+	name = "Acid Mix Dispenser"
+	desc = "Let's burn some faces!"
+
+	New()
+		..()
+		reagents.add_reagent("sacid", 1000)
+		reagents.add_reagent("pacid", 1000)
+
+/obj/structure/reagent_dispensers/thunderdome/water
+	name = "Water Dispenser"
+	desc = "YOU ARE A HORRIBLE PERSON"
+
+	New()
+		..()
+		reagents.add_reagent("water", 1000)

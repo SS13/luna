@@ -114,8 +114,8 @@
 	icon = 'screen1.dmi'
 	icon_state = "x"
 	var/btype = 0 // 0=radio, 1=prox, 2=time
-	var/btemp1 = 1500
-	var/btemp2 = 1000	// tank temperatures
+	var/btemp1 = 1000
+	var/btemp2 = 800	// tank temperatures
 
 /obj/spawner/newbomb/New()
 	..()

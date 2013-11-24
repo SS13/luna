@@ -96,8 +96,6 @@
 			for(var/atom/movable/A as mob|obj in src)
 				A.loc = src.loc
 				ex_act(severity)
-				//Foreach goto(35)
-			//SN src = null
 			del(src)
 			return
 		if(2.0)
@@ -105,8 +103,6 @@
 				for(var/atom/movable/A as mob|obj in src)
 					A.loc = src.loc
 					ex_act(severity)
-					//Foreach goto(108)
-				//SN src = null
 				del(src)
 				return
 		if(3.0)
@@ -114,8 +110,6 @@
 				for(var/atom/movable/A as mob|obj in src)
 					A.loc = src.loc
 					ex_act(severity)
-					//Foreach goto(181)
-				//SN src = null
 				del(src)
 				return
 		else
@@ -136,7 +130,6 @@
 			return
 		if(2.0)
 			if (prob(50))
-				//SN src = null
 				del(src)
 				return
 		else
@@ -255,17 +248,17 @@
 					var/imp = ""
 					var/bled = ""
 					if(e.wounds.len >= 1)
-						bled = "Bleeding:"
+						bled = "Bleeding "
 					if(e.broken)
-						AN = "[e.wound]:"
+						AN = "[e.wound] "
 					if(e.open)
-						open = "OPEN:"
+						open = "OPEN "
 					if(!e.clean)
-						infected = "UNCLEAN:"
+						infected = "UNCLEAN "
 					if(e.split)
-						e.split = ":SPLT"
+						e.split = "SPLT "
 					if(e.implant)
-						imp = "IMPLANT:"
+						imp = "IMPLANT "
 					if(!AN && !open && !infected & !imp)
 						AN = "None"
 					dat += "<td>[e.display_name]</td><td>[e.burn_dam]</td><td>[e.brute_dam]</td><td>[bled][AN][open][infected][imp]</font></td>"

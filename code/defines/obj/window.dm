@@ -14,8 +14,6 @@
 
 // Prefab windows to make it easy...
 
-
-
 // Basic
 
 /obj/structure/window/basic/north

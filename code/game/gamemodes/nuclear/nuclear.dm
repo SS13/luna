@@ -42,8 +42,8 @@
 /obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;
 /obj/item/clothing/mask/gas/voice:3:Voice changer;
 /obj/item/weapon/aiModule/freeform:3:Freeform AI module;
-/obj/item/weapon/syndie/c4explosive:4:Low power explosive charge, with detonator);
-/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge, with detonator;
+/obj/item/weapon/syndie/c4explosive:4:Low power explosive charge;
+/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge;
 /obj/item/weapon/reagent_containers/pill/cyanide:2:Cyanide Pill
 	"}
 

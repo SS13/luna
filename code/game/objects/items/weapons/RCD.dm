@@ -40,6 +40,8 @@ RCD
 	throw_speed = 1
 	throw_range = 5
 	w_class = 3.0
+	m_amt = 75000
+	g_amt = 15000
 	origin_tech = "engineering=4;materials=2"
 
 /obj/item/weapon/rcd_ammo

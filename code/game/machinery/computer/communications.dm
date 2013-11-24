@@ -1,4 +1,33 @@
 // The communications computer
+/obj/machinery/computer/communications
+	name = "Communications Console"
+	icon_state = "comm"
+	req_access = list(access_heads)
+	circuit = "/obj/item/weapon/circuitboard/computer/communications"
+	brightnessred = 0
+	brightnessgreen = 2
+	brightnessblue = 0
+	var/prints_intercept = 1
+	var/authenticated = 0
+	var/list/messagetitle = list()
+	var/list/messagetext = list()
+	var/currmsg = 0
+	var/aicurrmsg = 0
+	var/state = STATE_DEFAULT
+	var/aistate = STATE_DEFAULT
+	var/const
+		STATE_DEFAULT = 1
+		STATE_CALLSHUTTLE = 2
+		STATE_CANCELSHUTTLE = 3
+		STATE_MESSAGELIST = 4
+		STATE_VIEWMESSAGE = 5
+		STATE_DELMESSAGE = 6
+		STATE_STATUSDISPLAY = 7
+
+	var/status_display_freq = "1435"
+	var/stat_msg1
+	var/stat_msg2
+
 
 /obj/machinery/computer/communications/process()
 	..()
@@ -32,10 +61,10 @@
 			post_status("alert", "default")
 		if("call-prison")
 			PrisonControl.start()
-			radioalert("Prison Notice", "Prisoner Shuttle launching in one minute.")
+			usr << "Labor camp shuttle launching in 20 seconds."
 		if("recall-prison")
 			PrisonControl.recall()
-			radioalert("Prison Notice", "Prisoner Shuttle returning in two minutes.")
+			usr << "Labor camp shuttle returning in 20 seconds."
 		if("callshuttle")
 			src.state = STATE_DEFAULT
 			if(src.authenticated)
@@ -193,8 +222,7 @@
 				else
 					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=recall-prison'>Recall Prison Shutle</A> \]"
 
-				//dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shutle</A> \]"
-				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=nolockdown'>Disable Lockdown</A> \]"
+				//dat += "<BR>\[ <A HREF='?src=\ref[src];operation=nolockdown'>Disable Lockdown</A> \]"
 				var/area/CurArea = get_area(src)
 				if (CurArea.redalert)
 					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=toggle-redalert'>Cancel Red Alert</A> \]"
@@ -331,7 +359,7 @@
 
 
 /proc/call_shuttle_proc(var/mob/user)
-	if ((!( ticker ) || main_shuttle.location == 0))
+	if (!ticker  || main_shuttle.location == 0)
 		return
 
 	if (LaunchControl.online)
@@ -346,11 +374,11 @@
 		return
 	if(ticker.mode.name == "nuclear emergency" && world.time < 36000)
 		// on nuke, only allow evacuation after an hour
-		user << "The pods are not responding.. how odd."
+		user << "The pods are not responding... how odd..."
 		return
 	if(ticker.mode.name == "zombie" && world.time < 36000)
-		// on nuke, only allow evacuation after an hour
-		user << "The pods are not responding.. how odd."
+		// on zombies, only allow evacuation after an hour
+		user << "The pods are not responding... how odd..."
 		return
 
 	LaunchControl.start()
@@ -362,7 +390,7 @@
 	return
 
 /proc/cancel_call_proc(var/mob/user)
-	if ((!( ticker ) || main_shuttle.location != 1 || main_shuttle.direction == 0 || LaunchControl.timeleft() < 30))
+	if (!ticker || main_shuttle.location != 1 || main_shuttle.direction == 0 || LaunchControl.timeleft() < 30)
 		return
 	if( ticker.mode.name == "blob" )
 		return
@@ -383,7 +411,6 @@
 	if(!frequency) return
 
 
-
 	var/datum/signal/status_signal = new
 	status_signal.source = src
 	status_signal.transmission_method = 1
@@ -399,20 +426,16 @@
 	frequency.post_signal(src, status_signal)
 
 
-
-	/*
+/*
 		receive_signal(datum/signal/signal)
 
 		switch(signal.data["command"])
 			if("blank")
 				mode = 0
-
 			if("shuttle")
 				mode = 1
-
 			if("message")
 				set_message(signal.data["msg1"], signal.data["msg2"])
-
 			if("alert")
 				set_picture(signal.data["picture_state"])
 */

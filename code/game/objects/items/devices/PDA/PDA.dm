@@ -27,7 +27,7 @@
 	var/ttone = "beep" //The ringtone!
 	var/honkamt = 0 //How many honks left when infected with honk.exe
 	var/mimeamt = 0 //How many silence left when infected with mime.exe
-	var/note = "Congratulations, your station has chosen the Thinktronic 5230 Personal Data Assistant!" //Current note in the notepad function.
+	var/note = "Congratulations, your ship has chosen the Thinktronic 5230 Personal Data Assistant!" //Current note in the notepad function.
 	var/cart = "" //A place to stick cartridge menu information
 
 	var/obj/item/device/uplink/pda/uplink = null
@@ -95,6 +95,24 @@
 	icon_state = "pda-clown"
 	desc = "A portable microcomputer by Thinktronic Systems, LTD. The surface is coated with polytetrafluoroethylene and banana drippings."
 	ttone = "honk"
+
+/obj/item/device/pda/clown/HasEntered(AM as mob|obj) //Clown PDA is slippery.
+	if (istype(AM, /mob/living/carbon))
+		var/mob/M =	AM
+		if ((istype(M, /mob/living/carbon/human) && (istype(M:shoes, /obj/item/clothing/shoes) && M:shoes.flags&NOSLIP)) || M.m_intent == "walk") // tg one, make it work later -- Nikie
+		//if ((istype(M, /mob/living/carbon/human) && istype(M:shoes, /obj/item/clothing/shoes/galoshes)) || M.m_intent == "walk") // bay12 one, now tg one works -- ACCount
+			return
+
+		if (istype(M, /mob/living/carbon/human) && M.real_name != src.owner && istype(src.cartridge, /obj/item/weapon/cartridge/clown))
+			src.cartridge:honk_charges++
+
+		M.stop_pulling()
+		M << "\blue You slipped on the PDA!"
+		playsound(src.loc, 'slip.ogg', 50, 1, -3)
+		spawn(2)
+			step(M, M.dir)
+		M.Stun(8)
+		M.Weaken(5)
 
 /obj/item/device/pda/mime
 	default_cartridge = /obj/item/weapon/cartridge/mime
@@ -270,7 +288,7 @@
 
 			if (1)
 				dat += "<h4><img src=pda_notes.png> Notekeeper V2.1</h4>"
-				if ((!isnull(uplink)) && uplink.active)
+				if (!isnull(uplink) && uplink.active)
 					dat += "<a href='byond://?src=\ref[src];choice=Lock'> Lock</a><br>"
 				else
 					dat += "<a href='byond://?src=\ref[src];choice=Edit'> Edit</a><br>"
@@ -473,10 +491,9 @@
 				if("Ringtone")
 					var/t = sanitize(input(U, "Please enter new ringtone", name, ttone)) as text
 					if (in_range(src, U) && loc == U)
-						if (t)
-							if ((uplink) && (cmptext(t,uplink.unlocking_code)))
+						if(t)
+							if(uplink && cmptext(trim(t), trim(uplink.unlocking_code)))
 								if(uplink.active)
-									U << "The PDA uplink is already unlocked."
 									mode = 1
 								else
 									U << "The PDA softly beeps."
@@ -812,7 +829,7 @@
 							user.show_message(text("\red <b>Warning: [D.form] Detected</b>\nName: [D.name].\nType: [D.spread].\nStage: [D.stage]/[D.max_stages].\nPossible Cure: [D.cure]"))
 					if (M.reagents && M.reagents:get_reagent_amount("inaprovaline"))
 						user.show_message(text("\blue Bloodstream Analysis located [M.reagents:get_reagent_amount("inaprovaline")] units of rejuvenation chemicals."), 1)
-					if (M.brainloss >= 100 || istype(M, /mob/living/carbon/human) && M:brain_op_stage == 4.0)
+					if (M.brainloss >= 100 || istype(M, /mob/living/carbon) && !getbrain(M))
 						user.show_message(text("\red Subject is brain dead."), 1)
 					else if (M.brainloss >= 60)
 						user.show_message(text("\red Severe brain damage detected. Subject likely to have mental retardation."), 1)
@@ -901,22 +918,6 @@
 			src.id.loc = src.loc.loc
 		else src.id.loc = src.loc
 	..()
-
-/obj/item/device/pda/clown/HasEntered(AM as mob|obj) //Clown PDA is slippery.
-	if (istype(AM, /mob/living/carbon))
-		var/mob/M =	AM
-		if ((istype(M, /mob/living/carbon/human) && (istype(M:shoes, /obj/item/clothing/shoes) && M:shoes.flags&NOSLIP)) || M.m_intent == "walk") // tg one, make it work later -- Nikie
-		//if ((istype(M, /mob/living/carbon/human) && istype(M:shoes, /obj/item/clothing/shoes/galoshes)) || M.m_intent == "walk") // bay12 one, now tg one works -- ACCount
-			return
-
-		if (istype(M, /mob/living/carbon/human) && M.real_name != src.owner && istype(src.cartridge, /obj/item/weapon/cartridge/clown))
-			src.cartridge:honk_charges++
-
-		M.pulling = null
-		M << "\blue You slipped on the PDA!"
-		playsound(src.loc, 'slip.ogg', 50, 1, -3)
-		M.stunned = 8
-		M.weakened = 5
 
 /obj/item/device/pda/verb/verb_remove_id()
 	set category = "Object"

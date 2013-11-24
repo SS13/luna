@@ -296,7 +296,7 @@
 					src.diskette = null
 
 	else if (href_list["save_disk"]) //Save to disk!
-		if ((isnull(src.diskette)) || (src.diskette.read_only) || (isnull(src.active_record)))
+		if (isnull(src.diskette) || src.diskette.read_only || isnull(src.active_record))
 			src.temp = "Save error."
 			src.updateUsrDialog()
 			return
@@ -332,9 +332,9 @@
 			selected = null
 
 //Can't clone without someone to clone.  Or a pod.  Or if the pod is busy. Or full of gibs.
-		if ((!selected) || (!src.pod1) || (src.pod1.occupant) || (src.pod1.mess))
+		if (!selected || !src.pod1 || src.pod1.occupant || src.pod1.mess)
 			src.temp = "Unable to initiate cloning cycle." // most helpful error message in THE HISTORY OF THE WORLD
-		else if (src.pod1.growclone(selected, C.fields["name"], C.fields["UI"], C.fields["SE"], C.fields["mind"]))
+		else if (src.pod1.growclone(selected, C.fields["name"], C.fields["UI"], C.fields["SE"], C.fields["mind"], C.fields["mutantrace"]))
 			src.temp = "Cloning cycle activated."
 			geneticsrecords.Remove(C)
 			del(C)
@@ -364,12 +364,13 @@
 	if(!ckey && subject && subject.mind)
 		ckey = subject.mind.key
 
-	var/datum/data/record/R = new /datum/data/record(  )
+	var/datum/data/record/R = new /datum/data/record()
 	R.fields["ckey"] = ckey
 	R.fields["name"] = subject.real_name
 	R.fields["id"] = copytext(md5(subject.real_name), 2, 6)
 	R.fields["UI"] = subject.dna.uni_identity
 	R.fields["SE"] = subject.dna.struc_enzymes
+	R.fields["mutantrace"] = subject.dna.mutantrace
 
 	//Add an implant if needed
 	var/obj/item/weapon/implant/health/imp =locate(/obj/item/weapon/implant/health, subject)
@@ -439,10 +440,10 @@
 	var/mob/selected = null
 	for(var/client/C)
 		//Dead people only thanks!
-		if ((C.mob.stat != 2))
+		if (C.mob && C.mob.stat != 2)
 			continue
 		//They need a brain!
-		if ((istype(C.mob, /mob/living/carbon/human)) && (C.mob:brain_op_stage >= 4.0))
+		if (istype(C.mob, /mob/living/carbon/human) && !getbrain(C.mob))
 			continue
 
 		if ("[C.ckey]" == find_key)
@@ -450,7 +451,7 @@
 			break
 	if(!selected) //Search for a ghost if dead body with client isn't found.
 		for(var/mob/dead/observer/ghost in world)
-			if (ghost.corpse.mind.key == find_key)
+			if (ghost.corpse && ghost.corpse.mind.key == find_key)
 				selected = ghost
 				break
 	return selected
@@ -493,8 +494,8 @@
 		return
 	if (!istype(C)|| C.anchored || get_dist(user, src) > 1 || get_dist(src,C) > 1 )
 		return
-/obj/machinery/clonepod/proc/growclone(mob/ghost as mob, var/clonename, var/ui, var/se, var/mindref)
-	if (((!ghost) || (!ghost.client)) || src.mess || src.attempting)
+/obj/machinery/clonepod/proc/growclone(mob/ghost as mob, var/clonename, var/ui, var/se, var/mindref, var/mutantrace)
+	if (!ghost || !ghost.client || src.mess || src.attempting)
 		return 0
 
 	src.attempting = 1 //One at a time!!
@@ -529,7 +530,7 @@
 
 	var/datum/mind/clonemind = (locate(mindref) in ticker.minds)
 
-	if ((clonemind) && (istype(clonemind))) //Move that mind over!!
+	if (clonemind && (istype(clonemind))) //Move that mind over!!
 		clonemind.transfer_to(src.occupant)
 	else //welp
 		src.occupant.mind = new /datum/mind(  )
@@ -551,22 +552,21 @@
 
 	// -- End mode specific stuff
 
-	if (istype(ghost, /mob/dead/observer))
+	if(istype(ghost, /mob/dead/observer))
 		del(ghost) //Don't leave ghosts everywhere!!
 
-	if (!src.occupant.dna)
+	if(!src.occupant.dna)
 		src.occupant.dna = new /datum/dna(  )
-	if (ui)
+	if(ui)
 		src.occupant.dna.uni_identity = ui
 		updateappearance(src.occupant, ui)
-	if (se)
+	if(se)
 		src.occupant.dna.struc_enzymes = se
-
 		//Cloning now causes ALOT more genetic defects
 		for(var/i = 0 to 20)
 			randmutb(src.occupant) //Sometimes the clones come out wrong.
-
-		src.occupant.brainloss = 100
+	if(mutantrace)
+		src.occupant.dna.mutantrace = mutantrace
 
 	src.attempting = 0
 	return 1
@@ -789,5 +789,5 @@
 //SOME SCRAPS I GUESS
 /* EMP grenade/spell effect
 		if(istype(A, /obj/machinery/clonepod))
-			A:malfunction()
+			malfunction()
 */

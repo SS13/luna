@@ -14,7 +14,7 @@
 //Call these procs to dump your world to a series of image files (!!)
 //NOTE: Does not explicitly support non 32x32 icons or stuff with large pixel_* values, so don't blame me if it doesn't work perfectly
 
-/mob/verb/ksa_DumpImage()
+/*/mob/verb/ksa_DumpImage()
 	set name = "Dump Map"
 	ksa_DumpInternal()
 
@@ -24,7 +24,7 @@
 
 /mob/verb/ksa_DumpImageSuperSpecific()
 	set name = "Dump Single Map Section"
-	ksa_DumpTile(text2num(input("X")), text2num(input("Y")), text2num(input("Z")))
+	ksa_DumpTile(text2num(input("X")), text2num(input("Y")), text2num(input("Z")))*/
 
 /datum/ksa_descoper
 	var/value = 0

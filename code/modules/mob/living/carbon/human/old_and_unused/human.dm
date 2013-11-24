@@ -1074,7 +1074,7 @@
 		M << "You cannot attack people before the game has started."
 		return
 
-	if (M.a_intent == "hurt")
+	if (M.a_intent == "harm")
 		if (istype(M.wear_mask, /obj/item/clothing/mask/muzzle))
 			return
 		if (health > 0)
@@ -1209,7 +1209,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt")
+			if (M.a_intent == "harm")
 				if (w_uniform)
 					w_uniform.add_fingerprint(M)
 				var/damage = rand(10, 20)
@@ -1417,7 +1417,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.cell))
+			if (M.a_intent == "harm" && !(M.gloves && M.gloves.cell))
 				if (w_uniform)
 					w_uniform.add_fingerprint(M)
 				var/damage = rand(1, 9)
@@ -1757,7 +1757,7 @@
 								if("uniform")
 									message = text("\red <B>[] is trying to take off \a [] from []'s body!</B>", source, target.w_uniform, target)
 								if("pockets")
-									for(var/obj/item/device/assembly/mousetrap/MT in  list(target.l_store, target.r_store))
+									for(var/obj/item/device/assembly/mousetrap/MT in list(target.l_store, target.r_store))
 										if(MT.armed)
 											for(var/mob/O in viewers(target, null))
 												if(O == source)
@@ -1771,10 +1771,29 @@
 											MT.triggered(source, source.hand ? "l_hand" : "r_hand")
 											MT.layer = OBJ_LAYER
 											return
+									for(var/obj/item/device/assembly_holder/AH in list(target.l_store, target.r_store))
+										var/obj/item/device/assembly/mousetrap/MT
+										if(istype(a_left, /obj/item/device/assembly/mousetrap) && a_left:armed)
+											MT = a_left
+										else if(istype(a_right, /obj/item/device/assembly/mousetrap) && a_right:armed)
+											MT = a_right
+
+										if(MT)
+											for(var/mob/O in viewers(target, null))
+												if(O == source)
+													O.show_message(text("\red <B>You reach into the [target]'s pockets, but there was a live mousetrap in there!</B>"), 1)
+												else
+													O.show_message(text("\red <B>[source] reaches into [target]'s pockets and sets off a hidden mousetrap!</B>"), 1)
+											target.u_equip(AH)
+											if (target.client)
+												target.client.screen -= AH
+											AH.loc = source.loc
+											MT.triggered(source, source.hand ? "l_hand" : "r_hand")
+											AH.layer = OBJ_LAYER
+											return
 									message = text("\red <B>[] is trying to empty []'s pockets!!</B>", source, target)
 								if("CPR")
 									if (target.cpr_time >= world.time + 3)
-										//SN src = null
 										del(src)
 										return
 									message = text("\red <B>[] is trying perform CPR on []!</B>", source, target)

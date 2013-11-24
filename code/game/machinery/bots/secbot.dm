@@ -4,7 +4,7 @@
 	icon = 'aibots.dmi'
 	icon_state = "secbot0"
 	layer = 5.0
-	density = 0
+	density = 1
 	anchored = 0
 //	weight = 1.0E7
 

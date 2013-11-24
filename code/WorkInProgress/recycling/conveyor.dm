@@ -15,9 +15,10 @@
 
 	var/list/affecting	// the list of all items that will be moved this ptick
 	var/id = ""			// the control ID	- must match controller ID
+	var/is_on = 0
 
 /obj/machinery/conveyor/centcom_auto
-	id = "round_end_belt"
+	is_on = 1
 
 	// create a conveyor
 /obj/machinery/conveyor/New(loc, newdir, on = 0)
@@ -49,7 +50,7 @@
 		if(SOUTHWEST)
 			forwards = WEST
 			backwards = NORTH
-	if(on)
+	if(is_on)
 		operating = 1
 		setmove()
 

@@ -254,15 +254,15 @@ No Implant Specifics"}
 	..()
 	if (usr.stat)
 		return
-	if ((usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf))))
+	if (usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf)))
 		usr.machine = src
 		if (href_list["freq"])
-			if ((istype(src.case, /obj/item/weapon/implantcase) && istype(src.case.imp, /obj/item/weapon/implant/tracking)))
+			if (istype(src.case, /obj/item/weapon/implantcase) && istype(src.case.imp, /obj/item/weapon/implant/tracking))
 				var/obj/item/weapon/implant/tracking/T = src.case.imp
 				T.frequency += text2num(href_list["freq"])
 				T.frequency = sanitize_frequency(T.frequency)
 		if (href_list["id"])
-			if ((istype(src.case, /obj/item/weapon/implantcase) && istype(src.case.imp, /obj/item/weapon/implant/tracking)))
+			if (istype(src.case, /obj/item/weapon/implantcase) && istype(src.case.imp, /obj/item/weapon/implant/tracking))
 				var/obj/item/weapon/implant/tracking/T = src.case.imp
 				T.id += text2num(href_list["id"])
 				T.id = min(100, T.id)
@@ -273,7 +273,6 @@ No Implant Specifics"}
 			for(var/mob/M in viewers(1, src))
 				if (M.client)
 					src.attack_self(M)
-				//Foreach goto(290)
 		src.add_fingerprint(usr)
 	else
 		usr << browse(null, "window=implantpad")
@@ -288,7 +287,7 @@ No Implant Specifics"}
 	name = "implant"
 	icon = 'device.dmi'
 	icon_state = "implant"
-	var/implanted = null
+	var/mob/living/carbon/implanted = null
 	var/allow_reagents = 0
 
 /obj/item/weapon/implant/catchMessage(msg,mob/source)
@@ -659,7 +658,7 @@ mob/proc/endmindcontrol()
 			else
 				O.show_message("\red [user] implants themself with [src.name]!", 1)
 		src.imp.loc = target
-		src.imp.implanted = 1
+		src.imp.implanted = target
 		src.imp.implanted(target)
 		src.imp = null
 		src.icon_state = "implanter0"

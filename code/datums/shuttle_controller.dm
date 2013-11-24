@@ -1,24 +1,13 @@
-// Controls the emergency shuttle
-
-
-
+/* Controls the emergency shuttle */
 //This code needs major cleanup
-
 //The way that the goons setup the shuttle was VERY VERY VERY wierd
-
-
-
 
 // these define the time taken for the shuttle to get to SS13
 // and the time before it leaves again
 #define SHUTTLEARRIVETIME 600		// 10 minutes = 600 seconds
-
 #define PODLAUNCHTIME 600
-
 #define PODTRANSITTIME 150
-
 #define SHUTTLELEAVETIME 10		// 3 minutes = 180 seconds
-
 
 
 //Areas, centcom(start),station(dest),transit(deepspace)
@@ -30,14 +19,8 @@
 //Direction determines where to go next (0 = transit, 1 = Start, 2 = dest), it hasn't been tested when set to 0, but it might work
 //Online is weither the shuttle is actaully countingdown and moving (hard one to guess)
 
-
-
-
-
 var/global/datum/shuttle/main_shuttle
-
 var/global/list/datum/shuttle/shuttles = list()
-
 var/global/list/datum/shuttle/prisonshuttles = list()
 
 datum/shuttle
@@ -47,19 +30,18 @@ datum/shuttle
 		online = 0
 		direction = 1 // 1 = Start, 2 = Dest
 
+		area/centcom //Destination
+		area/station //Start
+		area/transit //Transit area
 
+		turf_to_leave_station // Shuttle turf in start will be replaced with it after departure
+		turf_to_leave_centcom // Shuttle turf in destination will be replaced with it after departure
 
-
-		area
-			centcom //Destination
-			station //Start
-			transit //Transit area
-
-		endtime			// timeofday that shuttle arrives
+		endtime		 // timeofday that shuttle arrives
 		//timeleft = 360 //600
 
 
-	New(var/name,var/station,var/transit,var/centcom)
+	New(var/name, var/station, var/transit, var/centcom)
 		src.name = name
 		src.station = station
 		src.transit = transit
@@ -77,18 +59,15 @@ datum/shuttle
 		if(direction == 1)
 			setdirection(2)
 			online = 1
-		//	settimeleft(PODTRANSITTIME)
 		else
 			setdirection(1)
 			online = 1
-		//	settimeleft(PODTRANSITTIME)
 
 	proc/abletolaunch()
 		if(location != 0 && online == 0)
 			return 1
 		else
 			return 0
-
 
 	// returns the time (in seconds) before shuttle arrival
 	proc/timeleft()
@@ -116,17 +95,13 @@ datum/shuttle
 
 	proc
 		process()
-	//		world << "T:[timeleft()],O:[online],D[direction],L:[location],E:[endtime],W:[world.timeofday]"
 			if(!online) return
 			var/timeleft = timeleft()
 			if(timeleft > 1e5)		// midnight rollover protection
 				timeleft = 0
 			switch(location)
 
-
-
 				//If at location 1 or 2 (Starting points), and the timer is still running, then move to the transit point
-
 
 				if(1)
 					if(timeleft>0)
@@ -135,12 +110,13 @@ datum/shuttle
 						var/area/end_location = locate(transit)
 						for(var/mob/m in start_location)
 							shake_camera(m, 3, 1)
-						for(var/obj/machinery/door/unpowered/shuttle/D in start_location) /*Made doors close when pod launches, too --Mloc*/
-							D.close()
+						for(var/obj/machinery/door/unpowered/shuttle/D in start_location) // Made doors close when pod launches, too --Mloc
+							if(!D.density)
+								D.close()
 						for(var/turf/simulated/shuttle/wall/S in start_location)
 							if(S.icon_state == "wall_hull")
-								S.icon_state = "wall_space"  /*Quickish hack to fix the hull sprites moving with the pod --Mloc*/
-						start_location.move_contents_to(end_location)
+								S.icon_state = "wall_space"  // Quickish hack to fix the hull sprites moving with the pod --Mloc
+						start_location.move_contents_to(end_location, /turf/space/hull)
 						location = 0
 						direction = 2
 
@@ -178,7 +154,7 @@ datum/shuttle
 								del(T)
 						for(var/mob/m in start_location)
 							shake_camera(m, 3, 1)
-						start_location.move_contents_to(end_location)
+						start_location.move_contents_to(end_location, /turf/space)
 
 
 						online = 0
@@ -192,7 +168,7 @@ datum/shuttle
 						for(var/mob/m in start_location)
 							shake_camera(m, 3, 1)
 						var/area/end_location = locate(transit)
-						start_location.move_contents_to(end_location)
+						start_location.move_contents_to(end_location, /turf/space)
 						location = 0
 						direction = 1
 
@@ -286,86 +262,80 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 	a.autosay(message, from)
 
 
-/datum/shuttle/prisonshuttle/
+/datum/shuttle/prisonshuttle
 	name = "Prison Shuttle"
 	location = 1 // 0 = Transit, 1 = Start, 2 = dest
 	online = 0
 	direction = 1 // 1 = Start, 2 = Dest
-	area
-		centcom //Destination
-		station //Start
-		transit //Transit area
-	var/area/holding = "/area/shuttle/prison/holding"
-	endtime			// timeofday that shuttle arrives
+	area/centcom //Destination
+	area/station //Start
+	area/transit //Transit area
+	endtime		 // timeofday that shuttle arrives
 		//timeleft = 360 //600
 
 	depart()
-		settimeleft(60)
+		settimeleft(20)
 		online = 1
 		if(location == 1)
 			direction = 2
 		else
 			direction = 1
 	recall()
+		settimeleft(20)
+		online = 1
 		if(direction == 1)
 			setdirection(2)
-			online = 1
-			settimeleft(120)
 		else
 			setdirection(1)
-			online = 1
-			settimeleft(120)
-
 
 	process()
-		//world << "T:[timeleft()],O:[online],D[direction],L:[location],E:[endtime],W:[world.timeofday]"
 		if(!online) return
 		var/timeleft = timeleft()
 		if(timeleft > 1e5)		// midnight rollover protection
 			timeleft = 0
 
-
-
-		switch(location)
-
-
-
-			//If at location 1 or 2 (Starting points), and the timer is still running, then move to the transit point
-
-
+		switch(location) //If at location 1 or 2 (Starting points), and the timer is still running, then move to the transit point
 			if(1)
 				//world << "HURR 1"
-				if(timeleft>0)
+				if(timeleft > 0)
 				//	world << "MOVE"
 					var/area/start_location = locate(station)
 					var/area/end_location = locate(transit)
 					for(var/mob/m in start_location)
 						shake_camera(m, 3, 1)
-					for(var/obj/machinery/door/unpowered/shuttle/D in start_location) /*Made doors close when pod launches, too --Mloc*/
-						D.close()
+					for(var/obj/machinery/door/poddoor/D in start_location) /* Made doors close when pod launches, too --Mloc */
+						if(!D.density)
+							D.close()
+							for(var/obj/machinery/door/poddoor/D2 in orange(1,D))
+								if(!D2.density)
+									D2.close()
+
 					for(var/turf/simulated/shuttle/wall/S in start_location)
-						if(S.icon_state == "wall_hull")
-							S.icon_state = "wall_space"  /*Quickish hack to fix the hull sprites moving with the pod --Mloc*/
-					start_location.move_contents_to(end_location)
+						if(S.icon_state == "wall3_hull")
+							S.icon_state = "wall3_space"  /* Quickish hack to fix the hull sprites moving with the pod --Mloc */
+					start_location.move_contents_to(end_location, /turf/space/hull)
 					location = 0
 					direction = 2
-					radioalert("Prison Notice", "Prisoner Shuttle has departed.")
+					//radioalert("Prison Notice", "Prisoner Shuttle has departed.")
 
 			if(0)
-				//world << "DURR 0"
 				if(timeleft > 0)
 					return 0
 
 				else if(timeleft <= 0)
 					//Move
-					location = direction
-
 					var/area/start_location = locate(transit)
 					var/area/end_location
+					var/opendoorsid
 					if(direction == 1)
 						end_location = locate(station)
+						opendoorsid = "siberia_shuttle_ship"
+						for(var/turf/simulated/shuttle/wall/S in start_location)
+							if(S.icon_state == "wall3_space")
+								S.icon_state = "wall3_hull"
 					else
 						end_location = locate(centcom)
+						opendoorsid = "siberia_shuttle_camp"
 
 					var/list/dstturfs = list()
 					var/throwy = world.maxy
@@ -386,61 +356,47 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 							del(T)
 					for(var/mob/m in start_location)
 						shake_camera(m, 3, 1)
-					start_location.move_contents_to(end_location)
+					start_location.move_contents_to(end_location, /turf/space)
+					location = direction
 
-					//var/area/holdingarea = locate(holding)
-					for(var/mob/living/carbon/human/prisoner in locate(centcom))
-						//world << "Found a prisoner, moving his ass."
-						prisoner.loc = locate(holding)
-						prisoner.dir = 2
-						prisoner.update_clothing()
-						var/occupied = 10
-						while(occupied >= 1)
-							var/mob/living/carbon/human/occupant = locate() in prisoner.loc
-							if(occupant != prisoner || prisoner.loc.density == 1)
-								prisoner.x--
-								occupied--
-							else
-								occupied = 0
-						var/mob/dead/observer/newghost = new/mob/dead/observer(prisoner.loc,null)
-						newghost.name = prisoner.real_name
-						newghost.real_name = prisoner.real_name
-						newghost.timeofdeath = world.time - 18000
-						if(prisoner.mind && !prisoner.mind.special_role)
-							newghost.timeofdeath -= 9000
-						if(prisoner.client)
-							prisoner.client.mob = newghost
-
+					for(var/obj/machinery/door/poddoor/D in end_location) /* Made doors open when pod arrives, too --ACCount */
+						if(D.id == opendoorsid)
+							D.open()
+							for(var/obj/machinery/door/poddoor/D2 in orange(1,D))
+								if(D2.id == opendoorsid)
+									D2.open()
 
 					online = 0
-					PrisonControl.location = 2
+					PrisonControl.location = direction
 					PrisonControl.departed = 0
-					radioalert("Prison Notice", "Prisoner Shuttle has arrived at the prison.")
+					//radioalert("Prison Notice", "Prisoner Shuttle has arrived at the prison.")
 
 					return 1
 
 			if(2)
 				//world << "HURRR 2"
-				if(timeleft <= 0)
-			//		world << "MOVE"
+				if(timeleft > 0)
+				//	world << "MOVE"
 					var/area/start_location = locate(centcom)
+					var/area/end_location = locate(transit)
 					for(var/mob/m in start_location)
 						shake_camera(m, 3, 1)
-					var/area/end_location = locate(station)
-					start_location.move_contents_to(end_location)
-					location = 1
-					online = 0
-					PrisonControl.location = 1
-					PrisonControl.departed = 0
-					radioalert("Prison Notice", "Prisoner Shuttle has arrived.")
-
+					for(var/obj/machinery/door/poddoor/D in start_location) /* Made doors close when pod launches, too --Mloc */
+						if(!D.density)
+							D.close()
+							for(var/obj/machinery/door/poddoor/D2 in orange(1,D))
+								if(!D2.density)
+									D2.close()
+					start_location.move_contents_to(end_location, /turf/space)
+					location = 0
+					direction = 1
+					//radioalert("Prison Notice", "Prisoner Shuttle has departed.")
 
 			else
 				return 1
 
 
-
-/datum/PodControl/prisonPodControl/
+/datum/PodControl/prisonPodControl
 	endtime
 	online = 0
 	departed = 0
@@ -450,7 +406,7 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 	unlocked = 0
 
 	start()
-		settimeleft(60)
+		settimeleft(20)
 		online = 1
 		last60 = timeleft()
 
@@ -459,6 +415,8 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 			s.recall()
 		online = 0
 		departed = 1
+		if(siberia_controller)
+			siberia_controller.stacker_drop()
 
 	process()
 		//world << "PODCON[timeleft()]"
@@ -471,4 +429,3 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 				s.depart()
 			online = 0
 			departed = 1
-

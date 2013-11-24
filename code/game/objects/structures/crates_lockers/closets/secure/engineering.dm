@@ -109,6 +109,7 @@
 		new /obj/item/clothing/shoes/orange(src)
 		new /obj/item/clothing/gloves/yellow(src)
 		new /obj/item/clothing/glasses/meson(src)
+		new /obj/item/clothing/head/helmet/hardhat(src)
 		new /obj/item/weapon/storage/belt/utility(src)
 		new /obj/item/weapon/storage/toolbox/mechanical(src)
 		new /obj/item/device/pda/engineering(src)

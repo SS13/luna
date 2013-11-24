@@ -90,8 +90,8 @@ var/global/list/datum/stack_recipe/r_metal_recipes = list ( \
  * Wood
  */
 var/global/list/datum/stack_recipe/wood_recipes = list ( \
-/*	new/datum/stack_recipe("wooden sandals", /obj/item/clothing/shoes/sandal, 1), \
-	new/datum/stack_recipe("wood floor tile", /obj/item/stack/tile/wood, 1, 4, 20), \*/
+	new/datum/stack_recipe("wooden sandals", /obj/item/clothing/shoes/sandal, 1), \
+/*	new/datum/stack_recipe("wood floor tile", /obj/item/stack/tile/wood, 1, 4, 20), \*/
 	new/datum/stack_recipe("table parts", /obj/item/weapon/table_parts/wood, 2), \
 	new/datum/stack_recipe("wooden chair", /obj/structure/stool/bed/chair/wood/normal, 3, time = 10, one_per_turf = 1, on_floor = 1), \
 	new/datum/stack_recipe("wooden barricade", /obj/structure/barricade/wooden, 5, time = 50, one_per_turf = 1, on_floor = 1), \
@@ -117,12 +117,12 @@ var/global/list/datum/stack_recipe/wood_recipes = list ( \
 var/global/list/datum/stack_recipe/cardboard_recipes = list ( \
 	new/datum/stack_recipe("box", /obj/item/weapon/storage/box), \
 	new/datum/stack_recipe("first aid kit", /obj/item/weapon/storage/firstaid), \
-/*	new/datum/stack_recipe("light tubes", /obj/item/weapon/storage/box/light/tubes), \
-	new/datum/stack_recipe("light bulbs", /obj/item/weapon/storage/box/light/bulbs), \
+	new/datum/stack_recipe("light tubes", /obj/item/weapon/storage/box/light/tubes), \
+/*	new/datum/stack_recipe("light bulbs", /obj/item/weapon/storage/box/light/bulbs), \*/
 	new/datum/stack_recipe("mouse traps", /obj/item/weapon/storage/box/mousetraps), \
 	new/datum/stack_recipe("cardborg suit", /obj/item/clothing/suit/cardborg, 3), \
 	new/datum/stack_recipe("cardborg helmet", /obj/item/clothing/head/cardborg), \
-	new/datum/stack_recipe("pizza box", /obj/item/weapon/pizzabox), \*/
+/*	new/datum/stack_recipe("pizza box", /obj/item/weapon/pizzabox), \*/
 
 	new/datum/stack_recipe("folder", /obj/item/weapon/folder), \
 )

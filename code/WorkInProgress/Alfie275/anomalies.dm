@@ -329,7 +329,7 @@ proc/SetupAnomalies()
 
 /obj/item/weapon/fossil/skull/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/weapon/fossil/bone))
-		var/obj/o = new /obj/skeleton(get_turf(src))
+		var/obj/o = new /obj/structure/skeleton(get_turf(src))
 		var/a = new /obj/item/weapon/fossil/bone
 		var/b = new src.type
 		o.contents.Add(a)
@@ -337,7 +337,7 @@ proc/SetupAnomalies()
 		del W
 		del src
 
-/obj/skeleton
+/obj/structure/skeleton
 	name = "Incomplete skeleton"
 	icon = 'fossil.dmi'
 	icon_state = "uskel"
@@ -346,12 +346,12 @@ proc/SetupAnomalies()
 	var/breq
 	var/bstate = 0
 
-/obj/skeleton/New()
+/obj/structure/skeleton/New()
 	src.breq = rand(6)+3
 	src.desc = "Incomplete skeleton, looks like it could use [src.breq-src.bnum] more bones."
 
 
-/obj/skeleton/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/structure/skeleton/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/weapon/fossil/bone))
 		if(!bstate)
 			bnum++

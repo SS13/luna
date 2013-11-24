@@ -23,12 +23,12 @@
 
 /obj/mecha/combat/marauder/green
 	name = "Marauder"
-	icon_state = "gm"
+	icon_state = "gmarauder"
 
 
 /obj/mecha/combat/marauder/red
 	name = "Marauder"
-	icon_state = "rm"
+	icon_state = "rmarauder"
 
 
 /obj/mecha/combat/marauder/seraph

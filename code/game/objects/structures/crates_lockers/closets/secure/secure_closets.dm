@@ -80,7 +80,7 @@
 	else if(src.broken)
 		user << "<span class='notice'>The locker appears to be broken.</span>"
 		return
-	else if((istype(W, /obj/item/weapon/card/emag)) && !src.broken)
+	else if(istype(W, /obj/item/weapon/card/emag) && !src.broken)
 		broken = 1
 		locked = 0
 		desc = "It appears to be broken."
@@ -88,6 +88,9 @@
 		flick(icon_broken, src)
 		for(var/mob/O in viewers(user, 3))
 			O.show_message("<span class='warning'>The locker has been broken by [user] with an electromagnetic card!</span>", 1, "You hear a faint electrical spark.", 2)
+	else if((istype(W, /obj/item/device/hacktool)) && src.req_access)
+		src.req_access = 0
+		user << "You reset [src]'s lock."
 	else if(istype(W, /obj/item/weapon/weldingtool))
 		var/obj/item/weapon/weldingtool/WT = W
 		if(!WT.remove_fuel(0,user))

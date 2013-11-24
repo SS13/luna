@@ -2,10 +2,9 @@
 CONTAINS:
 SCALPEL
 CIRCULAR SAW
-
 */
 
-/obj/item/weapon/scalpel/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
+/obj/item/weapon/surgical/scalpel/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	if(!istype(M, /mob) || istype(M, /mob/living/carbon/monkey)) //Adding basic organs to monkeys for implants.
 		return													 //TO DO: Remove the monkey check once you're sure monkey organs are safe to cut. - Abi79
 
@@ -94,7 +93,7 @@ CIRCULAR SAW
 
 // CIRCULAR SAW
 
-/obj/item/weapon/circular_saw/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
+/obj/item/weapon/surgical/circular_saw/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	if(!istype(M, /mob) || istype(M, /mob/living/carbon/monkey)) //Adding basic organs to monkeys for implants.
 		return													 //TO DO: Remove the monkey check once you're sure monkey organs are safe to cut. - Abi79
 
@@ -164,7 +163,7 @@ CIRCULAR SAW
 				M:brain_op_stage = 4.0
 				M.death()
 
-				var/obj/item/brain/B = new /obj/item/brain(M.loc)
+				var/obj/item/organ/brain/B = new /obj/item/organ/brain(M.loc)
 				B.owner = M
 			else
 				..()
@@ -173,11 +172,11 @@ CIRCULAR SAW
 
 	else if((!(user.zone_sel.selecting == "chest")) || (!(user.zone_sel.selecting == "groin")) || ((istype(M, /mob/living/carbon/human))))
 		var/datum/organ/external/S = M.organs["[user.zone_sel.selecting]"]
-		if(S.destroyed)
+		if(!S.status)
 			return
 		for(var/mob/O in viewers(M, null))
 			O.show_message(text("\red [M] gets his [S.display_name] sawed off with [src] by [user]."), 1)
-		S.destroyed = 1
+		S.status = ORGAN_DESTROYED
 		M:update_body()
 
 	if(icon_state == "saw3") // Bloodying it up
@@ -402,7 +401,7 @@ and then you have (1-3sec to respond to this eg by applying cotton.
 /obj/item/weapon/surgical_tool/bonegel
 	name = "Bone-gel"
 	icon = 'surgery.dmi'
-	icon_state = "bone gel"
+	icon_state = "bone-gel"
 
 /obj/item/weapon/surgical_tool/bonegel/New()
 	stage += 0

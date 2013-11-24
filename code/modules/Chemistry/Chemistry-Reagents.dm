@@ -86,20 +86,22 @@ datum
 				for(var/mob/living/carbon/slime/M in T)
 					M.adjustToxLoss(rand(15,20))
 				if(istype(T, /turf/simulated) && volume >= 3)
-					if(T:wet >= 1) return
-					T:wet = 1
-					if(T:wet_overlay)
-						T:overlays -= T:wet_overlay
-						T:wet_overlay = null
-					T:wet_overlay = image('water.dmi',T,"wet_floor")
-					T:overlays += T:wet_overlay
+					var/turf/simulated/turf = T
+					if(turf.wet >= 1) return
+					turf.wet = 1
+					if(turf.wet_overlay)
+						turf.overlays -= T:wet_overlay
+						turf.wet_overlay = null
+					turf.wet_overlay = image('water.dmi',T,"wet_floor")
+					turf.overlays += T:wet_overlay
 
 					spawn(800)
-						if(T:wet >= 2) return
-						T:wet = 0
-						if(T:wet_overlay)
-							T:overlays -= T:wet_overlay
-							T:wet_overlay = null
+						if(!istype(turf)) return
+						if(turf.wet >= 2) return
+						turf.wet = 0
+						if(turf.wet_overlay)
+							turf.overlays -= T:wet_overlay
+							turf.wet_overlay = null
 
 				var/hotspot = (locate(/obj/hotspot) in T)
 				if(hotspot)
@@ -145,6 +147,11 @@ datum
 					M.confused += 3
 				..()
 				return
+
+			reaction_turf(var/turf/simulated/T, var/volume)
+				..()
+				if(!istype(T)) return
+				T.Bless()
 
 		blood
 			data = new/list("donor"=null,"viruses"=null,"blood_DNA"=null,"blood_type"="A+","resistances"=null,"trace_chem"=null)
@@ -229,25 +236,21 @@ datum
 			reagent_state = LIQUID
 			reagent_color = "#009CA8" // rgb: 0, 156, 168
 
-			reaction_turf(var/turf/T, var/volume)
+			reaction_turf(var/turf/simulated/T, var/volume)
+				if(!istype(T)) return
 				src = null
-				if(T:wet >= 2) return
-				T:wet = 2
-				T:wet_overlay = image('effects.dmi', "slube")
-				T:overlays += T:wet_overlay
-				spawn(2000)
-					T:wet = 0
-					if(T:wet_overlay)
+				if(T.wet >= 2) return
+				T.wet = 2
+				T.wet_overlay = image('effects.dmi', "slube")
+				T.overlays += T:wet_overlay
+				spawn(1600)
+					if(!istype(T)) return
+					T.wet = 0
+					if(T.wet_overlay)
 						T:overlays -= T:wet_overlay
 
 				return
-/*
-		bilk
-			name = "Bilk"
-			id = "bilk"
-			description = "This appears to be beer mixed with milk. Disgusting."
-			reagent_state = LIQUID
-*/
+
 		anti_toxin
 			name = "Anti-Toxin (Dylovene)"
 			id = "anti_toxin"
@@ -282,8 +285,8 @@ datum
 			reagent_color = "#CF3600"
 			on_mob_life(var/mob/living/M)
 				if(!M) M = holder.my_atom
-				M:toxloss += 3
-				M:oxyloss += 6
+				M:toxloss += 4
+				M:oxyloss += 7
 				..()
 				return
 
@@ -1250,7 +1253,7 @@ datum
 							W.dropped(src)
 							W.layer = initial(W.layer)
 					var/mob/living/carbon/slime/new_mob = new /mob/living/carbon/slime(M.loc)
-					new_mob.a_intent = "hurt"
+					new_mob.a_intent = "harm"
 					if(M.mind)
 						M.mind.transfer_to(new_mob)
 					else

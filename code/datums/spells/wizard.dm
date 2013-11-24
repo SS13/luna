@@ -29,18 +29,18 @@
 
 /obj/effect/proc_holder/spell/targeted/genetic/mutate
 	name = "Mutate"
-	desc = "This spell causes you to turn into a hulk and gain laser vision for a short while."
+	desc = "This spell causes you to turn into a hulk and gain xray vision for a short while."
 
 	school = "transmutation"
 	charge_max = 400
 	clothes_req = 1
 	invocation = "BIRUZ BENNAR"
 	invocation_type = "shout"
-	message = "\blue You feel strong! You feel a pressure building behind your eyes!"
+	message = "\blue You feel strong!"
 	range = -1
 	include_user = 1
 
-	mutations = list(LASER, HULK)
+	mutations = 110
 	duration = 300
 
 /obj/effect/proc_holder/spell/targeted/inflict_handler/disintegrate
@@ -54,7 +54,7 @@
 	invocation_type = "shout"
 	range = 1
 
-	destroys = "gib_brain"
+	destroys = "gib"
 
 	sparks_spread = 1
 	sparks_amt = 4
@@ -105,8 +105,6 @@
 	inner_tele_radius = 0
 	outer_tele_radius = 6
 
-	centcomm_cancast = 0 //prevent people from getting to centcomm
-
 /obj/effect/proc_holder/spell/targeted/area_teleport/teleport
 	name = "Teleport"
 	desc = "This spell teleports you to a type of area of your selection."
@@ -137,7 +135,7 @@
 	summon_lifespan = 300
 
 
-/obj/effect/proc_holder/spell/aoe_turf/conjure/carp
+/*obj/effect/proc_holder/spell/aoe_turf/conjure/carp
 	name = "Summon Carp"
 	desc = "This spell conjures a simple carp."
 
@@ -148,10 +146,10 @@
 	invocation_type = "shout"
 	range = 1
 
-	summon_type = list(/mob/living/simple_animal/hostile/carp)
+	summon_type = list(/mob/living/simple_animal/hostile/carp)*/
 
 
-/obj/effect/proc_holder/spell/aoe_turf/conjure/construct
+/*obj/effect/proc_holder/spell/aoe_turf/conjure/construct
 	name = "Artificer"
 	desc = "This spell conjures a construct which may be controlled by Shades"
 
@@ -162,10 +160,10 @@
 	invocation_type = "none"
 	range = 0
 
-	summon_type = list(/obj/structure/constructshell)
+	summon_type = list(/obj/structure/constructshell)*/
 
 
-/obj/effect/proc_holder/spell/aoe_turf/conjure/creature
+/*obj/effect/proc_holder/spell/aoe_turf/conjure/creature
 	name = "Summon Creature Swarm"
 	desc = "This spell tears the fabric of reality, allowing horrific daemons to spill forth"
 
@@ -177,7 +175,7 @@
 	summon_amt = 10
 	range = 3
 
-	summon_type = list(/mob/living/simple_animal/hostile/creature)
+	summon_type = list(/mob/living/simple_animal/hostile/creature)*/
 
 /obj/effect/proc_holder/spell/targeted/trigger/blind
 	name = "Blind"

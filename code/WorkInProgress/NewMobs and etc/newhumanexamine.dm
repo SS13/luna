@@ -109,7 +109,7 @@
 			usr << "\red [name] has no pulse!"
 
 	for(var/datum/organ/external/temp in organs)
-		if(temp.destroyed)
+		if(!temp.status)
 			usr << "\red [name] is missing [t_his] [temp.display_name]!"
 		if(temp.wounds)
 			for(var/datum/organ/external/wound/w in temp.wounds)

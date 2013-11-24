@@ -1,7 +1,7 @@
 /**********************Mineral ores**************************/
 
 /obj/item/weapon/ore
-	name = "Rock"
+	name = "rock"
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "ore"
 
@@ -18,17 +18,17 @@
 	..()
 
 /obj/item/weapon/ore/uranium
-	name = "Uranium ore"
+	name = "uranium ore"
 	icon_state = "Uranium ore"
 	origin_tech = "materials=5"
 
 /obj/item/weapon/ore/iron
-	name = "Iron ore"
+	name = "iron ore"
 	icon_state = "Iron ore"
 	origin_tech = "materials=1"
 
 /obj/item/weapon/ore/glass
-	name = "Sand"
+	name = "sand"
 	icon_state = "Glass ore"
 	origin_tech = "materials=1"
 
@@ -41,32 +41,32 @@
 		del(src)
 
 /obj/item/weapon/ore/plasma
-	name = "Plasma ore"
+	name = "plasma ore"
 	icon_state = "Plasma ore"
 	origin_tech = "materials=2;plasma=2"
 
 /obj/item/weapon/ore/silver
-	name = "Silver ore"
+	name = "silver ore"
 	icon_state = "Silver ore"
 	origin_tech = "materials=3"
 
 /obj/item/weapon/ore/gold
-	name = "Gold ore"
+	name = "gold ore"
 	icon_state = "Gold ore"
 	origin_tech = "materials=4"
 
 /obj/item/weapon/ore/diamond
-	name = "Diamond ore"
+	name = "diamond ore"
 	icon_state = "Diamond ore"
 	origin_tech = "materials=6"
 
 /obj/item/weapon/ore/clown
-	name = "Bananium ore"
+	name = "bananium ore"
 	icon_state = "Clown ore"
 	origin_tech = "materials=4"
 
 /obj/item/weapon/ore/slag
-	name = "Slag"
+	name = "slag"
 	desc = "Completely useless"
 	icon_state = "slag"
 
@@ -154,9 +154,7 @@
 			..()
 			return
 
-		var/obj/item/weapon/cable_coil/CC = new/obj/item/weapon/cable_coil(user.loc)
-		CC.amount = 1
-		CC.update_icon()
+		new/obj/item/weapon/cable_coil(user.loc, 1)
 		overlays = list()
 		string_attached = null
 		user << "\blue You detach the string from the coin."

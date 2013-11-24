@@ -31,7 +31,7 @@ world/IsBanned(key,address,computer_id)
 		log_admin("[q2.ErrorMsg()]")
 		return 0
 	else
-		while(q2.NextRow()) // i made a hell of mess here pendling rewriteing because its overly complex for a thing like this.
+		while(q2.NextRow())
 			if(!isnull(q2.GetRowData()))
 				ban = q2.GetRowData()
 	if(!q1.Execute())
@@ -41,7 +41,7 @@ world/IsBanned(key,address,computer_id)
 		log_admin("[q3.ErrorMsg()]")
 		return 0
 	else
-		while(q3.NextRow()) // i made a hell of mess here pendling rewriteing because its overly complex for a thing like this.
+		while(q3.NextRow())
 			if(!isnull(q3.GetRowData()))
 				ban = q3.GetRowData()
 	if(!q1.Execute())
@@ -59,7 +59,7 @@ world/IsBanned(key,address,computer_id)
 			ClearTempbans()
 			return 0
 		else
-			returnban = list("reason" = "ckey/id", "desc" = "\nReason: [ban["reason"]]\nExpires: [GetExp(ban["minutes"])]\nBy: [ban["bannedby"]]")
+			returnban = list("reason" = "ckey/id", "desc" = "\nReason: [ban["reason"]]\nExpires: [GetExp(ban["minute"])]\nBy: [ban["bannedby"]]")
 	else
 		returnban = list("reason" = "ckey/id", "desc" = "\nReason: [ban["reason"]]\nExpires: <B>PERMANENT</B>\nBy: [ban["bannedby"]]")
 	return returnban

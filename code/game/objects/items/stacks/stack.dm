@@ -88,7 +88,7 @@
 	if ((usr.restrained() || usr.stat || usr.get_active_hand() != src))
 		return
 	if (href_list["make"])
-		if (src.amount < 1) del(src) //Never should happen
+		if (src.amount < 1) del(src) //Never should happen. Will happen.
 
 		var/datum/stack_recipe/R = recipes[text2num(href_list["make"])]
 		var/multiplier = text2num(href_list["multiplier"])
@@ -127,7 +127,7 @@
 				usr.put_in_hands(O)
 		O.add_fingerprint(usr)
 		//BubbleWrap - so newly formed boxes are empty
-		if ( istype(O, /obj/item/weapon/storage) )
+		if (istype(O, /obj/item/weapon/storage))
 			for (var/obj/item/I in O)
 				del(I)
 		//BubbleWrap END

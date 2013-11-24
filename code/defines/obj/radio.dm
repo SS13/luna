@@ -11,7 +11,7 @@
 	item_state = "electropack"
 
 /obj/item/device/radio/signaler
-	name = "Remote Signaling Device"
+	name = "remote signaling device"
 	desc = "Used to remotely activate devices."
 	icon_state = "signaller"
 	item_state = "signaler"
@@ -19,7 +19,7 @@
 	frequency = 1457
 
 /obj/item/device/radio/intercom
-	name = "Station Intercom (Radio)"
+	name = "station intercom (radio)"
 	desc = "Talk through this."
 	icon_state = "intercom"
 	anchored = 1

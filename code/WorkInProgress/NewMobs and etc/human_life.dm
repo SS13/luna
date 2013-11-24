@@ -204,7 +204,7 @@
 	if(resting)
 		weakened = max(weakened, 5)
 
-	if(health < -100 || brain_op_stage == 4.0)
+	if(health < -100 || !getbrain(src))
 		if(!zombie|| (toxloss +fireloss) > 100)
 			death()
 		else if(zombie && health < -200)
@@ -259,11 +259,11 @@
 			src.face_dmg = 1
 			src << "\red Your face has become disfigured."
 	for(var/datum/organ/external/temp in organs)
-		if(!temp.bleeding)
-			continue
-		else
-			if(prob(35))
-				bloodloss += rand(1,10)
+//		if(!temp.bleeding)
+//			continue
+//		else
+//			if(prob(35))
+//				bloodloss += rand(1,10)
 		if(temp.wounds)
 			for(var/datum/organ/external/wound/W in temp.wounds)
 				if(!temp.bleeding)

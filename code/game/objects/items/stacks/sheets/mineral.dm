@@ -55,6 +55,7 @@ var/global/list/datum/stack_recipe/sandstone_recipes = list ( \
 	throw_range = 3
 	origin_tech = "materials=6"
 	perunit = 3750
+	singular_name = "diamond"
 	sheettype = "diamond"
 
 var/global/list/datum/stack_recipe/diamond_recipes = list ( \
@@ -81,6 +82,7 @@ var/global/list/datum/stack_recipe/diamond_recipes = list ( \
 	origin_tech = "materials=5"
 	perunit = 2000
 	sheettype = "uranium"
+	singular_name = "uranium sheet"
 
 var/global/list/datum/stack_recipe/uranium_recipes = list ( \
 	new/datum/stack_recipe("uranium door", /obj/structure/mineral_door/uranium, 10, one_per_turf = 1, on_floor = 1), \
@@ -106,6 +108,7 @@ var/global/list/datum/stack_recipe/uranium_recipes = list ( \
 	origin_tech = "plasmatech=2;materials=2"
 	perunit = 2000
 	sheettype = "plasma"
+	singular_name = "plasma sheet"
 
 var/global/list/datum/stack_recipe/plasma_recipes = list ( \
 	new/datum/stack_recipe("plasma door", /obj/structure/mineral_door/transparent/plasma, 10, one_per_turf = 1, on_floor = 1), \
@@ -131,6 +134,7 @@ var/global/list/datum/stack_recipe/plasma_recipes = list ( \
 	origin_tech = "materials=4"
 	perunit = 2000
 	sheettype = "gold"
+	singular_name = "gold sheet"
 
 var/global/list/datum/stack_recipe/gold_recipes = list ( \
 	new/datum/stack_recipe("golden door", /obj/structure/mineral_door/gold, 10, one_per_turf = 1, on_floor = 1), \
@@ -156,6 +160,7 @@ var/global/list/datum/stack_recipe/gold_recipes = list ( \
 	origin_tech = "materials=3"
 	perunit = 2000
 	sheettype = "silver"
+	singular_name = "silver sheet"
 
 var/global/list/datum/stack_recipe/silver_recipes = list ( \
 	new/datum/stack_recipe("silver door", /obj/structure/mineral_door/silver, 10, one_per_turf = 1, on_floor = 1), \
@@ -181,6 +186,7 @@ var/global/list/datum/stack_recipe/silver_recipes = list ( \
 	origin_tech = "materials=4"
 	perunit = 2000
 	sheettype = "clown"
+	singular_name = "bananium sheet"
 
 /obj/item/stack/sheet/mineral/clown/New(var/loc, var/amount=null)
 	pixel_x = rand(0,4)-4
@@ -203,6 +209,7 @@ var/global/list/datum/stack_recipe/silver_recipes = list ( \
 	throw_range = 3
 	origin_tech = "materials=4"
 	perunit = 2000
+	singular_name = "adamantine sheet"
 
 /*
  * Mythril
@@ -217,3 +224,4 @@ var/global/list/datum/stack_recipe/silver_recipes = list ( \
 	throw_range = 3
 	origin_tech = "materials=4"
 	perunit = 2000
+	singular_name = "mythril sheet"

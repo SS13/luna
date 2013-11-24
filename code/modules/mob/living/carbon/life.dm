@@ -15,7 +15,7 @@
 			if(lastbreathT > world.timeofday)	//Midnight rollover check
 				lastbreathT = 0
 		else //Still give containing object the chance to interact
-			if(istype(loc, /obj/))
+			if(istype(loc, /obj))
 				var/obj/location_as_object = loc
 				location_as_object.handle_internal_lifeform(src, 0)
 
@@ -278,7 +278,7 @@
 					fireloss -= 5
 
 	if (mutations & HULK && health <= 25)
-		mutations &= ~8
+		mutations &= ~HULK
 		src << "\red You suddenly feel very weak."
 		weakened = 3
 		emote("collapse")
@@ -381,7 +381,7 @@
 	if(resting)
 		weakened = max(weakened, 1)
 
-	if(health < -100 || brain_op_stage == 4.0)
+	if(health < -100 || !getbrain(src))
 		death()
 	else if(health < 0)
 		if(health <= 20 && prob(1))
@@ -609,43 +609,39 @@
 		switch(body_part)
 			if(HEAD)
 				org = H.get_organ("head")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("head", 0, 1.1*discomfort)
 			if(CHEST)
 				org = H.get_organ("chest")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("chest", 0, 1.4*discomfort)
-			if(GROIN)
-				org = H.get_organ("groin")
-				if(!org.robotic && !prob(70))
-					TakeDamage("groin", 0, 0.9*discomfort)
 			if(LEGS)
 				org = H.get_organ("l_leg")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("l_leg", 0, 0.4*discomfort)
 				org = H.get_organ("r_leg")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("r_leg", 0, 0.4*discomfort)
 			if(ARMS)
 				org = H.get_organ("l_arm")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("l_arm", 0, 0.3*discomfort)
 				org = H.get_organ("r_arm")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("r_arm", 0, 0.3*discomfort)
 			if(FEET)
 				org = H.get_organ("l_foot")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("l_foot", 0, 0.15*discomfort)
 				org = H.get_organ("r_foot")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("r_foot", 0, 0.15*discomfort)
 			if(HANDS)
 				org = H.get_organ("l_hand")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("l_hand", 0, 0.15*discomfort)
 				org = H.get_organ("r_hand")
-				if(!org.robotic && !prob(70))
+				if(!org.status == ORGAN_ROBOTIC && !prob(70))
 					TakeDamage("r_hand", 0, 0.15*discomfort)
 	else
 		switch(body_part)
@@ -653,8 +649,6 @@
 				TakeDamage("head", 0, 1.1*discomfort)
 			if(CHEST)
 				TakeDamage("chest", 0, 1.4*discomfort)
-			if(GROIN)
-				TakeDamage("groin", 0, 0.9*discomfort)
 			if(LEGS)
 				TakeDamage("l_leg", 0, 0.4*discomfort)
 				TakeDamage("r_leg", 0, 0.4*discomfort)
@@ -727,28 +721,25 @@
 /mob/living/carbon/proc/add_fire_protection(var/temp)
 	var/fire_prot = 0
 
-	if(head && head.protective_temperature > temp)
+	if(istype(head) && head.protective_temperature > temp)
 		fire_prot += (head.protective_temperature/30)
 
-	if(wear_mask && wear_mask.protective_temperature > temp)
+	if(istype(wear_mask) && wear_mask.protective_temperature > temp)
 		fire_prot += (wear_mask.protective_temperature/40)
 
-	if(glasses && glasses.protective_temperature > temp)
+	if(istype(glasses) && glasses.protective_temperature > temp)
 		fire_prot += (glasses.protective_temperature/60)
 
-	if(ears && ears.protective_temperature > temp)
-		fire_prot += (ears.protective_temperature/60)
-
-	if(wear_suit && wear_suit.protective_temperature > temp)
+	if(istype(wear_suit) && wear_suit.protective_temperature > temp)
 		fire_prot += (wear_suit.protective_temperature/10)
 
-	if(w_uniform && w_uniform.protective_temperature > temp)
+	if(istype(w_uniform) && w_uniform.protective_temperature > temp)
 		fire_prot += (w_uniform.protective_temperature/20)
 
-	if(gloves && gloves.protective_temperature > temp)
+	if(istype(gloves) && gloves.protective_temperature > temp)
 		fire_prot += (gloves.protective_temperature/40)
 
-	if(shoes && shoes.protective_temperature > temp)
+	if(istype(shoes) && shoes.protective_temperature > temp)
 		fire_prot += (shoes.protective_temperature/40)
 
 	return fire_prot

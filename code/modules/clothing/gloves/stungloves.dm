@@ -4,7 +4,7 @@
 	update_icon()
 
 
-/obj/item/clothing/gloves/yellow/attackby(obj/item/weapon/W, mob/user)
+/obj/item/clothing/gloves/attackby(obj/item/weapon/W, mob/user)
 	if(istype(W, /obj/item/weapon/cable_coil))
 		var/obj/item/weapon/cable_coil/C = W
 		if(!wired)

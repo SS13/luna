@@ -11,7 +11,7 @@
 	var/datum/hud/living/carbon/hud = null // hud
 
 /mob/dead/observer/New(turf/loc,mob/the_corpse)
-	invisibility = 15
+	invisibility = 10
 	sight |= SEE_TURFS | SEE_MOBS | SEE_OBJS | SEE_SELF
 	see_invisible = 15
 	ear_deaf = 0
@@ -96,102 +96,19 @@
 	client.mob = corpse
 	del(src)
 
-/mob/dead/observer/proc/dead_tele()
+/mob/dead/observer/proc/dead_tele(var/area/A in world)
 	set category = "Special Verbs"
 	set name = "Teleport"
 	set desc= "Teleport"
-	if((usr.stat != 2) || !istype(usr, /mob/dead/observer))
+
+	if(usr.stat != 2 || !istype(usr, /mob/dead/observer))
 		usr << "Not when you're not dead!"
 		return
-	var/A
+
 	usr.verbs -= /mob/dead/observer/proc/dead_tele
-	spawn(50)
+	spawn(100)
 		usr.verbs += /mob/dead/observer/proc/dead_tele
-	A = input("Area to jump to", "BOOYEA", A) in list("Engine","Hallways","Toxins","Storage","Maintenance","Crew Quarters","Medical","Security","Chapel","Bridge","Thunderdome")
-	var/t = A
-	switch (A)
-		if ("Engine")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/engine) && !istype(B, /area/engine/combustion) && !istype(B, /area/engine/engine_walls))
-					L += B
-			A = L
-		if ("Hallways")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/hallway))
-					L += B
-			A = L
-		if ("Toxins")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/toxins) && !istype(B, /area/toxins/test_area))
-					L += B
-			A = L
-		if ("Storage")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/storage))
-					L += B
-			A = L
-		if ("Maintenance")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/maintenance))
-					L += B
-			A = L
-		if ("Crew Quarters")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/crew_quarters))
-					L += B
-			A = L
-		if ("Medical")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/medical))
-					L += B
-			A = L
-		if ("Security")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/security))
-					L += B
-			A = L
-		if ("Chapel")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/chapel))
-					L += B
-			A = L
-		if ("Bridge")
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/bridge))
-					L += B
-			A = L
-		if ("Thunderdome")
-			usr << "\red Two men enter, one leaves"
-			return
-			var/list/L = list()
-			for(var/area/B in world)
-				if(istype(B, /area/tdome))
-					L += B
-			A = L
 
-	var/list/L = list()
-	for(var/area/AR in A)
-		for(var/turf/T in AR)
-			if(!T.density)
-				var/clear = 1
-				for(var/obj/O in T)
-					if(O.density)
-						clear = 0
-						break
-				if(clear)
-					L+=T
-	if (!L.len)
-		log_admin("TELEPORT ERROR ([t])")
-	usr.loc = pick(L)
-
-
+	if(!A)
+		return
+	usr.loc = pick(get_area_turfs(A))
