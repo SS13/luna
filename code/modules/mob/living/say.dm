@@ -32,6 +32,9 @@
 		return emote(copytext(message, 2))
 
 
+	if(silent)
+		return
+
 	// In case an object applies custom effects to the spoken message.
 	// This offers more flexibility (overwrite brainloss effects, headset stunned check etc.) here than if it were inserted further below.
 

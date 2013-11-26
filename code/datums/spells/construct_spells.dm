@@ -68,14 +68,40 @@
 	summon_type = list(/obj/effect/forcefield)
 	summon_lifespan = 50
 
+/obj/effect/proc_holder/spell/aoe_turf/conjure/mimewall
+	name = "Invisible Wall"
+	desc = "Create an invisible wall on your location"
+
+	school = "transmutation"
+	charge_max = 300
+	clothes_req = 0
+	invocation = "none"
+	invocation_type = "none"
+	range = 0
+	summon_type = list(/obj/effect/forcefield/mime)
+	summon_lifespan = 300
+
 /obj/effect/forcefield
 	desc = "A magic wall."
 	name = "FORCEWALL"
 	icon = 'mob.dmi'
 	icon_state = "shield"
-	anchored = 1.0
+	anchored = 1
 	opacity = 0
 	density = 1
+
+/obj/effect/forcefield/mime
+	icon_state = "empty"
+	name = "invisible wall"
+	desc = "You have a bad feeling about this."
+
+/obj/effect/forcefield/mime/Bumped(var/mob/living/M)
+	if(istype(M))
+		for (var/mob/V in viewers(M))
+			if(V!=usr)
+				V.show_message("[M] looks as if a wall is in front of them.", 3, "", 2)
+
+
 
 /obj/effect/proc_holder/spell/targeted/ethereal_jaunt/shift
 	name = "Phase Shift"

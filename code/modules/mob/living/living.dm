@@ -19,6 +19,7 @@
 	var/list/surgeries = list()	//a list of surgery datums. generally empty, they're added when the player wants them.
 
 	var/update_slimes = 1
+	var/silent = 0
 
 	var/maxHealth = 100
 

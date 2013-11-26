@@ -234,6 +234,9 @@
 	else
 		health = 150 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss())
 
+	if(silent)
+		silent = max(silent, 0)
+
 	if(health < 0 && stat != 2)
 		death()
 		return
@@ -254,8 +257,9 @@
 
 
 	if (src.stat == DEAD)
-		src.lying = 1
-		src.blinded = 1
+		lying = 1
+		blinded = 1
+		silent = 0
 
 	else
 		if (src.paralysis || src.stunned || src.weakened || (status_flags && FAKEDEATH)) //Stunned etc.
