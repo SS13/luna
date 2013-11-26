@@ -15,17 +15,6 @@
 	origin_tech = "magnets=1;engineering=1"
 	throw_range = 20
 
-/obj/item/weapon/bedsheet
-	name = "bedsheet"
-	icon = 'items.dmi'
-	icon_state = "sheet"
-	layer = 4.0
-	item_state = "w_suit"
-	throwforce = 1
-	w_class = 1.0
-	throw_speed = 2
-	throw_range = 10
-
 /obj/item/weapon/c_tube
 	name = "cardboard tube"
 	icon = 'items.dmi'
@@ -432,7 +421,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	icon_state = "chain"
 	item_state = "chain"
 	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
-//	slot_flags = SLOT_BELT
+	slot_flags = SLOT_BELT
 	force = 10
 	throwforce = 7
 	w_class = 3
@@ -441,7 +430,8 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 
 /obj/item/weapon/staff
 	name = "wizards staff"
-	icon = 'wizard.dmi'
+	desc = "Apparently a staff used by the wizard."
+	icon = 'icons/obj/wizard.dmi'
 	icon_state = "staff"
 	force = 3.0
 	throwforce = 5.0
@@ -449,19 +439,12 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	throw_range = 5
 	w_class = 2.0
 	flags = FPRINT | TABLEPASS | NOSHIELD
+	attack_verb = list("bludgeoned", "whacked", "disciplined")
 
-/obj/item/weapon/teleportation_scroll
-	name = "Teleportation Scroll"
-	desc = "A scroll for moving around."
-	icon = 'icons/obj/wizard.dmi'
-	icon_state = "scroll"
-	var/uses = 4.0
-	flags = FPRINT | TABLEPASS
-	w_class = 2.0
-	item_state = "paper"
-	throw_speed = 4
-	throw_range = 20
-	origin_tech = "bluespace=4"
+/obj/item/weapon/staff/broom
+	name = "broom"
+	desc = "Used for sweeping, and flying into the night while cackling. Black cat not included."
+	icon_state = "broom"
 
 /obj/item/weapon/wirecutters
 	name = "wirecutters"
@@ -562,46 +545,3 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	icon_state = "gift"
 	item_state = "gift"
 	pressure_resistance = 70
-
-/obj/item/weapon/scalpel
-	name = "robotics scapel"
-	icon = 'surgery.dmi'
-	icon_state = "scalpel"
-	flags = FPRINT | TABLEPASS | CONDUCT
-	force = 10.0
-	w_class = 1.0
-	slash = 1
-	throwforce = 5.0
-	throw_speed = 3
-	throw_range = 5
-	m_amt = 10000
-	g_amt = 5000
-
-/obj/item/weapon/s_scalpel
-	name = "surgical scapel"
-	icon = 'surgery.dmi'
-	icon_state = "scalpel"
-	flags = FPRINT | TABLEPASS | CONDUCT
-	force = 10.0
-	w_class = 1.0
-	slash = 1
-	throwforce = 5.0
-	throw_speed = 3
-	throw_range = 5
-	m_amt = 10000
-	g_amt = 5000
-
-/obj/item/weapon/circular_saw
-	name = "circular saw"
-	icon = 'surgery.dmi'
-	icon_state = "saw3"
-	item_state = "saw1" // Naming needs to be cleaned up for the saw icons
-	flags = FPRINT | TABLEPASS | CONDUCT
-	force = 15.0
-	w_class = 1.0
-	slash = 1
-	throwforce = 9.0
-	throw_speed = 3
-	throw_range = 5
-	m_amt = 20000
-	g_amt = 10000

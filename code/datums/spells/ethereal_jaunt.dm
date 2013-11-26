@@ -9,7 +9,6 @@
 	invocation_type = "none"
 	range = -1
 	include_user = 1
-	centcomm_cancast = 0 //Prevent people from getting to centcomm
 
 	var phaseshift = 0
 	var/jaunt_duration = 50 //in deciseconds
@@ -67,13 +66,13 @@
 				target.canmove = 0
 				sleep(20)
 				flick("reappear",animation)
-				sleep(5)
 				if(!target.Move(mobloc))
 					for(var/direction in list(1,2,4,8,5,6,9,10))
 						var/turf/T = get_step(mobloc, direction)
 						if(T)
 							if(target.Move(T))
 								break
+				sleep(5)
 				target.canmove = 1
 				target.client.eye = target
 				del(animation)
@@ -82,20 +81,51 @@
 /obj/effect/dummy/spell_jaunt
 	name = "water"
 	icon = 'icons/effects/effects.dmi'
+	var/datum/gas_mixture/air_contents = null
 	icon_state = "nothing"
 	var/canmove = 1
 	density = 0
 	anchored = 1
+	layer = 4.1
+
+/obj/effect/dummy/spell_jaunt/New()
+	..()
+	// Make a breatheable atmosphere for our little wizard...
+	src.air_contents = new /datum/gas_mixture()
+	src.air_contents.volume = 70 //liters
+	src.air_contents.temperature = T20C
+	src.air_contents.oxygen = ONE_ATMOSPHERE * src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C) * O2STANDARD
+	src.air_contents.nitrogen = ONE_ATMOSPHERE * src.air_contents.volume/(R_IDEAL_GAS_EQUATION*T20C) * N2STANDARD
+
 
 /obj/effect/dummy/spell_jaunt/relaymove(var/mob/user, direction)
 	if (!src.canmove) return
 	var/turf/newLoc = get_step(src,direction)
-	if(!(newLoc.flags & NOJAUNT))
-		loc = newLoc
-	else
+
+	if(!newLoc) return
+
+	if(newLoc.flags & NOJAUNT)
 		user << "<span class='warning'>Some strange aura is blocking the way!</span>"
+	else if((loc.z in list(1,2,3,4)) && !(newLoc.z in list(1,2,3,4)))
+		user << "<span class='warning'>Some strange aura is blocking the way!</span>"
+	else if(loc.z != newLoc.z)
+		user << "<span class='warning'>Some strange aura is blocking the way!</span>"
+	else
+		loc = newLoc
 	src.canmove = 0
 	spawn(2) src.canmove = 1
+
+
+/obj/effect/dummy/spell_jaunt/remove_air(amount)
+	return air_contents.remove(amount)
+
+/obj/effect/dummy/spell_jaunt/return_air()
+	return air_contents
+
+/obj/effect/dummy/spell_jaunt/Del()
+	for(var/atom/movable/A in src)
+		A.loc = src.loc
+	..()
 
 /obj/effect/dummy/spell_jaunt/ex_act(blah)
 	return

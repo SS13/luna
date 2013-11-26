@@ -1,9 +1,10 @@
 /obj/structure/closet/syndicate/personal
-	desc = "Gear preparations closet."
+	desc = "gear closet"
 
 /obj/structure/closet/syndicate/personal/New()
 	..()
 	sleep(2)
+	new /obj/item/weapon/storage/belt/syndie(src)
 	new /obj/item/weapon/tank/jetpack/syndie(src)
 	new /obj/item/clothing/mask/breath(src)
 	new /obj/item/clothing/under/syndicate(src)

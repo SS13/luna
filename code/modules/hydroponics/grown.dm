@@ -328,6 +328,15 @@
 			reagents.add_reagent("toxin", 1+round(potency / 10, 1))
 			bitesize = 1+round(reagents.total_volume / 2, 1)
 
+	attackby(obj/item/weapon/W as obj, mob/user as mob)
+		if(istype(W, /obj/item/weapon/paper))
+			user << "\red You roll up the branch into the paper."
+			var/obj/item/clothing/mask/cigarette/weed/P = new(user.loc)
+			reagents.trans_to(P, reagents.total_volume)
+			P.name = pick("joint","doobie","spliff","roach","blunt","roll","fatty","reefer")
+			del W
+			del src
+
 /obj/item/weapon/reagent_containers/food/snacks/grown/ambrosiadeus
 	seed = "/obj/item/seeds/ambrosiadeus"
 	name = "ambrosia deus branch"
@@ -343,6 +352,16 @@
 			reagents.add_reagent("hyperzine", 1+round(potency / 10, 1))
 			reagents.add_reagent("space_drugs", 1+round(potency / 10, 1))
 			bitesize = 1+round(reagents.total_volume / 2, 1)
+
+	attackby(obj/item/weapon/W as obj, mob/user as mob)
+		if(istype(W, /obj/item/weapon/paper))
+			user << "\red You roll up the branch into the paper."
+			var/obj/item/clothing/mask/cigarette/weed/P = new(user.loc)
+			reagents.trans_to(P, reagents.total_volume)
+			P.name = pick("joint","doobie","spliff","roach","blunt","roll","fatty","reefer")
+			P.desc = "It has an unusual minty scent."
+			del W
+			del src
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/apple
 	seed = "/obj/item/seeds/appleseed"
@@ -418,7 +437,7 @@
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/pumpkin/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
-	if(istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/hatchet) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/kitchenknife) || istype(W, /obj/item/weapon/melee/energy))
+	if(istype(W, /obj/item/weapon/surgical/circular_saw) || istype(W, /obj/item/weapon/hatchet) || istype(W, /obj/item/weapon/kitchen/utensil/knife) || istype(W, /obj/item/weapon/kitchenknife) || istype(W, /obj/item/weapon/melee/energy))
 		user.show_message("<span class='notice'>You carve a face into [src]!</span>", 1)
 		new /obj/item/clothing/head/pumpkinhead (user.loc)
 		del(src)

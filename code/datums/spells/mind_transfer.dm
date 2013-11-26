@@ -8,9 +8,9 @@
 	invocation = "GIN'YU CAPAN"
 	invocation_type = "whisper"
 	range = 1
-	var/list/protected_roles = list("Wizard","Changeling","Cultist") //which roles are immune to the spell
+	var/list/protected_roles //= list("Wizard","Changeling","Cultist") //which roles are immune to the spell
 	var/list/compatible_mobs = list(/mob/living/carbon/human,/mob/living/carbon/monkey) //which types of mobs are affected by the spell. NOTE: change at your own risk
-	var/base_spell_loss_chance = 20 //base probability of the wizard losing a spell in the process
+	var/base_spell_loss_chance = 10 //base probability of the wizard losing a spell in the process
 	var/spell_loss_chance_modifier = 7 //amount of probability of losing a spell added per spell (mind_transfer included)
 	var/spell_loss_amount = 1 //the maximum amount of spells possible to lose during a single transfer
 	var/msg_wait = 500 //how long in deciseconds it waits before telling that body doesn't feel right or mind swap robbed of a spell
@@ -77,32 +77,16 @@ Also, you never added distance checking after target is selected. I've went ahea
 	user.spell_list = checked_spells//Set user spell list to whatever the new list is.
 	//SPELL LOSS END
 
-	//MIND TRANSFER BEGIN
-	if(caster.mind.special_verbs.len)//If the caster had any special verbs, remove them from the mob verb list.
-		for(var/V in caster.mind.special_verbs)//Since the caster is using an object spell system, this is mostly moot.
-			caster.verbs -= V//But a safety nontheless.
-
-	if(victim.mind.special_verbs.len)//Now remove all of the victim's verbs.
-		for(var/V in victim.mind.special_verbs)
-			victim.verbs -= V
-
 	var/mob/dead/observer/ghost = victim.ghostize(0)
 	ghost.spell_list = victim.spell_list//If they have spells, transfer them. Now we basically have a backup mob.
 
 	caster.mind.transfer_to(victim)
 	victim.spell_list = caster.spell_list//Now they are inside the victim's body.
 
-	if(victim.mind.special_verbs.len)//To add all the special verbs for the original caster.
-		for(var/V in caster.mind.special_verbs)//Not too important but could come into play.
-			caster.verbs += V
-
 	ghost.mind.transfer_to(caster)
 	caster.key = ghost.key	//have to transfer the key since the mind was not active
 	caster.spell_list = ghost.spell_list
 
-	if(caster.mind.special_verbs.len)//If they had any special verbs, we add them here.
-		for(var/V in caster.mind.special_verbs)
-			caster.verbs += V
 	//MIND TRANSFER END
 
 	//Here we paralyze both mobs and knock them out for a time.

@@ -1,8 +1,8 @@
 /datum/surgery/appendectomy
 	name = "appendectomy"
 	steps = list(/datum/surgery_step/incise, /datum/surgery_step/clamp_bleeders, /datum/surgery_step/retract_skin, /datum/surgery_step/incise, /datum/surgery_step/extract_appendix, /datum/surgery_step/close)
-	species = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
-	location = "groin"
+	species = list(/mob/living/carbon/human)
+	locations = list("groin")
 
 
 //extract appendix
@@ -23,8 +23,8 @@
 		user.visible_message("<span class='notice'>[user] successfully removes [target]'s appendix!</span>")
 		A.loc = get_turf(target)
 		target.internal_organs -= A
-		for(var/datum/disease/appendicitis in target.viruses)
-			appendicitis.cure()
+//		for(var/datum/disease/appendicitis in target.viruses)
+//			appendicitis.cure()
 	else
 		user.visible_message("<span class='notice'>[user] can't find an appendix in [target]!</span>")
 	return 1

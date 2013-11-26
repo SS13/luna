@@ -5,9 +5,10 @@
 	Announce()
 		var/list/possible_leaks = list()
 		for(var/obj/machinery/portable_atmospherics/canister/C)
+			if(istype(C, /obj/machinery/portable_atmospherics/canister/toxins) || istype(C, /obj/machinery/portable_atmospherics/canister/sleeping_agent) || istype(C, /obj/machinery/portable_atmospherics/canister/carbon_dioxide))
+				continue
 			possible_leaks += C
-		for(var/obj/machinery/atmospherics/pipe/tank/T)
-			possible_leaks += T
+
 
 		for(var/i = 1, i <= rand(1,3), i++)
 			var/obj/machinery/M = pick(possible_leaks)
@@ -19,10 +20,3 @@
 				else
 					C.release_pressure = rand(ONE_ATMOSPHERE,10*ONE_ATMOSPHERE)
 					C.valve_open = 1
-			else
-				var/obj/machinery/atmospherics/pipe/tank/T = M
-				if(prob(50))
-					i--
-					continue //Pick another one.
-
-				del T.node1

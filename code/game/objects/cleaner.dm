@@ -15,9 +15,8 @@
 
 
 /obj/structure/mopbucket/examine()
-	set src in view()
-	usr << text("\icon[] [] contains [] units of water left!", src, src.name, src.reagents.total_volume)
 	..()
+	usr << text("\icon[] [] contains [] units of water left!", src, src.name, src.reagents.total_volume)
 
 /obj/structure/mopbucket/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/mop))
@@ -42,3 +41,12 @@
 			if (prob(5))
 				del(src)
 				return
+
+/obj/structure/mopbucket/tunderdome
+	name = "lube mopbucket"
+	anchored = 1
+	New()
+		var/datum/reagents/R = new/datum/reagents(100)
+		reagents = R
+		R.my_atom = src
+		reagents.add_reagent("lube", 100)

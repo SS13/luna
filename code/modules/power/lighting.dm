@@ -359,6 +359,7 @@
 		on = !on
 		update()	// And return to default state
 
+		sleep(20)
 		flickering = 0
 
 	return
@@ -513,12 +514,12 @@
 
 		if(prot > 0 || (user.mutations & 2))
 			user << "You remove the light [fitting]"
-		else if(istype(H) && H.a_intent == "hurt")
+		else if(istype(H) && H.a_intent == "harm")
 			user << "You smash the light [fitting], but burn your hand on it!"
 
 			var/datum/organ/external/affecting = H.organs["[user.hand ? "l" : "r" ]_hand"]
 
-			affecting.take_damage( 2, 6 )		// 6 burn damage and 2 brute
+			affecting.take_damage(2, 6)		// 6 burn damage and 2 brute
 			broken()
 			H.UpdateDamageIcon()
 			H.updatehealth()
@@ -528,7 +529,7 @@
 
 			var/datum/organ/external/affecting = H.organs["[user.hand ? "l" : "r" ]_hand"]
 
-			affecting.take_damage( 0, 5 )		// 5 burn damage
+			affecting.take_damage(0, 5)		// 5 burn damage
 
 			H.UpdateDamageIcon()
 			H.fireloss += 5
@@ -740,7 +741,7 @@
 /obj/item/weapon/light/afterattack(atom/target, mob/user)
 	if(istype(target, /obj/machinery/light))
 		return
-	if(user.a_intent != "hurt")
+	if(user.a_intent != "harm")
 		return
 
 	if(status == LIGHT_OK || status == LIGHT_BURNED)
@@ -761,11 +762,11 @@
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/box/light/tubes
-	name = "Replacement tubes"
+	name = "replacement tubes"
 	icon_state = "light_tube"
 
 /obj/item/weapon/storage/box/light/bulb
-	name = "Replacement bulbs"
+	name = "replacement bulbs"
 	icon = 'storage.dmi'
 	icon_state = "light_bulb"
 

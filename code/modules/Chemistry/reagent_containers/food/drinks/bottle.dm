@@ -32,7 +32,7 @@
 /obj/item/weapon/reagent_containers/food/drinks/bottle/attack(mob/living/target as mob, mob/living/user as mob)
 	if(!target)
 		return
-	if(user.a_intent != "hurt" || !isGlass)
+	if(user.a_intent != "harm" || !isGlass)
 		return ..()
 
 	force = 15 //Smashing bottles over someoen's head hurts.

@@ -1,12 +1,13 @@
-/mob/living/carbon/monkey/name = "monkey"
-/mob/living/carbon/monkey/voice_name = "monkey"
-/mob/living/carbon/monkey/voice_message = "chimpers"
-/mob/living/carbon/monkey/icon = 'monkey.dmi'
-/mob/living/carbon/monkey/icon_state = "monkey1"
-/mob/living/carbon/monkey/gender = NEUTER
-/mob/living/carbon/monkey/flags = 258.0
-/mob/living/carbon/monkey/random_events = list("scratch")
-/mob/living/carbon/monkey/species = "Monkey"
+/mob/living/carbon/monkey
+	name = "monkey"
+	voice_name = "monkey"
+	voice_message = "chimpers"
+	icon = 'monkey.dmi'
+	icon_state = "monkey1"
+	gender = NEUTER
+	flags = 258.0
+	random_events = list("scratch")
+	species = "Monkey"
 
 /mob/living/carbon/monkey/New()
 	..()
@@ -30,38 +31,21 @@
 		dna.uni_identity += "12C"
 		dna.uni_identity += "4E2"
 
-	if(name == "monkey") name = text("monkey ([rand(1, 1000)])")
+	if(name == "monkey") name = text("monkey ([rand(1, 999)])")
 
 	real_name = name
 
 	var/datum/organ/external/chest/chest = new /datum/organ/external/chest( src )
-	chest.owner = src
 	var/datum/organ/external/groin/groin = new /datum/organ/external/groin( src )
-	groin.owner = src
 	var/datum/organ/external/head/head = new /datum/organ/external/head( src )
-	head.owner = src
 	var/datum/organ/external/l_arm/l_arm = new /datum/organ/external/l_arm( src )
-	l_arm.owner = src
 	var/datum/organ/external/r_arm/r_arm = new /datum/organ/external/r_arm( src )
-	r_arm.owner = src
 	var/datum/organ/external/l_hand/l_hand = new /datum/organ/external/l_hand( src )
-	l_hand.owner = src
 	var/datum/organ/external/r_hand/r_hand = new /datum/organ/external/r_hand( src )
-	r_hand.owner = src
 	var/datum/organ/external/l_leg/l_leg = new /datum/organ/external/l_leg( src )
-	l_leg.owner = src
 	var/datum/organ/external/r_leg/r_leg = new /datum/organ/external/r_leg( src )
-	r_leg.owner = src
 	var/datum/organ/external/l_foot/l_foot = new /datum/organ/external/l_foot( src )
-	l_foot.owner = src
 	var/datum/organ/external/r_foot/r_foot = new /datum/organ/external/r_foot( src )
-	r_foot.owner = src
-
-	internal_organs += new /obj/item/organ/appendix
-	internal_organs += new /obj/item/organ/heart
-	internal_organs += new /obj/item/organ/brain
-
-
 
 	organs["chest"] = chest
 	organs["groin"] = groin
@@ -74,6 +58,13 @@
 	organs["r_leg"] = r_leg
 	organs["l_foot"] = l_foot
 	organs["r_foot"] = r_foot
+
+	for(var/datum/organ/external/O in GetOrgans())
+		O.owner = src
+
+	var/obj/item/organ/brain/B = new /obj/item/organ/brain
+	internal_organs += B
+	B.owner = src
 
 	return
 
@@ -154,7 +145,7 @@
 	return
 
 /mob/living/carbon/monkey/hand_p(mob/M as mob)
-	if ((M.a_intent == "hurt" && !( istype(wear_mask, /obj/item/clothing/mask/muzzle) )))
+	if ((M.a_intent == "harm" && !( istype(wear_mask, /obj/item/clothing/mask/muzzle) )))
 		if ((prob(75) && health > 0))
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red <B>[M.name] has bit []!</B>", src), 1)
@@ -178,7 +169,7 @@
 		for(var/mob/O in viewers(src, null))
 			O.show_message("\blue [M.name] shakes [name] trying to wake him up!", 1)
 	else
-		if ((M.a_intent == "hurt" && !( istype(wear_mask, /obj/item/clothing/mask/muzzle) )))
+		if ((M.a_intent == "harm" && !( istype(wear_mask, /obj/item/clothing/mask/muzzle) )))
 			if ((prob(75) && health > 0))
 				for(var/mob/O in viewers(src, null))
 					O.show_message("\red <B>[M.name] has bit [name]!</B>", 1)
@@ -263,7 +254,7 @@
 			if ((O.client && !( O.blinded )))
 				O.show_message(text("\blue [] shakes [name] trying to wake him up!", M), 1)
 	else
-		if (M.a_intent == "hurt")
+		if (M.a_intent == "harm")
 			if ((prob(75) && health > 0))
 				for(var/mob/O in viewers(src, null))
 					if ((O.client && !( O.blinded )))
@@ -435,26 +426,26 @@
 /obj/equip_e/monkey/process()
 	if (item)
 		item.add_fingerprint(source)
-	if (!( item ))
+	if (!item)
 		switch(place)
 			if("head")
-				if (!( target.wear_mask ))
+				if (!target.wear_mask)
 					del(src)
 					return
 			if("l_hand")
-				if (!( target.l_hand ))
+				if (!target.l_hand)
 					del(src)
 					return
 			if("r_hand")
-				if (!( target.r_hand ))
+				if (!target.r_hand)
 					del(src)
 					return
 			if("back")
-				if (!( target.back ))
+				if (!target.back)
 					del(src)
 					return
 			if("handcuff")
-				if (!( target.handcuffed ))
+				if (!target.handcuffed)
 					del(src)
 					return
 			if("internal")
@@ -495,7 +486,7 @@
 	if(source.loc != s_loc)						return
 	if(target.loc != t_loc)						return
 	if(LinkBlocked(s_loc,t_loc))				return
-	if(item && source.equipped() != item)	return
+	if(item && source.equipped() != item)		return
 	if ((source.restrained() || source.stat))	return
 	switch(place)
 		if("mask")

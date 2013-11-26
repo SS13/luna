@@ -70,7 +70,7 @@
 
 /obj/structure/closet/crate/internals
 	desc = "A internals crate."
-	name = "Internals crate"
+	name = "internals crate"
 	icon_state = "o2crate"
 	icon_opened = "o2crateopen"
 	icon_closed = "o2crate"
@@ -86,7 +86,7 @@
 
 /obj/structure/closet/crate/internalsoxy
 	desc = "A internals crate."
-	name = "Internals crate"
+	name = "internals crate"
 	icon_state = "o2crate"
 	icon_opened = "o2crateopen"
 	icon_closed = "o2crate"
@@ -126,7 +126,7 @@
 
 /obj/structure/closet/crate/medical
 	desc = "A medical crate."
-	name = "Medical crate"
+	name = "medical crate"
 	icon_state = "medicalcrate"
 	icon_opened = "medicalcrateopen"
 	icon_closed = "medicalcrate"
@@ -150,7 +150,7 @@
 
 /obj/structure/closet/crate/freezer
 	desc = "A freezer."
-	name = "Freezer"
+	name = "freezer"
 	icon_state = "freezer"
 	icon_opened = "freezeropen"
 	icon_closed = "freezer"
@@ -196,21 +196,21 @@
 
 /obj/structure/closet/crate/bin
 	desc = "A large bin."
-	name = "Large bin"
+	name = "large bin"
 	icon_state = "largebin"
 	icon_opened = "largebinopen"
 	icon_closed = "largebin"
 
 /obj/structure/closet/crate/radiation
 	desc = "A crate with a radiation sign on it."
-	name = "Radioactive gear crate"
+	name = "radioactive gear crate"
 	icon_state = "radiation"
 	icon_opened = "radiationopen"
 	icon_closed = "radiation"
 
 /obj/structure/closet/crate/secure
 	desc = "A secure crate."
-	name = "Secure crate"
+	name = "secure crate"
 	icon_state = "securecrate"
 	icon_opened = "securecrateopen"
 	icon_closed = "securecrate"
@@ -223,21 +223,21 @@
 
 /obj/structure/closet/crate/secure/weapon
 	desc = "A secure weapons crate."
-	name = "Weapons crate"
+	name = "weapons crate"
 	icon_state = "weaponcrate"
 	icon_opened = "weaponcrateopen"
 	icon_closed = "weaponcrate"
 
 /obj/structure/closet/crate/secure/engineering
 	desc = "A crate for the storage of engineering equipment."
-	name = "Engineering crate"
+	name = "engineering crate"
 	icon_state = "engi_secure_crate"
 	icon_opened = "engi_secure_crate_open"
 	icon_closed = "engi_secure_crate"
 
 /obj/structure/closet/crate/secure/plasma
 	desc = "A secure plasma crate."
-	name = "Plasma crate"
+	name = "plasma crate"
 	icon_state = "plasmacrate"
 	icon_opened = "plasmacrateopen"
 	icon_closed = "plasmacrate"
@@ -258,7 +258,7 @@
 
 /obj/structure/closet/crate/secure/bin
 	desc = "A secure bin."
-	name = "Secure bin"
+	name = "secure bin"
 	icon_state = "largebins"
 	icon_opened = "largebinsopen"
 	icon_closed = "largebins"
@@ -268,7 +268,7 @@
 	emag = "largebinemag"
 
 /obj/structure/closet/crate/hydroponics
-	name = "Hydroponics crate"
+	name = "hydroponics crate"
 	desc = "All you need to destroy those pesky weeds and pests."
 	icon = 'icons/obj/storage.dmi'
 	icon_state = "hydrocrate"
@@ -277,14 +277,14 @@
 
 /obj/structure/closet/crate/engineering
 	desc = "A crate for the storage of engineering equipment."
-	name = "Engineering crate"
+	name = "engineering crate"
 	icon_state = "engi_crate"
 	icon_opened = "engi_crate_open"
 	icon_closed = "engi_crate"
 
 /obj/structure/closet/crate/electical
 	desc = "A crate for the storage of electical equipment."
-	name = "Electical crate"
+	name = "electical crate"
 	icon_state = "engi_e_crate"
 	icon_opened = "engi_e_crate_open"
 	icon_closed = "engi_e_crate"
@@ -353,7 +353,10 @@
 		overlays.Cut()
 		overlays += redlight
 		return
-	else if ( (istype(W, /obj/item/weapon/card/emag)) && locked &&!broken)
+	else if(istype(W, /obj/item/device/hacktool) && src.req_access)
+		src.req_access = 0
+		user << "You reset [src]'s lock."
+	else if(istype(W, /obj/item/weapon/card/emag) && !broken)
 		overlays.Cut()
 		overlays += emag
 		overlays += sparks

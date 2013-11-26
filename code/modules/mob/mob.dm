@@ -3,167 +3,174 @@
 /mob/animate_movement = 2
 /mob/mouse_drag_pointer = MOUSE_ACTIVE_POINTER
 
-/mob/var/team = null
-
-/mob/var/mholder = null
-
-/mob/var/robot_talk_understand = 0
-
-/mob/var/datum/mind/mind
-
-/mob/var/uses_hud = 0
-/mob/var/obj/screen/flash = null
-/mob/var/obj/screen/pain = null
-/mob/var/obj/screen/blind = null
-/mob/var/obj/screen/hands = null
-/mob/var/obj/screen/mach = null
-/mob/var/obj/screen/sleep = null
-/mob/var/obj/screen/rest = null
-/mob/var/obj/screen/pullin = null
-/mob/var/obj/screen/internals = null
-/mob/var/obj/screen/oxygen = null
-/mob/var/obj/screen/i_select = null
-/mob/var/obj/screen/m_select = null
-/mob/var/obj/screen/toxin = null
-/mob/var/obj/screen/fire = null
-/mob/var/obj/screen/bodytemp = null
-/mob/var/obj/screen/healths = null
-/mob/var/obj/screen/throw_icon = null
-/mob/var/obj/screen/panel_icon = null
-/mob/var/obj/screen/cell_icon = null
-/mob/var/obj/screen/exttemp = null
-/mob/var/obj/screen/store = null
-/mob/var/obj/screen/module_icon = null
-
-/mob/var/list/atom/hallucinations = list()
-/mob/var/halloss = 0
-/mob/var/hallucination = 0
-
-/mob/var/alien_egg_flag = 0
-
-/mob/var/last_special = 0
-
-/mob/var/obj/screen/zone_sel/zone_sel = null
-
-/mob/var/emote_allowed = 1
-/mob/var/computer_id = null
-/mob/var/lastattacker = null
-/mob/var/lastattacked = null
-/mob/var/already_placed = 0.0
-/mob/var/obj/machinery/machine = null
-/mob/var/other_mobs = null
-/mob/var/memory = ""
-/mob/var/poll_answer = 0.0
-/mob/var/sdisabilities = 0
-/mob/var/disabilities = 0
-/mob/var/atom/movable/pulling = null
-/mob/var/stat = 0.0
 #define STAT_ASLEEP 1
 #define STAT_DEAD 2
-/mob/var/next_move = null
-/mob/var/prev_move = null
-/mob/var/monkeyizing = null
-/mob/var/other = 0.0
-/mob/var/hand = null
-/mob/var/eye_blind = null
-/mob/var/eye_blurry = null
-/mob/var/ear_deaf = null
-/mob/var/ear_damage = null
-/mob/var/stuttering = null
-/mob/var/intoxicated = null
-/mob/var/real_name = null
-/mob/var/face_dmg = 0
-/mob/var/blinded = null
-/mob/var/rejuv = null
-/mob/var/druggy = 0
-/mob/var/confused = 0
-/mob/var/staggering = 0
-/mob/var/antitoxs = null
-/mob/var/plasma = null
-/mob/var/sleeping = 0.0
-/mob/var/resting = 0.0
-/mob/var/lying = 0.0
-/mob/var/canmove = 1.0
-/mob/var/eye_stat = null
-/mob/var/oxyloss = 0.0
-/mob/var/toxloss = 0.0
-/mob/var/fireloss = 0.0
-/mob/var/timeofdeath = 0.0
-/mob/var/bruteloss = 0.0
-/mob/var/organbruteloss = 0.0
-/mob/var/cpr_time = 1.0
-/mob/var/health_full = 100
-/mob/var/health = 100
-/mob/var/bodytemperature = 310.055	//98.7 F
-/mob/var/drowsyness = 0.0
-/mob/var/dizziness = 0
-/mob/var/is_dizzy = 0
-/mob/var/is_jittery = 0
-/mob/var/jitteriness = 0
-/mob/var/charges = 0.0
-/mob/var/nutrition = 1600 //dun break
-/mob/var/paralysis = 0.0
-/mob/var/stunned = 0.0
-/mob/var/weakened = 0.0
-/mob/var/losebreath = 0.0
-/mob/var/muted = null
-/mob/var/intent = null
-/mob/var/shakecamera = 0
-/mob/var/a_intent = "help"
-/mob/var/m_int = null
-/mob/var/m_intent = "run"
-/mob/var/lastDblClick = 0
-/mob/var/lastKnownIP = null
-/mob/var/lastKnownCkey = null
-/mob/var/lastKnownID = null
-/mob/var/obj/structure/stool/buckled = null
-/mob/var/obj/item/weapon/handcuffs/handcuffed = null
-/mob/var/obj/item/l_hand = null
-/mob/var/obj/item/r_hand = null
-/mob/var/obj/item/weapon/back = null
-/mob/var/obj/item/weapon/tank/internal = null
-/mob/var/obj/item/weapon/storage/s_active = null
-/mob/var/obj/item/clothing/mask/wear_mask = null
-/mob/var/r_epil = 0
-/mob/var/r_ch_cou = 0
-/mob/var/r_Tourette = 0
 
-/mob/var/obj/hud/hud_used = null
+/mob
+	density = 1
+	layer = 4.0
+	animate_movement = 2
+	mouse_drag_pointer = MOUSE_ACTIVE_POINTER
 
-/mob/var/list/organs = list(  )
-/mob/var/list/grabbed_by = list(  )
-/mob/var/list/requests = list(  )
+	var/mholder = null
 
-/mob/var/list/mapobjs = list()
+	var/robot_talk_understand = 0
 
-/mob/var/in_throw_mode = 0
+	var/datum/mind/mind
 
-/mob/var/coughedtime = null
+	var/uses_hud = 0
+	var/obj/screen/flash = null
+	var/obj/screen/pain = null
+	var/obj/screen/blind = null
+	var/obj/screen/hands = null
+	var/obj/screen/mach = null
+	var/obj/screen/sleep = null
+	var/obj/screen/rest = null
+	var/obj/screen/pullin = null
+	var/obj/screen/internals = null
+	var/obj/screen/oxygen = null
+	var/obj/screen/i_select = null
+	var/obj/screen/m_select = null
+	var/obj/screen/toxin = null
+	var/obj/screen/fire = null
+	var/obj/screen/bodytemp = null
+	var/obj/screen/healths = null
+	var/obj/screen/throw_icon = null
+	var/obj/screen/panel_icon = null
+	var/obj/screen/cell_icon = null
+	var/obj/screen/exttemp = null
+	var/obj/screen/store = null
+	var/obj/screen/module_icon = null
 
-/mob/var/inertia_dir = 0
-/mob/var/footstep = 1
+	var/list/spell_list = list()
 
-/mob/var/music_lastplayed = "null"
+	var/list/atom/hallucinations = list()
+	var/halloss = 0
+	var/hallucination = 0
 
-/mob/var/job = null
+	var/alien_egg_flag = 0
 
-/mob/var/nodamage = 0
-/mob/var/logged_in = 0
+	var/last_special = 0
 
-/mob/var/underwear = 1
-/mob/var/be_syndicate = 0
-/mob/var/be_nuke_agent = 0
-/mob/var/be_takeover_agent = 0
-/mob/var/be_random_name = 0
-/mob/var/const/blindness = 1
-/mob/var/const/deafness = 2
-/mob/var/const/muteness = 4
-/mob/var/brainloss = 0
+	var/obj/screen/zone_sel/zone_sel = null
 
-/mob/var/datum/dna/dna = null
-/mob/var/radiation = 0.0
+	var/emote_allowed = 1
+	var/computer_id = null
+	var/lastattacker = null
+	var/lastattacked = null
+	var/already_placed = 0.0
+	var/obj/machinery/machine = null
+	var/other_mobs = null
+	var/memory = ""
+	var/poll_answer = 0.0
+	var/sdisabilities = 0
+	var/disabilities = 0
+	var/atom/movable/pulling = null
+	var/stat = 0.0
+	var/next_move = null
+	var/prev_move = null
+	var/monkeyizing = null
+	var/other = 0.0
+	var/hand = null
+	var/eye_blind = null
+	var/eye_blurry = null
+	var/ear_deaf = null
+	var/ear_damage = null
+	var/stuttering = null
+	var/intoxicated = null
+	var/real_name = null
+	var/face_dmg = 0
+	var/blinded = null
+	var/rejuv = null
+	var/druggy = 0
+	var/confused = 0
+	var/staggering = 0
+	var/antitoxs = null
+	var/plasma = null
+	var/sleeping = 0.0
+	var/resting = 0.0
+	var/lying = 0.0
+	var/canmove = 1.0
+	var/eye_stat = null
+	var/oxyloss = 0.0
+	var/toxloss = 0.0
+	var/fireloss = 0.0
+	var/timeofdeath = 0.0
+	var/bruteloss = 0.0
+	var/organbruteloss = 0.0
+	var/cpr_time = 1.0
+	var/health_full = 100
+	var/health = 100
+	var/bodytemperature = 310.055	//98.7 F
+	var/drowsyness = 0.0
+	var/dizziness = 0
+	var/is_dizzy = 0
+	var/is_jittery = 0
+	var/jitteriness = 0
+	var/charges = 0.0
+	var/nutrition = 1600 //dun break
+	var/paralysis = 0.0
+	var/stunned = 0.0
+	var/weakened = 0.0
+	var/losebreath = 0.0
+	var/muted = null
+	var/intent = null
+	var/shakecamera = 0
+	var/a_intent = "help"
+	var/m_int = null
+	var/m_intent = "run"
+	var/lastDblClick = 0
+	var/lastKnownIP = null
+	var/lastKnownCkey = null
+	var/lastKnownID = null
+	var/obj/structure/stool/bed/buckled = null
+	var/obj/item/weapon/handcuffs/handcuffed = null
+	var/obj/item/l_hand = null
+	var/obj/item/r_hand = null
+	var/obj/item/weapon/back = null
+	var/obj/item/weapon/tank/internal = null
+	var/obj/item/weapon/storage/s_active = null
+	var/obj/item/clothing/mask/wear_mask = null
+	var/r_epil = 0
+	var/r_ch_cou = 0
+	var/r_Tourette = 0
 
-/mob/var/mutations = 0
+	var/obj/hud/hud_used = null
+
+	var/list/organs = list(  )
+	var/list/grabbed_by = list(  )
+	var/list/requests = list(  )
+
+	var/list/mapobjs = list()
+
+	var/in_throw_mode = 0
+
+	var/coughedtime = null
+
+	var/inertia_dir = 0
+	var/footstep = 1
+
+	var/music_lastplayed = "null"
+
+	var/job = null
+
+	var/nodamage = 0
+	var/logged_in = 0
+
+	var/underwear = 1
+	var/be_syndicate = 0
+	var/be_nuke_agent = 0
+	var/be_takeover_agent = 0
+	var/be_random_name = 0
+	var/const/blindness = 1
+	var/const/deafness = 2
+	var/const/muteness = 4
+	var/brainloss = 0
+
+	var/datum/dna/dna = null
+	var/radiation = 0.0
+
+	var/mutations = 0
 ///mob/telekinesis = 1
 ///mob/firemut = 2
 ///mob/xray = 4
@@ -172,18 +179,28 @@
 ///mob/obese = 32
 ///mob/husk = 64
 
-/mob/var/voice_name = "unidentifiable voice"
-/mob/var/voice_message = null
+	var/voice_name = "unidentifiable voice"
+	var/voice_message = null
 
 //Monkey/infected mode
-/mob/var/list/resistances = list()
-/mob/var/datum/disease/virus = null
+	var/list/resistances = list()
+	var/datum/disease/virus = null
 
 //Changeling mode stuff
-/mob/var/changeling_absorbing = 0
-/mob/var/changeling_fakedeath = 0
-/mob/var/changeling_level = 0
-/mob/var/list/absorbed_dna = list()
+	var/changeling_absorbing = 0
+	var/changeling_fakedeath = 0
+	var/changeling_level = 0
+	var/list/absorbed_dna = list()
+
+//List of active diseases
+	var/list/viruses = list() // replaces var/datum/disease/virus
+
+	// Weird shit from tg
+	var/update_icon = 1 //Set to 1 to trigger update_icons() at the next life() call
+	var/status_flags = CANSTUN|CANWEAKEN|CANPARALYSE|CANPUSH	//bitflags defining which status effects can be inflicted (replaces canweaken, canstun, etc)
+	var/area/lastarea = null
+	var/digitalcamo = 0 // Can they be tracked by the AI?
+
 
 /mob/proc/Cell()
 	set category = "Admin"
@@ -221,7 +238,6 @@ mob/verb/turnwest()
 	dir = WEST
 
 /proc/ran_zone(zone, probability)
-
 	if (probability == null)
 		probability = 90
 	if (probability == 100)
@@ -845,9 +861,9 @@ mob/verb/turnwest()
 							usr.a_intent = "disarm"
 							usr.hud_used.action_intent.icon_state = "disarm"
 						if("disarm")
-							usr.a_intent = "hurt"
+							usr.a_intent = "harm"
 							usr.hud_used.action_intent.icon_state = "harm"
-						if("hurt")
+						if("harm")
 							usr.a_intent = "grab"
 							usr.hud_used.action_intent.icon_state = "grab"
 						if("grab")
@@ -861,18 +877,18 @@ mob/verb/turnwest()
 						if("disarm")
 							usr.a_intent = "help"
 							usr.hud_used.action_intent.icon_state = "help"
-						if("hurt")
+						if("harm")
 							usr.a_intent = "disarm"
 							usr.hud_used.action_intent.icon_state = "disarm"
 						if("grab")
-							usr.a_intent = "hurt"
+							usr.a_intent = "harm"
 							usr.hud_used.action_intent.icon_state = "harm"
 			else
 				switch(usr.a_intent)
 					if("help")
-						usr.a_intent = "hurt"
+						usr.a_intent = "harm"
 						usr.hud_used.action_intent.icon_state = "harm"
-					if ("hurt")
+					if ("harm")
 						usr.a_intent = "help"
 						usr.hud_used.action_intent.icon_state = "help"
 
@@ -884,12 +900,32 @@ mob/verb/turnwest()
 				if("disarm")
 					usr.a_intent = "help"
 					usr.hud_used.action_intent.icon_state = "help"
-				if("hurt")
+				if("harm")
 					usr.a_intent = "disarm"
 					usr.hud_used.action_intent.icon_state = "disarm"
 				if("grab")
-					usr.a_intent = "hurt"
+					usr.a_intent = "harm"
 					usr.hud_used.action_intent.icon_state = "harm"
+
+/*
+ ACCount's new intents panel. Start.
+ */
+		if("help")
+			usr.a_intent = "help"
+			usr.hud_used.action_intent.icon_state = "help"
+		if("grab")
+			usr.a_intent = "grab"
+			usr.hud_used.action_intent.icon_state = "grab"
+		if("disarm")
+			usr.a_intent = "disarm"
+			usr.hud_used.action_intent.icon_state = "disarm"
+		if("harm")
+			usr.a_intent = "harm"
+			usr.hud_used.action_intent.icon_state = "harm"
+/*
+ ACCount's new intents panel. End.
+ See HUD icons in modules/mob/living/carbon/humah/hud.dm
+ */
 
 		if("arrowright")
 			switch(usr.a_intent)
@@ -897,9 +933,9 @@ mob/verb/turnwest()
 					usr.a_intent = "disarm"
 					usr.hud_used.action_intent.icon_state = "disarm"
 				if("disarm")
-					usr.a_intent = "hurt"
+					usr.a_intent = "harm"
 					usr.hud_used.action_intent.icon_state = "harm"
-				if("hurt")
+				if("harm")
 					usr.a_intent = "grab"
 					usr.hud_used.action_intent.icon_state = "grab"
 				if("grab")
@@ -922,7 +958,7 @@ mob/verb/turnwest()
 						usr.intent = "13,15"
 					if("disarm")
 						usr.intent = "14,15"
-					if("hurt")
+					if("harm")
 						usr.intent = "15,15"
 					if("grab")
 						usr.intent = "12,15"
@@ -981,8 +1017,8 @@ mob/verb/turnwest()
 		if("run")
 			usr.m_intent = "run"
 			usr.m_int = "13,14"
-		if("hurt")
-			usr.a_intent = "hurt"
+		if("harm")
+			usr.a_intent = "harm"
 			usr.intent = "15,15"
 		if("grab")
 			usr.a_intent = "grab"
@@ -1130,6 +1166,41 @@ mob/verb/turnwest()
 		spawn(0)
 			O.process()
 			return
+
+	if(href_list["criminal"])
+		if(istype(usr, /mob/living/carbon/human))
+			var/mob/living/carbon/human/H = usr
+			if(istype(H.glasses, /obj/item/clothing/glasses/hud/security) || istype(H.glasses, /obj/item/clothing/glasses/sunglasses/sechud))
+				var/modified = 0
+				var/perpname = "wot"
+				if(wear_id)
+					var/obj/item/weapon/card/id/I = wear_id.GetID()
+					if(I)
+						perpname = I.name
+					else
+						perpname = name
+				else
+					perpname = name
+
+				if(perpname)
+					for (var/datum/data/record/E in data_core.general)
+						if (E.fields["name"] == perpname)
+							for (var/datum/data/record/R in data_core.security)
+								if (R.fields["id"] == E.fields["id"])
+
+									var/setcriminal = input(usr, "Specify a new criminal status for this person.", "Security HUD", R.fields["criminal"]) in list("None", "*Arrest*", "Incarcerated", "Parolled", "Released", "Cancel")
+
+									if(istype(H.glasses, /obj/item/clothing/glasses/hud/security) || istype(H.glasses, /obj/item/clothing/glasses/sunglasses/sechud))
+										if(setcriminal != "Cancel")
+											R.fields["criminal"] = setcriminal
+											modified = 1
+
+											spawn()
+												H.handle_regular_hud_updates()
+
+				if(!modified)
+					usr << "\red Unable to locate a data core entry for this person."
+
 	..()
 	return
 
@@ -1425,11 +1496,13 @@ mob/verb/turnwest()
 	set name = "Respawn"
 	set category = "OOC"
 
-	if (!( abandon_allowed ))
-		return
-	if ((stat != 2 || !( ticker )))
+	if (stat != DEAD || !ticker)
 		usr << "\blue <B>You must be dead to use this!</B>"
 		return
+
+	if (!abandon_allowed && !ticker.mode.name == "Sandbox")
+		return
+
 	if (ticker.mode.name == "AutoTraitor")
 		var/deathtime = world.time - src.timeofdeath
 		var/deathtimeminutes = round(deathtime / 600)
@@ -1447,7 +1520,6 @@ mob/verb/turnwest()
 			return
 		else
 			usr << "You can respawn now, enjoy your new life! :-D"
-
 
 	log_game("[usr.name]/[usr.key] used abandon mob.")
 
@@ -1472,7 +1544,7 @@ mob/verb/turnwest()
 
 
 
-	if(client && client.holder && (client.holder.state == 2))
+	if(client && client.holder && client.holder.state == 2)
 		client.admin_play()
 		return
 
@@ -1616,7 +1688,8 @@ mob/verb/turnwest()
 			if(muted)
 				src << "You are muted, have a nice day"
 				return
-			if (!( ismob(M) ))
+
+			if(!ismob(M))
 				return
 
 			var/t
@@ -1628,7 +1701,7 @@ mob/verb/turnwest()
 
 			t = sanitize(t)
 
-			if (!( t ))
+			if (!t)
 				return
 
 			if (usr.client && usr.client.holder)
@@ -1737,7 +1810,7 @@ mob/verb/turnwest()
 			var/mob/a = src
 			if(a.mind)
 				a.mind.log.updateloc(loc.loc,src)
-	return
+	return .
 
 /atom/movable/verb/pull()
 	set name = "Pull"
@@ -2297,11 +2370,29 @@ mob/verb/turnwest()
 		stat(null, "([x], [y], [z])")
 		stat(null, "CPU: [world.cpu]")
 
+	if(spell_list.len)
+		for(var/obj/effect/proc_holder/spell/S in spell_list)
+			switch(S.charge_type)
+				if("recharge")
+					statpanel("Spells","[S.charge_counter/10.0]/[S.charge_max/10]",S)
+				if("charges")
+					statpanel("Spells","[S.charge_counter]/[S.charge_max]",S)
+				if("holdervar")
+					statpanel("Spells","[S.holder_var_type] [S.holder_var_amount]",S)
+
 /client/proc/station_explosion_cinematic()
 	if(mob)
 		var/mob/M = mob
 		M.loc = null // HACK, but whatever, this works
+
+		if(!M)
+			return 0
+
 		var/obj/screen/boom = M.hud_used.station_explosion
+
+		if(!boom)
+			return 0
+
 		M.client.screen += boom
 		if(ticker)
 			switch(ticker.mode.name)
@@ -2397,15 +2488,3 @@ mob/verb/turnwest()
 /mob/proc/AdjustResting(amount)
 	resting = max(resting + amount,0)
 	return
-
-//List of active diseases
-
-/mob/var/list/viruses = list() // replaces var/datum/disease/virus
-
-/mob/var/update_icon = 1 //Set to 1 to trigger update_icons() at the next life() call
-
-/mob/var/status_flags = CANSTUN|CANWEAKEN|CANPARALYSE|CANPUSH	//bitflags defining which status effects can be inflicted (replaces canweaken, canstun, etc)
-
-/mob/var/area/lastarea = null
-
-/mob/var/digitalcamo = 0 // Can they be tracked by the AI?

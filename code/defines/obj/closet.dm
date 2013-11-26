@@ -30,6 +30,28 @@
 	desc = "A bulky (yet mobile) closet. Comes with janitor's clothes and biohazard gear."
 	name = "Custodial Closet"
 
+/obj/structure/closet/jcloset/New()
+	..()
+	sleep(2)
+	new /obj/item/clothing/under/rank/janitor(src)
+	new /obj/item/clothing/under/rank/janitor(src)
+	new /obj/item/clothing/shoes/black(src)
+	new /obj/item/clothing/shoes/black(src)
+	new /obj/item/device/flashlight(src)
+	new /obj/item/device/flashlight(src)
+	new /obj/item/clothing/shoes/galoshes(src)
+	new /obj/item/clothing/shoes/galoshes(src)
+	new /obj/item/weapon/caution(src)
+	new /obj/item/weapon/caution(src)
+	new /obj/item/weapon/caution(src)
+	new /obj/item/weapon/caution(src)
+	new /obj/item/weapon/caution(src)
+	new /obj/item/weapon/caution(src)
+	new /obj/item/weapon/storage/box/grenades/cleaner(src)
+	new /obj/item/weapon/storage/box/grenades/cleaner(src)
+	new /obj/item/weapon/reagent_containers/glass/bucket(src)
+
+
 /obj/structure/closet/lawcloset
 	desc = "A bulky (yet mobile) closet. Comes with lawyer apparel and items."
 	name = "Legal Closet"
@@ -54,6 +76,24 @@
 	icon_state = "toolcloset"
 	icon_closed = "toolcloset"
 	icon_opened = "toolclosetopen"
+
+/obj/structure/closet/toolcloset/New()
+	..()
+	if(prob(10)) new /obj/item/clothing/gloves/yellow(src)
+	if(prob(20)) new /obj/item/weapon/storage/belt/utility(src)
+	if(prob(30)) new /obj/item/device/multitool(src)
+
+	if(prob(80)) new /obj/item/weapon/storage/toolbox/mechanical(src)
+	else		 new /obj/item/weapon/storage/toolbox/electrical(src)
+
+	if(prob(50)) new /obj/item/weapon/cable_coil(src,30)
+	if(prob(30)) new /obj/item/clothing/head/helmet/hardhat(src)
+	new /obj/item/weapon/wrench(src)
+	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/screwdriver(src)
+	new /obj/item/weapon/crowbar(src)
+	new /obj/item/device/flashlight(src)
+	return
 
 /obj/structure/closet/thunderdome
 	desc = "Everything you need!"

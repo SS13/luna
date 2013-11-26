@@ -115,7 +115,7 @@
 	if (user.hand)
 		if(ishuman(user))
 			var/datum/organ/external/temp = user:organs["l_hand"]
-			if(!temp.destroyed)
+			if(temp.status)
 				user.l_hand = src
 			else
 				user << "\blue You pick \the [src] up with your ha- wait a minute."
@@ -125,7 +125,7 @@
 	else
 		if(ishuman(user))
 			var/datum/organ/external/temp = user:organs["r_hand"]
-			if(!temp.destroyed)
+			if(temp.status)
 				user.r_hand = src
 			else
 				user << "\blue You pick \the [src] up with your ha- wait a minute."
@@ -176,18 +176,30 @@
 /obj/item/var/superblunt = 0
 /obj/item/var/slash = 0
 
-/obj/item/proc/attack(mob/M as mob, mob/user as mob, def_zone)
+/obj/item/proc/attack(mob/living/M as mob, mob/living/user as mob, def_zone)
 	if (!M) // not sure if this is the right thing...
 		return
+
+	if(iscarbon(M) && (M.lying || isslime(M)))
+		var/mob/living/carbon/mob = M
+		//world << "mob is acceptable for surgery"
+		if(mob.surgeries.len)
+			//world << "mob has surgery"
+			if(user.a_intent == "help")
+				//world << "user is helpful"
+				for(var/datum/surgery/S in mob.surgeries)
+					//world << "checking [S]"
+					if(S.next_step(user, mob))
+						return 1
+
 
 	if (src.hitsound)
 		playsound(src.loc, hitsound, 50, 1, -1)
 	/////////////////////////
 	user.lastattacked = M
 	M.lastattacker = user
-	//spawn(1800)            // this wont work right
-	//	M.lastattacker = null
 	/////////////////////////
+
 	if(M.client)
 		log_attack("[M.name] attacked by [user.name]([user.key]) with [src]")
 	user.log_m("Attacked [M.name]([M.real_name]) with [src]")
@@ -213,7 +225,7 @@
 		if (H.organs[text("[]", def_zone)])
 			affecting = H.organs[text("[]", def_zone)]
 		if(affecting)
-			if(affecting.destroyed)
+			if(!affecting.status)
 				for(var/mob/O in viewers(M, null))
 					O.show_message(text("\red <B>[user3] has missed [M] with [src] </B>"),1)
 				return

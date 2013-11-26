@@ -54,11 +54,11 @@
 
 	return
 
-/obj/effect/proc_holder/spell/aoe_turf/conjure/summonEdSwarm //test purposes
-	name = "Dispense Wizard Justice"
-	desc = "This spell dispenses wizard justice."
+/obj/effect/proc_holder/spell/aoe_turf/conjure/summonSecbotSwarm //test purposes
+	name = "Dispense Justice"
+	desc = "This spell dispenses justice."
 
-	summon_type = list(/obj/machinery/bot/ed209)
+	summon_type = list(/obj/machinery/bot/secbot)
 	summon_amt = 10
 	range = 3
-	newVars = list("emagged" = 1,"name" = "Wizard's Justicebot")
+	newVars = list("emagged" = 1,"name" = "Justicebot")

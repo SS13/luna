@@ -42,9 +42,6 @@
 	attack_self(mob/living/user as mob)
 		user << "\red [src.name] has three settings, and they are all DESTROY."
 
-/obj/item/weapon/gun/energy/pulse_rifle/destroyer
-	icon_state = "h"
-
 
 
 /obj/item/weapon/gun/energy/pulse_rifle/M1911

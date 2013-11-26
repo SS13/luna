@@ -1,19 +1,20 @@
-/mob/living/carbon/alien/humanoid/name = "alien"
-/mob/living/carbon/alien/humanoid/icon_state = "alien_s"
+/mob/living/carbon/alien/humanoid
+	name = "alien"
+	icon_state = "alien_s"
 
-/mob/living/carbon/alien/humanoid/var/obj/item/weapon/r_store = null
-/mob/living/carbon/alien/humanoid/var/obj/item/weapon/l_store = null
+	var/obj/item/weapon/r_store = null
+	var/obj/item/weapon/l_store = null
 
-/mob/living/carbon/alien/humanoid/var/icon/stand_icon = null
-/mob/living/carbon/alien/humanoid/var/icon/lying_icon = null
+	var/icon/stand_icon = null
+	var/icon/lying_icon = null
 
-/mob/living/carbon/alien/humanoid/var/last_b_state = 1.0
+	var/last_b_state = 1.0
 
-/mob/living/carbon/alien/humanoid/var/image/face_standing = null
-/mob/living/carbon/alien/humanoid/var/image/face_lying = null
+	var/image/face_standing = null
+	var/image/face_lying = null
 
-/mob/living/carbon/alien/humanoid/var/list/body_standing = list(  )
-/mob/living/carbon/alien/humanoid/var/list/body_lying = list(  )
+	var/list/body_standing = list(  )
+	var/list/body_lying = list(  )
 
 /mob/living/carbon/alien/humanoid/New()
 	..()
@@ -24,15 +25,18 @@
 
 	if(name == "alien") name = text("alien ([rand(1, 1000)])")
 	real_name = name
+	var/obj/item/organ/brain/alien/B = new /obj/item/organ/brain/alien
+	internal_organs += B
+	B.owner = src
 
 /mob/living/carbon/alien/humanoid/attack_slime(mob/living/carbon/slime/M as mob)
-	if (!ticker)
+	if(!ticker)
 		M << "You cannot attack people before the game has started."
 		return
 
 	if(M.Victim) return // can't attack while eating!
 
-	if (health > -100)
+	if(health > -100)
 
 		for(var/mob/O in viewers(src, null))
 			if ((O.client && !( O.blinded )))
@@ -163,7 +167,6 @@
 
 	if(shielded)
 		damage /= 4
-
 
 	show_message("\red The blob attacks you!")
 
@@ -407,7 +410,7 @@
 		M << "You cannot attack people before the game has started."
 		return
 
-	if (M.a_intent == "hurt")
+	if (M.a_intent == "harm")
 		if (istype(M.wear_mask, /obj/item/clothing/mask/muzzle))
 			return
 		if (health > 0)
@@ -460,7 +463,13 @@
 					M << "<span class='notice'>Not enough charge!</span>"
 				return
 
+
 	if (M.a_intent == "help")
+		if(lying)
+			if(surgeries.len)
+				for(var/datum/surgery/S in surgeries)
+					if(S.next_step(M, src))
+						return 1
 		if (health > 0)
 			sleeping = 0
 			resting = 0
@@ -503,7 +512,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt" && !(M.gloves && M.gloves.cell))
+			if (M.a_intent == "harm" && !(M.gloves && M.gloves.cell))
 				var/damage = rand(1, 9)
 				if (prob(90))
 					if (M.mutations & HULK)
@@ -564,7 +573,6 @@
 
 
 /mob/living/carbon/alien/humanoid/show_inv(mob/user as mob)
-
 	user.machine = src
 	var/dat = {"
 	<B><HR><FONT size=3>[name]</FONT></B>

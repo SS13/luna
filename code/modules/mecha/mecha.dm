@@ -450,16 +450,10 @@
 			src.check_for_internal_damage(list(MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST))
 	return
 
-/*obj/mecha/bullet_act(var/type) //wrapper
+/obj/mecha/bullet_act(var/type) //wrapper
 
 	src.log_message("Hit by projectile.",1)
 	call((proc_res["dynbulletdamage"]||src), "dynbulletdamage")(type) //calls equipment
-	..()
-	return*/
-
-/obj/mecha/bullet_act(var/obj/item/projectile/Proj) //wrapper
-	src.log_message("Hit by projectile. Type: [Proj.name]([Proj.flag]).",1)
-	call((proc_res["dynbulletdamage"]||src), "dynbulletdamage")(Proj) //calls equipment
 	..()
 	return
 
@@ -482,38 +476,49 @@
 
 /obj/mecha/proc/destroy()
 	spawn()
-		var/obj/mecha/mecha = src
-	//	var/mob/M = src.occupant
+		go_out()
 		var/turf/T = get_turf(src)
-		var/wreckage = src.wreckage
-		var/list/r_equipment = src.equipment
-		var/obj/item/weapon/cell/r_cell = src.cell
-		var/obj/machinery/portable_atmospherics/canister/r_canister = src.internal_tank
-		src = null
-		del(mecha)
-		if(prob(40))
-			explosion(T, 0, 0, 1, 3)
-		spawn(0)
-			if(wreckage)
-				var/obj/structure/mecha_wreckage/WR = new wreckage(T)
-				for(var/obj/item/mecha_parts/mecha_equipment/E in r_equipment)
-					if(prob(30))
-						WR.crowbar_salvage += E
-						E.loc = WR
-						E.equip_ready = 1
-						E.reliability = rand(30,100)
-					else
-						E.loc = T
-						E.destroy()
-				if(r_cell)
-					WR.crowbar_salvage += r_cell
-					r_cell.loc = WR
-					r_cell.charge = rand(0, r_cell.charge)
-				if(r_canister)
-					WR.crowbar_salvage += r_canister
-					r_canister.loc = WR
-	return
+		tag = "\ref[src]" //better safe then sorry
+		if(loc)
+			loc.Exited(src)
+		loc = null
+		if(T)
+			if(istype(src, /obj/mecha/working/ripley/))
+				var/obj/mecha/working/ripley/R = src
+				if(R.cargo)
+					for(var/obj/O in R.cargo) //Dump contents of stored cargo
+						O.loc = T
+						R.cargo -= O
+						T.Entered(O)
 
+			if(prob(30))
+				explosion(T, 0, 0, 1, 3)
+			spawn(0)
+				if(wreckage)
+					var/obj/structure/mecha_wreckage/WR = new wreckage(T)
+					for(var/obj/item/mecha_parts/mecha_equipment/E in equipment)
+						if(E.salvageable && prob(30))
+							WR.crowbar_salvage += E
+							E.forceMove(WR)
+							E.equip_ready = 1
+							E.reliability = round(rand(E.reliability/3,E.reliability))
+						else
+							E.forceMove(T)
+							E.destroy()
+					if(cell)
+						WR.crowbar_salvage += cell
+						cell.forceMove(WR)
+						cell.charge = rand(0, cell.charge)
+					if(internal_tank)
+						WR.crowbar_salvage += internal_tank
+						internal_tank.forceMove(WR)
+				else
+					for(var/obj/item/mecha_parts/mecha_equipment/E in equipment)
+						E.forceMove(T)
+						E.destroy()
+		spawn(0)
+			del(src)
+	return
 
 /obj/mecha/ex_act(severity)
 	src.log_message("Affected by explosion of severity: [severity].",1)
@@ -933,10 +938,6 @@
 	set category = "Exosuit Interface"
 	set src = usr.loc
 	set popup_menu = 0
-	var/turf/T = get_turf(src)
-	if(istype(T.loc, /area/tdome/tdomea))
-		usr << "\red No way to flee away."
-		return
 	if(usr!=src.occupant)
 		return
 	src.go_out()
@@ -946,37 +947,23 @@
 
 /obj/mecha/proc/go_out()
 	if(!src.occupant) return
-	var/mob/mob_container
+	var/atom/movable/mob_container
 	if(ishuman(occupant))
 		mob_container = src.occupant
 	else
 		return
-
-	var/turf/T = get_turf(src)
-
-	if(istype(T.loc, /area/tdome/tdomea))
-		mob_container.stat = 2
-		if(mob_container.team == 1)
-			mob_container.loc = pick(tdome2)
-		else
-			mob_container.loc = pick(tdome1)
-
+	if(mob_container.forceMove(src.loc))//ejecting mob container
+		src.log_message("[mob_container] moved out.")
+		occupant.reset_view()
+		/*
+		if(src.occupant.client)
+			src.occupant.client.eye = src.occupant.client.mob
+			src.occupant.client.perspective = MOB_PERSPECTIVE
+		*/
+		src.occupant << browse(null, "window=exosuit")
 		src.occupant = null
+		src.icon_state = initial(icon_state)+"-open"
 		src.dir = dir_in
-
-	else
-		if(mob_container.forceMove(src.loc))//ejecting mob container
-			src.log_message("[mob_container] moved out.")
-			occupant.reset_view()
-			/*
-			if(src.occupant.client)
-				src.occupant.client.eye = src.occupant.client.mob
-				src.occupant.client.perspective = MOB_PERSPECTIVE
-			*/
-			src.occupant << browse(null, "window=exosuit")
-			src.occupant = null
-			src.icon_state = initial(icon_state)+"-open"
-			src.dir = dir_in
 	return
 
 /////////////////////////

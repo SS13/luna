@@ -9,8 +9,8 @@ MOP
 	icon_state = "mop"
 	var/mopping = 0
 	var/mopcount = 0
-	force = 3.0
-	throwforce = 10.0
+	force = 9
+	throwforce = 10
 	throw_speed = 5
 	throw_range = 10
 	w_class = 3.0

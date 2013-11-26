@@ -130,17 +130,20 @@
 		traitor_mob << "Unfortunately, the Syndicate wasn't able to get you a radio."
 	else
 		if (istype(R, /obj/item/device/radio))
-			var/obj/item/device/uplink/radio/T = new /obj/item/device/uplink/radio(R)
-			R:traitorradio = T
-			R:traitor_frequency = freq
-			T.name = R.name
-			T.icon_state = R.icon_state
-			T.origradio = R
+			var/obj/item/device/radio/radio = R
+			var/obj/item/device/uplink/headset/T = new /obj/item/device/uplink/headset(R)
+
+			radio.uplink = T
+			radio.traitor_frequency = freq
+			T.hostradio = R
 			traitor_mob << "The Syndicate have cunningly disguised a Syndicate Uplink as your [R.name] [loc]. Simply dial the frequency [format_frequency(freq)] to unlock its hidden features."
 			traitor_mob.mind.store_memory("<B>Radio Freq:</B> [format_frequency(freq)] ([R.name] [loc]).")
+
 		else if (istype(R, /obj/item/device/pda))
+			var/obj/item/device/pda/pda = R
 			var/obj/item/device/uplink/pda/T = new /obj/item/device/uplink/pda(R)
-			R:uplink = T
+
+			pda.uplink = T
 			T.unlocking_code = pda_pass
 			T.hostpda = R
 			traitor_mob << "The Syndicate have cunningly disguised a Syndicate Uplink as your [R.name] [loc]. Simply enter the code \"[pda_pass]\" into the ringtone select to unlock its hidden features."

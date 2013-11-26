@@ -35,7 +35,7 @@
 	if (mind)
 		mind.transfer_to(O)
 	O.loc = loc
-	O.a_intent = "hurt"
+	O.a_intent = "harm"
 	O << "<B>You are now a monkey.</B>"
 	/*
 	if (ticker.mode.name == "monkey")
@@ -247,7 +247,7 @@
 	if (client)
 		client.mob = O
 	O.loc = loc
-	O.a_intent = "hurt"
+	O.a_intent = "harm"
 	O << "<B>You are now an alien.</B>"
 	del(src)
 	return

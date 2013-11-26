@@ -86,7 +86,7 @@
 	using = new h_type( src )
 	using.name = "act_intent"
 	using.dir = SOUTHWEST
-	using.icon_state = (mymob.a_intent == "hurt" ? "harm" : mymob.a_intent)
+	using.icon_state = mymob.a_intent
 	using.screen_loc = ui_acti
 	using.layer = 20
 	adding += using
@@ -119,7 +119,7 @@
 	using.layer = 19
 	adding += using
 
-	using = new h_type( src )
+/*	using = new h_type( src ) Commenting this out. Intents is better. --ACCount
 	using.name = "arrowleft"
 	using.icon_state = "s_arrow"
 	using.dir = WEST
@@ -133,7 +133,43 @@
 	using.dir = EAST
 	using.screen_loc = ui_iarrowright
 	using.layer = 19
+	adding += using*/
+
+/*
+ ACCount's new intents panel. Start.
+ */
+	using = new h_type( src )
+	using.name = "help"
+	using.icon_state = "help_m"
+	using.screen_loc = ui_iarrowleft
+	using.layer = 19
 	adding += using
+
+	using = new h_type( src )
+	using.name = "grab"
+	using.icon_state = "grab_m"
+	using.screen_loc = ui_iarrowleft
+	using.layer = 19
+	adding += using
+
+
+	using = new h_type( src )
+	using.name = "disarm"
+	using.icon_state = "disarm_m"
+	using.screen_loc = ui_iarrowright
+	using.layer = 19
+	adding += using
+
+	using = new h_type( src )
+	using.name = "harm"
+	using.icon_state = "harm_m"
+	using.screen_loc = ui_iarrowright
+	using.layer = 19
+	adding += using
+/*
+ ACCount's new intents panel. End.
+ See actions in modules/mob/mob.dm
+ */
 
 	using = new h_type( src )
 	using.name = "drop"
@@ -302,7 +338,7 @@
 	intents += using
 	//ICONS
 	using = new h_type( src )
-	using.name = "hurt"
+	using.name = "harm"
 	using.icon_state = "harm"
 	using.screen_loc = "15:-11,15"
 	using.layer = 19
@@ -353,6 +389,7 @@
 	using.layer = 17
 	using.mouse_opacity = 0
 	vimpaired += using
+
 	using = new h_type( src )
 	using.name = null
 	using.icon_state = "dither50"
@@ -360,6 +397,7 @@
 	using.layer = 17
 	using.mouse_opacity = 0
 	vimpaired += using
+
 	using = new h_type( src )
 	using.name = null
 	using.icon_state = "dither50"
@@ -367,6 +405,7 @@
 	using.layer = 17
 	using.mouse_opacity = 0
 	vimpaired += using
+
 	using = new h_type( src )
 	using.name = null
 	using.icon_state = "dither50"

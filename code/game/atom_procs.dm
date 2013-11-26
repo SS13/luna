@@ -173,15 +173,6 @@
 		//world << "atom.DblClick() on [src] by [usr] : src.type is [src.type]"
 		usr:lastDblClick = world.time
 	..()
-
-	//Putting it here for now. It diverts stuff to the mech clicking procs. Putting it here stops us drilling items in our inventory Carn
-	if(istype(usr.loc,/obj/mecha))
-		if(usr.client && (src in usr.client.screen))
-			return
-		var/obj/mecha/Mech = usr.loc
-		Mech.click_action(src,usr)
-		return
-
 	var/parameters = params2list(params)
 
 	// ------ SHIFT-CLICK -----
@@ -191,11 +182,28 @@
 			ShiftClick(usr)
 		return
 
+	//Putting it here for now. It diverts stuff to the mech clicking procs. Putting it here stops us drilling items in our inventory Carn
+	if(istype(usr.loc,/obj/mecha))
+		if(usr.client && (src in usr.client.screen))
+			return
+		var/obj/mecha/Mech = usr.loc
+		Mech.click_action(src,usr)
+		return
+
+
 	// ------- ALT-CLICK -------
 
 	if(parameters["alt"])
 		if(!isAI(usr))
 			AltClick(usr)
+		return
+
+
+	// ------- CTRL-CLICK -------
+
+	if(parameters["ctrl"])
+		if(!isAI(usr))
+			CtrlClick(usr)
 		return
 
 	usr.log_m("Clicked on [src]")
@@ -240,7 +248,7 @@
 	if (((usr.paralysis || usr.stunned || usr.weakened) && !istype(usr, /mob/living/silicon/ai)) || usr.stat != 0)
 		return
 
-	if ((!( src in usr.contents ) && (((!( isturf(src) ) && (!( isturf(src.loc) ) && (src.loc && !( isturf(src.loc.loc) )))) || !( isturf(usr.loc) )) && (src.loc != usr.loc && (!( istype(src, /obj/screen) ) && !( usr.contents.Find(src.loc) ))))))
+	if ((!( src in usr.contents ) && (((!isturf(src) && (!isturf(src.loc) && (src.loc && !isturf(src.loc.loc)))) || !isturf(usr.loc)) && (src.loc != usr.loc && (!istype(src, /obj/screen) && !( usr.contents.Find(src.loc) ))))))
 		return
 
 	var/t5 = in_range(src, usr) || src.loc == usr
@@ -388,6 +396,11 @@
 				else if(pixel_x < -16)	usr.dir = WEST
 
 /atom/proc/AltClick()
+	if(hascall(src,"pull"))
+		src:pull()
+	return
+
+/atom/proc/CtrlClick()
 	if(hascall(src,"pull"))
 		src:pull()
 	return

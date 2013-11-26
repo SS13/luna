@@ -17,7 +17,7 @@
 /obj/item/weapon/tank/blob_act()
 	if(prob(25))
 		var/turf/location = src.loc
-		if (!( istype(location, /turf) ))
+		if (!istype(location, /turf))
 			del(src)
 
 		if(src.air_contents)
@@ -27,7 +27,7 @@
 
 /obj/item/weapon/tank/attack_self(mob/user as mob)
 	user.machine = src
-	if (!(src.air_contents))
+	if (!src.air_contents)
 		return
 
 	var/using_internal

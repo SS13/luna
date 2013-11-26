@@ -89,21 +89,21 @@ mob/new_player
 	Stat()
 		..()
 
-		statpanel("Game")
-		if(client.statpanel=="Game" && ticker)
+		statpanel("Lobby")
+		if(client.statpanel=="Lobby" && ticker)
 			if(ticker.hide_mode)
 				stat("Game Mode:", "Secret")
 			else
 				stat("Game Mode:", "[master_mode]")
 
 			if(ticker.current_state == GAME_STATE_PREGAME)
+				stat(null, null)
+				for(var/mob/new_player/player in world)
+					stat(player.key, player.ready ? "(Playing)" : null)
+				stat(null, null)
+
 				stat("Time To Start:", ticker.pregame_timeleft)
 
-		statpanel("Lobby")
-		if(client.statpanel=="Lobby" && ticker)
-			if(ticker.current_state == GAME_STATE_PREGAME)
-				for(var/mob/new_player/player in world)
-					stat("[player.key]", (player.ready)?("(Playing)"):(null))
 
 	Topic(href, href_list[])
 		if(href_list["show_preferences"])

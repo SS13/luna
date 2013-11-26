@@ -43,11 +43,10 @@
 	return
 
 /datum/UnifiedNetworkController/PowernetController/DeviceUsed(var/obj/item/device/Device, var/obj/cabling/Cable, var/mob/User)
-
 	switch(Device.type)
 		if(/obj/item/device/multitool)
-			User << "Power available: [src.Power]"
-			User << "Power Draw     : [src.Draw]"
+			User << "Power available: [SurplusPower()]"
+			User << "Power draw: [src.Draw]"
 
 	return
 

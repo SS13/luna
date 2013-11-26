@@ -46,8 +46,8 @@
 	icon_state = "autoinjector"
 	item_state = "pen"
 	origin_tech = "biotech=3;materials=3"
-	amount_per_transfer_from_this = 10
-	volume = 10
+	amount_per_transfer_from_this = 15
+	volume = 15
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/New()
 	..()
@@ -68,8 +68,3 @@
 		icon_state = "[initial(icon_state)]1"
 	else
 		icon_state = "[initial(icon_state)]0"
-
-/obj/item/weapon/reagent_containers/hypospray/autoinjector/minihypo
-	name = "mini hypospray"
-	desc = "Hypospray is a sterile, air-needle autoinjector for rapid administration of drugs to patients."
-	icon_state = "minihypo"

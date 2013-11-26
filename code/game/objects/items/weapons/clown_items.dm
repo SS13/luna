@@ -28,8 +28,10 @@
 		M.stop_pulling()
 		M << "\blue You slipped on the [name]!"
 		playsound(src.loc, 'sound/misc/slip.ogg', 50, 1, -3)
-		M.Stun(4)
-		M.Weaken(2)
+		spawn(2)
+			step(M, M.dir)
+		M.Stun(6)
+		M.Weaken(4)
 
 /*
  * Soap
@@ -66,8 +68,10 @@
 		M.stop_pulling()
 		M << "\blue You slipped on the [name]!"
 		playsound(src.loc, 'sound/misc/slip.ogg', 50, 1, -3)
-		M.Stun(3)
-		M.Weaken(2)
+		spawn(2)
+			step(M, M.dir)
+		M.Stun(6)
+		M.Weaken(4)
 
 /obj/item/weapon/soap/afterattack(atom/target, mob/user as mob)
 	if(istype(target,/obj/effect/decal/cleanable))
@@ -97,7 +101,7 @@
 	w_class = 1.0
 	throw_speed = 3
 	throw_range = 15
-//	attack_verb = list("HONKED")
+	attack_verb = list("HONKED")
 	var/spam_flag = 0
 
 /obj/item/weapon/bikehorn/attack_self(mob/user as mob)

@@ -24,7 +24,7 @@ Do deserunt Ut cillum in ad Duis et laboris dolore do voluptate anim Excepteur m
 	var/area/area
 	var/areastring = null
 	var/obj/item/weapon/cell/cell
-	var/start_charge = 90				// initial cell charge %
+	var/start_charge = 95				// initial cell charge %
 	var/cell_type = 2500				// 0=no cell, 1=regular, 2=high-cap (x5) <- old, now it's just 0=no cell, otherwise dictate cellcapacity by changing this value. 1 used to be 1000, 2 was 2500
 	var/opened = 0
 	var/shorted = 0

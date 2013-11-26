@@ -21,12 +21,6 @@
 	var/const/warningtime = 50 	// Make the CORE OVERLOAD message repeat only every aprox. ?? seconds
 	var/lastwarning = 0			// Time in 1/10th of seconds since the last sent warning
 
-/obj/machinery/engine/supermatter/pumpkin
-	name = "evil pumpkin"
-	desc = "A strangely translucent and iridescent pumpkin.  \red You get headaches just from looking at it."
-	icon_state = "pumpkin"
-
-
 /obj/machinery/engine/klaxon
 	name = "Emergency Klaxon"
 	icon = 'engine.dmi'
@@ -84,7 +78,7 @@
 	for(var/dir in cardinal)
 		var/turf/T = get_step(L, dir)
 		for(var/obj/beam/e_beam/item in T)
-			power += item.power
+			power += item.power*2
 
 	//Ok, 100% oxygen atmosphere = best reaction
 	//Maxes out at 100% oxygen pressure

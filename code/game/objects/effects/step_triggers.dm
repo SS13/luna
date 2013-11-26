@@ -119,22 +119,20 @@
 	name = "wormhole"
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "bhole2"
-	invisibility = 0
 	teleport_x = 67	// teleportation coordinates (if one is null, then no teleport!)
-	teleport_y = 97
+	teleport_y = 44
 	teleport_z = 7
-	teleport_x_offset = 69
-	teleport_y_offset = 104
+	teleport_x_offset = 66
+	teleport_y_offset = 51
 	teleport_z_offset = 7
 
 /obj/effect/step_trigger/teleporter/random/gteam
 	name = "wormhole"
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "bhole2"
-	invisibility = 0
-	teleport_x = 17	// teleportation coordinates (if one is null, then no teleport!)
-	teleport_y = 97
+	teleport_x = 21	// teleportation coordinates (if one is null, then no teleport!)
+	teleport_y = 44
 	teleport_z = 7
-	teleport_x_offset = 19
-	teleport_y_offset = 104
+	teleport_x_offset = 22
+	teleport_y_offset = 51
 	teleport_z_offset = 7

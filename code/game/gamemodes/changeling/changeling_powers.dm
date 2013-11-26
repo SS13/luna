@@ -17,7 +17,7 @@
 
 	spawn(600*tick_multiplier)
 		src.verbs += /client/proc/changeling_neurotoxic_sting
-		usr.verbs += /client/proc/changeling_hallucinogenic_sting
+		src.verbs += /client/proc/changeling_hallucinogenic_sting
 
 	src.changeling_level = 2
 	return
@@ -29,7 +29,7 @@
 	src.verbs -= /client/proc/changeling_lesser_transform
 	src.verbs -= /client/proc/changeling_fakedeath
 	src.verbs -= /client/proc/changeling_neurotoxic_sting
-	usr.verbs -= /client/proc/changeling_hallucinogenic_sting
+	src.verbs -= /client/proc/changeling_hallucinogenic_sting
 
 /client/proc/changeling_absorb_dna()
 	set category = "Changeling"
@@ -181,7 +181,7 @@
 	O.oxyloss = usr.oxyloss
 	O.fireloss = usr.fireloss
 	O.stat = usr.stat
-	O.a_intent = "hurt"
+	O.a_intent = "harm"
 	for (var/obj/item/weapon/implant/I in implants)
 		I.loc = O
 		I.implanted = O
@@ -349,7 +349,6 @@
 
 	spawn(600*tick_multiplier)
 		usr.verbs += /client/proc/changeling_neurotoxic_sting
-
 	return
 
 /client/proc/changeling_hallucinogenic_sting(mob/T as mob in oview(1))
@@ -364,7 +363,8 @@
 	usr << "\blue We stealthily sting [T]."
 
 	spawn(50*tick_multiplier) //Give the changeling a chance to calmly walk away before the target FREAKS THE FUCK OUT
-		T.reagents.add_reagent("LSD", 30)
+		if(T)
+			T.reagents.add_reagent("LSD", 30)
 
 	usr.verbs -= /client/proc/changeling_hallucinogenic_sting
 

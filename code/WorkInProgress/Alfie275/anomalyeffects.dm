@@ -1,4 +1,4 @@
-var/list/anomalyeffects = list("emp" = 2, "heal"=2,"hurt"=2, list("march" = 1,"repel"=1,"tele"=2)=4)
+var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"repel"=1,"tele"=2)=4)
 
 
 /datum/anomalyeffect
@@ -26,8 +26,8 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2,"hurt"=2, list("march" = 1,"r
 	effectname = "heal"
 	fluff = "Biological stabiliser field."
 
-/datum/anomalyeffect/hurt
-	effectname = "hurt"
+/datum/anomalyeffect/harm
+	effectname = "harm"
 	fluff = "Biological destabiliser field."
 
 /datum/anomalyeffect/emp
@@ -280,7 +280,7 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2,"hurt"=2, list("march" = 1,"r
 
 
 
-/datum/anomalyeffect/hurt/Activate()
+/datum/anomalyeffect/harm/Activate()
 	for(var/mob/living/carbon/m in range(src.range,get_turf(src.o)))
 		if(!CanAnom(m))
 			continue

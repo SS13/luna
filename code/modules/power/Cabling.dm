@@ -1,11 +1,11 @@
 /obj/cabling/power
 	icon = 'power_cond.dmi'
 
-	name = "Power Cable"
+	name = "power cable"
 
-	ConnectableTypes = list( /obj/machinery/power, /obj/structure/grille )
+	ConnectableTypes = list(/obj/machinery/power, /obj/structure/grille)
 	NetworkControllerType = /datum/UnifiedNetworkController/PowernetController
-	DropCablePieceType = /obj/item/weapon/cable_coil/power
+	DropCablePieceType = /obj/item/weapon/cable_coil
 	EquivalentCableType = /obj/cabling/power
 
 /obj/item/weapon/cable_coil/power

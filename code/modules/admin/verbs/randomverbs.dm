@@ -221,7 +221,7 @@ proc/remove_virus2(mob/by)
 				if(!istype(affecting, /datum/organ/external))    continue
 				affecting.heal_damage(1000, 1000)    //fixes getting hit after ingestion, killing you when game updates organ health
 				affecting.broken = 0
-				affecting.perma_injury = 0
+				affecting.perma_dmg = 0
 			H.UpdateDamageIcon()
 		M.bodytemperature = 310.055	//98.7 F
 		M.fireloss = 0
@@ -236,7 +236,6 @@ proc/remove_virus2(mob/by)
 		M.updatehealth()
 		M.buckled = initial(M.buckled)
 		M.handcuffed = initial(M.handcuffed)
-		M.face_dmg = 0
 		if (M.stat > 1)
 			M.stat=0
 		..()
@@ -448,103 +447,3 @@ proc/remove_virus2(mob/by)
 		src.view = input("Select view range:", "FUCK YE", 7) in list(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
 	else
 		src.view = world.view
-
-/client/proc/revive_td()
-	set category = "Roleplay"
-	set name = "Revive TD teams"
-	set desc = "this smallgay don't know how to put this shit in secrets"
-
-	for(var/mob/living/carbon/human/H in world)
-		if(H.z == 7)
-			H.revive()
-
-/client/proc/tdparty()
-	set category = "Roleplay"
-	set name = "TD party"
-	set desc = "cause all so lazy"
-
-	switch(alert("Do you wanna party with Buonaparte?",,"Yes","No",))
-		if("Yes")
-			var/t = 0
-			for(var/mob/living/carbon/human/H in world)
-				for(var/obj/item/W in H)
-					if (!istype(W,/datum/organ))
-						H.u_equip(W)
-						if (H.client)
-							H.client.screen -= W
-						if (W)
-							W.loc = H.loc
-							W.dropped(H)
-							W.layer = initial(W.layer)
-					H.paralysis += 5
-					sleep(5)
-				if(t)
-					H.loc = pick(tdome2)
-					H.team = 1
-					t = !t
-				else
-					H.loc = pick(tdome1)
-					H.team = 2
-					t = !t
-		if("No")
-			return
-
-/client/proc/tp_td()
-	set category = "Roleplay"
-	set name = "Teleport TD teams"
-	set desc = "just a teleportation without any healing"
-
-	for(var/mob/living/carbon/human/H in world)
-		if(H.team == 1)
-			H.loc = pick(tdome2)
-		else if(H.team == 2)
-			H.loc = pick(tdome1)
-
-
-/client/proc/c_op()
-	set category = "Roleplay"
-	set name = "Toggle extinguishers podlock"
-	var/id = "clothing2"
-
-	for(var/obj/machinery/door/poddoor/M in machines)
-		if (M.id == id)
-			if (M.density)
-				M.open()
-			else
-				M.close()
-
-/client/proc/e_op()
-	set category = "Roleplay"
-	set name = "Toggle energy podlock"
-	var/id = "energy1"
-
-	for(var/obj/machinery/door/poddoor/M in machines)
-		if (M.id == id)
-			if (M.density)
-				M.open()
-			else
-				M.close()
-
-/client/proc/g_op()
-	set category = "Roleplay"
-	set name = "Toggle gun podlock"
-	var/id = "gun1"
-
-	for(var/obj/machinery/door/poddoor/M in machines)
-		if (M.id == id)
-			if (M.density)
-				M.open()
-			else
-				M.close()
-
-/client/proc/t_op()
-	set category = "Roleplay"
-	set name = "Toggle arena podlocks"
-	var/id = "td1"
-
-	for(var/obj/machinery/door/poddoor/M in machines)
-		if (M.id == id)
-			if (M.density)
-				M.open()
-			else
-				M.close()

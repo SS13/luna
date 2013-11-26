@@ -110,19 +110,14 @@
 		step(O, get_dir(O, src))
 	return
 
-
 /obj/structure/table/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
-	if (istype(W, /obj/item/weapon/grab) && get_dist(src,user)<2)
+	if (istype(W, /obj/item/weapon/grab))
 		var/obj/item/weapon/grab/G = W
-		if(G.state<2)
-			user << "\red You need a better grip to do that!"
-			return
-		G.affecting.loc = src.loc
 		G.affecting.weakened = 5
 		for(var/mob/O in viewers(world.view, src))
 			if (O.client)
 				O << text("\red [] puts [] on the table.", G.assailant, G.affecting)
+		G.affecting.loc = src.loc
 		del(W)
 		return
 
@@ -144,16 +139,13 @@
 
 /obj/structure/table/reinforced/attackby(obj/item/weapon/W as obj, mob/user as mob)
 
-	if (istype(W, /obj/item/weapon/grab) && get_dist(src,user)<2)
+	if (istype(W, /obj/item/weapon/grab))
 		var/obj/item/weapon/grab/G = W
-		if(G.state<2)
-			user << "\red You need a better grip to do that!"
-			return
 		G.affecting.loc = src.loc
 		G.affecting.weakened = 5
 		for(var/mob/O in viewers(world.view, src))
 			if (O.client)
-				O << text("\red [] puts [] on the table.", G.assailant, G.affecting)
+				O << text("\red [] puts [] on the reinforced table.", G.assailant, G.affecting)
 		del(W)
 		return
 
@@ -186,12 +178,8 @@
 	return
 
 /obj/structure/table/woodentable/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
-	if (istype(W, /obj/item/weapon/grab) && get_dist(src,user)<2)
+	if (istype(W, /obj/item/weapon/grab))
 		var/obj/item/weapon/grab/G = W
-		if(G.state<2)
-			user << "\red You need a better grip to do that!"
-			return
 		G.affecting.loc = src.loc
 		G.affecting.weakened = 5
 		for(var/mob/O in viewers(world.view, src))

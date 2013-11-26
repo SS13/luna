@@ -34,18 +34,18 @@
 
 
 /obj/item/weapon/tank/jetpack/MouseDrop(obj/over_object as obj)
-	if ((istype(usr, /mob/living/carbon/human) || (ticker && ticker.mode.name == "monkey")))
+	if (istype(usr, /mob/living/carbon/human) || (ticker && ticker.mode.name == "monkey"))
 		var/mob/M = usr
-		if (!( istype(over_object, /obj/screen) ))
+		if (!istype(over_object, /obj/screen))
 			return ..()
-		if ((!M.restrained() && !M.stat && M.back == src))
+		if (!M.restrained() && !M.stat && M.back == src)
 			if (over_object.name == "r_hand")
-				if (!( M.r_hand ))
+				if (!M.r_hand)
 					M.u_equip(src)
 					M.r_hand = src
 			else
 				if (over_object.name == "l_hand")
-					if (!( M.l_hand ))
+					if (!M.l_hand)
 						M.u_equip(src)
 						M.l_hand = src
 			M.update_clothing()
@@ -107,19 +107,25 @@
 	src.on = !src.on
 	src.icon_state = "jetpack[on][jettype]"
 	src.item_state = "jetpack[on][jettype]"
+
+	if(usr.stat) return
+
 	if(src.on)
 		src.ion_trail.start()
 	else
 		src.ion_trail.stop()
 
-	if(ishuman(loc))
-		loc:update_clothing()
+	if(ishuman(usr))
+		usr:update_clothing()
 	usr << "You toggle the jetpack [on? "on":"off"]."
 	return
 
 /obj/item/weapon/tank/jetpack/verb/toggle_stabilisation()
 	set name = "Toggle Jetpack Stabilization"
 	set category = "Object"
+
+	if(usr.stat) return
+
 	src.stabilization_on = !src.stabilization_on
 	usr << "You toggle the stabilization [stabilization_on? "on":"off"]."
 	return

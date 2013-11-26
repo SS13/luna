@@ -77,7 +77,16 @@
 				loc = A.loc
 				return 0// nope.avi
 
-			if(!def_zone) def_zone = "chest"
+			if(!def_zone || def_zone == "groin")
+				def_zone = "chest"
+
+			if(def_zone == "eyes" || def_zone == "mouth")
+				def_zone = "head"
+
+			if(ishuman(A))
+				var/datum/organ/external/O = A:get_organ(def_zone)
+				if(!O || !O.status)
+					return 0// nope.avi
 
 			var/distance = get_dist(get_turf(A), starting) // Get the distance between the turf shot from and the mob we hit and use that for the calculations.
 			def_zone = ran_zone(def_zone, max(100-(7*distance), 5)) //Lower accurancy/longer range tradeoff. 7 is a balanced number to use.

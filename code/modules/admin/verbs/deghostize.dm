@@ -1,4 +1,4 @@
-/client/proc/cmd_admin_deghostize(var/mob/M in world)
+/client/proc/cmd_admin_deghostize(var/mob/dead/M in world)
 	set category = "Debug"
 	set name = "Deghostize"
 
@@ -174,7 +174,7 @@
 			new_character.equip_if_possible(new /obj/item/device/radio/headset/heads/hos(new_character), new_character.slot_ears)
 			new_character.equip_if_possible(new /obj/item/device/pda/heads/hos(new_character), new_character.slot_belt)
 			new_character.equip_if_possible(new /obj/item/clothing/under/rank/head_of_security(new_character), new_character.slot_w_uniform)
-			new_character.equip_if_possible(new /obj/item/clothing/suit/storage/hos(new_character), new_character.slot_wear_suit)
+			new_character.equip_if_possible(new /obj/item/clothing/suit/storage/armor/hos(new_character), new_character.slot_wear_suit)
 			new_character.equip_if_possible(new /obj/item/clothing/shoes/jackboots(new_character), new_character.slot_shoes)
 			new_character.equip_if_possible(new /obj/item/clothing/head/helmet/HoS(new_character), new_character.slot_head)
 			new_character.equip_if_possible(new /obj/item/clothing/gloves/black(new_character), new_character.slot_gloves)

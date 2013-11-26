@@ -7,53 +7,14 @@
 	unacidable = 1
 	luminosity = 8
 
-/**********************Miner lockers**************************
-
-/obj/structure/closet/secure_closet/miner
-	name = "miner's equipment"
-	icon_state = "miningsec1"
-	icon_closed = "miningsec"
-	icon_locked = "miningsec1"
-	icon_opened = "miningsecopen"
-	icon_broken = "miningsecbroken"
-	icon_off = "miningsecoff"
-	req_access = list(access_mining)
-
-/obj/structure/closet/secure_closet/miner/New()
-	..()
-	sleep(2)
-	if(prob(50))
-		new /obj/item/weapon/storage/backpack/industrial(src)
-	else
-		new /obj/item/weapon/storage/backpack/satchel_eng(src)
-	new /obj/item/device/radio/headset/headset_cargo(src)
-	new /obj/item/clothing/under/rank/miner(src)
-	new /obj/item/clothing/gloves/black(src)
-	new /obj/item/clothing/shoes/black(src)
-	new /obj/item/device/analyzer(src)
-	new /obj/item/weapon/storage/bag/ore(src)
-	new /obj/item/device/flashlight/lantern(src)
-	new /obj/item/weapon/shovel(src)
-	new /obj/item/weapon/pickaxe(src)
-	new /obj/item/clothing/glasses/meson(src)
-
-
-/******************************Lantern*******************************/
-
-/obj/item/device/flashlight/lantern
-	name = "lantern"
-	icon_state = "lantern"
-	desc = "A mining lantern."
-	brightness_on = 6			// luminosity when on
-
-*****************************Pickaxe********************************/
+/*****************************Pickaxe********************************/
 
 /obj/item/weapon/pickaxe
 	name = "pickaxe"
 	icon = 'icons/obj/items.dmi'
 	icon_state = "pickaxe"
 	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
-//	slot_flags = SLOT_BELT
+	slot_flags = SLOT_BELT
 	force = 12.0
 	throwforce = 4.0
 	item_state = "pickaxe"
@@ -81,7 +42,8 @@
 		icon_state = "handdrill"
 		item_state = "jackhammer"
 		digspeed = 30
-		force = 15.0
+		force = 15
+		slash = 1
 		origin_tech = "materials=2;powerstorage=3;engineering=2"
 		desc = "Yours is the drill that will pierce through the rock walls."
 
@@ -89,7 +51,8 @@
 		name = "sonic jackhammer"
 		icon_state = "jackhammer"
 		item_state = "jackhammer"
-		force = 17.0
+		force = 17
+		slash = 1
 		digspeed = 20 //faster than drill, but cannot dig
 		origin_tech = "materials=3;powerstorage=2;engineering=2"
 		desc = "Cracks rocks with sonic blasts, perfect for killing cave lizards."
@@ -116,6 +79,7 @@
 		item_state = "jackhammer"
 		digspeed = 5 //Digs through walls, girders, and can dig up sand
 		force = 20.0
+		slash = 1
 		origin_tech = "materials=6;powerstorage=4;engineering=5"
 		desc = "Yours is the drill that will pierce the heavens!"
 
@@ -124,6 +88,7 @@
 		icon_state = "diamonddrill"
 		item_state = "jackhammer"
 		digspeed = 15
+		slash = 1
 		desc = ""
 
 /*****************************Shovel********************************/
@@ -134,14 +99,15 @@
 	icon = 'icons/obj/items.dmi'
 	icon_state = "shovel"
 	flags = FPRINT | TABLEPASS| CONDUCT | ONBELT
-//	slot_flags = SLOT_BELT
+	slot_flags = SLOT_BELT
 	force = 8.0
 	throwforce = 4.0
 	item_state = "shovel"
+	slash = 1
 	w_class = 3.0
 	m_amt = 50
 	origin_tech = "materials=1;engineering=1"
-//	attack_verb = list("bashed", "bludgeoned", "thrashed", "whacked")
+	attack_verb = list("bashed", "bludgeoned", "thrashed", "whacked")
 
 /obj/item/weapon/shovel/spade
 	name = "spade"

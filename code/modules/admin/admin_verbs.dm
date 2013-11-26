@@ -56,7 +56,9 @@
 			/client/proc/toggleadminsectordoors,
 			/client/proc/toggleadminshuttledoors,
 			/client/proc/toggleevents,
-			/obj/admins/proc/toggletraitorscaling	//toggle traitor scaling
+			/obj/admins/proc/toggletraitorscaling,	//toggle traitor scaling
+			/client/proc/give_disease,
+			/client/proc/give_spell
 			)
 
 	//Verbs for everyone primary administrator and up.
@@ -103,8 +105,6 @@
 			/client/proc/funbutton,
 			/client/proc/general_report,
 			/client/proc/Getmob,
-			/client/proc/givedisease,
-			/client/proc/givedisease_deadly,
 			/client/proc/jobban_panel,
 			/client/proc/loadmap,
 			/client/proc/loadmaphere,
@@ -557,10 +557,20 @@
 			spawn(50+rand(0,3000))
 				explosion(T, 3, 1, force=1)
 
-	usr << "\blue Blowing up station ..."
+	usr << "\blue Blowing up ship ..."
 
 	log_admin("[key_name(usr)] has used boom boom boom shake the room")
 	message_admins("[key_name_admin(usr)] has used boom boom boom shake the room", 1)
+
+/client/proc/give_disease(mob/T as mob in mob_list) // -- Giacom
+	set category = "Debug"
+	set name = "Give Disease"
+	set desc = "Gives a Disease to a mob."
+	var/datum/disease/D = input("Choose the disease to give to that guy", "ACHOO") as null|anything in diseases
+	if(!D) return
+	T.contract_disease(new D, 1)
+	log_admin("[key_name(usr)] gave [key_name(T)] the disease [D].")
+	message_admins("\blue [key_name_admin(usr)] gave [key_name(T)] the disease [D].", 1)
 
 /client/proc/stealth()
 	set category = "Admin"
@@ -629,7 +639,7 @@
 				del(M)
 
 
-/client/proc/givedisease(var/mob/living/carbon/M in world)
+/*client/proc/givedisease(var/mob/living/carbon/M in world)
 	set category = "Debug"
 	set name = "Give disease"
 	set desc = "Does what it says on the tin"
@@ -641,7 +651,7 @@
 	set name = "Give deadly disease"
 	set desc = "Does what it says on the tin"
 	infect_mob_random_greater(M)
-	message_admins("\blue [src.ckey] infected [M.real_name]([M.ckey]) with a deadly disease.")
+	message_admins("\blue [src.ckey] infected [M.real_name]([M.ckey]) with a deadly disease.")*/
 
 /client/proc/clearmap()
 	set category = "Special Verbs"

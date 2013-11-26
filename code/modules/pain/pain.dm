@@ -42,7 +42,7 @@ mob/living/carbon/proc/handle_pain()
 		var/maxdam = 0
 		var/datum/organ/external/damaged_organ = null
 		for(var/datum/organ/external/E in src:organs)
-			if(E.robotic || E.destroyed)
+			if(E.status != ORGAN_INTACT)
 				continue
 			var/dam = E.get_damage()
 			// make the choice of the organ depend on damage,

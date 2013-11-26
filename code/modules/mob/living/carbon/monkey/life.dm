@@ -3,7 +3,7 @@
 
 	..()
 
-	if(!client)
+	if(!client && !stat) // No more RUNNING DEAD MONKIES
 		if(prob(33) && canmove && isturf(loc))
 			step(src, pick(cardinal))
 		if(prob(1))
@@ -28,8 +28,8 @@
 		see_in_dark = 2
 		see_invisible = 0
 
-	if (sleep) sleep.icon_state = text("sleep[]", sleeping)
-	if (rest) rest.icon_state = text("rest[]", resting)
+	if (sleep) sleep.icon_state = text("sleep[sleeping]")
+	if (rest) rest.icon_state = text("rest[resting]")
 
 	if (healths)
 		if (stat != 2)
@@ -85,8 +85,8 @@
 	client.screen -= hud_used.druggy
 	client.screen -= hud_used.vimpaired
 
-	if ((blind && stat != 2))
-		if ((blinded))
+	if (blind && stat != 2)
+		if (blinded)
 			blind.layer = 18
 		else
 			blind.layer = 0
@@ -102,7 +102,7 @@
 
 	if (stat != 2)
 		if (machine)
-			if (!( machine.check_eye(src) ))
+			if (!machine.check_eye(src))
 				reset_view(null)
 		else
 			if(!client.adminobs)

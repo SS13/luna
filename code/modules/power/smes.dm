@@ -24,7 +24,7 @@
 	var/charge = 5e6
 	var/charging = 0
 	var/chargemode = 1
-	var/chargecount = 0
+	var/chargecount = 40000
 	var/chargelevel = 0
 	var/online = 1
 	var/n_tag = null
@@ -54,11 +54,9 @@
 
 
 /obj/machinery/power/smes/update_icon()
-
 	overlays = null
 	if(stat & BROKEN)
 		return
-
 
 	overlays += image('power.dmi', "smes-op[online]")
 
@@ -79,10 +77,8 @@
 
 
 /obj/machinery/power/smes/process()
-
 	if(stat & BROKEN)
 		return
-
 
 	//store machine state to see if we need to update the icon overlays
 	var/last_disp = chargedisplay()
@@ -94,9 +90,7 @@
 
 		if(charging)
 			if(excess >= 0)		// if there's power available, try to charge
-
 				var/load = min((capacity-charge)/SMESRATE, chargelevel)		// charge at set rate, limited to spare capacity
-
 				charge += load * SMESRATE	// increase the charge
 
 				AddLoad(load)		// add the load to the terminal side network
@@ -149,13 +143,9 @@
 		return
 
 	var/datum/UnifiedNetworkController/PowernetController/Controller = GetPowernet()
-
 	var/excess = Controller.UnrecoveredSurplusPower()	// this was how much wasn't used on the network last ptick, minus any removed by other SMESes
-
 	excess = min(lastout, excess)						// clamp it to how much was actually output by this SMES last ptick
-
 	excess = min((capacity-charge)/SMESRATE, excess)	// for safety, also limit recharge by space capacity of SMES (shouldn't happen)
-
 	// now recharge this amount
 
 	var/clev = chargedisplay()
@@ -207,7 +197,6 @@
 	t += "Stored capacity : [round(100.0*charge/capacity, 0.1)]%<BR><BR>"
 
 	t += "Input: [charging ? "Charging" : "Not Charging"]    [chargemode ? "<B>Auto</B> <A href = '?src=\ref[src];cmode=1'>Off</A>" : "<A href = '?src=\ref[src];cmode=1'>Auto</A> <B>Off</B> "]<BR>"
-
 
 	t += "Input level:  <A href = '?src=\ref[src];input=-4'>M</A> <A href = '?src=\ref[src];input=-3'>-</A> <A href = '?src=\ref[src];input=-2'>-</A> <A href = '?src=\ref[src];input=-1'>-</A> [add_lspace(chargelevel,5)] <A href = '?src=\ref[src];input=1'>+</A> <A href = '?src=\ref[src];input=2'>+</A> <A href = '?src=\ref[src];input=3'>+</A> <A href = '?src=\ref[src];input=4'>M</A><BR>"
 

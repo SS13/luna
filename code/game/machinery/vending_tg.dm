@@ -599,7 +599,7 @@
 	vend_reply = "Have an enchanted evening!"
 	product_ads = "FJKLFJSD;AJKFLBJAKL;1234 LOONIES LOL!;>MFW;Kill them fuckers!;GET DAT FUKKEN DISK;HONK!;EI NATH;Destroy the station!;Admin conspiracies since forever!;Space-time bending hardware!"
 	products = list(/obj/item/clothing/head/wizard = 1,/obj/item/clothing/suit/wizrobe = 1,/obj/item/clothing/head/wizard/red = 1,/obj/item/clothing/suit/wizrobe/red = 1,/obj/item/clothing/shoes/sandal = 1,/obj/item/weapon/staff = 2)
-	contraband = list(/obj/item/weapon/reagent_containers/glass/bottle/virus/wizarditis = 1)	//No one can get to the machine to hack it anyways; for the lulz - Microwave
+	contraband = list(/obj/item/weapon/reagent_containers/glass/bottle/virus/wizarditis = 1, /obj/item/weapon/staff/magical/test = 1)	//No one can get to the machine to hack it anyways; for the lulz - Microwave
 /*
 /obj/machinery/vending_tg/dinnerware
 	name = "dinnerware"
@@ -664,7 +664,7 @@
 	req_access_txt = "29"
 	products = list(/obj/item/clothing/suit/storage/labcoat = 2,/obj/item/clothing/under/rank/roboticist = 2,/obj/item/weapon/cable_coil = 4,/obj/item/device/flash = 6,
 					/obj/item/weapon/cell/high/empty = 10, /obj/item/device/assembly/prox_sensor = 4,/obj/item/device/assembly/signaler = 4,/obj/item/device/healthanalyzer = 4,
-					/obj/item/weapon/scalpel = 2,/obj/item/weapon/circular_saw = 2,/obj/item/weapon/tank/anesthetic = 4,/obj/item/clothing/mask/breath/medical = 4,
+					/obj/item/weapon/surgical/scalpel = 2,/obj/item/weapon/surgical/circular_saw = 2,/obj/item/weapon/tank/anesthetic = 4,/obj/item/clothing/mask/breath/medical = 4,
 					/obj/item/weapon/screwdriver = 5,/obj/item/weapon/crowbar = 5)
 	contraband = list(/obj/item/weapon/stock_parts/scanning_module = 2,/obj/item/weapon/stock_parts/micro_laser = 3,
 					/obj/item/weapon/stock_parts/matter_bin = 5,/obj/item/weapon/stock_parts/manipulator = 3,/obj/item/weapon/stock_parts/console_screen = 2)

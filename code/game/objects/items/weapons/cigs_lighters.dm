@@ -50,7 +50,7 @@ CIGS
 	item_state = "zippo"
 	w_class = 2
 	flags = TABLEPASS | ONBELT
-//	slot_flags = SLOT_BELT
+	slot_flags = SLOT_BELT
 	can_hold = list("/obj/item/weapon/match")
 
 	New()
@@ -410,7 +410,6 @@ CIGS
 	New()
 		..()
 		reagents.add_reagent("dexalinp", 45)
-		reagents.add_reagent("inaprovaline", 10)
 		reagents.add_reagent("leporazine", 45)
 
 /obj/item/clothing/mask/cigarette/cigar/badmin
@@ -442,24 +441,22 @@ CIGS
 ////////////
 /obj/item/clothing/mask/cigarette/weed
 	name = "joint"
-	desc = "420 smoke weed errday"
+	desc = "420 smoke weed errday."
 	smoketime = 250
-	chem_volume = 40
-
-	New()
-		..()
-		reagents.add_reagent("space_drugs", 10)
+	chem_volume = 50
 
 /obj/item/clothing/mask/cigarette/weed/mega
 	desc = "This thing smells weird even unlit."
 	New()
 		..()
+		reagents.add_reagent("space_drugs", 10)
 		reagents.add_reagent("LSD", 15)
 
 /obj/item/clothing/mask/cigarette/weed/black
 	desc = "There's a really strong odor coming from this..."
 	New()
 		..()
+		reagents.add_reagent("space_drugs", 10)
 		reagents.add_reagent("cyanide", 5)
 		reagents.add_reagent("lexorin", 10)
 
@@ -467,6 +464,7 @@ CIGS
 	desc = "It has an unusual minty scent."
 	New()
 		..()
+		reagents.add_reagent("space_drugs", 10)
 		reagents.add_reagent("bicaridine", 5)
 		reagents.add_reagent("kelotane", 5)
 		reagents.add_reagent("anti_toxin", 5)

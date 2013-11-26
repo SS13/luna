@@ -1,52 +1,62 @@
 /datum/organ
 	var/name = "organ"
-	var/mob/living/owner = null
+	var/mob/living/carbon/owner = null
+
+/* ORGAN STATUS
+#define ORGAN_INTACT 		1
+#define ORGAN_DESTROYED 	0
+#define ORGAN_ROBOTIC 		2
+ */
 
 /datum/organ/external
 	name = "external"
 	var/icon_name = null
 	var/list/wounds = list()
 	var/damage_state = "00"
+
 	var/brute_dam = 0
 	var/burn_dam = 0
 	var/slash_dam = 0
-	var/bandaged = 0
+
 	var/max_damage = 0
 	var/wound_size = 0
 	var/max_size = 0
 	var/critical = 0
 	var/perma_dmg = 0
-	var/bleeding = 0
-	var/perma_injury = 0
 	var/broken = 0
-	var/destroyed = 0
-	var/robotic = 0
 	var/destspawn
+
 	var/obj/item/weapon/implant/implant = null
+	var/obj/item/cavity = null
+
 	var/min_broken_damage = 30
 	var/datum/organ/external/parent
 	var/damage_msg = "\red You feel a intense pain"
 
+	var/status = ORGAN_INTACT
+
 	var/body_part = null
 
+	var/open = 0
+	var/display_name
+	var/clean = 1
+	var/stage = 0
+	var/wound = 0
+	var/split = 0
+	var/bleeding = 0
+
 	process()
-		if(destroyed)
-			if(destspawn)
-				droplimb()
-			return
-		if(broken == 0 || robotic)
-			perma_dmg = 0
 		if(parent)
-			if(parent.destroyed)
-				destroyed = 1
+			if(!parent.status)
+				status = ORGAN_DESTROYED
 				owner:update_body()
 				return
 		if(brute_dam > min_broken_damage)
-			if(robotic)
-				if(prob(20))
+			if(status == ORGAN_ROBOTIC)
+				if(prob(95))
 					return
 			else
-				if(broken == 0)
+				if(broken == 0 && prob(60))
 					var/dmgmsg = "[damage_msg] in your [display_name]"
 					owner << dmgmsg
 					owner.unlock_medal("Broke Yarrr Bones!", 0, "Break a bone.", "easy")
@@ -56,16 +66,24 @@
 					owner.emote("scream")
 					broken = 1
 					wound = "broken" //Randomise in future
-					perma_injury = brute_dam
+					perma_dmg = brute_dam
 				return
 		return
 
-	var/open = 0
-	var/display_name
-	var/clean = 1
-	var/stage = 0
-	var/wound = 0
-	var/split = 0
+/datum/organ/external/proc/robotize()
+	status = ORGAN_ROBOTIC
+	heal_damage(1000, 1000, 1)
+	slash_dam = 0
+	bleeding = 0
+	open = 0
+	owner:update_clothing()
+	min_broken_damage += 20
+	max_damage += 30
+
+	var/list/organs = owner.GetOrgans()
+	for(var/datum/organ/external/O in organs) // Robotize all connected limbs
+		if(O.parent == src)
+			O.robotize()
 
 /datum/organ/external/proc/createwound(var/size = 1)
 	if(ishuman(src.owner))
@@ -86,8 +104,7 @@
 /datum/organ/external/wound/proc/stopbleeding()
 	if(!src.bleeding)
 		return
-	var/t = 10 * src.wound_size
-	src.owner:bloodloss -= t
+	src.owner:bloodloss -= 10 * src.wound_size
 	src.bleeding = 0
 	del(src)
 
@@ -127,7 +144,7 @@
 /datum/organ/external/l_arm
 	name = "l_arm"
 	icon_name = "arm_left"
-	max_damage = 75
+	max_damage = 85
 	min_broken_damage = 30
 	display_name = "left arm"
 
@@ -136,7 +153,7 @@
 /datum/organ/external/l_foot
 	name = "l_foot"
 	icon_name = "foot_left"
-	max_damage = 40
+	max_damage = 51
 	min_broken_damage = 20
 	display_name = "left foot"
 
@@ -145,7 +162,7 @@
 /datum/organ/external/l_hand
 	name = "l_hand"
 	icon_name = "hand_left"
-	max_damage = 40
+	max_damage = 45
 	min_broken_damage = 20
 	display_name = "left hand"
 
@@ -154,7 +171,7 @@
 /datum/organ/external/l_leg
 	name = "l_leg"
 	icon_name = "leg_left"
-	max_damage = 75
+	max_damage = 85
 	min_broken_damage = 30
 	display_name = "left leg"
 
@@ -163,7 +180,7 @@
 /datum/organ/external/r_arm
 	name = "r_arm"
 	icon_name = "arm_right"
-	max_damage = 75
+	max_damage = 85
 	min_broken_damage = 30
 	display_name = "right arm"
 
@@ -172,7 +189,7 @@
 /datum/organ/external/r_foot
 	name = "r_foot"
 	icon_name = "foot_right"
-	max_damage = 40
+	max_damage = 51
 	min_broken_damage = 20
 	display_name = "right foot"
 
@@ -181,7 +198,7 @@
 /datum/organ/external/r_hand
 	name = "r_hand"
 	icon_name = "hand_right"
-	max_damage = 40
+	max_damage = 45
 	min_broken_damage = 20
 	display_name = "right hand"
 
@@ -190,12 +207,11 @@
 /datum/organ/external/r_leg
 	name = "r_leg"
 	icon_name = "leg_right"
-	max_damage = 75
+	max_damage = 85
 	min_broken_damage = 30
 	display_name = "right leg"
 
 	body_part = LEG_RIGHT
-
 
 
 
@@ -251,167 +267,121 @@
 	var/stomach = null
 
 /datum/organ/external/proc/droplimb()
-	if(destroyed)
-		if(destroyed)
-			owner.unlock_medal("Lost something?", 0, "Lose a limb.", "easy")
-			if(name == "chest")
-				owner.gib()
-			if(name == "head")
-				var/obj/item/weapon/organ/head/H = new(owner.loc)
-				var/lol = pick(cardinal)
-				step(H,lol)
-				owner:update_face()
-				owner:update_body()
-				return
-			if(name == "r arm")
-				var/obj/item/weapon/organ/r_arm/H = new(owner.loc)
-				if(owner:organs["l_hand"])
-					var/datum/organ/external/S = owner:organs["l_hand"]
-					if(!S.destroyed)
-						var/obj/item/weapon/organ/r_hand/X = new(owner.loc)
-						for(var/mob/M in viewers(owner))
-							M.show_message("\red [owner.name]'s [X.name] flies off in arc.")
-						var/lol2 = pick(cardinal)
-						step(X,lol2)
-				var/lol = pick(cardinal)
-				step(H,lol)
-				destroyed = 1
-				robotic = 0
-				return
-			if(name == "l arm")
-				var/obj/item/weapon/organ/l_arm/H = new(owner.loc)
-				if(owner:organs["l_hand"])
-					var/datum/organ/external/S = owner:organs["l_hand"]
-					if(!S.destroyed)
-						var/obj/item/weapon/organ/l_hand/X = new(owner.loc)
-						for(var/mob/M in viewers(owner))
-							M.show_message("\red [owner.name]'s [X.name] flies off in arc.")
-						var/lol2 = pick(cardinal)
-						step(X,lol2)
-				var/lol = pick(cardinal)
-				step(H,lol)
-				destroyed = 1
-				robotic = 0
-				return
-			if(name == "r leg")
-				var/obj/item/weapon/organ/r_leg/H = new(owner.loc)
-				if(owner:organs["r_foot"])
-					var/datum/organ/external/S = owner:organs["r_foot"]
-					if(!S.destroyed)
-						var/obj/item/weapon/organ/l_foot/X = new(owner.loc)
-						for(var/mob/M in viewers(owner))
-							M.show_message("\red [owner.name]'s [X.name] flies off.")
-						var/lol2 = pick(cardinal)
-						step(X,lol2)
-				var/lol = pick(cardinal)
-				step(H,lol)
-				destroyed = 1
-				robotic = 0
-				return
-			if(name == "l leg")
-				var/obj/item/weapon/organ/l_leg/H = new(owner.loc)
-				if(owner:organs["l_foot"])
-					var/datum/organ/external/S = owner:organs["l_foot"]
-					if(!S.destroyed)
-						var/obj/item/weapon/organ/l_foot/X = new(owner.loc)
-						for(var/mob/M in viewers(owner))
-							M.show_message("\red [owner.name]'s [X.name] flies off.")
-						var/lol2 = pick(cardinal)
-						step(X,lol2)
-				var/lol = pick(cardinal)
-				step(H,lol)
-				destroyed = 1
-				robotic = 0
-				return
+	if(status) return
+
+	for(var/datum/organ/external/wound/W in wounds)
+		W.stopbleeding()
+
+	if(implant)
+		implant.loc = owner.loc
+		implant.implanted = null
+		implant = null
+
+	if(cavity)
+		cavity.loc = owner.loc
+		cavity = null
+
+	owner.unlock_medal("Lost something?", 0, "Lose a limb.", "easy")
+
+	for(var/mob/M in viewers(owner))
+		M.show_message("\red [owner.name]'s [display_name] flies off.")
+
+	var/list/organs = owner.GetOrgans()
+	for(var/datum/organ/external/O in organs) // Drop all connected limbs
+		if(O.parent == src && O.status)
+			O.status = ORGAN_DESTROYED
+			O.droplimb()
+
+	var/lol = pick(cardinal)
+	switch(name)
+		if("chest")
+			owner.gib()
+		if("head")
+			var/obj/item/weapon/organ/head/H = new(owner.loc)
+			step(H,lol)
+			owner:update_face()
+			owner:update_body()
+			if(ishuman(owner))
+				var/mob/living/carbon/human/mob = owner
+
+				var/icon/eyes_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "eyes_l")
+				eyes_l.Blend(rgb(mob.r_eyes, mob.g_eyes, mob.b_eyes), ICON_ADD)
+				H.overlays += image("icon" = eyes_l)
+
+				var/icon/hair_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "[mob.hair_icon_state]_l")
+				hair_l.Blend(rgb(mob.r_hair, mob.g_hair, mob.b_hair), ICON_ADD)
+				H.overlays += image("icon" = hair_l)
+
+				var/icon/facial_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "[mob.face_icon_state]_l")
+				facial_l.Blend(rgb(mob.r_facial, mob.g_facial, mob.b_facial), ICON_ADD)
+				H.overlays += image("icon" = facial_l)
+
+			var/obj/item/organ/brain/B = getbrain(owner)
+			if(B) // Move brain to dropped head, this will make body not cloneable
+				owner.internal_organs -= B
+				B.loc = H
+				H.brain = B
+			return
+
+		if("r_arm")
+			var/obj/item/weapon/organ/r_arm/H = new(owner.loc)
+			step(H,lol)
+			return
+		if("l_arm")
+			var/obj/item/weapon/organ/l_arm/H = new(owner.loc)
+			step(H,lol)
+			return
+		if("r_leg")
+			var/obj/item/weapon/organ/r_leg/H = new(owner.loc)
+			step(H,lol)
+			return
+		if("l_leg")
+			var/obj/item/weapon/organ/l_leg/H = new(owner.loc)
+			step(H,lol)
+			return
+		if("r_hand")
+			var/obj/item/weapon/organ/r_hand/H = new(owner.loc)
+			step(H,lol)
+			return
+		if("l_hand")
+			var/obj/item/weapon/organ/l_hand/H = new(owner.loc)
+			step(H,lol)
+			return
+		if("r_foot")
+			var/obj/item/weapon/organ/r_foot/H = new(owner.loc)
+			step(H,lol)
+			return
+		if("l_foot")
+			var/obj/item/weapon/organ/l_foot/H = new(owner.loc)
+			step(H,lol)
+			return
 
 /datum/organ/proc/process()
 	return
 
 /datum/organ/external/proc/take_damage(brute, burn, slash, supbrute)
-	if ((brute <= 0 && burn <= 0))
+	if(status == ORGAN_ROBOTIC) //This makes robolimbs not damageable by chems and makes it stronger
+		brute = max(0, brute - 5)
+		burn = max(0, burn - 4)
+
+	if(brute <= 0 && burn <= 0)
 		return 0
-	if(destroyed)
+
+	if(!status)
 		return 0
+
+
 	// make the target feel heavy pain
-	if(owner && prob((brute+burn)*2)) owner.pain(display_name, (brute+burn)*2, 1)
-	if(slash)
+	if(owner && status == ORGAN_INTACT && prob((brute+burn)*2) )
+		owner.pain(display_name, (brute+burn)*2, 1)
+
+	if((slash || prob((brute-10)/2)) && status == ORGAN_INTACT && brute_dam >= max_damage)
 		var/chance = rand(1,5)
 		var/nux = brute * chance
-		if(brute_dam >= max_damage)
-			if(prob(5 * brute))
-				for(var/mob/M in viewers(owner))
-					M.show_message("\red [owner.name]'s [display_name] flies off.")
-				if(name == "chest")
-					owner.gib()
-				if(name == "head")
-					var/obj/item/weapon/organ/head/H = new(owner.loc)
-					var/lol = pick(cardinal)
-					step(H,lol)
-					destroyed = 1
-					owner:update_face()
-					owner:update_body()
-					owner.death()
-					return
-				if(name == "r arm")
-					var/obj/item/weapon/organ/r_arm/H = new(owner.loc)
-					if(owner:organs["r_hand"])
-						var/datum/organ/external/S = owner:organs["r_hand"]
-						if(!S.destroyed)
-							var/obj/item/weapon/organ/r_hand/X = new(owner.loc)
-							for(var/mob/M in viewers(owner))
-								M.show_message("\red [owner.name]'s [X.name] flies off.")
-							var/lol2 = pick(cardinal)
-							step(X,lol2)
-					var/lol = pick(cardinal)
-					step(H,lol)
-					destroyed = 1
-					robotic = 0
-					return
-				if(name == "l arm")
-					var/obj/item/weapon/organ/l_arm/H = new(owner.loc)
-					if(owner:organs["l_hand"])
-						var/datum/organ/external/S = owner:organs["l_hand"]
-						if(!S.destroyed)
-							var/obj/item/weapon/organ/l_hand/X = new(owner.loc)
-							for(var/mob/M in viewers(owner))
-								M.show_message("\red [owner.name]'s [X.name] flies off in an arc.")
-							var/lol2 = pick(cardinal)
-							step(X,lol2)
-					var/lol = pick(cardinal)
-					step(H,lol)
-					destroyed = 1
-					robotic = 0
-					return
-				if(name == "r leg")
-					var/obj/item/weapon/organ/r_leg/H = new(owner.loc)
-					if(owner:organs["r_foot"])
-						var/datum/organ/external/S = owner:organs["r_foot"]
-						if(!S.destroyed)
-							var/obj/item/weapon/organ/l_foot/X = new(owner.loc)
-							for(var/mob/M in viewers(owner))
-								M.show_message("\red [owner.name]'s [X.name] flies off flies off in an arc.")
-							var/lol2 = pick(cardinal)
-							step(X,lol2)
-					var/lol = pick(cardinal)
-					step(H,lol)
-					destroyed = 1
-					robotic = 0
-					return
-				if(name == "l leg")
-					var/obj/item/weapon/organ/l_leg/H = new(owner.loc)
-					if(owner:organs["l_foot"])
-						var/datum/organ/external/S = owner:organs["l_foot"]
-						if(!S.destroyed)
-							var/obj/item/weapon/organ/l_foot/X = new(owner.loc)
-							for(var/mob/M in viewers(owner))
-								M.show_message("\red [owner.name]'s [X.name] flies off.")
-							var/lol2 = pick(cardinal)
-							step(X,lol2)
-					var/lol = pick(cardinal)
-					step(H,lol)
-					destroyed = 1
-					robotic = 0
-					return
+		if(prob(2 * brute))
+			status = ORGAN_DESTROYED
+			droplimb()
+
 		else if(prob(nux))
 			createwound(rand(1,5))
 			owner << "You feel something wet on your [display_name]"
@@ -445,13 +415,18 @@
 
 	return result
 
-/datum/organ/external/proc/heal_damage(brute, burn,var/internal = 0)
+/datum/organ/external/proc/heal_damage(brute, burn, var/internal = 0)
+	if(status == ORGAN_ROBOTIC) // This makes robolimbs not healable by chems
+		brute = max(0, brute - 3)
+		burn = max(0, burn - 3)
+
 	brute_dam = max(0, brute_dam - brute)
 	burn_dam = max(0, burn_dam - burn)
 	if(internal)
 		broken = 0
-		perma_injury = 0
 		perma_dmg = 0
+		split = 0
+		wound = 0
 	return update_icon()
 
 /datum/organ/external/proc/get_damage()	//returns total damage
@@ -504,33 +479,36 @@
 		return 0
 	return
 
-obj/item/weapon/organ/
+/obj/item/weapon/organ
 	icon = 'human.dmi'
-obj/item/weapon/organ/head
+	var/mob/living/carbon/owner = null
+
+/obj/item/weapon/organ/head
 	name = "head"
 	icon_state = "head_l"
-obj/item/weapon/organ/l_arm
+	var/obj/item/organ/brain/brain = null
+
+/obj/item/weapon/organ/l_arm
 	name = "left arm"
 	icon_state = "arm_left_l"
-obj/item/weapon/organ/l_foot
+/obj/item/weapon/organ/l_foot
 	name = "left foot"
 	icon_state = "foot_left_l"
-obj/item/weapon/organ/l_hand
+/obj/item/weapon/organ/l_hand
 	name = "left hand"
 	icon_state = "hand_left_l"
-obj/item/weapon/organ/l_leg
+/obj/item/weapon/organ/l_leg
 	name = "left leg"
 	icon_state = "leg_left_l"
-obj/item/weapon/organ/r_arm
+/obj/item/weapon/organ/r_arm
 	name = "right arm"
 	icon_state = "arm_right_l"
-obj/item/weapon/organ/r_foot
+/obj/item/weapon/organ/r_foot
 	name = "right foot"
 	icon_state = "foot_right_l"
-obj/item/weapon/organ/r_hand
+/obj/item/weapon/organ/r_hand
 	name = "right hand"
 	icon_state = "hand_right_l"
-obj/item/weapon/organ/r_leg
+/obj/item/weapon/organ/r_leg
 	name = "right leg"
 	icon_state = "leg_right_l"
-

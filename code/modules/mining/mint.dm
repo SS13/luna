@@ -1,14 +1,10 @@
 /**********************Mint**************************/
 
-
 /obj/machinery/mineral/mint
-	name = "Coin press"
+	name = "coin press"
 	icon = 'icons/obj/economy.dmi'
 	icon_state = "coinpress0"
-	density = 1
-	anchored = 1.0
-	var/obj/machinery/mineral/input = null
-	var/obj/machinery/mineral/output = null
+
 	var/amt_silver = 0 //amount of silver
 	var/amt_gold = 0   //amount of gold
 	var/amt_diamond = 0
@@ -26,11 +22,11 @@
 
 /obj/machinery/mineral/mint/New()
 	..()
-	spawn( 5 )
-		for (var/dir in cardinal)
+	spawn(5)
+		for(var/dir in cardinal)
 			src.input = locate(/obj/machinery/mineral/input, get_step(src, dir))
 			if(src.input) break
-		for (var/dir in cardinal)
+		for(var/dir in cardinal)
 			src.output = locate(/obj/machinery/mineral/output, get_step(src, dir))
 			if(src.output) break
 		processing_items.Add(src)
@@ -39,7 +35,7 @@
 
 
 /obj/machinery/mineral/mint/process()
-	if ( src.input)
+	if(src.input)
 		var/obj/item/stack/sheet/O
 		O = locate(/obj/item/stack/sheet, input.loc)
 		if(O)
@@ -70,7 +66,6 @@
 
 
 /obj/machinery/mineral/mint/attack_hand(user as mob) //TODO: Adamantine coins! -Durandan
-
 	var/dat = "<b>Coin Press</b><br>"
 
 	if (!input)

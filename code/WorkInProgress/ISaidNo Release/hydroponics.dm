@@ -678,7 +678,7 @@
 						src.reagents.add_reagent("blood", 5)
 						user << "\red You toss the [W] to the plant."
 						del W
-//				else if (istype(W, /obj/item/brain) || istype(W, /obj/item/clothing/head/butt))	 Strumpetplaya - commenting this out as it has components we don't support.
+//				else if (istype(W, /obj/item/organ/brain) || istype(W, /obj/item/clothing/head/butt))	 Strumpetplaya - commenting this out as it has components we don't support.
 //					src.reagents.add_reagent("blood", 20)
 //					user << "\red You toss the [W] to the plant."
 //					del W

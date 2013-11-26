@@ -98,9 +98,9 @@ proc/randomevent_laws()
 		if (!W) return
 		if (!user) return
 		if (istype(W, /obj/item/weapon/melee/energy/axe)) del src
-		if (istype(W, /obj/item/weapon/circular_saw)) del src
+		if (istype(W, /obj/item/weapon/surgical/circular_saw)) del src
 		if (istype(W, /obj/item/weapon/kitchen/utensil/knife)) del src
-		if (istype(W, /obj/item/weapon/scalpel)) del src
+		if (istype(W, /obj/item/weapon/surgical/scalpel)) del src
 		if (istype(W, /obj/item/weapon/screwdriver)) del src
 		if (istype(W, /obj/item/weapon/shard)) del src
 		if (istype(W, /obj/item/weapon/melee/energy/sword)) del src

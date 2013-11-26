@@ -179,7 +179,7 @@ CLASSIC BATON
 		M << "\red The helmet protects you from being hit hard in the head!"
 		return
 	if (status == 0 || (status == 1 && charges == 0))
-		if(user.a_intent == "hurt")
+		if(user.a_intent == "harm")
 			if (M.weakened < 5 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.weakened = 5
 				..()
@@ -196,7 +196,7 @@ CLASSIC BATON
 			return
 	if((charges > 0 && status == 1) && (istype(H, /mob/living/carbon/human)))
 		flick("baton_active", src)
-		if (user.a_intent == "hurt")
+		if (user.a_intent == "harm")
 			playsound(src.loc, 'Genhit.ogg', 50, 1, -1)
 			if(isrobot(user))
 				var/mob/living/silicon/robot/R = user
@@ -229,7 +229,7 @@ CLASSIC BATON
 			if (O.client)	O.show_message("\red <B>[M] has been stunned with the stun baton by [user]!</B>", 1, "\red You hear someone fall", 2)
 	else if((charges > 0 && status == 1) && (istype(M, /mob/living/carbon/monkey)))
 		flick("baton_active", src)
-		if (user.a_intent == "hurt")
+		if (user.a_intent == "harm")
 			playsound(src.loc, 'Genhit.ogg', 50, 1, -1)
 			if(isrobot(user))
 				var/mob/living/silicon/robot/R = user
@@ -273,7 +273,7 @@ CLASSIC BATON
 		return
 	src.add_fingerprint(user)
 
-	if (user.a_intent == "hurt")
+	if (user.a_intent == "harm")
 		playsound(src.loc, "swing_hit", 50, 1, -1)
 		if (M.weakened < 8 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.weakened = 8

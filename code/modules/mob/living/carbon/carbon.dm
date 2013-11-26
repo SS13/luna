@@ -1,32 +1,31 @@
-/mob/living/carbon/gender = MALE
+/mob/living/carbon/
+	gender = MALE
 
-/mob/living/carbon/var/co2overloadtime = null
-/mob/living/carbon/var/temperature_resistance = T0C+75
-/mob/living/carbon/var/obj/item/weapon/card/id/wear_id = null
-/mob/living/carbon/var/list/stomach_contents = list()
-/mob/living/carbon/var/brain_op_stage = 0.0
+	var/co2overloadtime = null
+	var/temperature_resistance = T0C+75
 
-/mob/living/carbon/var/list/internal_organs	= list()	//List of /obj/item/organ in the mob. they don't go in the contents.
+	var/obj/item/weapon/card/id/wear_id = null
 
-/mob/living/carbon/var/oxygen_alert = 0
-/mob/living/carbon/var/toxins_alert = 0
-/mob/living/carbon/var/fire_alert = 0
-/mob/living/carbon/var/temperature_alert = 0
-/mob/living/carbon/var/list/random_events = list() //If handle_random_events() is run, it will choose from this list. Entries are defined per type (See Monkey and Human)
-/mob/living/carbon/var/oxylossparalysis = 50
-/mob/living/carbon/var/species = null
+	var/list/stomach_contents 	= list()
+	var/list/internal_organs	= list()	//List of /obj/item/organ in the mob. they don't go in the contents.
 
-/mob/living/carbon/var/datum/disease2/disease/virus2 = null
-/mob/living/carbon/var/list/datum/disease2/disease/immunevirus2 = list()
-/mob/living/carbon/var/list/datum/disease2/resistance/resistances2 = list()
+	var/oxygen_alert = 0
+	var/toxins_alert = 0
+	var/fire_alert = 0
+	var/temperature_alert = 0
+	var/list/random_events = list() //If handle_random_events() is run, it will choose from this list. Entries are defined per type (See Monkey and Human)
+	var/oxylossparalysis = 50
+	var/species = null
+
+	var/datum/disease2/disease/virus2 = null
+	var/list/datum/disease2/disease/immunevirus2 = list()
+	var/list/datum/disease2/resistance/resistances2 = list()
 
 /mob/living/carbon/Move(NewLoc, direct)
 	. = ..()
 	if(.)
 		if(nutrition)
 			nutrition--
-		/*if(mutations & 32 && m_intent == "run")
-			bodytemperature += 2*/
 	return .
 
 /mob/living/carbon/relaymove(var/mob/user, direction)
@@ -98,6 +97,8 @@
 			H.blood_DNA = initial(blood_DNA)
 			H.blood_type = initial(blood_type)
 	update_clothing()
+
+
 
 /mob/living/carbon/Move()
 	if (buckled)
@@ -206,13 +207,13 @@
 	for(var/t in organs)
 		if (istype(organs[text("[]", t)], /datum/organ/external))
 			L += organs[text("[]", t)]
-	return L
+	return uniquelist(L)
 
 /mob/living/carbon/proc/UpdateDamageIcon()
 	return
 
 
-/mob/living/carbon/attack_hand(mob/user)
+/mob/living/carbon/attack_hand(mob/living/user)
 	if (!ticker)
 		user << "You cannot attack people before the game has started."
 		return
@@ -231,13 +232,13 @@
 		if(D.spread_by_touch())
 			contract_disease(D, 0, 1, CONTACT_HANDS)
 
-/*	if(lying || isslime(src))
+	if(lying || isslime(src))
 		if(user.a_intent == "help")
 			if(surgeries.len)
 				for(var/datum/surgery/S in surgeries)
 					if(S.next_step(user, src))
 						return 1
-	return 0*/
+	return 0
 
 
 /mob/living/carbon/attack_paw(mob/M as mob)

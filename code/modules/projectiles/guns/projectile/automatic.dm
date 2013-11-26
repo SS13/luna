@@ -70,7 +70,7 @@
 	item_state = "l6closedmag"
 	w_class = 5
 	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBACK
-//	slot_flags = 0
+	slot_flags = 0
 	max_shells = 50
 	caliber = "a762"
 	origin_tech = "combat=5;materials=1;syndicate=2"

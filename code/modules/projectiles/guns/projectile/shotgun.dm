@@ -7,7 +7,7 @@
 	w_class = 4.0
 	force = 10
 	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBACK
-//	slot_flags = SLOT_BACK
+	slot_flags = SLOT_BACK
 	caliber = "shotgun"
 	origin_tech = "combat=4;materials=2"
 	ammo_type = "/obj/item/ammo_casing/shotgun/beanbag"
@@ -127,7 +127,7 @@
 				user << "<span class='notice'>You load a shell into \the [src]!</span>"
 		A.update_icon()
 		update_icon()
-		if(istype(A, /obj/item/weapon/circular_saw) || istype(A, /obj/item/weapon/melee/energy/sword) || istype(A, /obj/item/weapon/weldingtool/plasmacutter))
+		if(istype(A, /obj/item/weapon/surgical/circular_saw) || istype(A, /obj/item/weapon/melee/energy/sword) || istype(A, /obj/item/weapon/weldingtool/plasmacutter))
 			user << "<span class='notice'>You begin to shorten the barrel of \the [src].</span>"
 			if(loaded.len)
 				afterattack(user, user)	//will this work?
@@ -141,6 +141,9 @@
 				item_state = "gun"
 				flags &= ~ONBACK	//you can't sling it on your back
 				flags |= ONBELT		//but you can wear it on your belt (poorly concealed under a trenchcoat, ideally)
+				slot_flags &= ~ SLOT_BACK
+				slot_flags |= SLOT_BELT
+
 				user << "<span class='warning'>You shorten the barrel of \the [src]!</span>"
 
 				name = "sawn-off shotgun"

@@ -1,64 +1,61 @@
-proc/random_name(gender, attempts_to_find_unique_name=10)
-	for(var/i=1, i<=attempts_to_find_unique_name, i++)
-		if(gender==FEMALE)	. = capitalize(pick(first_names_female)) + " " + capitalize(pick(last_names))
-		else				. = capitalize(pick(first_names_male)) + " " + capitalize(pick(last_names))
+/mob/living/carbon/human
+	name = "human"
+	voice_name = "human"
+	icon = 'mob.dmi'
+	icon_state = "m-none"
 
-		if(i != attempts_to_find_unique_name && !findname(.))
-			break
+	species = "Human"
+	var/lastnutritioncomplaint = 0
+	var/bloodloss = 0
+	var/r_hair = 0
+	var/g_hair = 0
+	var/b_hair = 0
+	var/h_style = "Short Hair"
+	var/r_facial = 0
+	var/g_facial = 0
+	var/b_facial = 0
+	var/f_style = "Shaved"
+	var/r_eyes = 0
+	var/g_eyes = 0
+	var/b_eyes = 0
+	var/s_tone = 0
+	var/age = 30
+	var/b_type = "A+"
+	var/obj/overlay/hair
 
-/mob/living/carbon/human/name = "human"
-/mob/living/carbon/human/voice_name = "human"
-/mob/living/carbon/human/icon = 'mob.dmi'
-/mob/living/carbon/human/icon_state = "m-none"
+	var/obj/item/weapon/r_store = null	//Left pocket
+	var/obj/item/weapon/l_store = null	//Right pocket
+	var/obj/item/weapon/s_store = null 	//Suit Storage
 
-/mob/living/carbon/human/species = "Human"
-/mob/living/carbon/human/var/lastnutritioncomplaint = 0
-/mob/living/carbon/human/var/bloodloss = 0
-/mob/living/carbon/human/var/r_hair = 0.0
-/mob/living/carbon/human/var/g_hair = 0.0
-/mob/living/carbon/human/var/b_hair = 0.0
-/mob/living/carbon/human/var/h_style = "Short Hair"
-/mob/living/carbon/human/var/r_facial = 0.0
-/mob/living/carbon/human/var/g_facial = 0.0
-/mob/living/carbon/human/var/b_facial = 0.0
-/mob/living/carbon/human/var/f_style = "Shaved"
-/mob/living/carbon/human/var/r_eyes = 0.0
-/mob/living/carbon/human/var/g_eyes = 0.0
-/mob/living/carbon/human/var/b_eyes = 0.0
-/mob/living/carbon/human/var/s_tone = 0.0
-/mob/living/carbon/human/var/age = 30.0
-/mob/living/carbon/human/var/b_type = "A+"
-/mob/living/carbon/human/var/obj/overlay/hair
-/mob/living/carbon/human/var/obj/item/weapon/r_store = null
-/mob/living/carbon/human/var/obj/item/weapon/l_store = null
+	var/icon/stand_icon = null
+	var/icon/lying_icon = null
 
-/mob/living/carbon/human/var/icon/stand_icon = null
-/mob/living/carbon/human/var/icon/lying_icon = null
+	var/last_b_state = 1.0
 
-/mob/living/carbon/human/var/last_b_state = 1.0
+	var/image/face_standing = null
+	var/image/face_lying = null
 
-/mob/living/carbon/human/var/image/face_standing = null
-/mob/living/carbon/human/var/image/face_lying = null
+	var/hair_icon_state = "hair_a"
+	var/face_icon_state = "bald"
 
-/mob/living/carbon/human/var/hair_icon_state = "hair_a"
-/mob/living/carbon/human/var/face_icon_state = "bald"
+	var/list/body_standing = list()
+	var/list/body_lying = list()
 
-/mob/living/carbon/human/var/list/body_standing = list()
-/mob/living/carbon/human/var/list/body_lying = list()
+	var/bot = 0
+	var/zombie = 0
+	var/pale = 0
+	var/zombietime = 0
+	var/zombifying = 0
+	var/zombi_infected = 0
+	var/image/zombieimage = null
+	var/datum/organ/external/DEBUG_lfoot
+	var/datum/reagents/vessel
 
-/mob/living/carbon/human/var/bot = 0
-/mob/living/carbon/human/var/zombie = 0
-/mob/living/carbon/human/var/pale = 0
-/mob/living/carbon/human/var/zombietime = 0
-/mob/living/carbon/human/var/zombifying = 0
-/mob/living/carbon/human/var/zombi_infected = 0
-/mob/living/carbon/human/var/image/zombieimage = null
-/mob/living/carbon/human/var/datum/organ/external/DEBUG_lfoot
-/mob/living/carbon/human/var/datum/reagents/vessel
+	var/gender_ambiguous = 0 //if something goes wrong during gender reassignment this generates a line in examine
 
-/mob/living/carbon/human/var/gender_ambiguous = 0
+	var/list/hud_list = list()
 
-/mob/living/carbon/human/var/list/hud_list = list()
+	var/tdome_team = 0
 
 /mob/living/carbon/human/dummy
 	real_name = "Test Dummy"
@@ -74,48 +71,22 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 		dna = new /datum/dna( null )
 
 	var/datum/organ/external/chest/chest = new /datum/organ/external/chest( src )
-	chest.owner = src
-
 	var/datum/organ/external/groin/groin = new /datum/organ/external/groin( src )
-	groin.owner = src
-
 	var/datum/organ/external/head/head = new /datum/organ/external/head( src )
-	head.owner = src
-
 	var/datum/organ/external/l_arm/l_arm = new /datum/organ/external/l_arm( src )
-	l_arm.owner = src
-
 	var/datum/organ/external/r_arm/r_arm = new /datum/organ/external/r_arm( src )
-	r_arm.owner = src
-
 	var/datum/organ/external/l_hand/l_hand = new /datum/organ/external/l_hand( src )
-	l_hand.owner = src
-	l_hand.parent = l_arm
-
 	var/datum/organ/external/r_hand/r_hand = new /datum/organ/external/r_hand( src )
-	r_hand.owner = src
-	r_hand.parent = r_arm
-
 	var/datum/organ/external/l_leg/l_leg = new /datum/organ/external/l_leg( src )
-	l_leg.owner = src
-
 	var/datum/organ/external/r_leg/r_leg = new /datum/organ/external/r_leg( src )
-	r_leg.owner = src
-
 	var/datum/organ/external/l_foot/l_foot = new /datum/organ/external/l_foot( src )
-	l_foot.owner = src
-	l_foot.parent = l_leg
-
 	var/datum/organ/external/r_foot/r_foot = new /datum/organ/external/r_foot( src )
-	r_foot.owner = src
+
+	l_hand.parent = l_arm
+	r_hand.parent = r_arm
+	l_foot.parent = l_leg
 	r_foot.parent = r_leg
 
-	internal_organs += new /obj/item/organ/appendix
-	internal_organs += new /obj/item/organ/heart
-	internal_organs += new /obj/item/organ/brain
-
-
-	//blood
 	organs["chest"] += chest
 	organs["groin"] += groin
 	organs["head"] += head
@@ -139,7 +110,9 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 	organs += r_leg
 	organs += l_foot
 	organs += r_foot
-	//DEBUG_lfoot = l_foot
+
+	for(var/datum/organ/external/O in GetOrgans())
+		O.owner = src
 
 	var/g = "m"
 	if (gender == MALE)
@@ -156,14 +129,17 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 		lying_icon = new /icon('human.dmi', "body_[g]_l")
 	icon = stand_icon
 
-	src << "\blue Your icons have been generated!"
+//	src << "\blue Your icons have been generated!"
 
 	vessel = new/datum/reagents(560)
 	vessel.my_atom = src
 	vessel.add_reagent("blood",560)
 
-	// random infection :D
-	//if(prob(3)) infect_mob_random_lesser(src)	//theres an event for it now/again
+	internal_organs += new /obj/item/organ/appendix
+	var/obj/item/organ/brain/brain = new /obj/item/organ/brain()
+	internal_organs += brain
+	brain.owner = src
+
 
 	for(var/i=0;i<7;i++) // 2 for medHUDs and 5 for secHUDs
 		hud_list += image('icons/mob/hud.dmi', src, "hudunknown")
@@ -181,7 +157,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				B.data["viruses"] = viruses
 
 /mob/living/carbon/human/Bump(atom/movable/AM as mob|obj, yes)
-	if ((!( yes ) || now_pushing))
+	if (!yes  || now_pushing)
 		return
 	now_pushing = 1
 	if (ismob(AM))
@@ -197,7 +173,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				var/obj/item/weapon/melee/baton/W = equipped()
 				if (world.time > lastDblClick+2)
 					lastDblClick = world.time
-					if(((prob(40)) || (prob(95) && mutations & CLUMSY)) && W.status)
+					if((prob(40) || (prob(95) && mutations & CLUMSY)) && W.status)
 						src << "\red You accidentally stun yourself with the [W.name]."
 						weakened = max(12, weakened)
 						playsound(loc, 'Egloves.ogg', 50, 1, -1)
@@ -239,29 +215,34 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 	if(health_deficiency >= 40)
 		tally += (health_deficiency / 40)
 
-	for(var/organ in list("l_leg","l_foot","r_leg","r_foot"))
-		var/datum/organ/external/o = organs["[organ]"]
-		if(o.broken) tally += 2
-
 	if(wear_suit) tally += wear_suit.slowdown
 
 	if(shoes) tally += shoes.slowdown
 
-	if (bodytemperature < 283.222)
+	for(var/organ in list("l_leg","l_foot","r_leg","r_foot"))
+		var/datum/organ/external/O = organs[organ]
+		if(O.broken) // Be slower if our legs is broken
+			tally += 2
+		else if(!O.status) // Or destroyed
+			tally += 3
+		else if(O.status == ORGAN_ROBOTIC) // Be faster if our legs is robotic
+			tally = max(tally - 1, 1.3)
+
+	if(bodytemperature < 283.222)
 		tally += (283.222 - bodytemperature) / 20 * 1.25
 
 	return tally
 
 /mob/living/carbon/human/Stat()
 	..()
-/*	if(ticker.mode.name == "AI malfunction")
+	if(ticker && ticker.mode.name == "AI malfunction")
 		if(ticker.mode:malf_mode_declared)
-			stat(null, "Time left: [ ticker.mode:AI_win_timeleft]")
+			stat(null, "Time left: [ticker.mode:AI_win_timeleft]")
 //	if(main_shuttle.online && main_shuttle.location < 2)
 //		var/timeleft = LaunchControl.timeleft()
 //		if (timeleft)
 //			stat(null, "ETA-[(timeleft / 60) % 60]:[add_zero(num2text(timeleft % 60), 2)]")
-*/
+
 	if (client.statpanel == "Status")
 		if (internal)
 			if (!internal.air_contents)
@@ -271,12 +252,14 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				stat("Tank Pressure", internal.air_contents.return_pressure())
 				stat("Distribution Pressure", internal.distribute_pressure)
 
+	var/obj/item/device/assembly/health/H = locate() in src
+	if(H && H.scanning)
+		stat("Health", health)
+
+
 /mob/living/carbon/human/ex_act(severity)
 	if(!blinded)
 		flick("flash", flash)
-
-// /obj/item/clothing/suit/bomb_suit(src)
-// /obj/item/clothing/head/bomb_hood(src)
 
 	if (stat == 2 && client)
 		gib()
@@ -292,11 +275,12 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 	var/f_loss = null
 	switch (severity)
 		if (1.0)
-			b_loss += 500
+			b_loss += 250
 			if (!prob(getarmor(null, "bomb")))
 				gib()
 				return
 			else
+				b_loss = b_loss/2
 				var/atom/target = get_edge_target_turf(src, get_dir(src, get_step_away(src, src)))
 				throw_at(target, 200, 4)
 			//return
@@ -310,8 +294,8 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 			f_loss += 60
 
 			if (prob(getarmor(null, "bomb")))
-				b_loss = b_loss/1.5
-				f_loss = f_loss/1.5
+				b_loss = b_loss/2
+				f_loss = f_loss/2
 
 			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 30
@@ -322,7 +306,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 		if(3.0)
 			b_loss += 30
 			if (prob(getarmor(null, "bomb")))
-				b_loss = b_loss/2
+				b_loss = b_loss/4
 			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 15
 				ear_deaf += 60
@@ -377,13 +361,13 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 	show_message("\red The blob attacks you!")
 	var/list/zones = list()
 	for(var/datum/organ/external/part in organs)
-		if(!part.destroyed)
+		if(part.status)
 			zones += part.name
 	var/zone = pick(zones)
 	if(!zone)
 		return
 	var/datum/organ/external/temp = organs["[zone]"]
-	if(temp.destroyed)
+	if(!temp.status)
 		return
 	switch(zone)
 		if ("head")
@@ -447,9 +431,18 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 /mob/living/carbon/human/u_equip(obj/item/W as obj)
 	if (W == wear_suit)
 		wear_suit = null
+		W = s_store
+		if(W)
+			u_equip(W)
+			if (client)
+				client.screen -= W
+			if (W)
+				W.loc = loc
+				W.dropped(src)
+				W.layer = initial(W.layer)
 	else if (W == w_uniform)
 		W = r_store
-		if (W)
+		if(W)
 			u_equip(W)
 			if (client)
 				client.screen -= W
@@ -515,7 +508,6 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 		handcuffed = null
 	else if (W == r_hand)
 		r_hand = null
-
 	else if (W == l_hand)
 		l_hand = null
 
@@ -524,18 +516,19 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 /mob/living/carbon/human/db_click(text, t1)
 	var/obj/item/W = equipped()
 	var/emptyHand = (W == null)
-	if ((!emptyHand) && (!istype(W, /obj/item)))
+	if (!emptyHand && !istype(W, /obj/item))
 		return
 	if (emptyHand)
 		usr.next_move = usr.prev_move
 		usr:lastDblClick -= 3	//permit the double-click redirection to proceed.
+
 	switch(text)
 		if("mask")
 			if (wear_mask)
 				if (emptyHand)
 					wear_mask.DblClick()
 				return
-			if (!( istype(W, /obj/item/clothing/mask) ))
+			if (!istype(W, /obj/item/clothing/mask))
 				return
 			u_equip(W)
 			wear_mask = W
@@ -553,74 +546,72 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 			back = W
 			W.equipped(src, text)
 		if("o_clothing")
-			if (wear_suit)
-				if (emptyHand)
+			if(wear_suit)
+				if(emptyHand)
 					wear_suit.DblClick()
 				return
-			if (!( istype(W, /obj/item/clothing/suit) ))
+			if(!istype(W, /obj/item/clothing/suit))
 				return
 			u_equip(W)
 			wear_suit = W
 			W.equipped(src, text)
 		if("gloves")
-			if (gloves)
-				if (emptyHand)
+			if(gloves)
+				if(emptyHand)
 					gloves.DblClick()
 				return
-			if (!( istype(W, /obj/item/clothing/gloves) ))
+			if (!istype(W, /obj/item/clothing/gloves))
 				return
 			u_equip(W)
 			gloves = W
 			W.equipped(src, text)
 		if("shoes")
-			if (shoes)
-				if (emptyHand)
+			if(shoes)
+				if(emptyHand)
 					shoes.DblClick()
 				return
-			if (!( istype(W, /obj/item/clothing/shoes) ))
+			if(!istype(W, /obj/item/clothing/shoes))
 				return
 			u_equip(W)
 			shoes = W
 			W.equipped(src, text)
 		if("belt")
-			if (belt)
-				if (emptyHand)
+			if(belt)
+				if(emptyHand)
 					belt.DblClick()
 				return
-			if (!W || !W.flags || !( W.flags & ONBELT ))
+			if(!W || !W.flags || !(W.flags & ONBELT))
 				return
 			u_equip(W)
 			belt = W
 			W.equipped(src, text)
 		if("eyes")
-			if (glasses)
-				if (emptyHand)
+			if(glasses)
+				if(emptyHand)
 					glasses.DblClick()
 				return
-			if (!( istype(W, /obj/item/clothing/glasses) ))
+			if(!istype(W, /obj/item/clothing/glasses))
 				return
 			u_equip(W)
 			glasses = W
 			W.equipped(src, text)
 		if("head")
-			if (head)
-				if (emptyHand)
+			if(head)
+				if(emptyHand)
 					head.DblClick()
 				return
-			if (( istype(W, /obj/item/weapon/paper) ))
-				u_equip(W)
-				head = W
-			else if (!( istype(W, /obj/item/clothing/head) ))
+			if(!istype(W, /obj/item/clothing/head) && !istype(W, /obj/item/weapon/paper))
 				return
 			u_equip(W)
 			head = W
 			W.equipped(src, text)
 		if("ears")
-			if (ears)
-				if (emptyHand)
+			if(ears)
+				if(emptyHand)
 					ears.DblClick()
 				return
-			if (!(istype(W, /obj/item/clothing/ears)) && !(istype(W, /obj/item/device/radio/headset)) && !(W.w_class == 1))
+
+			if(!W || (!istype(W, /obj/item/clothing/ears) && !istype(W, /obj/item/device/radio/headset) && !W.w_class == 1))
 				return
 			u_equip(W)
 			ears = W
@@ -630,7 +621,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				if (emptyHand)
 					w_uniform.DblClick()
 				return
-			if (!( istype(W, /obj/item/clothing/under) ))
+			if (!istype(W, /obj/item/clothing/under))
 				return
 			u_equip(W)
 			w_uniform = W
@@ -640,31 +631,40 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				if (emptyHand)
 					wear_id.DblClick()
 				return
-			if (!w_uniform)
+			if(!w_uniform)
 				return
-			if (!istype(W, /obj/item/weapon/card/id) && !istype(W, /obj/item/device/pda) )
+			if(!istype(W, /obj/item/weapon/card/id) && !istype(W, /obj/item/device/pda) )
 				return
 			u_equip(W)
 			wear_id = W
 			W.equipped(src, text)
 		if("storage1")
-			if (l_store)
-				if (emptyHand)
+			if(l_store)
+				if(emptyHand)
 					l_store.DblClick()
 				return
-			if ((!( istype(W, /obj/item) ) || W.w_class > 2 || !( w_uniform )))
+			if(!istype(W, /obj/item) || W.w_class > 2 || !w_uniform)
 				return
 			u_equip(W)
 			l_store = W
 		if("storage2")
-			if (r_store)
-				if (emptyHand)
+			if(r_store)
+				if(emptyHand)
 					r_store.DblClick()
 				return
-			if ((!( istype(W, /obj/item) ) || W.w_class > 2 || !( w_uniform )))
+			if(!istype(W, /obj/item) || W.w_class > 2 || !w_uniform)
 				return
 			u_equip(W)
 			r_store = W
+		if("suit storage")
+			if(s_store)
+				if(emptyHand)
+					s_store.DblClick()
+				return
+			if(!istype(W, /obj/item) || !wear_suit || !W.type in wear_suit.allowed)
+				return
+			u_equip(W)
+			s_store = W
 
 	update_clothing()
 
@@ -672,13 +672,13 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 
 /mob/living/carbon/human/meteorhit(O as obj)
 	for(var/mob/M in viewers(src, null))
-		if ((M.client && !( M.blinded )))
+		if (M.client && !M.blinded)
 			M.show_message(text("\red [] has been hit by []", src, O), 1)
 	if (health > 0)
 		var/dam_zone = pick("chest", "chest", "chest", "head", "groin")
 		if (istype(organs[dam_zone], /datum/organ/external))
 			var/datum/organ/external/temp = organs[dam_zone]
-			if(temp.destroyed)
+			if(!temp.status)
 				return
 			temp.take_damage((istype(O, /obj/effect/meteor/small) ? 10 : 25), 30)
 			UpdateDamageIcon()
@@ -690,7 +690,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 		M << "You cannot attack people before the game has started."
 		return
 
-	if (M.a_intent == "hurt")
+	if (M.a_intent == "harm")
 		if (istype(M.wear_mask, /obj/item/clothing/mask/muzzle))
 			return
 		if (health > 0)
@@ -709,7 +709,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 					for(var/mob/O in viewers(src, null))
 						O.show_message(text("\red <B>[M.name] has attempted to bite []!</B>", src), 1)
 					return
-			else if (istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armourrigvest))
+			else if (istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armor))
 				if (prob(25))
 					for(var/mob/O in viewers(src, null))
 						O.show_message(text("\red <B>[M.name] has attempted to bite []!</B>", src), 1)
@@ -726,7 +726,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				var/damage = rand(1, 3)
 				var/zones = list()
 				for(var/datum/organ/external/p in organs)
-					if(!p.destroyed)
+					if(p.status)
 						zones += p.name
 				if(!zones)
 					return
@@ -770,7 +770,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 					for(var/mob/O in viewers(src, null))
 						O.show_message(text("\red <B>[M.name] has attempted to bite []!</B>", src), 1)
 					return
-			else if (istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armourrigvest))
+			else if (istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armor))
 				if (prob(25))
 					for(var/mob/O in viewers(src, null))
 						O.show_message(text("\red <B>[M.name] has attempted to bite []!</B>", src), 1)
@@ -786,7 +786,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				var/damage = rand(1, 3)
 				var/list/zones = list()
 				for(var/datum/organ/external/p in organs)
-					if(!p.destroyed)
+					if(p.status)
 						zones += p.name
 				if(!zones)
 					return
@@ -897,7 +897,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt")
+			if (M.a_intent == "harm")
 				if (w_uniform)
 					w_uniform.add_fingerprint(M)
 				var/damage = rand(10, 20)
@@ -1004,7 +1004,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 	if(M.gloves && istype(M.gloves,/obj/item/clothing/gloves))
 		var/obj/item/clothing/gloves/G = M.gloves
 		if(G.cell)
-			if(M.a_intent == "hurt")//Stungloves.
+			if(M.a_intent == "harm")//Stungloves.
 				if(G.cell.charge >= 2500)
 					G.cell.charge -= 2500
 					visible_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>")
@@ -1020,8 +1020,13 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				return
 
 	if (M.a_intent == "help")
-		if (M.zombie)
+		if(M.zombie)
 			return
+		if(lying || isslime(src))
+			if(surgeries.len)
+				for(var/datum/surgery/S in surgeries)
+					if(S.next_step(M, src))
+						return 1
 		if (health > 0)
 			if (w_uniform)
 				w_uniform.add_fingerprint(M)
@@ -1047,17 +1052,18 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 						if(prob(30))
 							burndamage += halloss
 
-					if(org.destroyed)
+					if(!org.status)
 						src << "\t \red My [org.display_name] is <b>missing</b>!."
 						continue
 
-					else if(org.robotic)
+					else if(org.status == ORGAN_ROBOTIC)
 						if(brutedamage > 0)
-							status = "dented"
+							status = "scratched"
 						if(brutedamage > 30)
 							status = "severely dented"
 						if(brutedamage > 0 && burndamage > 0)
 							status += " and "
+
 						if(burndamage > 30)
 							status += "burnt"
 						else if(burndamage > 0)
@@ -1072,8 +1078,12 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 						status = "bruised"
 					if(brutedamage > 30)
 						status = "mangled"
-					if(org.bleeding)
-						status = "<b>bleeding</b>"
+
+					for(var/datum/organ/external/wound/w in org.wounds)
+						if(w.bleeding || org.bleeding)
+							status = "<b>bleeding</b>"
+							break
+
 					if((brutedamage > 0 || org.bleeding) && burndamage > 0)
 						status += " and "
 
@@ -1096,7 +1106,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				for(var/mob/O in viewers(src, null))
 					O.show_message(text("\blue [] shakes [] trying to wake [] up!", M, src, src), 1)
 		else
-			if (M.health >= -75.0)
+			if (M.health >= -99)
 				if (((M.head && M.head.flags & 4) || ((M.wear_mask && !( M.wear_mask.flags & 32 )) || ((head && head.flags & 4) || (wear_mask && !( wear_mask.flags & 32 ))))))
 					M << "\blue <B>Remove that mask!</B>"
 					return
@@ -1135,7 +1145,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red [] has grabbed [] passively!", M, src), 1)
 		else
-			if (M.a_intent == "hurt")
+			if (M.a_intent == "harm")
 				if (w_uniform)
 					w_uniform.add_fingerprint(M)
 				var/damage = rand(1, 9)
@@ -1145,12 +1155,12 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 					var/def_zone = ran_zone(t)
 					if(organs["[def_zone]"])
 						affecting = organs["[def_zone]"]
-					if (!affecting.destroyed)
+					if (affecting.status)
 						//Attack with zombie
 						if(!zombie && !virus2)
 							// lower chance if wearing a suit
 							var/pr = 0
-							if(istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armourrigvest))
+							if(istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armor))
 								pr = 70
 							else if(istype(wear_suit, /obj/item/clothing/suit/bio_suit))
 								pr = 70
@@ -1184,11 +1194,26 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 				var/def_zone = ran_zone(t)
 				if (organs["[def_zone]"])
 					affecting = organs["[def_zone]"]
-				if ((istype(affecting, /datum/organ/external) && prob(90) && !affecting.destroyed))
-					if (M.mutations & HULK)
+
+				var/cybermod = 0
+
+				for(var/organ in list("l_arm","l_hand","r_arm","r_hand"))
+					var/datum/organ/external/O = organs["[organ]"]
+					if(O.broken) // Be weaker if our arms is broken
+						damage -= 1
+					else if(!O.status) // Or destroyed
+						damage -= 2
+					else if(O.status == ORGAN_ROBOTIC) // Be stronger if our arms is robotic
+						damage += 2
+						cybermod++
+
+					damage = max(damage, 0)
+
+				if(istype(affecting, /datum/organ/external) && prob(90) && affecting.status)
+					if (M.mutations & HULK || prob(10*cybermod))
 						damage += 5
 						spawn(0)
-							paralysis += 1
+							Weaken(2)
 							step_away(src,M,15)
 							sleep(3)
 							step_away(src,M,15)
@@ -1200,7 +1225,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 					if (def_zone == "head")
 						for(var/mob/O in viewers(src, null))
 							O.show_message(text("\red <B>[] has punched [] in face!</B>", M, src), 1)
-						if ((((head && head.body_parts_covered & HEAD) || (wear_mask && wear_mask.body_parts_covered & HEAD)) && prob(99)))
+						if (((head && head.body_parts_covered & HEAD) || (wear_mask && wear_mask.body_parts_covered & HEAD)) && prob(99))
 							if (istype(wear_mask, /obj/item/clothing/mask/gas/clown_hat))
 								for(var/mob/O in viewers(src, null))
 									O.show_message(text("[src]'s nose honks!"), 1)
@@ -1210,9 +1235,8 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 							else
 								show_message("\red You have been protected from a hit to the head.")
 							return
-						if (damage > 4.9)
-							if (weakened < 10)
-								weakened = rand(10, 15)
+						if (damage > 7)
+							Weaken(8)
 							for(var/mob/O in viewers(M, null))
 								O.show_message(text("\red <B>[] has weakened []!</B>", M, src), 1, "\red You hear someone fall.", 2)
 						affecting.take_damage(damage)
@@ -1221,16 +1245,14 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 							if ((((wear_suit && wear_suit.body_parts_covered & CHEST) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(85)))
 								show_message("\red You have been protected from a hit to the chest.")
 								return
-							if (damage > 4.9)
+							if (damage > 7)
 								if (prob(50))
-									if (weakened < 5)
-										weakened = 5
+									Weaken(5)
 									playsound(loc, 'thudswoosh.ogg', 50, 1, -1)
 									for(var/mob/O in viewers(src, null))
 										O.show_message(text("\red <B>[] has knocked down []!</B>", M, src), 1, "\red You hear someone fall.", 2)
 								else
-									if (stunned < 5)
-										stunned = 5
+									Stun(5)
 									for(var/mob/O in viewers(src, null))
 										O.show_message(text("\red <B>[] has stunned []!</B>", M, src), 1)
 								if(stat != 2)	stat = 1
@@ -1240,15 +1262,13 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 								if ((((wear_suit && wear_suit.body_parts_covered & GROIN) || (w_uniform && w_uniform.body_parts_covered & GROIN)) && prob(75)))
 									show_message("\red You have been protected from a hit to the lower chest.")
 									return
-								if (damage > 4.9)
+								if (damage > 7)
 									if (prob(50))
-										if (weakened < 3)
-											weakened = 3
+										Weaken(3)
 										for(var/mob/O in viewers(src, null))
 											O.show_message(text("\red <B>[] has knocked down []!</B>", M, src), 1, "\red You hear someone fall.", 2)
 									else
-										if (stunned < 3)
-											stunned = 3
+										Stun(3)
 										for(var/mob/O in viewers(src, null))
 											O.show_message(text("\red <B>[] has stunned []!</B>", M, src), 1)
 									if(stat != 2)	stat = 1
@@ -1265,7 +1285,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 						O.show_message(text("\red <B>[] has attempted to punch []!</B>", M, src), 1)
 					return
 			else
-				if (!( lying ) && !(M.gloves && M.gloves.cell))
+				if (!lying && !(M.gloves && M.gloves.cell))
 					if (w_uniform)
 						w_uniform.add_fingerprint(M)
 					var/randn = rand(1, 100)
@@ -1484,7 +1504,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 							if("uniform")
 								message = text("\red <B>[] is trying to take off \a [] from []'s body!</B>", source, target.w_uniform, target)
 							if("pockets")
-								for(var/obj/item/device/assembly/mousetrap/MT in  list(target.l_store, target.r_store))
+								for(var/obj/item/device/assembly/mousetrap/MT in list(target.l_store, target.r_store))
 									if(MT.armed)
 										for(var/mob/O in viewers(target, null))
 											if(O == source)
@@ -1497,6 +1517,26 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 										MT.loc = source.loc
 										MT.triggered(source, source.hand ? "l_hand" : "r_hand")
 										MT.layer = OBJ_LAYER
+										return
+								for(var/obj/item/device/assembly_holder/AH in list(target.l_store, target.r_store))
+									var/obj/item/device/assembly/mousetrap/MT
+									if(istype(AH.a_left, /obj/item/device/assembly/mousetrap) && AH.a_left:armed)
+										MT = AH.a_left
+									else if(istype(AH.a_right, /obj/item/device/assembly/mousetrap) && AH.a_right:armed)
+										MT = AH.a_right
+
+									if(MT)
+										for(var/mob/O in viewers(target, null))
+											if(O == source)
+												O.show_message(text("\red <B>You reach into the [target]'s pockets, but there was a live mousetrap in there!</B>"), 1)
+											else
+												O.show_message(text("\red <B>[source] reaches into [target]'s pockets and sets off a hidden mousetrap!</B>"), 1)
+										target.u_equip(AH)
+										if (target.client)
+											target.client.screen -= AH
+										AH.loc = source.loc
+										MT.triggered(source, source.hand ? "l_hand" : "r_hand")
+										AH.layer = OBJ_LAYER
 										return
 								message = text("\red <B>[] is trying to empty []'s pockets!!</B>", source, target)
 							if("CPR")
@@ -1529,7 +1569,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 	if(target.loc != t_loc && mut == 0)			return
 	if(LinkBlocked(s_loc,t_loc) && mut == 0)	return
 	if(item && source.equipped() != item)		return
-	if ((source.restrained() && mut == 0)) 		return
+	if(source.restrained() && mut == 0) 		return
 	if(source.stat)								return
 
 	switch(place)
@@ -1950,7 +1990,7 @@ proc/random_name(gender, attempts_to_find_unique_name=10)
 	updatehealth()
 
 	for (var/datum/organ/external/O in L)
-		if(!O.destroyed)
+		if(O.status)
 			O.update_icon()
 			bruteloss += O.brute_dam
 			fireloss += O.burn_dam

@@ -31,9 +31,7 @@
 		del(pulse)
 
 	for(var/obj/item/weapon/W in range(world.view-1, myturf))
-
 		if (istype(W, /obj/item/assembly/m_i_ptank) || istype(W, /obj/item/assembly/r_i_ptank) || istype(W, /obj/item/assembly/t_i_ptank))
-
 			var/O
 			if(istype(W:part1,/obj/item/weapon/tank/plasma))
 				O = W:part1
@@ -68,23 +66,9 @@
 			continue
 
 
-		M << "\red <B>Your equipment malfunctions.</B>" //Yeah, i realise that this WILL
-														//show if theyre not carrying anything
-														//that is affected. lazy.
 		for(var/obj/item/device/cloak/S in M)
 			S.active = 0
 			S.icon_state = "shield0"
-
-		for(var/obj/item/weapon/gun/energy/G in M)
-			G.emp_act(1)
-
-		if ((istype(M, /mob/living/carbon/human)) && (istype(M:glasses, /obj/item/clothing/glasses/thermal)))
-			M << "\red <B>Your thermal glasses malfunction.</B>"
-			M.eye_blind = 3
-			M.eye_blurry = 5
-			M.disabilities |= 1
-			spawn(100*tick_multiplier)
-				M.disabilities &= ~1
 
 		if (locate(/obj/item/device/radio, M))
 			for(var/obj/item/device/radio/R in M) //Add something for the intercoms.
@@ -99,45 +83,14 @@
 			for(var/obj/item/weapon/melee/baton/B in M) //Add something for the intercoms.
 				B.charges = 0
 
-		if(locate(/obj/item/clothing/under/chameleon, M))
-			for(var/obj/item/clothing/under/chameleon/C in M) //Add something for the intercoms.
-				M << "\red <B>Your jumpsuit malfunctions</B>"
-				C.name = "psychedelic"
-				C.desc = "Groovy!"
-				C.icon_state = "psyche"
-				C.item_color = "psyche"
-				spawn(200*tick_multiplier)
-					C.name = "Black Jumpsuit"
-					C.icon_state = "bl_suit"
-					C.item_color = "black"
-					C.desc = null
-
 		M << "\red <B>BZZZT</B>"
 
 
 	for(var/obj/machinery/A in range(world.view-1, myturf))
-		A.use_power(7500)
-
-		var/obj/overlay/pulse2 = new/obj/overlay ( A.loc )
-		pulse2.icon = 'effects.dmi'
-		pulse2.icon_state = "empdisable"
-		pulse2.name = "emp sparks"
-		pulse2.anchored = 1
-		pulse2.dir = pick(cardinal)
-
-		spawn(10*tick_multiplier)
-			del(pulse2)
-
 		if(istype(A, /obj/machinery/turret))
 			A:enabled = 0
 			A:lasers = 0
 			A:power_change()
-
-		if(istype(A, /obj/machinery/computer) && prob(20))
-			A:set_broken()
-
-		if(istype(A, /obj/machinery/firealarm) && prob(50))
-			A:alarm()
 
 		if(istype(A, /obj/machinery/power/smes))
 			A:online = 0

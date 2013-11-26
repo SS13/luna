@@ -20,36 +20,31 @@
 	max_equip = 4
 
 /obj/mecha/combat/phazon/green
-	name = "Phazon"
+	name = "green Phazon"
 	icon_state = "gphaz"
 
 /obj/mecha/combat/phazon/red
-	name = "Phazon"
+	name = "red Phazon"
 	icon_state = "rphaz"
-
 
 /obj/mecha/combat/phazon/New()
 	..()
-	var/obj/item/mecha_parts/mecha_equipment/ME = new /obj/item/mecha_parts/mecha_equipment/weapon/energy/laser
+	var/obj/item/mecha_parts/mecha_equipment/ME = new /obj/item/mecha_parts/mecha_equipment/tool/rcd
 	ME.attach(src)
-
-//	var/obj/item/mecha_parts/mecha_equipment/ME = new /obj/item/mecha_parts/mecha_equipment/tool/rcd
-//	ME.attach(src)
-//	ME = new /obj/item/mecha_parts/mecha_equipment/gravcatapult
-//	ME.attach(src)
+	ME = new /obj/item/mecha_parts/mecha_equipment/gravcatapult
+	ME.attach(src)
 	return
 
 /obj/mecha/combat/phazon/Bump(var/atom/obstacle)
 	if(phasing && get_charge()>=phasing_energy_drain)
-		if(!istype(obstacle,/turf/unsimulated/wall/skull))
-			spawn()
-				if(can_move)
-					can_move = 0
-					flick("phazon-phase", src)
-					src.loc = get_step(src,src.dir)
-					src.use_power(phasing_energy_drain)
-					sleep(step_in*3)
-					can_move = 1
+		spawn()
+			if(can_move)
+				can_move = 0
+				flick("phazon-phase", src)
+				src.loc = get_step(src,src.dir)
+				src.use_power(phasing_energy_drain)
+				sleep(step_in*3)
+				can_move = 1
 	else
 		. = ..()
 	return
@@ -101,3 +96,24 @@
 		src.occupant_message("<font color=\"[phasing?"#00f\">En":"#f00\">Dis"]abled phasing.</font>")
 	return
 
+/obj/mecha/combat/phazon/red/get_commands()
+	var/output = {"<div class='wr'>
+						<div class='header'>Special</div>
+						<div class='links'>
+						<a href='?src=\ref[src];switch_damtype=1'>Change melee damage type</a><br>
+						</div>
+						</div>
+						"}
+	output += ..()
+	return output
+
+/obj/mecha/combat/phazon/green/get_commands()
+	var/output = {"<div class='wr'>
+						<div class='header'>Special</div>
+						<div class='links'>
+						<a href='?src=\ref[src];switch_damtype=1'>Change melee damage type</a><br>
+						</div>
+						</div>
+						"}
+	output += ..()
+	return output

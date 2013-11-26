@@ -23,6 +23,8 @@
 			if(A)
 				A.inflamed = 1
 				A.update_icon()
+			else
+				src.cure()
 			if(prob(3))
 				affected_mob << "<span class='warning'>You feel a stabbing pain in your abdomen!</span>"
 				affected_mob.Stun(rand(2,3))

@@ -11,7 +11,7 @@
 	throw_range = 20
 	m_amt = 1875
 	max_amount = 60
-//	attack_verb = list("hit", "bludgeoned", "whacked")
+	attack_verb = list("hit", "bludgeoned", "whacked")
 
 /obj/item/stack/rods/attackby(obj/item/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/weldingtool))

@@ -6,11 +6,6 @@
 	max_ammo = 7
 	multiple_sprites = 1
 
-/obj/item/ammo_magazine/a357/seed
-	name = "bug of seeds"
-	desc = "A bug of pumpkin seeds."
-	icon_state = "seed"
-
 /obj/item/ammo_magazine/c38
 	name = "speed loader (.38)"
 	icon_state = "38"
@@ -122,3 +117,47 @@
 	ammo_type = "/obj/item/ammo_casing/a762"
 	max_ammo = 0
 	multiple_sprites = 1
+
+
+/*
+ * SHOTGUN AMMO BOXES
+ */
+
+/obj/item/ammo_magazine/shotgunbox
+	name = "slug box"
+	icon_state = "gbox"
+	origin_tech = "combat=2"
+	ammo_type = "/obj/item/ammo_casing/shotgun"
+	max_ammo = 8
+	multiple_sprites = 1
+
+/obj/item/ammo_magazine/shotgunbox/empty
+	icon_state = "gbox-0"
+	max_ammo = 0
+
+/obj/item/ammo_magazine/shotgunbox/dart
+	name = "darts box"
+	icon_state = "blbox"
+	ammo_type = "/obj/item/ammo_casing/shotgun/dart"
+
+/obj/item/ammo_magazine/shotgunbox/dart/empty
+	icon_state = "blbox-0"
+	max_ammo = 0
+
+/obj/item/ammo_magazine/shotgunbox/stun
+	name = "stunshells box"
+	icon_state = "stunbox"
+	ammo_type = "/obj/item/ammo_casing/shotgun/stunshell"
+
+/obj/item/ammo_magazine/shotgunbox/stun/empty
+	icon_state = "stunbox-0"
+	max_ammo = 0
+
+obj/item/ammo_magazine/shotgunbox/bean
+	name = "beanbag box"
+	icon_state = "bbox"
+	ammo_type = "/obj/item/ammo_casing/shotgun/beanbag"
+
+/obj/item/ammo_magazine/shotgunbox/bean/empty
+	icon_state = "bbox-0"
+	max_ammo = 0

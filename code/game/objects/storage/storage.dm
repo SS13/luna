@@ -13,7 +13,6 @@
 	return
 
 /obj/item/weapon/storage/New()
-
 	src.boxes = new /obj/screen/storage(  )
 	src.boxes.name = "storage"
 	src.boxes.master = src
@@ -64,7 +63,7 @@
 
 	if (src.contents.len >= 7) return
 
-	if (W.w_class >= w_class && !istype(src, /obj/item/weapon/storage/backpack/holding) || src.loc == W)
+	if ((W.w_class >= w_class && !istype(src, /obj/item/weapon/storage/backpack/holding)) || w_class == 1 && W.w_class == 1 || src.loc == W)
 		return
 
 //	if(W.w_class >= src.w_class && (istype(W, /obj/item/weapon/storage)))
@@ -108,7 +107,7 @@
 
 /obj/item/weapon/storage/attack_hand(mob/living/user as mob)
 	playsound(src.loc, "rustle", 50, 1, -5)
-	if (src.loc == user && user:r_store != src && user:l_store != src)
+	if (src.loc == user && (ismonkey(user) || (user:r_store != src && user:l_store != src)))
 		if (user.s_active)
 			user.s_active.close(user)
 		src.show_to(user)
@@ -135,7 +134,7 @@
 			L += G.gift:return_inv()
 	return L
 
-/obj/item/weapon/storage/proc/show_to(mob/user as mob)
+/obj/item/weapon/storage/proc/show_to(mob/living/user as mob)
 	if(!user.client) return
 
 	for(var/obj/item/device/assembly/mousetrap/MT in src)
@@ -149,6 +148,26 @@
 			MT.triggered(user, user.hand ? "l_hand" : "r_hand")
 			MT.layer = OBJ_LAYER
 			return
+
+
+	if(ishuman(user))
+		for(var/obj/item/device/assembly_holder/AH in list(user:l_store, user:r_store))
+			var/obj/item/device/assembly/mousetrap/MT
+			if(istype(AH.a_left, /obj/item/device/assembly/mousetrap) && AH.a_left:armed)
+				MT = AH.a_left
+			else if(istype(AH.a_right, /obj/item/device/assembly/mousetrap) && AH.a_right:armed)
+				MT = AH.a_right
+
+			if(MT)
+				for(var/mob/O in viewers(user, null))
+					if(O == user)
+						user.show_message(text("\red <B>You reach into the [src.name], but there was a live mousetrap in there!</B>"), 1)
+					else
+						user.show_message(text("\red <B>[user] reaches into the [src.name] and sets off a hidden mousetrap!</B>"), 1)
+				AH.loc = user.loc
+				MT.triggered(user, user.hand ? "l_hand" : "r_hand")
+				AH.layer = OBJ_LAYER
+				return
 
 	hide_from(user)
 
@@ -196,7 +215,6 @@
 
 	else if (src == user.back)
 		src.orient_objs(4, 10, 4, 3)
-
 	else
 		src.orient_objs(4, 10, 4, 3)
 	return

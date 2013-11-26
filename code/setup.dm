@@ -185,6 +185,11 @@ vs_control/var/FIRE_PLASMA_ENERGY_RELEASED_DESC = "Determines the temp increase 
 #define HIDEEYES		4	//APPLIES ONLY TO HELMETS/MASKS!! (eyes means glasses)
 #define HIDEFACE		8	//APPLIES ONLY TO HELMETS/MASKS!! Dictates whether we appear as unknown.
 
+//organs var/status
+#define ORGAN_DESTROYED 	0
+#define ORGAN_INTACT 		1
+#define ORGAN_ROBOTIC 		2
+
 //slots
 /*#define slot_back			1
 #define slot_wear_mask		2

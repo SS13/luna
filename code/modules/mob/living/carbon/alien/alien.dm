@@ -1,13 +1,14 @@
-/mob/living/carbon/alien/name = "alien"
-/mob/living/carbon/alien/voice_name = "alien"
-/mob/living/carbon/alien/voice_message = "hisses"
-/mob/living/carbon/alien/icon = 'alien.dmi'
-/mob/living/carbon/alien/toxloss = 250
-/mob/living/carbon/alien/species = "Alien"
+/mob/living/carbon/alien
+	name = "alien"
+	voice_name = "alien"
+	voice_message = "hisses"
+	icon = 'alien.dmi'
+	toxloss = 250
+	species = "Alien"
 
-/mob/living/carbon/alien/var/toxgain = 5 // How much toxins is gained from weeds per tick
-/mob/living/carbon/alien/var/toxgainmax = 350 // Needs to be tested for balance. The maximum amount of toxins aliens can gain.
-/mob/living/carbon/alien/var/alien_invis = 0.0
+	var/toxgain = 5 // How much toxins is gained from weeds per tick
+	var/toxgainmax = 350 // Needs to be tested for balance. The maximum amount of toxins aliens can gain.
+	var/alien_invis = 0.0
 
 /mob/living/carbon/alien/updatehealth()
 	if (!nodamage)
@@ -29,6 +30,7 @@ mob/living/carbon/alien/Life()
 			var/image/A = image(T.icon,T,T.icon_state)
 			imagesP += A
 			usr << A
+
 /mob/living/carbon/alien/FireBurn() // It should make this affect all carbon mobs except for aliens (This applies to contaminate and pl_effects as well)
 /mob/living/carbon/alien/contaminate()
 /mob/living/carbon/alien/pl_effects()

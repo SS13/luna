@@ -4,7 +4,7 @@
 	icon_state = "prox"
 	m_amt = 800
 	g_amt = 200
-	w_amt = 50
+
 	origin_tech = "magnets=1"
 
 	secured = 0
@@ -48,7 +48,7 @@
 
 
 	sense()
-		if((!secured)||(!scanning)||(cooldown > 0))	return 0
+		if(!secured|| !scanning || cooldown > 0)	return 0
 		pulse(0)
 		visible_message("\icon[src] *beep* *beep*", "*beep* *beep*")
 		cooldown = 2

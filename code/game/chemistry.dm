@@ -11,6 +11,9 @@
 	var/state = null
 	var/det_time = 20.0
 
+	proc/prime()
+		return
+
 /obj/item/weapon/grenade/smokebomb
 	desc = "It is set to detonate in 2 seconds."
 	name = "smoke bomb"
@@ -68,7 +71,7 @@
 
 /obj/item/weapon/grenade/smokebomb/afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
 	if (user.equipped() == src)
-		if (!( src.state ))
+		if (!src.state)
 			user << "\red You prime the smoke bomb! [det_time/10] seconds!"
 			src.state = 1
 			src.icon_state = "flashbang1"
@@ -85,7 +88,7 @@
 
 /obj/item/weapon/grenade/incendiarygrenade/afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
 	if (user.equipped() == src)
-		if (!( src.state ))
+		if (!src.state)
 			user << "\red You prime the incendiary grenade! [det_time/10] seconds!"
 			src.state = 1
 			src.icon_state = "flashbang1"
@@ -116,7 +119,7 @@
 	..()
 	return
 
-/obj/item/weapon/grenade/smokebomb/proc/prime()
+/obj/item/weapon/grenade/smokebomb/prime()
 	playsound(src.loc, 'smoke.ogg', 50, 1, -3)
 	spawn(0)
 		src.smoke.start()
@@ -135,7 +138,7 @@
 	del(src)
 	return
 
-/obj/item/weapon/grenade/incendiarygrenade/proc/prime()
+/obj/item/weapon/grenade/incendiarygrenade/prime()
 	playsound(src.loc, 'bamf.ogg', 75, 1, -2)
 	var/turf/T = src.loc
 	var/turf/Tx1 = src.x + 1
@@ -203,7 +206,7 @@
 
 /obj/item/weapon/grenade/mustardbomb/afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
 	if (user.equipped() == src)
-		if (!( src.state ))
+		if (!src.state)
 			user << "\red You prime the mustard gas bomb! [det_time/10] seconds!"
 			src.state = 1
 			src.icon_state = "flashbang1"
@@ -226,7 +229,7 @@
 	..()
 	return
 
-/obj/item/weapon/grenade/mustardbomb/proc/prime()
+/obj/item/weapon/grenade/mustardbomb/prime()
 	playsound(src.loc, 'smoke.ogg', 50, 1, -3)
 	spawn(0)
 		src.mustard_gas.start()
@@ -251,7 +254,7 @@
 		src.state = 1
 		src.icon_state = "flashbang1"
 		add_fingerprint(user)
-		spawn( src.det_time )
+		spawn(src.det_time)
 			prime()
 			return
 	return

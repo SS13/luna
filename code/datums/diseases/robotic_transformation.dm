@@ -58,3 +58,4 @@
 				if(T)
 					gibs(T)
 				affected_mob:Robotize()
+				src.cure(0)

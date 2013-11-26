@@ -25,10 +25,10 @@ var/global/list/autolathe_recipes = list( \
 		new /obj/item/stack/rods(), \
 		new /obj/item/weapon/rcd_ammo(), \
 		/*new /obj/item/weapon/kitchenknife(), \
-		new /obj/item/weapon/surgicaldrill(),\
-		new /obj/item/weapon/retractor(),\
-		new /obj/item/weapon/cautery(),\
-		new /obj/item/weapon/hemostat(),\*/
+		new /obj/item/weapon/surgicaldrill(),\*/
+		new /obj/item/weapon/surgical/retractor(),\
+		new /obj/item/weapon/surgical/cautery(),\
+		new /obj/item/weapon/surgical/hemostat(),\
 		new /obj/item/weapon/reagent_containers/glass/beaker(), \
 		new /obj/item/weapon/reagent_containers/glass/beaker/large(), \
 		new /obj/item/ammo_casing/shotgun/blank(), \
@@ -44,8 +44,8 @@ var/global/list/autolathe_recipes = list( \
 		new /obj/item/device/assembly/signaler(), \
 		new /obj/item/device/assembly/infra(), \
 		new /obj/item/device/assembly/timer(), \*/
-		new /obj/item/weapon/scalpel(), \
-		new /obj/item/weapon/circular_saw(), \
+		new /obj/item/weapon/surgical/scalpel(), \
+		new /obj/item/weapon/surgical/circular_saw(), \
 		new /obj/item/weapon/light/tube(), \
 		new /obj/item/weapon/light/bulb(), \
 		/*new /obj/item/weapon/camera_assembly(), \*/

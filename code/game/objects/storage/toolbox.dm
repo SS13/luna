@@ -92,8 +92,8 @@
 	new /obj/item/weapon/crowbar(src)
 	new /obj/item/weapon/cable_coil(src,30)
 	new /obj/item/weapon/cable_coil(src,30)
-	if(prob(5))	new /obj/item/clothing/gloves/yellow(src)
-	else		new /obj/item/weapon/cable_coil(src)
+	if(prob(10))new /obj/item/clothing/gloves/yellow(src)
+	else		new /obj/item/weapon/cable_coil(src,30)
 
 /obj/item/weapon/storage/toolbox/syndicate
 	name = "suspicious looking toolbox"

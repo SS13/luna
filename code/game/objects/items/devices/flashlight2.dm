@@ -9,13 +9,15 @@
 	m_amt = 50
 	g_amt = 20
 	var/on = 0
-	var/brightness_on = 4 //luminosity when on
+	var/brightness_on_r = 4 //luminosity when on, R
+	var/brightness_on_g = 4 //luminosity when on, G
+	var/brightness_on_b = 4 //luminosity when on, B
 
 /obj/item/device/flashlight/initialize()
 	..()
 	if(on)
 		icon_state = "[initial(icon_state)]-on"
-		ul_SetLuminosity(brightness_on)
+		ul_SetLuminosity(brightness_on_r, brightness_on_g, brightness_on_b)
 	else
 		icon_state = initial(icon_state)
 		ul_SetLuminosity(0)
@@ -24,15 +26,23 @@
 	if(on)
 		icon_state = "[initial(icon_state)]-on"
 		if(loc == user)
-			user.ul_SetLuminosity(user.luminosity + brightness_on)
+			user.ul_SetLuminosity(user.LuminosityRed + brightness_on_r, user.LuminosityGreen + brightness_on_g, user.LuminosityBlue + brightness_on_b)
 		else if(isturf(loc))
-			ul_SetLuminosity(brightness_on)
+			ul_SetLuminosity(brightness_on_r, brightness_on_g, brightness_on_b)
 	else
 		icon_state = initial(icon_state)
 		if(loc == user)
-			user.ul_SetLuminosity(user.luminosity - brightness_on)
+			user.ul_SetLuminosity(user.LuminosityRed - brightness_on_r, user.LuminosityGreen - brightness_on_g, user.LuminosityBlue - brightness_on_b)
 		else if(isturf(loc))
 			ul_SetLuminosity(0)
+
+/obj/item/device/flashlight/verb/toggle()
+	set name = "Toggle Flashlight"
+	set category = "Object"
+	set src in oview(1)
+	if(!usr.stat)
+		attack_self(usr)
+
 
 /obj/item/device/flashlight/attack_self(mob/user)
 	if(!isturf(user.loc))
@@ -90,19 +100,21 @@
 	desc = "Old, dusty mining lantern."
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "lantern"
-	brightness_on = 7 //luminosity when on
+	brightness_on_r = 6 //luminosity when on, R
+	brightness_on_g = 6 //luminosity when on, G
+	brightness_on_b = 5 //luminosity when on, B
 
 
 /obj/item/device/flashlight/pickup(mob/user)
 	if(on)
-		user.ul_SetLuminosity(user.luminosity + brightness_on)
+		user.ul_SetLuminosity(user.LuminosityRed + brightness_on_r, user.LuminosityGreen + brightness_on_g, user.LuminosityBlue + brightness_on_b)
 		ul_SetLuminosity(0)
 
 
 /obj/item/device/flashlight/dropped(mob/user)
 	if(on)
-		user.ul_SetLuminosity(user.luminosity - brightness_on)
-		ul_SetLuminosity(brightness_on)
+		user.ul_SetLuminosity(user.LuminosityRed - brightness_on_r, user.LuminosityGreen - brightness_on_g, user.LuminosityBlue - brightness_on_b)
+		ul_SetLuminosity(brightness_on_r, brightness_on_g, brightness_on_b)
 
 
 /obj/item/device/flashlight/pen
@@ -111,7 +123,9 @@
 	icon_state = "penlight"
 	item_state = ""
 	flags = FPRINT | TABLEPASS | CONDUCT
-	brightness_on = 2
+	brightness_on_r = 2 //luminosity when on, R
+	brightness_on_g = 2 //luminosity when on, G
+	brightness_on_b = 2 //luminosity when on, B
 
 
 // the desk lamps are a bit special
@@ -120,7 +134,9 @@
 	desc = "A desk lamp with an adjustable mount."
 	icon_state = "lamp"
 	item_state = "lamp"
-	brightness_on = 5
+	brightness_on_r = 6 //luminosity when on, R
+	brightness_on_g = 6 //luminosity when on, G
+	brightness_on_b = 6 //luminosity when on, B
 	w_class = 4
 	flags = FPRINT | TABLEPASS | CONDUCT
 	m_amt = 0
@@ -133,7 +149,9 @@
 	desc = "A classic green-shaded desk lamp."
 	icon_state = "lampgreen"
 	item_state = "lampgreen"
-	brightness_on = 5
+	brightness_on_r = 6 //luminosity when on, R
+	brightness_on_g = 6 //luminosity when on, G
+	brightness_on_b = 6 //luminosity when on, B
 
 
 /obj/item/device/flashlight/lamp/verb/toggle_light()
@@ -150,7 +168,9 @@
 	name = "flare"
 	desc = "A red Nanotrasen issued flare. There are instructions on the side, it reads 'pull cord, make light'."
 	w_class = 2.0
-	brightness_on = 7 // Pretty bright.
+	brightness_on_r = 7 //luminosity when on, R - pretty bright
+	brightness_on_g = 1 //luminosity when on, G
+	brightness_on_b = 1 //luminosity when on, B
 	icon_state = "flare"
 	item_state = "flare"
 	var/fuel = 0
@@ -183,7 +203,6 @@
 		update_brightness(null)
 
 /obj/item/device/flashlight/flare/attack_self(mob/user)
-
 	// Usual checks
 	if(!fuel)
 		user << "<span class='notice'>It's out of fuel.</span>"
@@ -210,7 +229,9 @@
 	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
 	m_amt = 0
 	g_amt = 0
-	brightness_on = 6 //luminosity when on
+	brightness_on_r = 6 //luminosity when on, R
+	brightness_on_g = 6 //luminosity when on, G
+	brightness_on_b = 5 //luminosity when on, B
 
 
 /obj/item/clothing/head/helmet/hardhat/attack_self(mob/user)

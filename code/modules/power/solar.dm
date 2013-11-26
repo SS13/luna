@@ -1,12 +1,13 @@
 /obj/machinery/power/solar
 	name = "solar panel"
 	desc = "A solar electrical generator."
-	icon = 'power.dmi'
+	icon = 'icons/obj/power.dmi'
 	icon_state = "sp_base"
 	anchored = 1
 	density = 1
 	directwired = 1
-	var/health = 10.0
+	var/glass_type = /obj/item/stack/sheet/glass
+	var/health = 10
 	var/id = 1
 	var/obscured = 0
 	var/sunfrac = 0
@@ -27,15 +28,23 @@
 
 		if(Network)
 			for(var/obj/machinery/power/solar_control/SC in Network.Nodes)
-				if(SC.id == id)
-					control = SC
+				control = SC
 
 /obj/machinery/power/solar/attackby(obj/item/weapon/W, mob/user)
+	if(istype(W, /obj/item/weapon/crowbar))
+		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+		if(do_after(user, 50))
+			playsound(src.loc, 'sound/items/Deconstruct.ogg', 50, 1)
+			new /obj/item/weapon/solar_assembly(src.loc)
+			new glass_type(src.loc, 2)
+			user.visible_message("<span class='notice'>[user] takes the glass off the solar panel.</span>")
+			del(src)
+		return
+	else if (W)
+		src.add_fingerprint(user)
+		src.health -= W.force
+		src.healthcheck()
 	..()
-	src.add_fingerprint(user)
-	src.health -= W.force/3
-	src.healthcheck()
-	return
 
 /obj/machinery/power/solar/blob_act()
 	src.health--
@@ -44,7 +53,7 @@
 
 /obj/machinery/power/solar/proc/healthcheck()
 	if (src.health <= 0)
-		if(!(stat & BROKEN))
+		if(!stat & BROKEN)
 			broken()
 		else
 			new /obj/item/weapon/shard(src.loc)
@@ -80,6 +89,10 @@
 
 	var/datum/UnifiedNetwork/Network = Networks[/obj/cabling/power]
 	//return //TODO: FIX
+
+	if(Network && !control)
+		for(var/obj/machinery/power/solar_control/SC in Network.Nodes)
+			control = SC
 
 	if(!obscured)
 		var/sgen = SOLARGENRATE * sunfrac

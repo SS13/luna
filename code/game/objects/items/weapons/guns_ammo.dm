@@ -224,7 +224,7 @@ obj/item/weapon/gun/revolver/attackby(obj/item/weapon/ammo/a357/A as obj, mob/us
 
 /obj/item/weapon/gun/revolver/attack(mob/M as mob, mob/user as mob)
 	src.add_fingerprint(user)
-	if ((user.a_intent == "hurt" && src.bullets > 0))
+	if ((user.a_intent == "harm" && src.bullets > 0))
 		if (prob(20))
 			if (M.paralysis < 10)
 				M.paralysis = 10
@@ -343,7 +343,7 @@ obj/item/weapon/gun/revolver/attackby(obj/item/weapon/ammo/a357/A as obj, mob/us
 	if ((istype(H, /mob/living/carbon/human) && istype(H, /obj/item/clothing/head) && H.flags & 8 && prob(80)))
 		M << "\red The helmet protects you from being hit hard in the head!"
 		return
-	if ((user.a_intent == "hurt" && src.bullets > 0))
+	if ((user.a_intent == "harm" && src.bullets > 0))
 		if (prob(5))
 			if (M.paralysis < 10)
 				M.paralysis = 10
@@ -556,7 +556,7 @@ obj/item/weapon/gun/revolver/attackby(obj/item/weapon/ammo/a357/A as obj, mob/us
 	src.add_fingerprint(user)
 	var/mob/living/carbon/human/H = M
 	if(src.charges >= 1 && istype(H, /mob/living/carbon/human))
-		if (user.a_intent == "hurt")
+		if (user.a_intent == "harm")
 			if (prob(20))
 				if (M.paralysis < 10 && !M.mutations & HULK)
 					M.paralysis = 10
@@ -583,7 +583,7 @@ obj/item/weapon/gun/revolver/attackby(obj/item/weapon/ammo/a357/A as obj, mob/us
 		src.charges--
 		update_icon()
 	else if((src.charges >= 1) && (istype(M, /mob/living/carbon/monkey)))
-		if (user.a_intent == "hurt")
+		if (user.a_intent == "harm")
 			if (prob(20))
 				if (M.paralysis < 10 && (!(M.mutations & HULK)) )
 					M.paralysis = 10

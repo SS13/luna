@@ -34,4 +34,5 @@ Bonus
 			else
 				if (M.reagents.get_reagent_amount("inaprovaline") < 30)
 					M.reagents.add_reagent("inaprovaline", 10)
+					M.reagents.add_reagent("dexalinp", 5)
 	return

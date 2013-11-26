@@ -20,6 +20,9 @@
 /obj/effect/proc_holder/spell/targeted/area_teleport/before_cast(list/targets)
 	var/A = null
 
+	if(!teleportlocs.len)
+		process_teleport_locs()
+
 	if(!randomise_selection)
 		A = input("Area to teleport to", "Teleport", A) in teleportlocs
 	else

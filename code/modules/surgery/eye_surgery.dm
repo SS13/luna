@@ -1,13 +1,13 @@
 /datum/surgery/eye_surgery
 	name = "eye surgery"
 	steps = list(/datum/surgery_step/incise, /datum/surgery_step/retract_skin, /datum/surgery_step/clamp_bleeders, /datum/surgery_step/fix_eyes, /datum/surgery_step/close)
-	species = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
-	location = "eyes"
+	species = list(/mob/living/carbon/human)
+	locations = list("eyes")
 
 
 //fix eyes
 /datum/surgery_step/fix_eyes
-	implements = list(/obj/item/weapon/surgical/hemostat = 100, /obj/item/weapon/screwdriver = 45, /obj/item/weapon/pen = 25)
+	implements = list(/obj/item/weapon/surgical/hemostat = 100, /obj/item/weapon/screwdriver = 65, /obj/item/weapon/pen = 45)
 	time = 64
 
 /datum/surgery_step/fix_eyes/preop(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
@@ -24,7 +24,7 @@
 /datum/surgery_step/fix_eyes/failure(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
 	if(getbrain(target))
 		user.visible_message("<span class='warning'>[user] accidentally stabs [target] right in the brain!</span>")
-		target.adjustBrainLoss(100)
+		target.adjustBrainLoss(20)
 	else
 		user.visible_message("<span class='warning'>[user] accidentally stabs [target] right in the brain! Or would have, if [target] had a brain.</span>")
 	return 0

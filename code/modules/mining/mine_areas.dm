@@ -91,3 +91,8 @@
 /area/asteroid/base/maint
 	name = "Mining Maintenance"
 	icon_state = "maintcentral"
+
+
+/area/asteroid/siberia
+	name = "Siberia"
+	icon_state = "mining"

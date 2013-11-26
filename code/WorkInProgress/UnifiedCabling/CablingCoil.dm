@@ -115,6 +115,7 @@
 			var/mob/M = loc
 			M.drop_item(src)
 		del(src)
+		return 1
 	else
 		amount -= used
 		update_icon()
@@ -262,3 +263,41 @@
 
 	..()
 	return
+
+/obj/item/weapon/cable_coil/attack(mob/living/carbon/M as mob, mob/living/user as mob)
+	if(!ishuman(M) || !ishuman(user) || user.a_intent != "help")
+		return ..()
+
+	var/mob/living/carbon/human/H = M
+	var/mob/living/carbon/human/user2 = user
+
+	var/t = user2.zone_sel.selecting
+	var/datum/organ/external/affecting = H.organs[t]
+
+	if(t in list("eyes", "mouth", "groin", "chest") || !affecting)
+		return ..()
+
+	if(affecting.status != ORGAN_ROBOTIC)
+		return ..()
+
+	if(use(2))
+		if(M != user)
+			for (var/mob/O in viewers(M, null))
+				O.show_message("\red [M]'s robotic [affecting.display_name] wires has been replaced by [user].", 1)
+		else
+			var/t_himself = "it's"
+			if (user.gender == MALE)
+				t_himself = "his"
+			else if (user.gender == FEMALE)
+				t_himself = "her's"
+
+			for (var/mob/O in viewers(M, null))
+				O.show_message("\red [M] replaced some wires on [t_himself] robotic [affecting.display_name].", 1)
+
+
+		if (affecting.heal_damage(0, 10))
+			H.UpdateDamageIcon()
+		else
+			H.UpdateDamage()
+
+		M.updatehealth()

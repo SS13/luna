@@ -74,7 +74,7 @@
 /obj/structure/closet/secure_closet/chem
 	name = "Chemist's locker"
 	icon_state = "securechem1"
-	icon_closed = "secureres"
+	icon_closed = "securechem"
 	icon_locked = "securechem1"
 	icon_opened = "secureresopen"
 	icon_broken = "securechembroken"

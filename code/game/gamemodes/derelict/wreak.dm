@@ -18,17 +18,15 @@
 	for(var/turf/simulated/floor/a in world)
 		if(a.z > 4)	continue
 
-		if(locate(/obj/effect/landmark/derelict/nodamage) in a)
-			continue
-		if(prob(90))
+		if(prob(70) && !(locate(/obj/effect/landmark/derelict/nodamage) in a))
 			a.ex_act(3)
 		calc += 1
 		if(calc > 50)
 			sleep(0)
 			calc = 0
-		if(locate(/obj/effect/landmark/derelict/noblast) in a)
-			continue
 		if(prob(1) && prob(5))
+			if(locate(/obj/effect/landmark/derelict/noblast) in a) // whole aera of noblast
+				continue
 			explosion(a,3,5,7,9, 1)
 	world << "Destroying walls (SLOW)"
 	sleep(20*tick_multiplier)
@@ -41,7 +39,7 @@
 		if(calc > 50)
 			sleep(0)
 			calc = 0
-		if(prob(25))
+		if(prob(40))
 			a.ex_act(3)
 	world << "Smashing windows"
 	sleep(20*tick_multiplier)
@@ -50,7 +48,7 @@
 
 		if(locate(/obj/effect/landmark/derelict/nodamage) in get_turf(a))
 			continue
-		if(prob(35))
+		if(prob(40))
 			a.ex_act(3)
 		calc += 1
 		if(calc > 50)
@@ -63,7 +61,7 @@
 
 		if(locate(/obj/effect/landmark/derelict/nodamage) in get_turf(a))
 			continue
-		if(prob(35))
+		if(prob(65))
 			a.ex_act(3)
 		calc += 1
 		if(calc > 50)
@@ -102,21 +100,40 @@
 	for(var/obj/a in b)
 		a.Move(locate(a.x, a.y, hangar.z))
 
+	world << "Spawning tools"
 
 	for(var/obj/effect/landmark/derelict/glass/glass in world)
-		if(prob(50))
-			var/obj/item/stack/sheet/glass/g = new(glass.loc)
-			g.amount = rand(2, 30)
+		new /obj/item/stack/sheet/glass(glass.loc, rand(5, 50))
 
 	for(var/obj/effect/landmark/derelict/metal/metal in world)
-		if(prob(50))
-			var/obj/item/stack/sheet/metal/g = new(metal.loc)
-			g.amount = rand(2, 30)
+		new /obj/item/stack/sheet/metal(metal.loc, rand(5, 50))
 
 	for(var/obj/effect/landmark/derelict/o2canister/o2 in world)
-		if(prob(50)) new /obj/machinery/portable_atmospherics/canister/air(o2.loc)
+		if(prob(40)) new /obj/machinery/portable_atmospherics/canister/air(o2.loc)
 		else		 new /obj/machinery/portable_atmospherics/canister/oxygen(o2.loc)
 
 	for(var/obj/effect/landmark/derelict/o2crate/o2 in world)
-		if(prob(90))
-			new /obj/structure/closet/crate/internals(o2.loc)
+		new /obj/structure/closet/crate/internalsoxy(o2.loc)
+
+
+	for(var/obj/effect/landmark/derelict/superpacman/superpacman in world)
+		new /obj/machinery/power/port_gen/pacman/super(superpacman.loc)
+		new /obj/item/stack/sheet/mineral/uranium(superpacman.loc, 50)
+		new /obj/item/stack/sheet/mineral/uranium(superpacman.loc, 50)
+
+	for(var/obj/effect/landmark/derelict/supplycrate/supplycrate in world)
+		new /obj/item/weapon/tank/emergency_oxygen/engi(supplycrate.loc)
+		new /obj/item/weapon/tank/emergency_oxygen/engi(supplycrate.loc)
+		new /obj/item/weapon/tank/emergency_oxygen/engi(supplycrate.loc)
+		new /obj/item/weapon/tank/emergency_oxygen/engi(supplycrate.loc)
+		new /obj/item/weapon/storage/belt/utility(supplycrate.loc)
+		new /obj/item/weapon/storage/belt/utility(supplycrate.loc)
+		new /obj/item/weapon/storage/toolbox/mechanical(supplycrate.loc)
+		new /obj/item/weapon/storage/toolbox/electrical(supplycrate.loc)
+		new /obj/item/clothing/gloves/yellow(supplycrate.loc)
+		new /obj/item/clothing/gloves/yellow(supplycrate.loc)
+		new /obj/item/device/multitool(supplycrate.loc)
+		new /obj/item/device/multitool(supplycrate.loc)
+		new /obj/item/clothing/shoes/magnetic(supplycrate.loc)
+		new /obj/item/clothing/shoes/magnetic(supplycrate.loc)
+		new /obj/structure/closet/crate/engineering(supplycrate.loc)

@@ -88,6 +88,34 @@
 	..()
 	reagents.add_reagent("cleaner", 200)
 
+//water sprayer
+/obj/item/weapon/reagent_containers/spray/water
+	name = "water sprayer"
+
+	New()
+		..()
+		reagents.add_reagent("water", 200)
+
+//acid flower
+/obj/item/weapon/reagent_containers/spray/acidflower
+	name = "acid flower"
+	desc = "A seemingly innocent sunflower...with a RAGE inside!"
+	icon = 'icons/obj/harvest.dmi'
+	icon_state = "sunflower"
+	item_state = "sunflower"
+	amount_per_transfer_from_this = 8
+	volume = 80
+
+/obj/item/weapon/reagent_containers/spray/acidflower/New()
+	..()
+	reagents.add_reagent("sacid", 40)
+	reagents.add_reagent("pacid", 40)
+
+/obj/item/weapon/reagent_containers/spray/acidflower/attack_self(var/mob/user) //Don't allow changing how much the flower sprays
+	return
+
+
+
 //pepperspray
 /obj/item/weapon/reagent_containers/spray/pepper
 	name = "pepperspray"

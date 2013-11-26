@@ -1,8 +1,8 @@
 /datum/surgery/brain_removal
 	name = "brain removal"
 	steps = list(/datum/surgery_step/incise, /datum/surgery_step/clamp_bleeders, /datum/surgery_step/retract_skin, /datum/surgery_step/saw, /datum/surgery_step/extract_brain)
-	species = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
-	location = "head"
+	species = list(/mob/living/carbon/human)
+	locations = list("head")
 
 
 //extract brain
@@ -16,20 +16,15 @@
 	if(B)
 		user.visible_message("<span class='notice'>[user] begins to extract [target]'s brain.</span>")
 	else
-		user.visible_message("<span class='notice'>[user] looks for a brain in [target].</span>")
+		user.visible_message("<span class='notice'>[user] looks for a brain in [target]'s head.</span>")
 
 /datum/surgery_step/extract_brain/success(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
 	if(B)
 		user.visible_message("<span class='notice'>[user] successfully removes [target]'s brain!</span>")
 		B.loc = get_turf(target)
-		B.transfer_identity(target)
+		B.owner = target
 		target.internal_organs -= B
-		if(ishuman(target))
-			var/mob/living/carbon/human/H = target
-			H.update_hair(0)
-		//user.attack_log += "\[[time_stamp()]\]<font color='red'> Debrained [target.name] ([target.ckey]) INTENT: [uppertext(user.a_intent)])</font>"
-		//target.attack_log += "\[[time_stamp()]\]<font color='orange'> Debrained by [user.name] ([user.ckey]) (INTENT: [uppertext(user.a_intent)])</font>"
-		log_attack("<font color='red'>[user.name] ([user.ckey]) debrained [target.name] ([target.ckey]) (INTENT: [uppertext(user.a_intent)])</font>")
+		log_attack("[user.name] ([user.ckey]) debrained [target.name] ([target.ckey]) (INTENT: [uppertext(user.a_intent)])")
 	else
 		user.visible_message("<span class='notice'>[user] can't find a brain in [target]!</span>")
 	return 1

@@ -2,15 +2,11 @@
 
 /obj/machinery/mineral/stacking_machine
 	name = "stacking machine"
-	icon = 'icons/obj/machines/mining_machines.dmi'
 	icon_state = "stacker"
-	density = 1
-	anchored = 1.0
-	var/obj/machinery/mineral/stacking_unit_console/CONSOLE
+
 	var/stk_types = list()
 	var/stk_amt   = list()
-	var/obj/machinery/mineral/input = null
-	var/obj/machinery/mineral/output = null
+
 	var/ore_gold = 0
 	var/ore_silver = 0
 	var/ore_diamond = 0
@@ -172,6 +168,9 @@
 
 
 /obj/machinery/mineral/stacking_machine/attack_hand(mob/user as mob)
+	drop_stacks()
+
+/obj/machinery/mineral/stacking_machine/proc/drop_stacks()
 	if (ore_gold)
 		var/obj/item/stack/sheet/mineral/gold/G = new /obj/item/stack/sheet/mineral/gold
 		G.amount = ore_gold

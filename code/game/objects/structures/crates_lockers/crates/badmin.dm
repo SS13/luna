@@ -1,0 +1,23 @@
+/obj/structure/closet/crate/badmin/jensen/New()
+	new /obj/item/clothing/glasses/sunglasses/sechud/jensenshades(src)
+	new /obj/item/clothing/under/rank/head_of_security/jensen(src)
+	new /obj/item/clothing/suit/storage/armor/hos/jensen(src)
+	new /obj/item/clothing/head/helmet/HoS/jensen(src)
+	new /obj/item/clothing/shoes/swat/combat(src)
+
+/obj/structure/closet/crate/badmin/jensen/attack_hand(mob/living/carbon/user as mob)
+	if(ishuman(user))
+		for(var/datum/organ/external/O in user.GetOrgans())
+			if(O.name in list("l_arm", "r_arm", "l_leg", "r_leg"))
+				O.robotize()
+	..()
+
+/obj/structure/closet/crate/badmin/wizard/New()
+	new /obj/item/weapon/teleportation_scroll(src)
+	new /obj/item/weapon/spellbook(src)
+	new /obj/item/weapon/staff/magical/test(src)
+
+	new /obj/item/clothing/under/color/blue(src)
+	new /obj/item/clothing/shoes/sandal(src)
+	new /obj/item/clothing/suit/wizrobe(src)
+	new /obj/item/clothing/head/wizard(src)

@@ -56,7 +56,7 @@
 		if (!src.alive)
 			..()
 			return
-		if (user.a_intent == "hurt")
+		if (user.a_intent == "harm")
 			src.health -= rand(1,2) * src.brutevuln
 			for(var/mob/O in viewers(src, null))
 				O.show_message("\red <b>[user]</b> punches [src]!", 1)
@@ -309,7 +309,7 @@
 	atksilicon = 0
 
 	attack_hand(mob/user as mob)
-		if (src.alive && (user.a_intent != "hurt"))
+		if (src.alive && (user.a_intent != "harm"))
 			src.visible_message("\red <b>[user]</b> pets [src]!")
 			return
 		if(prob(95))
@@ -669,7 +669,7 @@
 
 	attack_hand(var/mob/user as mob)
 		if (!src.alive) return
-		if (user.a_intent == "hurt")
+		if (user.a_intent == "harm")
 			src.health -= rand(1,2) * src.brutevuln
 			for(var/mob/O in viewers(src, null))
 				O.show_message("\red <b>[user]</b> punches [src]!", 1)

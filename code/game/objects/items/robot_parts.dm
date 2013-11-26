@@ -66,7 +66,7 @@
 	var/obj/item/robot_parts/r_leg/r_leg = null
 	var/obj/item/robot_parts/chest/chest = null
 	var/obj/item/robot_parts/head/head = null
-	var/obj/item/brain/brain = null
+	var/obj/item/organ/brain/brain = null
 
 /obj/item/robot_parts/robot_suit/New()
 	..()
@@ -152,7 +152,7 @@
 		else
 			user << "\blue You need to attach an flash to it first!"
 
-	if(istype(W, /obj/item/brain))
+	if(istype(W, /obj/item/organ/brain))
 		if(src.check_completion())
 			user.drop_item() // Move the brain inside the robo suit
 			W.loc = src

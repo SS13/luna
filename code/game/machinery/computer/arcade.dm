@@ -4,6 +4,7 @@
 	icon = 'icons/obj/computer.dmi'
 	icon_state = "arcade"
 	circuit = "/obj/item/weapon/circuitboard/computer/arcade"
+
 	var/enemy_name = "Space Villain"
 	var/temp = "Winners Don't Use Spacedrugs" //Temporary message, for attack messages, etc
 	var/player_hp = 30 //Player health/attack points
@@ -20,15 +21,19 @@
 
 	var/list/prizes = list(	/obj/item/weapon/storage/box/toy/snappops				= 2,
 							/obj/item/weapon/storage/box/toy/waterballoons			= 2,
+							/obj/item/toy/c4										= 2,
 							/obj/item/device/radio/beacon/blink						= 2,
 							/obj/item/clothing/under/syndicate						= 2,
 							/obj/item/toy/sword										= 2,
 							/obj/item/toy/gun										= 2,
 							/obj/item/toy/crossbow									= 2,
-							/obj/item/clothing/suit/syndicatefake					= 2, //vends all types, see vend_prize()
+							/obj/item/clothing/suit/syndicatefake					= 5, //vends all types, see vend_prize()
+							/obj/item/weapon/storage/backpack/toy					= 2,
 							/obj/item/weapon/storage/fancy/crayons					= 2,
-							/obj/item/toy/spinningtoy								= 2,
+							/obj/item/toy/spinningtoy								= 1,
 							/obj/item/toy/prize										= 6, //vends all types except base, see vend_prize()
+							/obj/item/weapon/storage/backpack/toy 					= 2,
+							/obj/item/weapon/reagent_containers/spray/waterflower	= 2,
 							)
 
 	brightnessred = 0
@@ -262,7 +267,7 @@
 		..(severity)
 		return
 
-	if(emagged && prob(150/severity))
+	if(emagged && prob(90/severity))
 		explode()
 		return
 

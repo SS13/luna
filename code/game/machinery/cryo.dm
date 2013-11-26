@@ -183,7 +183,7 @@
 					if(occupant.bodytemperature < 225)
 						if(ishuman(occupant))
 							for(var/datum/organ/external/O in occupant:organs)
-								if(!O.destroyed && !O.robotic)//FIND BACK
+								if(O.status == ORGAN_INTACT)//FIND BACK
 									if(prob(5)) O.heal_damage(1,0,0)
 									if(prob(5)) O.heal_damage(0,1,0)
 						else

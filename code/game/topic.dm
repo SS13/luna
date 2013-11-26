@@ -72,7 +72,7 @@ datum/mapobject
 			return 1
 		return 2
 
-obj/mapinfo
+/obj/mapinfo
 	invisibility = 101
 	var/mapname = "thismap"
 	var/decks = 4
@@ -94,8 +94,7 @@ proc/file2list(A)
 			break
 		else
 			var/Y = copytext(text,1,X)
-			text = copytext(
-			text,X+1,0)
+			text = copytext(text,X+1,0)
 			lines += Y
 		sleep(1)
 	return lines

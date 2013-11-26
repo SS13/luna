@@ -101,11 +101,11 @@
 		return 1
 	var/inaccurate = 0
 	if( \
-			istype(W, /obj/item/weapon/scalpel) || \
+			istype(W, /obj/item/weapon/surgical/scalpel) || \
 			istype(W, /obj/item/weapon/kitchen/utensil/knife) \
 		)
 	else if( \
-			istype(W, /obj/item/weapon/circular_saw) || \
+			istype(W, /obj/item/weapon/surgical/circular_saw) || \
 			istype(W, /obj/item/weapon/shovel) \
 		)
 		inaccurate = 1
@@ -714,9 +714,11 @@
 		bitesize = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/pie/calm
+	name = "banana cream pie"
+	desc = "Old good banana pie with new, stunning taste! HONK!"
 	New()
 		..()
-		reagents.add_reagent("neurotoxin", 10)
+		reagents.add_reagent("neurotoxin", 8)
 
 /obj/item/weapon/reagent_containers/food/snacks/pie/throw_impact(atom/hit_atom)
 	..()

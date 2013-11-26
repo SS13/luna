@@ -18,7 +18,7 @@
 	item_state = "hardhat0_red"
 	item_color = "red"
 	name = "firefighter helmet"
-	protective_temperature = 30000
+	protective_temperature = 16000
 //	flags = FPRINT | TABLEPASS | STOPSPRESSUREDMAGE
 //	heat_protection = HEAD
 //	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
@@ -29,7 +29,7 @@
 	icon_state = "hardhat0_white"
 	item_state = "hardhat0_white"
 	item_color = "white"
-	protective_temperature = 30000
+	protective_temperature = 16000
 //	flags = FPRINT | TABLEPASS | STOPSPRESSUREDMAGE
 //	heat_protection = HEAD
 //	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT

@@ -13,11 +13,6 @@
 	var/load_method = 0 //0 = Single shells or quick loader, 1 = box, 2 = magazine
 	var/obj/item/ammo_magazine/empty_mag = null
 
-/obj/item/weapon/gun/projectile/ghost
-	desc = "A special gun used to annihilate any unholy jerks."
-	name = "ghost gun"
-	icon_state = "musket"
-
 
 /obj/item/weapon/gun/projectile/New()
 	..()

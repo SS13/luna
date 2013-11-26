@@ -260,6 +260,26 @@
 	oneharvest = 1
 	growthstages = 2
 
+/obj/item/weapon/reagent_containers/food/snacks/grown/killertomato
+	seed = "/obj/item/seeds/killertomatoseed"
+	name = "killer-tomato"
+	desc = "I say to-mah-to, you say tom-mae-to... OH GOD IT'S EATING MY LEGS!!"
+	icon_state = "killertomato"
+	potency = 10
+	New()
+		..()
+		spawn(5)	//So potency can be set in the proc that creates these crops
+			reagents.add_reagent("nutriment", 1+round((potency / 10), 1))
+			bitesize = 1+round(reagents.total_volume / 2, 1)
+
+/*obj/item/weapon/reagent_containers/food/snacks/grown/killertomato/attack_self(mob/user as mob)
+	if(istype(user.loc,/turf/space))
+		return
+	new /mob/living/simple_animal/tomato(user.loc)
+	del(src)
+
+	user << "<span class='notice'>You plant the killer-tomato.</span>"*/
+
 /obj/item/seeds/bluetomatoseed
 	name = "pack of blue-tomato seeds"
 	desc = "These seeds grow into blue-tomato plants."
@@ -530,6 +550,54 @@
 	growthstages = 4
 	plant_type = 2
 
+/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/glowshroom
+	seed = "/obj/item/seeds/glowshroom"
+	name = "glowshroom cluster"
+	desc = "<I>Mycena Bregprox</I>: This species of mushroom glows in the dark."
+	icon_state = "glowshroom"
+	New()
+		..()
+		if(lifespan == 0) //basically, if you're spawning these via admin or on the map, then set up some default stats.
+			lifespan = 120
+			endurance = 30
+			maturation = 15
+			production = 1
+			yield = 3
+			potency = 30
+			plant_type = 2
+		spawn(5)	//So potency can be set in the proc that creates these crops
+			reagents.add_reagent("radium",1+round((potency / 20), 1))
+		if(istype(src.loc,/mob))
+			pickup(src.loc)//adjusts the lighting on the mob
+		else
+			src.ul_SetLuminosity(round(potency/10,1))
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/glowshroom/attack_self(mob/user as mob)
+	if(istype(user.loc,/turf/space))
+		return
+	var/obj/effect/glowshroom/planted = new /obj/effect/glowshroom(user.loc)
+
+	planted.delay = planted.delay - production*100 //So the delay goes DOWN with better stats instead of up. :I
+	planted.endurance = endurance
+	planted.yield = yield
+	planted.potency = potency
+	del(src)
+
+	user << "<span class='notice'>You plant the glowshroom.</span>"
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/glowshroom/Del()
+	if(istype(loc,/mob))
+		loc.ul_SetLuminosity(round(potency/10,1))
+	..()
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/glowshroom/pickup(mob/user)
+	ul_SetLuminosity(0)
+	user.ul_SetLuminosity(round(potency/10,1))
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/glowshroom/dropped(mob/user)
+	user.ul_SetLuminosity(round(user.luminosity - (potency/10),1))
+	ul_SetLuminosity(round(potency/10,1))
+
 /obj/item/seeds/plumpmycelium
 	name = "pack of plump-helmet mycelium"
 	desc = "This mycelium grows into helmets... maybe."
@@ -546,9 +614,9 @@
 	oneharvest = 1
 	growthstages = 3
 	plant_type = 2
-	mutatelist = list(/obj/item/seeds/walkingmushroommycelium)
+/*	mutatelist = list(/obj/item/seeds/walkingmushroommycelium)*/
 
-/obj/item/seeds/walkingmushroommycelium
+/*obj/item/seeds/walkingmushroommycelium
 	name = "pack of walking mushroom mycelium"
 	desc = "This mycelium will grow into huge stuff!"
 	icon_state = "mycelium-walkingmushroom"
@@ -563,7 +631,7 @@
 	potency = 0
 	oneharvest = 1
 	growthstages = 3
-	plant_type = 2
+	plant_type = 2*/
 
 /obj/item/seeds/nettleseed
 	name = "pack of nettle seeds"
@@ -833,7 +901,7 @@
 	plant_type = 0
 	growthstages = 6
 
-/obj/item/seeds/pumpkinseed
+/*obj/item/seeds/pumpkinseed
 	name = "pack of pumpkin seeds"
 	desc = "These seeds grow into pumpkin vines."
 	icon_state = "seed-pumpkin"
@@ -847,7 +915,7 @@
 	yield = 3
 	potency = 10
 	plant_type = 0
-	growthstages = 3
+	growthstages = 3*/
 
 
 /obj/item/seeds/limeseed
@@ -948,7 +1016,7 @@
 	plant_type = 0
 	growthstages = 6
 
-/obj/item/seeds/grassseed
+/*obj/item/seeds/grassseed
 	name = "pack of grass seeds"
 	desc = "These seeds grow into grass. Yummy!"
 	icon_state = "seed-grass"
@@ -962,7 +1030,7 @@
 	yield = 5
 	potency = 10
 	plant_type = 0
-	growthstages = 2
+	growthstages = 2*/
 
 /obj/item/seeds/cocoapodseed
 	name = "pack of cocoa pod seeds"

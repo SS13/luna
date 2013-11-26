@@ -5,7 +5,7 @@
 	icon_state = "detective"
 	item_state = "gun"
 	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBELT
-//	slot_flags = SLOT_BELT
+	slot_flags = SLOT_BELT
 	m_amt = 2000
 	w_class = 3
 	throwforce = 5

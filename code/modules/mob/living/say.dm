@@ -1,7 +1,7 @@
 /mob/living/proc/binarycheck() // /tg/ stuff, let it be  -- Nikie
 	//if (istype(src, /mob/living/silicon/pai)) return
-	if (issilicon(src)) return 1
-	if (!ishuman(src)) return
+	if(issilicon(src)) return 1
+	if(!ishuman(src)) return
 	var/mob/living/carbon/human/H = src
 	if (H.ears)
 		var/obj/item/device/radio/headset/dongle = H.ears
@@ -151,6 +151,11 @@
 			message += "[stutter(pick("!", "!!", "!!!"))]"
 		if(!stuttering && prob(15))
 			message = NewStutter(message)
+
+	if(istype(wear_mask, /obj/item/clothing/mask/gas/horsehead))
+		var/obj/item/clothing/mask/gas/horsehead/hoers = wear_mask
+		if(!hoers.canremove)
+			message = pick("NEEIIGGGHHHH!", "NEEEIIIIGHH!", "NEIIIGGHH!", "HAAWWWWW!", "HAAAWWW!")
 
 	if (!istype(src, /mob/living/silicon))
 		var/list/obj/item/used_radios = new

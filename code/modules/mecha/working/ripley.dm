@@ -10,17 +10,10 @@
 	var/cargo_capacity = 15
 
 
-/obj/mecha/working/ripley/shittyg
+/obj/mecha/working/ripley/shitty
 	desc = "You can't describe this awful... Mecha?"
 	name = "\"Frankenstein\""
-	icon_state = "shitg"
-	force = 15
-
-/obj/mecha/working/ripley/shittyr
-	desc = "You can't describe this awful... Mecha?"
-	name = "\"Frankenstein\""
-	icon_state = "shitgr"
-	force = 15
+	icon_state = "shit"
 
 /obj/mecha/working/ripley/firefighter
 	desc = "Standart APLU chassis was refitted with additional thermal protection."

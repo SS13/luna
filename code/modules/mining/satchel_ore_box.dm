@@ -4,7 +4,7 @@
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "satchel"
 	name = "satchel"
-	var/capacity = 50; //the number of items it can carry.
+	var/capacity = 50 //the number of items it can carry.
 	flags = FPRINT | TABLEPASS | ONBELT
 	w_class = 1
 
@@ -19,22 +19,23 @@
 	return
 
 /obj/item/weapon/satchel/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/ore))
+	if(istype(W, /obj/item/weapon/ore))
 		var/obj/item/weapon/ore/O = W
-		src.contents += O;
+		if((src.contents.len + 1) <= capacity)
+			src.contents += O
 		return
 	..()
 
 /obj/item/weapon/satchel/ore/borg
 	name = "cyborg mining satchel"
-	capacity = 100; //the number of ore pieces it can carry.
+	capacity = 100 //the number of ore pieces it can carry.
 
 /**********************Ore box**************************/
 
 /obj/structure/ore_box
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "orebox0"
-	name = "Ore Box"
+	name = "ore box"
 	desc = "A heavy box used for storing ore."
 	density = 1
 	var/amt_gold = 0

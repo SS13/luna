@@ -4,6 +4,7 @@
 	icon_state = "backpack"
 	w_class = 4.0
 	flags = 259.0
+	slot_flags = SLOT_BACK
 
 /obj/item/weapon/storage/backpack/clown
 	name = "Giggles Von Honkerton"
@@ -35,24 +36,49 @@
 	icon_state = "captainpack"
 	item_state = "captainpack"
 
+/obj/item/weapon/storage/backpack/toy
+	name = "toy backpack"
+	icon = 'tank.dmi'
+	desc = "You can look like a real spessman with it! Now with blinking lights!"
+	icon_state = "jetpack1_s"
+	item_state = "jetpack1_s"
+
+
 /obj/item/weapon/storage/box
 	name = "box"
 	icon_state = "box"
 	item_state = "syringe_kit"
 	foldable = /obj/item/stack/sheet/cardboard	//BubbleWrap
 
+
+/obj/item/weapon/storage/box/healthsensors
+	name = "health sensors box"
+	icon_state = "implant"
+	item_state = "syringe_kit"
+
+/obj/item/weapon/storage/box/healthsensors/New()
+	new /obj/item/device/assembly/health(src)
+	new /obj/item/device/assembly/health(src)
+	new /obj/item/device/assembly/health(src)
+	new /obj/item/device/assembly/health(src)
+	new /obj/item/device/assembly/health(src)
+	new /obj/item/device/assembly/health(src)
+	new /obj/item/device/assembly/health(src)
+	..()
+	return
+
 /obj/item/weapon/storage/box/glass
 	name = "glassware box"
 	icon_state = "beakerbox"
 
 /obj/item/weapon/storage/box/glass/New()
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
-	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass( src )
+	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass(src)
+	new /obj/item/weapon/reagent_containers/food/drinks/drinkingglass(src)
 	..()
 	return
 
@@ -95,13 +121,13 @@
 	icon_state = "id"
 
 /obj/item/weapon/storage/box/fcard/New()
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
-	new /obj/item/weapon/f_card( src )
+	new /obj/item/weapon/f_card(src)
+	new /obj/item/weapon/f_card(src)
+	new /obj/item/weapon/f_card(src)
+	new /obj/item/weapon/f_card(src)
+	new /obj/item/weapon/f_card(src)
+	new /obj/item/weapon/f_card(src)
+	new /obj/item/weapon/f_card(src)
 	..()
 	return
 
@@ -127,13 +153,13 @@
 	name = "flashbangs (WARNING)"
 
 /obj/item/weapon/storage/box/grenades/flashbang/New()
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
-	new /obj/item/weapon/grenade/flashbang( src )
+	new /obj/item/weapon/grenade/flashbang(src)
+	new /obj/item/weapon/grenade/flashbang(src)
+	new /obj/item/weapon/grenade/flashbang(src)
+	new /obj/item/weapon/grenade/flashbang(src)
+	new /obj/item/weapon/grenade/flashbang(src)
+	new /obj/item/weapon/grenade/flashbang(src)
+	new /obj/item/weapon/grenade/flashbang(src)
 	..()
 	return
 
@@ -142,11 +168,11 @@
 	name = "EMP grenades"
 
 /obj/item/weapon/storage/box/grenades/emp/New()
-	new /obj/item/weapon/grenade/emp( src )
-	new /obj/item/weapon/grenade/emp( src )
-	new /obj/item/weapon/grenade/emp( src )
-	new /obj/item/weapon/grenade/emp( src )
-	new /obj/item/weapon/grenade/emp( src )
+	new /obj/item/weapon/grenade/emp(src)
+	new /obj/item/weapon/grenade/emp(src)
+	new /obj/item/weapon/grenade/emp(src)
+	new /obj/item/weapon/grenade/emp(src)
+	new /obj/item/weapon/grenade/emp(src)
 	..()
 	return
 
@@ -167,11 +193,11 @@
 	name = "cleaner grenades"
 
 /obj/item/weapon/storage/box/grenades/cleaner/New()
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
-	new /obj/item/weapon/grenade/chem_grenade/cleaner( src )
+	new /obj/item/weapon/grenade/chem_grenade/cleaner(src)
+	new /obj/item/weapon/grenade/chem_grenade/cleaner(src)
+	new /obj/item/weapon/grenade/chem_grenade/cleaner(src)
+	new /obj/item/weapon/grenade/chem_grenade/cleaner(src)
+	new /obj/item/weapon/grenade/chem_grenade/cleaner(src)
 	..()
 	return
 
@@ -180,13 +206,13 @@
 	icon_state = "id"
 
 /obj/item/weapon/storage/box/gl/New()
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
-	new /obj/item/clothing/glasses/regular( src )
+	new /obj/item/clothing/glasses/regular(src)
+	new /obj/item/clothing/glasses/regular(src)
+	new /obj/item/clothing/glasses/regular(src)
+	new /obj/item/clothing/glasses/regular(src)
+	new /obj/item/clothing/glasses/regular(src)
+	new /obj/item/clothing/glasses/regular(src)
+	new /obj/item/clothing/glasses/regular(src)
 	..()
 	return
 
@@ -196,13 +222,13 @@
 	icon_state = "handcuff"
 
 /obj/item/weapon/storage/box/handcuffs/New()
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
-	new /obj/item/weapon/handcuffs( src )
+	new /obj/item/weapon/handcuffs(src)
+	new /obj/item/weapon/handcuffs(src)
+	new /obj/item/weapon/handcuffs(src)
+	new /obj/item/weapon/handcuffs(src)
+	new /obj/item/weapon/handcuffs(src)
+	new /obj/item/weapon/handcuffs(src)
+	new /obj/item/weapon/handcuffs(src)
 	..()
 	return
 
@@ -211,13 +237,13 @@
 	icon_state = "id"
 
 /obj/item/weapon/storage/box/id/New()
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
-	new /obj/item/weapon/card/id( src )
+	new /obj/item/weapon/card/id(src)
+	new /obj/item/weapon/card/id(src)
+	new /obj/item/weapon/card/id(src)
+	new /obj/item/weapon/card/id(src)
+	new /obj/item/weapon/card/id(src)
+	new /obj/item/weapon/card/id(src)
+	new /obj/item/weapon/card/id(src)
 	..()
 	return
 
@@ -226,13 +252,13 @@
 	icon_state = "latex"
 
 /obj/item/weapon/storage/box/lglo/New()
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
-	new /obj/item/clothing/gloves/latex( src )
+	new /obj/item/clothing/gloves/latex(src)
+	new /obj/item/clothing/gloves/latex(src)
+	new /obj/item/clothing/gloves/latex(src)
+	new /obj/item/clothing/gloves/latex(src)
+	new /obj/item/clothing/gloves/latex(src)
+	new /obj/item/clothing/gloves/latex(src)
+	new /obj/item/clothing/gloves/latex(src)
 	..()
 	return
 
@@ -241,12 +267,12 @@
 	icon_state = "syringe"
 
 /obj/item/weapon/storage/box/dna_inject/New()
-	new /obj/item/weapon/dnainjector/h2m( src )
-	new /obj/item/weapon/dnainjector/h2m( src )
-	new /obj/item/weapon/dnainjector/h2m( src )
-	new /obj/item/weapon/dnainjector/m2h( src )
-	new /obj/item/weapon/dnainjector/m2h( src )
-	new /obj/item/weapon/dnainjector/m2h( src )
+	new /obj/item/weapon/dnainjector/h2m(src)
+	new /obj/item/weapon/dnainjector/h2m(src)
+	new /obj/item/weapon/dnainjector/h2m(src)
+	new /obj/item/weapon/dnainjector/m2h(src)
+	new /obj/item/weapon/dnainjector/m2h(src)
+	new /obj/item/weapon/dnainjector/m2h(src)
 	..()
 	return
 
@@ -255,61 +281,61 @@
 	icon_state = "sterile"
 
 /obj/item/weapon/storage/box/stma/New()
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
-	new /obj/item/clothing/mask/surgical( src )
+	new /obj/item/clothing/mask/surgical(src)
+	new /obj/item/clothing/mask/surgical(src)
+	new /obj/item/clothing/mask/surgical(src)
+	new /obj/item/clothing/mask/surgical(src)
+	new /obj/item/clothing/mask/surgical(src)
+	new /obj/item/clothing/mask/surgical(src)
+	new /obj/item/clothing/mask/surgical(src)
 	..()
 	return
 
-/obj/item/weapon/storage/box/trackimp_kit
+/obj/item/weapon/storage/box/imp_kit
+	icon_state = "implant"
+
+/obj/item/weapon/storage/box/imp_kit/track
 	name = "Tracking Implant Kit"
-	icon_state = "implant"
 
-/obj/item/weapon/storage/box/trackimp_kit/New()
-	new /obj/item/weapon/implantcase/tracking( src )
-	new /obj/item/weapon/implantcase/tracking( src )
-	new /obj/item/weapon/implantcase/tracking( src )
-	new /obj/item/weapon/implantcase/tracking( src )
-	new /obj/item/weapon/implanter( src )
-	new /obj/item/weapon/implantpad( src )
-	new /obj/item/weapon/locator( src )
+/obj/item/weapon/storage/box/imp_kit/track/New()
+	new /obj/item/weapon/implantcase/tracking(src)
+	new /obj/item/weapon/implantcase/tracking(src)
+	new /obj/item/weapon/implantcase/tracking(src)
+	new /obj/item/weapon/implantcase/tracking(src)
+	new /obj/item/weapon/implanter(src)
+	new /obj/item/weapon/implantpad(src)
+	new /obj/item/weapon/locator(src)
 	..()
 
 	return
 
-/obj/item/weapon/storage/box/chemimp_kit
+/obj/item/weapon/storage/box/imp_kit/chem
 	name = "Chemical Implant Kit"
-	icon_state = "implant"
 
-/obj/item/weapon/storage/box/chemimp_kit/New()
-	new /obj/item/weapon/implantcase/chem( src )
-	new /obj/item/weapon/implantcase/chem( src )
-	new /obj/item/weapon/implantcase/chem( src )
-	new /obj/item/weapon/implantcase/chem( src )
-	new /obj/item/weapon/implantcase/chem( src )
-	new /obj/item/weapon/implanter( src )
-	new /obj/item/weapon/implantpad( src )
+/obj/item/weapon/storage/box/imp_kit/chem/New()
+	new /obj/item/weapon/implantcase/chem(src)
+	new /obj/item/weapon/implantcase/chem(src)
+	new /obj/item/weapon/implantcase/chem(src)
+	new /obj/item/weapon/implantcase/chem(src)
+	new /obj/item/weapon/implantcase/chem(src)
+	new /obj/item/weapon/implanter(src)
+	new /obj/item/weapon/implantpad(src)
 	..()
 
 	return
 
 
-/obj/item/weapon/storage/box/daimp_kit
+/obj/item/weapon/storage/box/imp_kit/da
 	name = "Death Alarm Implant Kit"
-	icon_state = "implant"
 
-/obj/item/weapon/storage/box/daimp_kit/New()
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implantcase/death_alarm( src )
-	new /obj/item/weapon/implanter( src )
-	new /obj/item/weapon/implantpad( src )
+/obj/item/weapon/storage/box/imp_kit/da/New()
+	new /obj/item/weapon/implantcase/death_alarm(src)
+	new /obj/item/weapon/implantcase/death_alarm(src)
+	new /obj/item/weapon/implantcase/death_alarm(src)
+	new /obj/item/weapon/implantcase/death_alarm(src)
+	new /obj/item/weapon/implantcase/death_alarm(src)
+	new /obj/item/weapon/implanter(src)
+	new /obj/item/weapon/implantpad(src)
 	..()
 	return
 
@@ -319,12 +345,12 @@
 	icon_state = "mousetraps"
 
 /obj/item/weapon/storage/box/mousetraps/New()
-	new /obj/item/device/assembly/mousetrap( src )
-	new /obj/item/device/assembly/mousetrap( src )
-	new /obj/item/device/assembly/mousetrap( src )
-	new /obj/item/device/assembly/mousetrap( src )
-	new /obj/item/device/assembly/mousetrap( src )
-	new /obj/item/device/assembly/mousetrap( src )
+	new /obj/item/device/assembly/mousetrap(src)
+	new /obj/item/device/assembly/mousetrap(src)
+	new /obj/item/device/assembly/mousetrap(src)
+	new /obj/item/device/assembly/mousetrap(src)
+	new /obj/item/device/assembly/mousetrap(src)
+	new /obj/item/device/assembly/mousetrap(src)
 	..()
 	return
 
@@ -334,12 +360,12 @@
 	icon_state = "donk_kit"
 
 /obj/item/weapon/storage/box/donkpocket/New()
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
-	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket( src )
+	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket(src)
+	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket(src)
+	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket(src)
+	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket(src)
+	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket(src)
+	new /obj/item/weapon/reagent_containers/food/snacks/donkpocket(src)
 	..()
 	return
 

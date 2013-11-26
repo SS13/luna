@@ -331,14 +331,14 @@ datum/mind
 				if (t:uplink) del(t:uplink)
 				t:uplink = null
 			else if (istype(t, /obj/item/device/radio))
-				if (t:traitorradio) del(t:traitorradio)
-				t:traitorradio = null
+				if (t:uplink) del(t:uplink)
+				t:uplink = null
 				t:traitor_frequency = 0.0
-			else if (/*istype(t, /obj/item/weapon/SWF_uplink) || */istype(t, /obj/item/device/uplink/radio))
+			else if (istype(t, /obj/item/device/uplink/radio))
 				if (t:origradio)
 					var/obj/item/device/radio/R = t:origradio
 					R.loc = current.loc
-					R.traitorradio = null
+					R.uplink = null
 					R.traitor_frequency = 0.0
 				del(t)
 
@@ -386,7 +386,7 @@ datum/mind
 				if (src in current_mode:syndicates)
 					current_mode:syndicates -= src
 					if (!silent)
-						src.current << "\red <B>You are no longer a syndicate!</B>"
+						src.current << "\red <B>You are no longer a nuclear operative!</B>"
 
 
 

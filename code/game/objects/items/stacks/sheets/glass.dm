@@ -89,11 +89,7 @@
 	m_amt = 1875
 	origin_tech = "materials=2"
 
-/obj/item/stack/sheet/rglass/cyborg
-	name = "reinforced glass"
-	desc = "Glass which seems to have rods or something stuck in them."
-	singular_name = "reinforced glass sheet"
-	icon_state = "sheet-rglass"
+/obj/item/stack/sheet/rglass/cyborg //No autolathe glass dupes!
 	g_amt = 0
 	m_amt = 0
 

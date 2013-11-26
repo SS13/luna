@@ -1,7 +1,8 @@
-/mob/living/carbon/alien/humanoid/queen/name = "alien queen"
-/mob/living/carbon/alien/humanoid/queen/icon_state = "queen_s"
-/mob/living/carbon/alien/humanoid/queen/health_full = 250
-/mob/living/carbon/alien/humanoid/queen/toxgain = 20
+/mob/living/carbon/alien/humanoid/queen
+	name = "alien queen"
+	icon_state = "queen_s"
+	health_full = 250
+	toxgain = 20
 
 /mob/living/carbon/alien/humanoid/queen/New()
 	..()
@@ -11,7 +12,6 @@
 
 //Queen verbs
 /mob/living/carbon/alien/humanoid/queen/verb/lay_egg()
-
 	set name = "Lay Egg (200)"
 	set desc = "Plants an egg"
 	set category = "Alien"

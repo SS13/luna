@@ -330,7 +330,8 @@ datum
 						update_total()
 						handle_reactions()
 						my_atom.on_reagent_change()
-						R.on_merge(data)
+						if(R) //Still here, not disappeared in reactions
+							R.on_merge(data)
 						return 0
 
 				var/datum/reagent/D = chemical_reagents_list[reagent]

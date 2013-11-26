@@ -323,7 +323,7 @@
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/storage/labcoat(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci,slot_ears)
-			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic(src), slot_back)
+			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 
 		if ("Chemist")
 			src.equip_if_possible(new /obj/item/device/pda/chem(src), slot_belt)
@@ -331,7 +331,7 @@
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/storage/labcoat(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci(src),slot_ears)
-			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic(src), slot_back)
+			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 
 		if ("Janitor")
 			src.equip_if_possible(new /obj/item/device/pda/janitor(src), slot_belt)
@@ -444,7 +444,7 @@
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/hos(src), slot_ears)
 			src.equip_if_possible(new /obj/item/device/pda/heads/hos(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/head_of_security(src), slot_w_uniform)
-			src.equip_if_possible(new /obj/item/clothing/suit/storage/hos(src), slot_wear_suit)
+			src.equip_if_possible(new /obj/item/clothing/suit/storage/armor/hos(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/shoes/jackboots(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet/HoS(src), slot_head)
 			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)

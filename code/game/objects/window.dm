@@ -96,7 +96,7 @@
 	return
 
 /obj/structure/window/attack_hand()
-	if ((usr.mutations & HULK))
+	if(usr.mutations & HULK)
 		usr << text("\blue You smash through the window.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -124,7 +124,7 @@
 	return
 
 /obj/structure/window/attack_paw()
-	if ((usr.mutations & HULK))
+	if (usr.mutations & HULK)
 		usr << text("\blue You smash through the window.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -137,8 +137,6 @@
 	return
 
 /obj/structure/window/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
-
 	if (istype(W, /obj/item/weapon/screwdriver))
 		if(reinf && state >= 1)
 			state = 3 - state
@@ -157,9 +155,20 @@
 			state = 1-state;
 			playsound(src.loc, 'Crowbar.ogg', 75, 1)
 			user << (state ? "You have pried the window into the frame." : "You have pried the window out of the frame.")
+	else if(istype(W, /obj/item/weapon/wrench) && !anchored)
+		var/glass_type
+		if(reinf)
+			glass_type = /obj/item/stack/sheet/rglass
+		else
+			glass_type = /obj/item/stack/sheet/glass
+		new glass_type(user.loc)
+		if(src.dir == SOUTHWEST)//fulltiles drop two panes
+			new glass_type(user.loc)
+		playsound(src.loc, 'sound/items/Deconstruct.ogg', 50, 1)
+		src.Del(0)
 	else
 		var/aforce = W.force
-		if(reinf) aforce /= 2.0
+		if(reinf) aforce /= 2
 		src.health = max(0, src.health - aforce)
 		playsound(src.loc, 'Glasshit.ogg', 75, 1)
 		if (src.health <= 7)
@@ -170,12 +179,12 @@
 				var/index = null
 				index = 0
 				while(index < 2)
-					new /obj/item/weapon/shard( src.loc )
-					if(reinf) new /obj/item/stack/rods( src.loc)
+					new /obj/item/weapon/shard(src.loc)
+					if(reinf) new /obj/item/stack/rods(src.loc)
 					index++
 			else
-				new /obj/item/weapon/shard( src.loc )
-				if(reinf) new /obj/item/stack/rods( src.loc)
+				new /obj/item/weapon/shard(src.loc)
+				if(reinf) new /obj/item/stack/rods(src.loc)
 			src.density = 0
 			del(src)
 			return
@@ -227,12 +236,13 @@
 
 	return
 
-/obj/structure/window/Del()
+/obj/structure/window/Del(var/shatter = 1)
 	density = 0
 
 	update_nearby_tiles()
 
-	playsound(src, "shatter", 70, 1)
+	if(shatter)
+		playsound(src, "shatter", 70, 1)
 	..()
 
 /obj/structure/window/Move()

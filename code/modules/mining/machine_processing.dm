@@ -2,22 +2,17 @@
 
 /obj/machinery/mineral/processing_unit
 	name = "furnace"
-	icon = 'icons/obj/machines/mining_machines.dmi'
 	icon_state = "furnace"
-	density = 1
-	anchored = 1.0
-	var/obj/machinery/mineral/input = null
-	var/obj/machinery/mineral/output = null
-	var/obj/machinery/mineral/CONSOLE = null
-	var/ore_gold = 0;
-	var/ore_silver = 0;
-	var/ore_diamond = 0;
-	var/ore_glass = 0;
-	var/ore_plasma = 0;
-	var/ore_uranium = 0;
-	var/ore_iron = 0;
-	var/ore_clown = 0;
-	var/ore_adamantine = 0;
+
+	var/ore_gold = 0
+	var/ore_silver = 0
+	var/ore_diamond = 0
+	var/ore_glass = 0
+	var/ore_plasma = 0
+	var/ore_uranium = 0
+	var/ore_iron = 0
+	var/ore_clown = 0
+	var/ore_adamantine = 0
 
 /obj/machinery/mineral/processing_unit/New()
 	..()

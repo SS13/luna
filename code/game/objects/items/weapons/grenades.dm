@@ -29,7 +29,7 @@ FLASHBANG
 			spawn( 5 )
 				prime()
 				return
-		else if (!( src.state ))
+		else if (!src.state)
 			user << "\red You prime the emp grenade! [det_time/10] seconds!"
 			src.state = 1
 			src.icon_state = "emp_active"
@@ -44,7 +44,7 @@ FLASHBANG
 		src.add_fingerprint(user)
 	return
 
-/obj/item/weapon/grenade/emp/proc/prime()
+/obj/item/weapon/grenade/emp/prime()
 	playsound(src.loc, 'Welder2.ogg', 25, 1)
 	var/turf/T = get_turf(src)
 	if(T)
@@ -98,9 +98,6 @@ FLASHBANG
 			continue
 
 
-		M << "\red <B>Your equipment malfunctions.</B>" //Yeah, i realise that this WILL
-														//show if theyre not carrying anything
-														//that is affected. lazy.
 		for(var/obj/item/device/cloak/S in M)
 			S.active = 0
 			S.icon_state = "shield0"
@@ -280,7 +277,7 @@ FLASHBANG
 			spawn( 5 )
 				prime()
 				return
-		else if (!( src.state ))
+		else if (!src.state)
 			user << "\red You prime the flashbang! [det_time/10] seconds!"
 			src.state = 1
 			src.icon_state = "flashbang_active"
@@ -303,7 +300,7 @@ FLASHBANG
 	..()
 	return
 
-/obj/item/weapon/grenade/flashbang/proc/prime()
+/obj/item/weapon/grenade/flashbang/prime()
 	playsound(src.loc, 'bang.ogg', 25, 1)
 	var/turf/T = get_turf(src)
 	if(T)
@@ -343,27 +340,27 @@ FLASHBANG
 		else
 			if (get_dist(M, T) <= 5)
 				flick("e_flash", M.flash)
-				if (!( istype(M, /mob/living/carbon/human) ))
-					if(!(M.mutations & HULK))  M.stunned = 7
-					if(!(M.mutations & HULK))  M.weakened = 2
+				if (!istype(M, /mob/living/carbon/human))
+					if(!M.mutations & HULK)  M.stunned = 7
+					if(!M.mutations & HULK)  M.weakened = 2
 				else
 					var/mob/living/carbon/human/H = M
 					M.ear_deaf += 10
 					if (prob(20))
 						M.ear_damage += rand(0, 4)
-					if ((!( istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || istype(H.head, /obj/item/clothing/head/helmet/welding) ) || M.paralysis))
-						if(!(M.mutations & HULK))  M.stunned = 7
-						if(!(M.mutations & HULK))  M.weakened = 2
+					if (!(istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || istype(H.head, /obj/item/clothing/head/helmet/welding) ) || M.paralysis)
+						if(!M.mutations & HULK)  M.stunned = 7
+						if(!M.mutations & HULK)  M.weakened = 2
 					else
-						if (!( M.paralysis ))
+						if (!M.paralysis)
 							M.eye_stat += rand(1, 3)
 				M << "\red <B>BANG</B>"
 			else
-				if (!( istype(M, /mob/living/carbon/human) ))
+				if (!istype(M, /mob/living/carbon/human))
 					flick("flash", M.flash)
 				else
 					var/mob/living/carbon/human/H = M
-					if (!( istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || istype(H.head, /obj/item/clothing/head/helmet/welding) ) )
+					if (!istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || istype(H.head, /obj/item/clothing/head/helmet/welding) )
 						flick("flash", M.flash)
 				M.eye_stat += rand(1, 2)
 				M.ear_deaf += 5
@@ -402,7 +399,7 @@ FLASHBANG
 			src.state = 1
 			src.icon_state = "flashbang_active"
 			add_fingerprint(user)
-			spawn( src.det_time )
+			spawn(src.det_time)
 				prime()
 				return
 	return
@@ -419,7 +416,7 @@ FLASHBANG
 			src.state = 1
 			src.icon_state = "emp_active"
 			add_fingerprint(user)
-			spawn( src.det_time )
+			spawn(src.det_time)
 				prime()
 				return
 	return

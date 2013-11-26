@@ -23,7 +23,7 @@
 
 	attackby(obj/item/W as obj, mob/user as mob)
 		if(istype(W, /obj/item/weapon/wrench) && state == 0)
-			if(anchored && !istype(src,/obj/structure/girder/displaced))
+			if(anchored)
 				playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
 				user << "\blue Now disassembling the girder"
 				if(do_after(user,40))
@@ -31,7 +31,7 @@
 					user << "\blue You dissasembled the girder!"
 					new /obj/item/stack/sheet/metal(get_turf(src))
 					del(src)
-			else if(!anchored)
+			else
 				playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
 				user << "\blue Now securing the girder"
 				if(get_turf(user, 40))
@@ -189,10 +189,12 @@
 		return
 
 /obj/structure/girder/displaced
+	name = "displaced girder"
 	icon_state = "displaced"
 	anchored = 0
 
 /obj/structure/girder/reinforced
+	name = "reinforced girder"
 	icon_state = "reinforced"
 	state = 2
 
