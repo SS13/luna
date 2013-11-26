@@ -587,6 +587,3 @@
 	user << browse(dat, text("window=mob[name];size=340x480"))
 	onclose(user, "mob[name]")
 	return
-
-
-

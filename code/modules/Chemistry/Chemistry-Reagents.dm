@@ -2096,6 +2096,8 @@ datum
 			nutriment_factor = 1 * REAGENTS_METABOLISM
 			on_mob_life(var/mob/living/M as mob)
 				M.nutrition += nutriment_factor
+				M.silent += 2
+
 				if(istype(M, /mob/living/carbon/human) && M.job in list("Mime"))
 					if(!M) M = holder.my_atom
 					M.heal_organ_damage(1,1)
@@ -2488,6 +2490,8 @@ datum
 
 			on_mob_life(var/mob/living/carbon/M as mob)
 				if(!M) M = holder.my_atom
+				if(!M.weakened)
+					M << "<span class='danger'>Your muscles begin to painfully tighten.</span>"
 				M.weakened = max(M.weakened, 6)
 				if(!data) data = 1
 				data++
@@ -3031,6 +3035,11 @@ datum
 			description = "You take a tiny sip and feel a burning sensation..."
 			reagent_color = "#2E6671" // rgb: 46, 102, 113
 
+			on_mob_life(var/mob/living/M as mob)
+				if(!M.weakened)
+					M << "<span class='danger'>Your muscles begin to painfully tighten.</span>"
+				M.weakened = max(M.weakened, 4)
+
 		ethanol/irishcarbomb
 			name = "Irish Car Bomb"
 			id = "irishcarbomb"
@@ -3069,8 +3078,8 @@ datum
 				if(istype(M, /mob/living/carbon/human) && M.job in list("Clown") || istype(M, /mob/living/carbon/monkey))
 					if(!M) M = holder.my_atom
 					M.heal_organ_damage(1,1)
-					..()
-					return
+				..()
+				return
 
 		ethanol/silencer
 			name = "Silencer"
@@ -3081,6 +3090,9 @@ datum
 
 			on_mob_life(var/mob/living/M as mob)
 				M.nutrition += nutriment_factor
+
+				M.silent += 2
+
 				if(istype(M, /mob/living/carbon/human) && M.job in list("Mime"))
 					if(!M) M = holder.my_atom
 					M.heal_organ_damage(1,1)

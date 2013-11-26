@@ -378,6 +378,9 @@
 			emote("snore")
 		sleeping--
 
+	if(silent)
+		silent = max(silent, 0)
+
 	if(resting)
 		weakened = max(weakened, 1)
 
@@ -423,7 +426,7 @@
 	else //Dead.
 		lying = 1
 		blinded = 1
-		stat = 2
+		silent = 0
 
 	if (stuttering)
 		stuttering--

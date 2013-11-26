@@ -357,6 +357,8 @@
 			src.equip_if_possible(new /obj/item/clothing/gloves/latex(src), slot_gloves)
 			src.equip_if_possible(new /obj/item/clothing/head/beret(src), slot_head)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
+			src.silent += 1000000
+			src.spell_list += new /obj/effect/proc_holder/spell/aoe_turf/conjure/mimewall()
 
 		if ("Engineer")
 			src.equip_if_possible(new /obj/item/device/pda/engineering(src), slot_belt)
