@@ -377,7 +377,7 @@
 		user << "\blue Now disassembling the outer wall plating."
 		playsound(src.loc, 'Welder.ogg', 100, 1)
 
-		if(do_after(100))
+		if(do_after(user, 100))
 			user << "\blue You disassembled the outer wall plating."
 			dismantle_wall()
 
@@ -426,14 +426,14 @@
 		if (src.d_state == 2)
 			user << "\blue Slicing metal cover."
 			playsound(src.loc, 'Welder.ogg', 100, 1)
-			if (do_after(60))
+			if (do_after(user, 60))
 				src.d_state = 3
 				user << "\blue You removed the metal cover."
 
 		else if(src.d_state == 5)
 			user << "\blue Removing support rods."
 			playsound(src.loc, 'Welder.ogg', 100, 1)
-			if(do_after(100))
+			if(do_after(user, 100))
 				src.d_state = 6
 				new /obj/item/stack/rods( src )
 				user << "\blue You removed the support rods."
@@ -442,7 +442,7 @@
 		if(src.d_state == 4)
 			user << "\blue Detaching support rods."
 			playsound(src.loc, 'Ratchet.ogg', 100, 1)
-			if(do_after(40))
+			if(do_after(user, 40))
 				src.d_state = 5
 				user << "\blue You detach the support rods."
 
@@ -456,7 +456,7 @@
 		if(src.d_state == 1)
 			playsound(src.loc, 'Screwdriver.ogg', 100, 1)
 			user << "\blue Removing support lines."
-			if (do_after(40))
+			if (do_after(user, 40))
 				src.d_state = 2
 				user << "\blue You removed the support lines."
 
@@ -464,21 +464,21 @@
 		if(src.d_state == 3)
 			user << "\blue Prying cover off."
 			playsound(src.loc, 'Crowbar.ogg', 100, 1)
-			if(do_after(100))
+			if(do_after(user, 100))
 				src.d_state = 4
 				user << "\blue You removed the cover."
 
 		else if(src.d_state == 6)
 			user << "\blue Prying outer sheath off."
 			playsound(src.loc, 'Crowbar.ogg', 100, 1)
-			if(do_after(100))
+			if(do_after(user, 100))
 				user << "\blue You removed the outer sheath."
 				dismantle_wall()
 				return
 
 	else if(istype(W, /obj/item/stack/sheet/metal) && src.d_state)
 		user << "\blue Repairing wall."
-		if(do_after(100))
+		if(do_after(user, 100))
 			src.d_state = 0
 			src.icon_state = initial(src.icon_state)
 			user << "\blue You repaired the wall."
