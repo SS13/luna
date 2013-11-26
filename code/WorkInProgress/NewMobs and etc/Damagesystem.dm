@@ -1192,8 +1192,8 @@
 				if (t in list( "eyes", "mouth" ))
 					t = "head"
 				var/def_zone = ran_zone(t)
-				if (organs["[def_zone]"])
-					affecting = organs["[def_zone]"]
+				if(organs[def_zone])
+					affecting = organs[def_zone]
 
 				var/cybermod = 0
 
@@ -1218,11 +1218,10 @@
 							sleep(3)
 							step_away(src,M,15)
 					playsound(loc, "punch", 25, 1, -1)
-					if(!def_zone == "head")
+					if(def_zone != "head")
 						for(var/mob/O in viewers(src, null))
 							O.show_message(text("\red <B>[] has punched []!</B>", M, src), 1)
-
-					if (def_zone == "head")
+					if(def_zone == "head")
 						for(var/mob/O in viewers(src, null))
 							O.show_message(text("\red <B>[] has punched [] in face!</B>", M, src), 1)
 						if (((head && head.body_parts_covered & HEAD) || (wear_mask && wear_mask.body_parts_covered & HEAD)) && prob(99))

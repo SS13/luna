@@ -2,7 +2,6 @@
 	name = "Robot"
 	voice_name = "synthesized voice"
 	icon = 'robots.dmi'//
-	icon_state = "robot"
 	health = 300
 
 //3 Modules can be activated at any one time.
@@ -26,10 +25,10 @@
 	var/alarms = list("Motion"=list(), "Fire"=list(), "Atmosphere"=list(), "Power"=list())
 	var/viewalerts = 0
 
-/mob/living/silicon/robot/var/obj/item/device/radio/radio
-/mob/living/silicon/robot/
+	var/obj/item/device/radio/radio
 	var/class = "standard"
-	icon_state = "standardrobot"
+	icon_state = "standartrobot"
+
 /mob/living/silicon/robot/New()
 
 	spawn (1)
