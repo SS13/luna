@@ -80,10 +80,17 @@
 
 	open_blastdoors_by_id(id)
 
-/proc/open_blastdoors_by_id(var/id)
+/proc/open_blastdoors_by_id(var/id, var/toggle)
 	for(var/obj/machinery/door/poddoor/M in machines)
-		if (M.id == id)
-			if (M.density)
-				M.open()
-			else
-				M.close()
+		if(M.id == id)
+			if(!toggle)
+				if(M.density)
+					M.open()
+				else
+					M.close()
+			else if(toggle == 1)
+				if(M.density)
+					M.open()
+			else if(toggle == -1)
+				if(!M.density)
+					M.close()

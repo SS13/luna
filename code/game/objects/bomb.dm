@@ -1,4 +1,4 @@
-/obj/spawner/bomb
+/obj/effect/spawner/bomb
 	name = "bomb"
 	icon = 'screen1.dmi'
 	icon_state = "x"
@@ -7,7 +7,7 @@
 	var/btemp = 500	// bomb temperature (degC)
 	var/active = 0
 
-/obj/spawner/bomb/New()
+/obj/effect/spawner/bomb/New()
 	..()
 
 	switch (src.btype)
@@ -93,23 +93,23 @@
 
 	del(src)
 
-/obj/spawner/bomb/radio
+/obj/effect/spawner/bomb/radio
 	btype = 0
 
-/obj/spawner/bomb/proximity
+/obj/effect/spawner/bomb/proximity
 	btype = 1
 
-/obj/spawner/bomb/timer
+/obj/effect/spawner/bomb/timer
 	btype = 2
 
-/obj/spawner/bomb/timer/syndicate
+/obj/effect/spawner/bomb/timer/syndicate
 	btemp = 450
 
-/obj/spawner/bomb/suicide
+/obj/effect/spawner/bomb/suicide
 	btype = 3
 
 
-/obj/spawner/newbomb
+/obj/effect/spawner/newbomb
 	name = "bomb"
 	icon = 'screen1.dmi'
 	icon_state = "x"
@@ -117,7 +117,7 @@
 	var/btemp1 = 1000
 	var/btemp2 = 800	// tank temperatures
 
-/obj/spawner/newbomb/New()
+/obj/effect/spawner/newbomb/New()
 	..()
 	var/obj/item/device/transfer_valve/V = new(src.loc)
 	var/obj/item/weapon/tank/plasma/PT = new(V)
@@ -154,16 +154,16 @@
 	V.update_icon()
 	del(src)
 
-/obj/spawner/newbomb/timer
+/obj/effect/spawner/newbomb/timer
 	btype = 2
 
-/obj/spawner/newbomb/timer/syndicate
+/obj/effect/spawner/newbomb/timer/syndicate
 	name = "Low-Yield Bomb"
 	btemp1 = 1500
 	btemp2 = 1000
 
-/obj/spawner/newbomb/proximity
+/obj/effect/spawner/newbomb/proximity
 	btype = 1
 
-/obj/spawner/newbomb/radio
+/obj/effect/spawner/newbomb/radio
 	btype = 0

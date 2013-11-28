@@ -32,7 +32,6 @@
 	return
 
 /obj/item/weapon/storage/photo_album/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
 	if (src.contents.len >= 7)
 		return
 
@@ -60,7 +59,7 @@
 /obj/item/weapon/camera_test
 	name = "camera"
 	icon = 'old_or_unused.dmi'
-	desc = "A one use - polaroid camera. 10 photos left."
+	desc = "A one use polaroid camera. 10 photos left."
 	icon_state = "camera"
 	item_state = "electropack"
 	w_class = 2.0
@@ -77,7 +76,7 @@
 	icon = 'old_or_unused.dmi'
 	icon_state = "photo"
 	item_state = "clipboard"
-	w_class = 1.0
+	w_class = 1
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /obj/item/weapon/camera_test/proc/build_composite_icon(var/atom/C)
@@ -141,6 +140,9 @@
 					mob_detail += "You can also see [A] on the photo[A:health < 75 ? " - [A] looks hurt":""].[holding ? " [holding]":"."]"
 
 		else
+			if(A.pixel_x > 20 || A.pixel_y > 20)
+				continue
+
 			if(itemnumber < 5)
 				var/icon/X = build_composite_icon(A)
 				X.Scale(22,20)
@@ -181,7 +183,7 @@
 	playsound(src.loc, pick('polaroid1.ogg','polaroid2.ogg'), 75, 1, -3)
 
 	pictures_left--
-	src.desc = "A one use - polaroid camera. [pictures_left] photos left."
+	src.desc = "A one use polaroid camera. [pictures_left] photos left."
 	user << "\blue [pictures_left] photos left."
 	can_use = 0
 	spawn(50) can_use = 1

@@ -1,4 +1,4 @@
-/obj/spawner/bomb/New()
+/obj/effect/spawner/bomb/New()
 	..()
 
 	switch (src.btype)

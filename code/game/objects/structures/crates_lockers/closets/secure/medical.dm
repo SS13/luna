@@ -1,6 +1,4 @@
-/obj/structure/closet/secure_closet/medical1
-	name = "medicine closet"
-	desc = "Filled with medical junk."
+/obj/structure/closet/secure_closet/medical
 	icon_state = "medical1"
 	icon_closed = "medical"
 	icon_locked = "medical1"
@@ -8,6 +6,11 @@
 	icon_broken = "medicalbroken"
 	icon_off = "medicaloff"
 	req_access = list(access_medical)
+
+
+/obj/structure/closet/secure_closet/medical/regular
+	name = "medicine closet"
+	desc = "Filled with medical junk."
 
 
 	New()
@@ -31,16 +34,9 @@
 
 
 
-/obj/structure/closet/secure_closet/medical2
+/obj/structure/closet/secure_closet/medical/anesthetic
 	name = "anesthetic closet"
 	desc = "Used to knock people out."
-	icon_state = "medical1"
-	icon_closed = "medical"
-	icon_locked = "medical1"
-	icon_opened = "medicalopen"
-	icon_broken = "medicalbroken"
-	icon_off = "medicaloff"
-	req_access = list(access_medical)
 
 
 	New()
@@ -56,17 +52,10 @@
 		new /obj/item/clothing/mask/breath/medical(src)
 		return
 
-/obj/structure/closet/secure_closet/medical3
+/obj/structure/closet/secure_closet/medical/blood
 	name = "Blood Freezer"
-	icon_state = "medical1"
-	icon_closed = "medical"
-	icon_locked = "medical1"
-	icon_opened = "medicalopen"
-	icon_broken = "medicalbroken"
-	icon_off = "medical1"
-	req_access = list(access_medical)
 
-/obj/structure/closet/secure_closet/medical3/New()
+/obj/structure/closet/secure_closet/medical/blood/New()
 	..()
 	sleep(2)
 	new/obj/item/weapon/reagent_containers/glass/bloodpack/A(src)

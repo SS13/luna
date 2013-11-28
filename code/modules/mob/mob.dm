@@ -2367,8 +2367,8 @@ mob/verb/turnwest()
 	statpanel("Status")
 
 	if (client && client.holder)
-		stat(null, "([x], [y], [z])")
-		stat(null, "CPU: [world.cpu]")
+		stat("Loc", "([x], [y], [z])")
+		stat("CPU", world.cpu)
 
 	if(spell_list.len)
 		for(var/obj/effect/proc_holder/spell/S in spell_list)

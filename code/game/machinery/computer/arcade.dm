@@ -186,7 +186,7 @@
 	var/prize = pickweight(prizes)
 
 	if(emagged)
-		prize = /obj/spawner/newbomb/timer
+		prize = /obj/effect/spawner/newbomb/timer
 		new /obj/item/clothing/head/collectable/petehat(src.loc)
 		message_admins("[key_name_admin(usr)] has outbombed Cuban Pete and been awarded a bomb.")
 

@@ -51,22 +51,22 @@
 /obj/structure/closet/crate/fireworks
 	name = "Fireworks crate"
 /obj/structure/closet/crate/fireworks/New()
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/sparkler(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
-	new /obj/item/weapon/firework(src)
+	new /obj/item/toy/fire/sparkler(src)
+	new /obj/item/toy/fire/sparkler(src)
+	new /obj/item/toy/fire/sparkler(src)
+	new /obj/item/toy/fire/sparkler(src)
+	new /obj/item/toy/fire/sparkler(src)
+	new /obj/item/toy/fire/sparkler(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
+	new /obj/item/toy/fire/firework(src)
 
 /obj/structure/closet/crate/internals
 	desc = "A internals crate."
@@ -282,9 +282,9 @@
 	icon_opened = "engi_crate_open"
 	icon_closed = "engi_crate"
 
-/obj/structure/closet/crate/electical
+/obj/structure/closet/crate/electrical
 	desc = "A crate for the storage of electical equipment."
-	name = "electical crate"
+	name = "electrical crate"
 	icon_state = "engi_e_crate"
 	icon_opened = "engi_e_crate_open"
 	icon_closed = "engi_e_crate"

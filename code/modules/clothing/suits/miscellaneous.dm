@@ -44,6 +44,11 @@
 	flags = FPRINT | TABLEPASS
 	flags_inv = HIDEJUMPSUIT
 
+/obj/item/clothing/suit/suspenders
+	name = "suspenders"
+	desc = "They suspend the illusion of the mime's play."
+	icon = 'icons/obj/clothing/belts.dmi'
+	icon_state = "suspenders"
 
 /obj/item/clothing/suit/cyborg_suit
 	name = "cyborg suit"
