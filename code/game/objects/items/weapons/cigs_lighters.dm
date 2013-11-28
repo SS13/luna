@@ -185,7 +185,8 @@ CIGS
 			light("<span class='notice'>[user] casually lights the [name] with [W], what a badass.</span>")
 
 	else if(istype(W, /obj/item/toy/minisingulo))
-		if(W:on)
+		var/obj/item/toy/minisingulo/S = W
+		if(S.on)
 			light("<span class='notice'>[user] casually lights the [name] with the singularity, what a badass.</span>")
 
 	else if(istype(W, /obj/item/weapon/lighter/zippo))
@@ -203,6 +204,11 @@ CIGS
 		if(M.lit)
 			light("<span class='notice'>[user] lights their [name] with their [W].</span>")
 
+	else if(istype(W, /obj/item/toy/fire))
+		var/obj/item/toy/fire/F = W
+		if(F.lit)
+			light("<span class='notice'>[user] lights their [name] with their [W].</span>")
+
 	else if(istype(W, /obj/item/weapon/melee/energy/sword))
 		var/obj/item/weapon/melee/energy/sword/S = W
 		if(S.active)
@@ -218,7 +224,7 @@ CIGS
 	else if(istype(W, /obj/item/device/flashlight/flare))
 		var/obj/item/device/flashlight/flare/C = W
 		if(C.on)
-			light("<span class='notice'>[user] lights their [name] with the [W].</span>")
+			light("<span class='notice'>[user] lights their [name] with their [W].</span>")
 	return
 
 

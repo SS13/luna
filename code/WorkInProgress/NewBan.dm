@@ -99,7 +99,7 @@ var/savefile/Banlist
 	for(var/p in expired)
 		RemoveBan(p)
 	return 1
-/proc/AddBan(ckey, computerid,ip, reason, bannedby, temp, minutes)
+/proc/AddBan(ckey, computerid, ip, reason, bannedby, temp, minutes)
 	var/bantimestamp = 0
 	if (temp)
 		UpdateTime()
@@ -135,6 +135,10 @@ var/savefile/Banlist
 
 /proc/GetExp(minutes as num)
 	UpdateTime()
+
+	if(!isnum(minutes))
+		minutes = text2num(minutes)
+
 	var/exp = minutes - CMinutes
 	if (exp <= 0)
 		return 0

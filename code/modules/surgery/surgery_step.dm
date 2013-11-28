@@ -22,7 +22,7 @@
 	if(accept_any_item)
 		//world << "accept_any_item"
 		if(tool && tool_check(user, tool))
-			world << "and item is valid"
+			//world << "and item is valid"
 			success = 1
 	else
 		for(var/path in implements)

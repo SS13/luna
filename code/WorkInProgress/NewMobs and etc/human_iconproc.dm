@@ -333,13 +333,6 @@
 	if(lying_icon)
 		del(lying_icon)
 
-	if (mutations & 64)
-		stand_icon.Blend(new /icon('human.dmi', "husk_s"), ICON_OVERLAY)
-		lying_icon.Blend(new /icon('human.dmi', "husk_l"), ICON_OVERLAY)
-
-	if (dna && dna.mutantrace)
-		return
-
 	var/g = "m"
 	if (gender == MALE)
 		g = "m"
@@ -349,12 +342,19 @@
 	stand_icon = new /icon('human.dmi', "body_[g]_s")
 	lying_icon = new /icon('human.dmi', "body_[g]_l")
 
-	if (underwear > 0)
+	if(mutations & 64)
+		stand_icon.Blend(new /icon('human.dmi', "husk_s"), ICON_OVERLAY)
+		lying_icon.Blend(new /icon('human.dmi', "husk_l"), ICON_OVERLAY)
+
+	if(underwear > 0)
 		stand_icon.Blend(new /icon('human.dmi', "underwear[underwear]_[g]_s"), ICON_OVERLAY)
 		lying_icon.Blend(new /icon('human.dmi', "underwear[underwear]_[g]_l"), ICON_OVERLAY)
 
+	if (dna && dna.mutantrace)
+		return
+
 	// Skin tone
-	if (s_tone >= 0)
+	if(s_tone >= 0)
 		stand_icon.Blend(rgb(s_tone, s_tone, s_tone), ICON_ADD)
 		lying_icon.Blend(rgb(s_tone, s_tone, s_tone), ICON_ADD)
 	else

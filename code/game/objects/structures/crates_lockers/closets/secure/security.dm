@@ -22,7 +22,7 @@
 		new /obj/item/clothing/under/rank/captain/suit(src)
 		new /obj/item/clothing/suit/armor/vest(src)
 		new /obj/item/clothing/head/helmet/swat(src)
-		new /obj/item/clothing/glasses/sunglasses( src )
+		new /obj/item/clothing/glasses/sunglasses(src)
 		new /obj/item/clothing/shoes/brown(src)
 		new /obj/item/clothing/gloves/green(src)
 		//new /obj/item/clothing/gloves/captain(src)
@@ -82,11 +82,11 @@
 		new /obj/item/weapon/gun/energy/gun(src)
 
 		new /obj/item/device/pda/heads/hos(src)
-		new /obj/item/clothing/under/rank/head_of_security( src )
+		new /obj/item/clothing/under/rank/head_of_security(src)
 		new /obj/item/clothing/shoes/jackboots(src)
-		new /obj/item/clothing/suit/storage/armor/hos( src )
+		new /obj/item/clothing/suit/storage/armor/hos(src)
 		new /obj/item/clothing/head/helmet/HoS(src)
-		new /obj/item/weapon/storage/box/id( src )
+		new /obj/item/weapon/storage/box/id(src)
 		new /obj/item/weapon/handcuffs(src)
 		new /obj/item/weapon/melee/baton(src)
 		new /obj/item/clothing/gloves/black(src)
@@ -118,10 +118,10 @@
 		new /obj/item/weapon/reagent_containers/spray/pepper(src)
 		new /obj/item/weapon/melee/baton(src)
 		new /obj/item/device/pda/warden(src)
-		new /obj/item/weapon/gun/energy/gun( src )
-		new /obj/item/device/flash( src )
+		new /obj/item/weapon/gun/energy/gun(src)
+		new /obj/item/device/flash(src)
 		new /obj/item/clothing/shoes/jackboots(src)
-		new /obj/item/clothing/suit/warden_jacket( src )
+		new /obj/item/clothing/suit/warden_jacket(src)
 		new /obj/item/clothing/head/helmet/wardencap(src)
 		new /obj/item/weapon/storage/box/handcuffs(src)
 		new /obj/item/clothing/gloves/black(src)
@@ -192,7 +192,7 @@
 		new /obj/item/device/encryptionkey/headset_med(src)
 		return
 
-/obj/structure/closet/secure_closet/security2
+/obj/structure/closet/secure_closet/forensics
 	name = "forensics locker"
 	icon_state = "sec1"
 	icon_closed = "sec"
@@ -202,19 +202,19 @@
 	icon_off = "secoff"
 	req_access = list(access_forensics_lockers)
 
-/obj/structure/closet/secure_closet/security2/New()
+/obj/structure/closet/secure_closet/forensics/New()
 	..()
 	sleep(2)
 	new /obj/item/device/radio/headset/headset_sec(src)
 	new /obj/item/device/pda/security(src)
-	new /obj/item/clothing/under/rank/forensic_technician( src )
+	new /obj/item/clothing/under/rank/forensic_technician(src)
 	new /obj/item/clothing/suit/storage/gearharness(src)
-	new /obj/item/clothing/shoes/brown( src )
-	new /obj/item/weapon/storage/box/fcard( src )
-	new /obj/item/weapon/storage/box/lglo( src )
-	new /obj/item/weapon/fcardholder( src )
-	new /obj/item/device/detective_scanner( src )
-	new /obj/item/weapon/storage/box/evidence( src )
+	new /obj/item/clothing/shoes/brown(src)
+	new /obj/item/weapon/storage/box/fcard(src)
+	new /obj/item/weapon/storage/box/lglo(src)
+	new /obj/item/weapon/fcardholder(src)
+	new /obj/item/device/detective_scanner(src)
+	new /obj/item/weapon/storage/box/evidence(src)
 	return
 
 /obj/structure/closet/secure_closet/detective
@@ -239,6 +239,7 @@
 		new /obj/item/weapon/storage/box/evidence(src)
 		new /obj/item/weapon/clipboard(src)
 		new /obj/item/weapon/storage/box/fcard(src)
+		new /obj/item/weapon/storage/box/evidence(src)
 		new /obj/item/weapon/fcardholder(src)
 		new /obj/item/device/radio/headset/headset_sec(src)
 		new /obj/item/device/detective_scanner(src)
@@ -277,8 +278,8 @@
 	var/id = null
 
 	New()
-		new /obj/item/clothing/under/color/orange( src )
-		new /obj/item/clothing/shoes/orange( src )
+		new /obj/item/clothing/under/color/orange(src)
+		new /obj/item/clothing/shoes/orange(src)
 		return
 
 

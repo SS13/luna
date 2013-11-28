@@ -82,8 +82,8 @@
 /mob/living/carbon/Stat()
 	..()
 	statpanel("Status")
-	stat(null, "Intent: [a_intent]")
-	stat(null, "Move Mode: [m_intent]")
+	stat("Intent", a_intent)
+	stat("Move Mode", m_intent)
 
 /mob/living/carbon/clean_blood()
 	. = ..()

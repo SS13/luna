@@ -1,5 +1,3 @@
-
-
 /datum/prison_shuttle
 	var/location = "prison"
 	var/destination = "prison"
@@ -8,8 +6,6 @@
 	var/list/destinations = list(	"transit"	= /area/shuttle/prison/transit,
 									"prison"	= /area/shuttle/prison/prison,
 									"ship"		= /area/shuttle/prison/station)//temporary
-
-
 
 /datum/prison_shuttle/proc/travel(var/new_destination, var/instant, var/override)
 	return
@@ -42,7 +38,7 @@
 					var/area/dest
 					if(location == "transit")
 						dest = locate(destinations[destination])
-						current.move_contents_to(dest)
+						current.move_contents_to(dest, /turf/space)
 						location = destination
 					else
 						dest = locate(destinations["transit"])

@@ -434,13 +434,15 @@
 */
 
 /proc/find_dead_player(var/find_key)
-	if (isnull(find_key))
+	if(!find_key)
 		return
 
 	var/mob/selected = null
 	for(var/client/C)
+		if(!C.mob)
+			continue
 		//Dead people only thanks!
-		if (C.mob && C.mob.stat != 2)
+		if (C.mob.stat != 2)
 			continue
 		//They need a brain!
 		if (istype(C.mob, /mob/living/carbon/human) && !getbrain(C.mob))
@@ -451,7 +453,7 @@
 			break
 	if(!selected) //Search for a ghost if dead body with client isn't found.
 		for(var/mob/dead/observer/ghost in world)
-			if (ghost.corpse && ghost.corpse.mind.key == find_key)
+			if (ghost.corpse && ghost.corpse.mind && ghost.corpse.mind.key == find_key)
 				selected = ghost
 				break
 	return selected

@@ -157,6 +157,36 @@
 	var/nexttime = 0
 
 
+/obj/machinery/power/solar_control/attackby(I as obj, user as mob)
+	if(istype(I, /obj/item/weapon/screwdriver))
+		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
+		if(do_after(user, 20))
+			if (src.stat & BROKEN)
+				user << "\blue The broken glass falls out."
+				var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
+				new /obj/item/weapon/shard(src.loc)
+				var/obj/item/weapon/circuitboard/computer/solar_control/M = new /obj/item/weapon/circuitboard/computer/solar_control(A)
+				for (var/obj/C in src)
+					C.loc = src.loc
+				A.circuit = M
+				A.state = 3
+				A.icon_state = "3"
+				A.anchored = 1
+				del(src)
+			else
+				user << "\blue You disconnect the monitor."
+				var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
+				var/obj/item/weapon/circuitboard/computer/solar_control/M = new /obj/item/weapon/circuitboard/computer/solar_control(A)
+				for(var/obj/C in src)
+					C.loc = src.loc
+				A.circuit = M
+				A.state = 4
+				A.icon_state = "4"
+				A.anchored = 1
+				del(src)
+	else
+		src.attack_hand(user)
+	return
 
 /obj/machinery/power/solar_control/New()
 	..()

@@ -23,7 +23,7 @@ var/global/datum/shuttle/main_shuttle
 var/global/list/datum/shuttle/shuttles = list()
 var/global/list/datum/shuttle/prisonshuttles = list()
 
-datum/shuttle
+/datum/shuttle
 	var
 		name = "Shuttle"
 		location = 1 // 0 = Transit, 1 = Start, 2 = dest

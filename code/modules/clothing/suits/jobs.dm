@@ -2,7 +2,7 @@
  * Job related
  */
 
-//Botonist
+//Botanist
 /obj/item/clothing/suit/apron
 	name = "apron"
 	desc = "A basic blue apron."
@@ -62,7 +62,6 @@
 	desc = "A basic, dull, white chef's apron."
 	icon_state = "apronchef"
 	item_state = "apronchef"
-	blood_overlay_type = "armor"
 	body_parts_covered = CHEST|GROIN
 
 //Detective
@@ -71,12 +70,9 @@
 	desc = "An 18th-century multi-purpose trenchcoat. Someone who wears this means serious business."
 	icon_state = "detective"
 	item_state = "det_suit"
-	blood_overlay_type = "coat"
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	allowed = list(/obj/item/weapon/tank/emergency_oxygen,/obj/item/weapon/reagent_containers/spray/pepper,/obj/item/device/flashlight,/obj/item/weapon/gun/energy,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/storage/fancy/cigarettes,/obj/item/weapon/lighter,/obj/item/device/detective_scanner,/obj/item/device/taperecorder)
 	armor = list(melee = 50, bullet = 10, laser = 25, energy = 10, bomb = 0, bio = 0, rad = 0)
-	cold_protection = CHEST|GROIN|LEGS|ARMS
-	heat_protection = CHEST|GROIN|LEGS|ARMS
 
 //Engineering
 /obj/item/clothing/suit/hazardvest
@@ -84,8 +80,7 @@
 	desc = "A high-visibility vest used in work zones."
 	icon_state = "hazard"
 	item_state = "hazard"
-	blood_overlay_type = "armor"
-	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency_oxygen,/obj/item/device/t_scanner,)
+	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency_oxygen,/obj/item/device/t_scanner, /obj/item/device/multitool, /obj/item/device/hacktool)
 
 //Lawyer
 /obj/item/clothing/suit/lawyer/bluejacket
@@ -93,7 +88,6 @@
 	desc = "A snappy dress jacket."
 	icon_state = "suitjacket_blue_open"
 	item_state = "suitjacket_blue_open"
-	blood_overlay_type = "coat"
 	body_parts_covered = CHEST|ARMS
 
 /obj/item/clothing/suit/lawyer/purpjacket
@@ -101,13 +95,4 @@
 	desc = "A foppish dress jacket."
 	icon_state = "suitjacket_purp"
 	item_state = "suitjacket_purp"
-	blood_overlay_type = "coat"
 	body_parts_covered = CHEST|ARMS
-
-//Mime
-/obj/item/clothing/suit/suspenders
-	name = "suspenders"
-	desc = "They suspend the illusion of the mime's play."
-	icon = 'icons/obj/clothing/belts.dmi'
-	icon_state = "suspenders"
-	blood_overlay_type = "armor" //it's the less thing that I can put here

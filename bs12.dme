@@ -778,6 +778,7 @@
 #include "code\modules\paperwork\handlabeler.dm"
 #include "code\modules\paperwork\paperbin.dm"
 #include "code\modules\paperwork\pen.dm"
+#include "code\modules\paperwork\photocopier.dm"
 #include "code\modules\paperwork\stamps.dm"
 #include "code\modules\power\apc.dm"
 #include "code\modules\power\Cabling.dm"

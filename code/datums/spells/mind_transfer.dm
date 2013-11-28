@@ -80,10 +80,12 @@ Also, you never added distance checking after target is selected. I've went ahea
 	var/mob/dead/observer/ghost = victim.ghostize(0)
 	ghost.spell_list = victim.spell_list//If they have spells, transfer them. Now we basically have a backup mob.
 
-	caster.mind.transfer_to(victim)
+	if(caster.mind)
+		caster.mind.transfer_to(victim)
 	victim.spell_list = caster.spell_list//Now they are inside the victim's body.
 
-	ghost.mind.transfer_to(caster)
+	if(ghost.mind)
+		ghost.mind.transfer_to(caster)
 	caster.key = ghost.key	//have to transfer the key since the mind was not active
 	caster.spell_list = ghost.spell_list
 
