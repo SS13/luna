@@ -1406,14 +1406,14 @@ other types of metals and chemistry for reagents).
 	build_path = "/obj/item/weapon/gun/energy/temperature"
 	locked = 1
 
-/datum/design/flora_gun
+/*/datum/design/flora_gun
 	name = "Floral Somatoray"
 	desc = "A tool that discharges controlled radiation which induces mutation in plant cells. Harmless to other organic life."
 	id = "flora_gun"
 	req_tech = list("materials" = 2, "biotech" = 3, "powerstorage" = 3)
 	build_type = PROTOLATHE
 	materials = list("$metal" = 2000, "$glass" = 500, "$uranium" = 500)
-	build_path = "/obj/item/weapon/gun/energy/floragun"
+	build_path = "/obj/item/weapon/gun/energy/floragun"*/
 
 /*/datum/design/large_grenade
 	name = "Large Grenade"

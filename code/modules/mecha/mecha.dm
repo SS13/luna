@@ -938,8 +938,10 @@
 	set category = "Exosuit Interface"
 	set src = usr.loc
 	set popup_menu = 0
-	if(usr!=src.occupant)
+
+	if(usr != src.occupant)
 		return
+
 	src.go_out()
 	add_fingerprint(usr)
 	return
@@ -947,13 +949,9 @@
 
 /obj/mecha/proc/go_out()
 	if(!src.occupant) return
-	var/atom/movable/mob_container
-	if(ishuman(occupant))
-		mob_container = src.occupant
-	else
-		return
-	if(mob_container.forceMove(src.loc))//ejecting mob container
-		src.log_message("[mob_container] moved out.")
+
+	if(src.occupant.forceMove(src.loc))//ejecting mob container
+		src.log_message("[src.occupant] moved out.")
 		occupant.reset_view()
 		/*
 		if(src.occupant.client)
