@@ -745,7 +745,7 @@ turf/simulated/floor/proc/update_icon()
 		if(locate(/obj/structure/lattice, src)) return
 		user << "\blue Constructing support lattice ..."
 		playsound(src.loc, 'Genhit.ogg', 50, 1)
-		new /obj/structure/lattice(loc)
+		new /obj/structure/lattice(src)
 		C:amount--
 
 		if (C:amount < 1)
