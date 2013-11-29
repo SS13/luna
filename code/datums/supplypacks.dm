@@ -462,7 +462,7 @@
     name = "Gas canister \[Air\]"
     contains = list(/obj/machinery/portable_atmospherics/canister/air)
     cost = 10
-    types = list("Materials", "Emergency")
+    types = list("Materials", "Emergency", "Engineering")
 
 /datum/supply_packs/gascanisternitrogen
     name = "Gas canister \[N2\]"
@@ -611,7 +611,7 @@
 	containername = "Bureaucracy crate"
 
 /datum/supply_packs/toner
-	name = "Toner Cartridges"
+	name = "Toner cartridges"
 	contains = list(/obj/item/device/toner,
 					/obj/item/device/toner,
 					/obj/item/device/toner,
