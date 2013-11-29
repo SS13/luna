@@ -461,7 +461,7 @@
 					continue
 				M.show_message("[user.name] smashed the light!", 3, "You hear a tinkle of breaking glass", 2)
 			if(on && (W.flags & CONDUCT))
-				if(!user.mutations & 2)
+				if(!(COLD_RESISTANCE in user.mutations))
 					Electrocute(user, 50, null, 20000)
 			broken()
 
@@ -476,7 +476,7 @@
 			var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 			s.set_up(3, 1, src)
 			s.start()
-			if(!user.mutations & 2)
+			if(!(COLD_RESISTANCE in user.mutations))
 				Electrocute(user, 75, null, 20000)
 
 
@@ -512,7 +512,7 @@
 		else
 			prot = 1
 
-		if(prot > 0 || (user.mutations & 2))
+		if(prot > 0 || (COLD_RESISTANCE in user.mutations))
 			user << "You remove the light [fitting]"
 		else if(istype(H) && H.a_intent == "harm")
 			user << "You smash the light [fitting], but burn your hand on it!"

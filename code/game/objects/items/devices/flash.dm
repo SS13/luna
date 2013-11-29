@@ -22,7 +22,7 @@
 
 
 /obj/item/device/flash/attack(mob/living/carbon/M as mob, mob/user as mob)
-	if ((usr.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in usr.mutations) && prob(50))
 		usr << "\red The flash slips out of your hand."
 		usr.drop_item()
 		return
@@ -49,7 +49,7 @@
 					return
 				if (!( safety ) && status == 1)
 					playsound(src.loc, 'flash.ogg', 100, 1)
-					if(!(M.mutations & HULK))  M.weakened = 10
+					M.Weaken(10)
 					if (prob(10))
 						status = 0
 						user << "\red The bulb has burnt out!"
@@ -77,7 +77,7 @@
 	return
 
 /obj/item/device/flash/attack_self(mob/living/carbon/user as mob, flag)
-	if ((usr.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in usr.mutations) && prob(50))
 		usr << "\red The flash slips out of your hand."
 		usr.drop_item()
 		return

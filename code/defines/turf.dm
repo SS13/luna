@@ -418,16 +418,20 @@
 	heat_capacity = 10000000
 
 /turf/simulated/shuttle/floor
-	name = "shuttle floor"
+	name = "floor"
 	icon_state = "floor"
 
 /turf/simulated/shuttle/wall
-	name = "shuttle wall"
+	name = "wall"
 	icon_state = "wall"
 	explosionstrength = 4
 	opacity = 1
 	density = 1
 	blocks_air = 1
+
+/turf/simulated/shuttle/wall/other
+	icon = 'walls.dmi'
+	icon_state = "riveted"
 
 /turf/unsimulated
 	name = "Command"

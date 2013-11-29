@@ -94,7 +94,7 @@
 
 	T.death(0)
 	T.real_name = "Unknown"
-	T.mutations |= 64
+	T.mutations += list(HUSK, NOCLONE)
 	T.update_body()
 
 	usr.changeling_absorbing = 0

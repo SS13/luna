@@ -11,7 +11,7 @@
 	invocation_type = "shout"
 	range = 7
 	selection_type = "range"
-	var/list/compatible_mobs = list(/mob/living/carbon/human, /mob/living/carbon/human/dummy, /mob/living/carbon/monkey)
+	var/list/compatible_mobs = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
 
 /obj/effect/proc_holder/spell/targeted/horsemask/cast(list/targets, mob/user = usr)
 	if(!targets.len)
@@ -23,7 +23,14 @@
 	if(!target)
 		return
 
-	if(!(target.type in compatible_mobs))
+	var/isvalid = 0
+	for(var/ttype in compatible_mobs)
+		if(istype(target, ttype))
+			isvalid = 1
+			break
+
+
+	if(!isvalid)
 		user << "<span class='notice'>It'd be stupid to curse [target] with a horse's head!</span>"
 		return
 

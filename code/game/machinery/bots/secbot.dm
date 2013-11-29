@@ -270,12 +270,10 @@ Auto Patrol: []"},
 					var/mob/living/carbon/M = src.target
 					var/maxstuns = 4
 					if (istype(M, /mob/living/carbon/human))
-						if (M.weakened < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
-							M.weakened = 10
-						if (M.stuttering < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+						M.Weaken(10)
+						if(M.stuttering < 10 && !(HULK in M.mutations))
 							M.stuttering = 10
-						if (M.stunned < 10 && (!(M.mutations & HULK))  /*&& (!istype(M:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
-							M.stunned = 10
+						M.Stun(10)
 					else
 						M.weakened = 10
 						M.stuttering = 10
@@ -819,7 +817,7 @@ Auto Patrol: []"},
 
 
 /obj/machinery/bot/secbot/proc/say_quote(var/text)
-	return "beeps, \"[text]\"";
+	return "beeps, \"[text]\""
 
 
 /obj/machinery/bot/secbot/shutdowns()
@@ -871,14 +869,14 @@ Auto Patrol: []"},
 		src.name = "helmet/signaler/prox sensor assembly"
 		del(W)
 
-	else if (((istype(W, /obj/item/robot_parts/l_arm)) || (istype(W, /obj/item/robot_parts/r_arm))) && (src.build_step == 2))
+	else if ((istype(W, /obj/item/robot_parts/l_arm) || istype(W, /obj/item/robot_parts/r_arm)) && src.build_step == 2)
 		src.build_step++
 		user << "You add the robot arm to [src]!"
 		src.name = "helmet/signaler/prox sensor/robot arm assembly"
 		src.overlays += image('aibots.dmi', "hs_arm")
 		del(W)
 
-	else if ((istype(W, /obj/item/weapon/melee/baton)) && (src.build_step >= 3))
+	else if (istype(W, /obj/item/weapon/melee/baton) && src.build_step >= 3)
 		src.build_step++
 		user << "You complete the Securitron! Beep boop."
 		var/obj/machinery/bot/secbot/S = new /obj/machinery/bot/secbot

@@ -11,16 +11,16 @@
 	else if (gender == FEMALE)
 		g = "_female"
 
-	if (mutations & HULK)
+	if(HULK in mutations)
 		overlays += image("icon" = 'genetics.dmi', "icon_state" = "hulk[g][!lying ? "_s" : "_l"]")
 
-	if (mutations & 2)
+	if(COLD_RESISTANCE in mutations)
 		overlays += image("icon" = 'genetics.dmi', "icon_state" = "fire[!lying ? "_s" : "_l"]")
 
-	if (mutations & 1)
+	if(TK in mutations)
 		overlays += image("icon" = 'genetics.dmi', "icon_state" = "telekinesishead[!lying ? "_s" : "_l"]")
 
-	if (dna && dna.mutantrace)
+	if(dna && dna.mutantrace)
 		overlays += image("icon" = 'genetics.dmi', "icon_state" = "[dna.mutantrace][g][!lying ? "_s" : "_l"]")
 		if(face_standing)
 			del(face_standing)
@@ -342,7 +342,7 @@
 	stand_icon = new /icon('human.dmi', "body_[g]_s")
 	lying_icon = new /icon('human.dmi', "body_[g]_l")
 
-	if(mutations & 64)
+	if(HUSK in mutations)
 		stand_icon.Blend(new /icon('human.dmi', "husk_s"), ICON_OVERLAY)
 		lying_icon.Blend(new /icon('human.dmi', "husk_l"), ICON_OVERLAY)
 

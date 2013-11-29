@@ -1,5 +1,5 @@
 /mob/living/carbon/alien/handle_regular_hud_updates()
-	if (stat == 2 || mutations & 4)
+	if (stat == 2 || (XRAY in mutations))
 		sight |= SEE_TURFS
 		sight |= SEE_MOBS
 		sight |= SEE_OBJS

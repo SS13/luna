@@ -531,25 +531,17 @@
 					/obj/item/device/transfer_valve = 6,/obj/item/device/assembly/timer = 6,/obj/item/device/assembly/signaler = 6,
 					/obj/item/device/assembly/prox_sensor = 6,/obj/item/device/assembly/igniter = 6)
 
-/obj/machinery/vending_tg/wallmed1
+/obj/machinery/vending_tg/wallmed
 	name = "\improper NanoMed"
 	desc = "Wall-mounted Medical Equipment dispenser."
 	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
 	icon_state = "wallmed"
 	icon_deny = "wallmed-deny"
 	density = 0 //It is wall-mounted, and thus, not dense. --Superxpdude
-	products = list(/obj/item/stack/medical/bruise_pack = 2,/obj/item/stack/medical/ointment = 2,/obj/item/weapon/reagent_containers/syringe/inaprovaline = 4,/obj/item/device/healthanalyzer = 1)
-	contraband = list(/obj/item/weapon/reagent_containers/syringe/antitoxin = 4,/obj/item/weapon/reagent_containers/syringe/antiviral = 4,/obj/item/weapon/reagent_containers/pill/tox = 1)
-
-/obj/machinery/vending_tg/wallmed2
-	name = "\improper NanoMed"
-	desc = "Wall-mounted Medical Equipment dispenser."
-	icon_state = "wallmed"
-	icon_deny = "wallmed-deny"
-	density = 0 //It is wall-mounted, and thus, not dense. --Superxpdude
-	products = list(/obj/item/weapon/reagent_containers/syringe/inaprovaline = 5,/obj/item/weapon/reagent_containers/syringe/antitoxin = 3,/obj/item/stack/medical/bruise_pack = 3,
-					/obj/item/stack/medical/ointment =3,/obj/item/device/healthanalyzer = 3)
-	contraband = list(/obj/item/weapon/reagent_containers/pill/tox = 3)
+	products = list(/obj/item/stack/medical/bruise_pack = 3, /obj/item/stack/medical/ointment = 3, /obj/item/stack/medical/bandaid = 2,
+					/obj/item/weapon/reagent_containers/syringe/inaprovaline = 4, /obj/item/weapon/reagent_containers/syringe/antitoxin = 4,
+					/obj/item/weapon/reagent_containers/syringe/antiviral = 4, /obj/item/device/healthanalyzer = 2)
+	contraband = list(/obj/item/weapon/reagent_containers/pill/tox = 2, /obj/item/weapon/reagent_containers/glass/bottle/stoxin = 2)
 
 /obj/machinery/vending_tg/security
 	name = "\improper SecTech"
@@ -559,7 +551,7 @@
 	icon_deny = "sec-deny"
 	req_access_txt = "1"
 	products = list(/obj/item/weapon/handcuffs = 16,/obj/item/weapon/grenade/flashbang = 8,/obj/item/device/flash = 8,/obj/item/weapon/melee/baton = 4,/obj/item/clothing/glasses/sunglasses = 2,
-					/obj/item/weapon/gun/energy/taser = 2, /obj/item/weapon/reagent_containers/food/snacks/donut/normal = 12/*,/obj/item/weapon/storage/box/evidence = 6*/)
+					/obj/item/weapon/gun/energy/taser = 2, /obj/item/weapon/reagent_containers/food/snacks/donut/normal = 12,/obj/item/weapon/storage/box/evidence = 2)
 	contraband = list(/obj/item/kitchen/donut_box = 2, /obj/item/weapon/gun/energy/gun = 1)
 /*
 /obj/machinery/vending_tg/hydronutrients

@@ -36,7 +36,7 @@ CLASSIC BATON
 //	..()
 
 /obj/item/weapon/melee/energy/sword/attack_self(mob/living/user as mob)
-	if ((user.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in user.mutations) && prob(50))
 		user << "\red You accidentally cut yourself with the Sword."
 		user.adjustBruteLoss(5)
 		user.adjustFireLoss(5)
@@ -151,7 +151,7 @@ CLASSIC BATON
 		src.icon = I
 /obj/item/weapon/melee/baton/attack_self(mob/user as mob)
 	src.status = !( src.status )
-	if ((usr.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in usr.mutations) && prob(50))
 		usr << "\red You grab the stunbaton on the wrong side!"
 		usr.Stun(10)
 		return
@@ -167,7 +167,7 @@ CLASSIC BATON
 	return
 
 /obj/item/weapon/melee/baton/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in usr.mutations) && prob(50))
 		usr << "\red You grab the stunbaton on the wrong side."
 		usr.Stun(10)
 		return
@@ -180,7 +180,7 @@ CLASSIC BATON
 		return
 	if (status == 0 || (status == 1 && charges == 0))
 		if(user.a_intent == "harm")
-			if (M.weakened < 5 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.weakened < 5 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.weakened = 5
 				..()
 			for(var/mob/O in viewers(M))
@@ -203,12 +203,12 @@ CLASSIC BATON
 				R.cell.charge -= 20
 			else
 				charges--
-			if (M.weakened < 1 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.weakened < 1 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.weakened = 1
-			if (M.stuttering < 1 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.stuttering < 1 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.stuttering = 1
 			..()
-			if (M.stunned < 1 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.stunned < 1 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.stunned = 1
 		else
 			playsound(src.loc, 'Egloves.ogg', 50, 1, -1)
@@ -217,11 +217,11 @@ CLASSIC BATON
 				R.cell.charge -= 20
 			else
 				charges--
-			if (M.weakened < 10 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.weakened < 10 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.weakened = 10
-			if (M.stuttering < 10 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.stuttering < 10 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.stuttering = 10
-			if (M.stunned < 10 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+			if (M.stunned < 10 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 				M.stunned = 10
 			user.lastattacked = M
 			M.lastattacker = user
@@ -236,12 +236,12 @@ CLASSIC BATON
 				R.cell.charge -= 400
 			else
 				charges--
-			if (M.weakened < 1 && (!(M.mutations & HULK)) )
+			if (M.weakened < 1 && (!(HULK in M.mutations)) )
 				M.weakened = 1
-			if (M.stuttering < 1 && (!(M.mutations & HULK)) )
+			if (M.stuttering < 1 && (!(HULK in M.mutations)) )
 				M.stuttering = 1
 			..()
-			if (M.stunned < 1 && (!(M.mutations & HULK)) )
+			if (M.stunned < 1 && (!(HULK in M.mutations)) )
 				M.stunned = 1
 		else
 			playsound(src.loc, 'Egloves.ogg', 50, 1, -1)
@@ -250,11 +250,11 @@ CLASSIC BATON
 				R.cell.charge -= 400
 			else
 				charges--
-			if (M.weakened < 10 && (!(M.mutations & HULK)) )
+			if (M.weakened < 10 && (!(HULK in M.mutations)) )
 				M.weakened = 10
-			if (M.stuttering < 10 && (!(M.mutations & HULK)) )
+			if (M.stuttering < 10 && (!(HULK in M.mutations)) )
 				M.stuttering = 10
-			if (M.stunned < 10 && (!(M.mutations & HULK)) )
+			if (M.stunned < 10 && (!(HULK in M.mutations)) )
 				M.stunned = 10
 			user.lastattacked = M
 			M.lastattacker = user
@@ -262,7 +262,7 @@ CLASSIC BATON
 			if (O.client)	O.show_message("\red <B>[M] has been stunned with the stun baton by [user]!</B>", 1, "\red You hear someone fall", 2)
 
 /obj/item/weapon/melee/classic_baton/attack(mob/living/M as mob, mob/living/user as mob)
-	if ((usr.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in usr.mutations) && prob(50))
 		usr << "\red You club yourself over the head."
 		usr.weakened = max(3 * force, usr.weakened)
 		if(ishuman(usr))
@@ -275,20 +275,20 @@ CLASSIC BATON
 
 	if (user.a_intent == "harm")
 		playsound(src.loc, "swing_hit", 50, 1, -1)
-		if (M.weakened < 8 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.weakened < 8 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.weakened = 8
-		if (M.stuttering < 8 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.stuttering < 8 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.stuttering = 8
 		..()
-		if (M.stunned < 8 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.stunned < 8 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.stunned = 8
 		for(var/mob/O in viewers(M))
 			if (O.client)	O.show_message("\red <B>[M] has been beaten with the police baton by [user]!</B>", 1, "\red You hear someone fall", 2)
 	else
 		playsound(src.loc, 'Genhit.ogg', 50, 1, -1)
-		if (M.weakened < 5 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.weakened < 5 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.weakened = 5
-		if (M.stunned < 5 && (!(M.mutations & HULK))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
+		if (M.stunned < 5 && (!(HULK in M.mutations))  /*&& (!istype(H:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
 			M.stunned = 5
 		for(var/mob/O in viewers(M))
 			if (O.client)	O.show_message("\red <B>[M] has been stunned with the police baton by [user]!</B>", 1, "\red You hear someone fall", 2)

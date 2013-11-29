@@ -21,7 +21,7 @@ FLASHBANG
 
 /obj/item/weapon/grenade/emp/afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
 	if (user.equipped() == src)
-		if ((user.mutations & CLUMSY) && prob(50))
+		if ((CLUMSY in user.mutations) && prob(50))
 			user << "\red Huh? How does this thing work?!"
 			src.state = 1
 			src.icon_state = "emp_active"
@@ -269,7 +269,7 @@ FLASHBANG
 
 /obj/item/weapon/grenade/flashbang/afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
 	if (user.equipped() == src)
-		if ((user.mutations & CLUMSY) && prob(50))
+		if ((CLUMSY in user.mutations) && prob(50))
 			user << "\red Huh? How does this thing work?!"
 			src.state = 1
 			src.icon_state = "flashbang_active"
@@ -313,8 +313,8 @@ FLASHBANG
 				S.icon_state = "shield0"
 		if ((get_dist(M, T) <= 2 || src.loc == M.loc || src.loc == M))
 			flick("e_flash", M.flash)
-			if(!(M.mutations & HULK))  M.stunned = 10
-			if(!(M.mutations & HULK))  M.weakened = 3
+			M.Stun(10)
+			M.Weaken(3)
 			M << "\red <B>BANG</B>"
 			if ((prob(14) || (M == src.loc && prob(70))))
 				M.ear_damage += rand(1, 10)
@@ -341,16 +341,16 @@ FLASHBANG
 			if (get_dist(M, T) <= 5)
 				flick("e_flash", M.flash)
 				if (!istype(M, /mob/living/carbon/human))
-					if(!M.mutations & HULK)  M.stunned = 7
-					if(!M.mutations & HULK)  M.weakened = 2
+					if(!HULK in M.mutations)  M.stunned = 7
+					if(!HULK in M.mutations)  M.weakened = 2
 				else
 					var/mob/living/carbon/human/H = M
 					M.ear_deaf += 10
 					if (prob(20))
 						M.ear_damage += rand(0, 4)
 					if (!(istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || istype(H.head, /obj/item/clothing/head/helmet/welding) ) || M.paralysis)
-						if(!M.mutations & HULK)  M.stunned = 7
-						if(!M.mutations & HULK)  M.weakened = 2
+						if(!HULK in M.mutations)  M.stunned = 7
+						if(!HULK in M.mutations)  M.weakened = 2
 					else
 						if (!M.paralysis)
 							M.eye_stat += rand(1, 3)
@@ -389,7 +389,7 @@ FLASHBANG
 
 /obj/item/weapon/grenade/flashbang/attack_self(mob/user as mob)
 	if (!src.state)
-		if (user.mutations & CLUMSY)
+		if (CLUMSY in user.mutations)
 			user << "\red Huh? How does this thing work?!"
 			spawn( 5 )
 				prime()
@@ -406,7 +406,7 @@ FLASHBANG
 
 /obj/item/weapon/grenade/emp/attack_self(mob/user as mob)
 	if (!src.state)
-		if (user.mutations & CLUMSY)
+		if (CLUMSY in user.mutations)
 			user << "\red Huh? How does this thing work?!"
 			spawn( 5 )
 				prime()

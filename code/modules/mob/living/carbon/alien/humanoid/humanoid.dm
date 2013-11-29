@@ -515,7 +515,7 @@
 			if (M.a_intent == "harm" && !(M.gloves && M.gloves.cell))
 				var/damage = rand(1, 9)
 				if (prob(90))
-					if (M.mutations & HULK)
+					if (HULK in M.mutations)
 						damage += 5
 						spawn(0)
 							paralysis += 1

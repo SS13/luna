@@ -62,12 +62,12 @@
 			src.fingerprintshidden += "(Wearing gloves). Real name: [M.real_name], Key: [M.key]"
 			src.fingerprintslast = M.key
 		return 0
-	if (M.mutations & mFingerprints)
+	if (mFingerprints in M.mutations)
 		if(src.fingerprintslast != M.key)
 			src.fingerprintshidden += "(Has no fingerprints) Real name: [M.real_name], Key: [M.key]"
 			src.fingerprintslast = M.key
 		return 0
-	if (!( src.fingerprints ))
+	if (!src.fingerprints)
 		src.fingerprints = text("[]", md5(M.dna.uni_identity))
 		if(src.fingerprintslast != M.key)
 			src.fingerprintshidden += "Real name: [M.real_name], Key: [M.key]"

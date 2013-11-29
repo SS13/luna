@@ -51,7 +51,6 @@
 
 
 /mob/living/silicon/robot/proc/pick_module()
-
 	var/pick_module = input("Please, select a module!", "Robot", null, null) in list("Standard", "Engineering", "Security", "Medical", "Janitor")
 	switch(pick_module)
 		if("Standard")
@@ -156,13 +155,13 @@
 		if(LaunchControl.online && main_shuttle.location < 2)
 			var/timeleft = LaunchControl.timeleft()
 			if (timeleft)
-				stat(null, "ETA-[(timeleft / 60) % 60]:[add_zero(num2text(timeleft % 60), 2)]")
+				stat("ETA", "[(timeleft / 60) % 60]:[add_zero(num2text(timeleft % 60), 2)]")
 
 		//if(ticker.mode.name == "AI malfunction" && ticker.processing)
 		//	stat(null, text("Time until all [station_name()]'s systems are taken over: [(ticker.AIwin - ticker.AItime) / 600 % 60]:[(ticker.AIwin - ticker.AItime) / 100 % 6][(ticker.AIwin - ticker.AItime) / 10 % 10]"))
 
 		if(cell)
-			stat(null, text("Charge Left: [cell.charge]/[cell.maxcharge]"))
+			stat("Charge Left", "[cell.charge]/[cell.maxcharge]")
 		else
 			stat(null, text("No Cell Inserted!"))
 
@@ -243,18 +242,9 @@
 
 /mob/living/silicon/robot/Bump(atom/movable/AM as mob|obj, yes)
 	spawn( 0 )
-		if ((!( yes ) || now_pushing))
+		if (!yes || now_pushing)
 			return
 		now_pushing = 1
-		/*if(ismob(AM))
-			var/mob/tmob = AM
-			if(istype(tmob, /mob/living/carbon/human) && tmob.mutations & 32)
-				if(prob(20))
-					for(var/mob/M in viewers(src, null))
-						if(M.client)
-							M << M << "\red <B>[src] fails to push [tmob]'s fat ass out of the way.</B>"
-					now_pushing = 0
-					return*/
 		now_pushing = 0
 		..()
 		if (!istype(AM, /atom/movable))

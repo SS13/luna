@@ -83,18 +83,9 @@
 /mob/living/carbon/monkey/Bump(atom/movable/AM as mob|obj, yes)
 
 	spawn(0)
-		if ((!( yes ) || now_pushing))
+		if (!yes || now_pushing)
 			return
 		now_pushing = 1
-		/*if(ismob(AM))
-			var/mob/tmob = AM
-			if(istype(tmob, /mob/living/carbon/human) && tmob.mutations & 32)
-				if(prob(70))
-					for(var/mob/M in viewers(src, null))
-						if(M.client)
-							M << "\red <B>[src] fails to push [tmob]'s fat ass out of the way.</B>"
-					now_pushing = 0
-					return*/
 		now_pushing = 0
 		..()
 		if (!( istype(AM, /atom/movable) ))
@@ -150,7 +141,7 @@
 			for(var/mob/O in viewers(src, null))
 				O.show_message(text("\red <B>[M.name] has bit []!</B>", src), 1)
 			var/damage = rand(1, 5)
-			if (mutations & HULK) damage += 10
+			if (HULK in mutations) damage += 10
 			bruteloss += damage
 			updatehealth()
 		else

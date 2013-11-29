@@ -89,7 +89,7 @@
 		if(5.0)
 			t = "huge"
 		else
-	if ((usr.mutations & CLUMSY) && prob(30)) t = "funny-looking"
+	if ((CLUMSY in usr.mutations) && prob(30)) t = "funny-looking"
 	usr << text("This is a []\icon[][]. It is a [] item.", !src.blood_DNA ? "" : "bloody ",src, src.name, t)
 	usr << src.desc
 	return
@@ -205,7 +205,7 @@
 	user.log_m("Attacked [M.name]([M.real_name]) with [src]")
 	M.log_m("Attacked by [user.name]([user.real_name])([user.key]) with [src]")
 	var/mob/user3 = user
-	if(user.mutations & 1)
+	if(TK in user.mutations)
 		user3 = null
 	if(!istype(M, /mob/living/carbon/human))
 		for(var/mob/O in viewers(M, null))
@@ -235,7 +235,7 @@
 			if (istype(affecting, /datum/organ/external))
 				var/b_dam = (src.damtype == "brute" ? src.force : 0)
 				var/f_dam = (src.damtype == "fire" ? src.force : 0)
-				if (M.mutations & 2)
+				if (COLD_RESISTANCE in M.mutations)
 					f_dam = 0
 				if (def_zone == "head")
 					if (b_dam && (istype(H.head, /obj/item/clothing/head/helmet/) && H.head.body_parts_covered & HEAD) && prob(80 - src.force))
@@ -259,7 +259,7 @@
 							if (prob(50))
 								if (ticker.mode.name == "revolution")
 									ticker.mode:remove_revolutionary(H.mind)
-					if (b_dam && prob(25 + (b_dam * 2)) && !(user.mutations & 1))
+					if (b_dam && prob(25 + (b_dam * 2)) && !(TK in user.mutations))
 						src.add_blood(H)
 						if (prob(65))
 							var/turf/location = H.loc
@@ -303,7 +303,7 @@
 							for(var/mob/O in viewers(H, null))
 								O.show_message(text("\red <B>[] has been stunned!</B>", H), 1)
 						if(H.stat != 2)	H.stat = 1
-					if (b_dam && prob(25 + (b_dam * 2)) && !(user.mutations & 1))
+					if (b_dam && prob(25 + (b_dam * 2)) && !(TK in user.mutations))
 						src.add_blood(H)
 						if (prob(65))
 							var/turf/location = H.loc
@@ -345,7 +345,7 @@
 							for(var/mob/O in viewers(H, null))
 								O.show_message(text("\red <B>[] has been stunned!</B>", H), 1)
 							if(H.stat != 2)	H.stat = 1
-						if (b_dam && prob(25 + (b_dam * 2)) && !(user.mutations & 1))
+						if (b_dam && prob(25 + (b_dam * 2)) && !(TK in user.mutations))
 							src.add_blood(H)
 							if (prob(65))
 								var/turf/location = H.loc
@@ -372,7 +372,7 @@
 										user2.w_uniform.add_blood(H)
 						affecting.take_damage(b_dam, f_dam,slash,superblunt)
 				else
-					if (b_dam && prob(25 + (b_dam * 2)) && !(user.mutations & 1))
+					if (b_dam && prob(25 + (b_dam * 2)) && !(TK in user.mutations))
 						src.add_blood(H)
 						if (prob(65))
 							var/turf/location = H.loc
@@ -408,7 +408,7 @@
 			if("brute")
 				M.bruteloss += power
 			if("fire")
-				if (!(M.mutations & COLD_RESISTANCE))
+				if (!(COLD_RESISTANCE in M.mutations))
 					M.fireloss += power
 			//		M << "heres ur burn notice"
 		M.updatehealth()

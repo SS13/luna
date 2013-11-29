@@ -324,8 +324,11 @@ Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> 
 			if (istype(M.wear_mask, /obj/item/clothing/mask/gas/voice)&&M.wear_mask:vchange)
 			//To properly have the ninja show up on radio. Could also be useful for similar items.
 			//Would not be necessary but the mob could be wearing a mask that is not a voice changer.
-				N = M.wear_mask:voice
-				//J = "Unknown"
+				if(M.wear_mask:voice != "Unknown")
+					N = M.wear_mask:voice
+				else
+					N = M.name
+				J = "Unknown"
 			var/rendered = "[part_a][N][part_b][quotedmsg][part_c]"
 			for (var/mob/R in heard_masked)
 				if(istype(R, /mob/living/silicon/ai))

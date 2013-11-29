@@ -12,11 +12,11 @@
 	ending = sanitize_spec(ending)
 
 	if (ending == "?")
-		return "queries, \"[sanitize(text)]\"";
+		return "queries, \"[text]\""
 	else if (ending == "!")
-		return "declares, \"[sanitize(copytext(text, 1, length(text)))]\"";
+		return "declares, \"[text]\""
 
-	return "states, \"[sanitize(text)]\"";
+	return "states, \"[text]\""
 /mob/living/silicon/robot/say_test(var/text)
 	var/ending = copytext(text, length(text))
 	if (ending == "?")

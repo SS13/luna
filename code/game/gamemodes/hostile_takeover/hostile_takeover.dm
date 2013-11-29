@@ -83,11 +83,11 @@
 			crew_spawns -= player.loc
 		else
 			player << "<b>* You're one of the ship's genetical research subjects."
-			player.mutations |= 512
+			player.mutations += mRemotetalk
 			if(prob(80))
-				player.mutations |= 4
+				player.mutations += HULK
 			else
-				player.mutations |= 1
+				player.mutations += TK
 			free--
 
 	for(var/mob/living/silicon/ai/S in world)

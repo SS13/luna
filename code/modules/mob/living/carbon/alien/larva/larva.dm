@@ -267,7 +267,7 @@
 				var/damage = rand(1, 9)
 
 				if (prob(90))
-					if (M.mutations & HULK && prob(90))
+					if (HULK in M.mutations && prob(90))
 						damage += 5
 						spawn(0)
 							paralysis += 1

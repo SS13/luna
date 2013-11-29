@@ -55,7 +55,7 @@ WELDINGTOOOL
 	if(!istype(M, /mob))
 		return
 
-	if((usr.mutations & CLUMSY) && prob(30))
+	if((CLUMSY in usr.mutations) && prob(30))
 		M << "\red You stab yourself in the eye."
 		M.eye_blurry += rand(3,4)
 		M.eye_stat += rand(1,2)

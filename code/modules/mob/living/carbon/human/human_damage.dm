@@ -42,15 +42,15 @@
 	update_clothing()
 
 /mob/living/carbon/human/Stun(amount)
-	if(mutations & HULK)	return
+	if(HULK in mutations)	return
 	..()
 
 /mob/living/carbon/human/Weaken(amount)
-	if(mutations & HULK)	return
+	if(HULK in mutations)	return
 	..()
 
 /mob/living/carbon/human/Paralyse(amount)
-	if(mutations & HULK)	return
+	if(HULK in mutations)	return
 	..()
 
 ////////////////////////////////////////////

@@ -170,7 +170,7 @@
 	var/datum/dna/dna = null
 	var/radiation = 0.0
 
-	var/mutations = 0
+	var/list/mutations = list()
 ///mob/telekinesis = 1
 ///mob/firemut = 2
 ///mob/xray = 4
@@ -582,9 +582,6 @@ mob/verb/turnwest()
 				if (state < 3)
 					if(istype(affecting, /mob/living/carbon/human))
 						var/mob/living/carbon/human/H = affecting
-						/*if(H.mutations & 32)
-							assailant << "\blue You can't strangle [affecting] through all that fat!"
-							return*/
 						for(var/obj/item/clothing/C in list(H.head, H.wear_suit, H.wear_mask, H.w_uniform))
 							if(C.body_parts_covered & HEAD)
 								assailant << "\blue You have to take off [affecting]'s [C.name] first!"
@@ -638,7 +635,7 @@ mob/verb/turnwest()
 			s_click(hud1)
 		return
 	if(M == assailant && state >= 2)
-		if( ( ishuman(user) /*&& (user.mutations & 32)*/ && ismonkey(affecting) ) || ( isalien(user) && iscarbon(affecting) ) )
+		if( ( ishuman(user) && ismonkey(affecting) ) || ( isalien(user) && iscarbon(affecting) ) )
 			var/mob/living/carbon/attacker = user
 			for(var/mob/N in viewers(user, null))
 				if(N.client)
@@ -1749,7 +1746,7 @@ mob/verb/turnwest()
 	if(M != usr) return
 	if(usr == src) return
 	if(istype(M,/mob/living/silicon/ai)) return
-	if(M.mutations & 1)
+	if(TK in M.mutations)
 		show_inv(usr)
 		return
 	if(get_dist(usr,src) > 1) return
@@ -2142,8 +2139,8 @@ mob/verb/turnwest()
 
 //sort of a legacy burn method for /electrocute, /shock, and the e_chair
 /mob/proc/burn_skin(burn_amount)
-	if(istype(src, /mob/living/carbon/human) && (!mutations & 2))
-		if(src.mutations & mShock)
+	if(istype(src, /mob/living/carbon/human) && !(COLD_RESISTANCE in mutations))
+		if(mShock in src.mutations)
 			return 0
 		var/mob/living/carbon/human/H = src	//make this damage method divide the damage to be done among all the body parts, then burn each body part for that much damage. will have better effect then just randomly picking a body part
 		var/divided_damage = (burn_amount)/(H.organs.len)
@@ -2160,7 +2157,7 @@ mob/verb/turnwest()
 		H.UpdateDamageIcon()
 		H.updatehealth()
 		return 1
-	else if(istype(src, /mob/living/carbon/monkey) && (!mutations & 2))
+	else if(istype(src, /mob/living/carbon/monkey) && !(COLD_RESISTANCE in mutations))
 		var/mob/living/carbon/monkey/M = src
 		M.fireloss += burn_amount
 		M.updatehealth()

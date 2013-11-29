@@ -88,7 +88,7 @@
 			new_character.equip_if_possible(new /obj/item/weapon/reagent_containers/food/snacks/grown/banana(new_character), new_character.slot_in_backpack)
 			new_character.equip_if_possible(new /obj/item/weapon/bikehorn(new_character), new_character.slot_in_backpack)
 			new_character.equip_if_possible(new /obj/item/weapon/storage/backpack/clown(new_character), new_character.slot_back)
-			src.mutations |= CLUMSY
+			src.mutations += CLUMSY
 
 		if ("Mime")
 			new_character.equip_if_possible(new /obj/item/device/pda/mime(new_character), new_character.slot_belt)

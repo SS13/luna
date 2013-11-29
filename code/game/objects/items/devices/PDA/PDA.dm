@@ -804,7 +804,7 @@
 	if (istype(M, /mob/living/carbon))
 		switch(scanmode)
 			if(1)
-				if ((user.mutations & CLUMSY || user.brainloss >= 60) && prob(50))
+				if (((CLUMSY in user.mutations) || user.brainloss >= 60) && prob(50))
 					user << text("\red You try to analyze the floor's vitals!")
 					for(var/mob/O in viewers(M, null))
 						O.show_message(text("\red [user] has analyzed the floor's vitals!"), 1)

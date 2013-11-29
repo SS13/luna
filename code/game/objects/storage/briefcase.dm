@@ -19,10 +19,10 @@
 			return
 		var/time = rand(2, 6)
 		if (prob(75))
-			if (M.paralysis < time && (!(M.mutations & HULK)) )
+			if (M.paralysis < time && (!(HULK in M.mutations)) )
 				M.paralysis = time
 		else
-			if (M.stunned < time && (!(M.mutations & HULK)) )
+			if (M.stunned < time && (!(HULK in M.mutations)) )
 				M.stunned = time
 		if(M.stat != 2)	M.stat = 1
 		for(var/mob/O in viewers(M, null))
