@@ -33,7 +33,7 @@ SPOON
 	if(!istype(M, /mob))
 		return
 
-	if((usr.mutations & CLUMSY) && prob(50))
+	if((CLUMSY in usr.mutations) && prob(50))
 		M << "\red You stab yourself in the eye."
 		M.eye_stat += 3
 		M.weakened += 4
@@ -95,7 +95,7 @@ SPOON
 	w_class = 3.0
 
 /obj/item/weapon/kitchen/rollingpin/attack(mob/M as mob, mob/user as mob)
-	if ((usr.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in usr.mutations) && prob(50))
 		usr << "\red The [src] slips out of your hand and hits your head."
 		var/datum/organ/external/affecting = M.organs["head"]
 		affecting.take_damage(10)
@@ -109,10 +109,10 @@ SPOON
 			return
 		var/time = rand(2, 6)
 		if (prob(75))
-			if (M.paralysis < time && (!(M.mutations & HULK)) )
+			if (M.paralysis < time && (!(HULK in M.mutations)) )
 				M.paralysis = time
 		else
-			if (M.stunned < time && (!(M.mutations & HULK)) )
+			if (M.stunned < time && (!(HULK in M.mutations)) )
 				M.stunned = time
 		if(M.stat != 2)	M.stat = 1
 		for(var/mob/O in viewers(M, null))
@@ -138,7 +138,7 @@ SPOON
 	throwforce = 12.0
 
 /obj/item/weapon/kitchen/utensil/knife/attack(target as mob, mob/living/user as mob)
-	if ((user.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in user.mutations) && prob(50))
 		user << "\red You accidentally cut yourself with the [src]."
 		user.adjustBruteLoss(10)
 		return

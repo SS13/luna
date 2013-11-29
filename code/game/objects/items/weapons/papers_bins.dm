@@ -39,7 +39,7 @@ PHOTOGRAPHS
 	return
 
 /obj/item/weapon/paper/attack_self(mob/user as mob)
-	if ((usr.mutations & CLUMSY) && prob(50))
+	if ((CLUMSY in usr.mutations) && prob(50))
 		usr << text("\red You cut yourself on the paper.")
 		usr:adjustBruteLoss(1)
 		return

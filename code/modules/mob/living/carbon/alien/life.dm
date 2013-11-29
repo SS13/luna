@@ -92,7 +92,7 @@
 	breath.toxins -= toxins_used
 	breath.oxygen += toxins_used
 
-	if(breath.temperature > (T0C+66) && !(mutations & 2)) // Hot air hurts :(
+	if(breath.temperature > (T0C+66) && !(COLD_RESISTANCE in mutations)) // Hot air hurts :(
 		if(prob(20))
 			src << "\red You feel a searing heat in your lungs!"
 		fire_alert = max(fire_alert, 1)

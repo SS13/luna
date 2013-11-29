@@ -210,7 +210,7 @@
 		O << "<B>You are playing a Robot. A Robot can interact with most electronic objects in its view point.</B>"
 		O << "<B>You must follow the laws that the AI has. You are the AI's assistant to the station basically.</B>"
 		O << "To use something, simply double-click it."
-		O << {"Use say ":s to speak to fellow cyborgs and the AI through binary."}
+		O << {"Use say ":b to speak to fellow cyborgs and the AI through binary."}
 
 	O.job = "Cyborg"
 

@@ -45,7 +45,7 @@
 	return
 
 /obj/structure/grille/attack_hand(var/obj/M)
-	if ((usr.mutations & HULK))
+	if (HULK in usr.mutations)
 		usr << text("\blue You kick the grille.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -82,7 +82,7 @@
 	return
 
 /obj/structure/grille/attack_paw(var/obj/M)
-	if (usr.mutations & HULK)
+	if (HULK in usr.mutations)
 		usr << text("\blue You kick the grille.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))

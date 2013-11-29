@@ -4,7 +4,7 @@
 		if(copytext(hud.icon_state,1,4) == "hud") //ugly, but icon comparison is worse, I believe
 			client.images.Remove(hud)
 
-	if (stat == DEAD || mutations & XRAY)
+	if (stat == DEAD || (XRAY in mutations))
 		sight |= SEE_TURFS
 		sight |= SEE_MOBS
 		sight |= SEE_OBJS
@@ -365,7 +365,7 @@
 
 /mob/living/carbon/human/proc/morph()
 	set name = "Morph"
-	if(!(src.mutations & mMorph))
+	if(!(mMorph in src.mutations))
 		src.verbs -= /mob/living/carbon/human/proc/morph
 		return
 
@@ -414,7 +414,7 @@
 
 /mob/living/carbon/human/proc/remotesay()
 	set name = "Project mind"
-	if(!(src.mutations & mRemotetalk))
+	if(!(mRemotetalk in src.mutations))
 		src.verbs -= /mob/living/carbon/human/proc/remotesay
 		return
 	var/list/creatures = list()
@@ -423,7 +423,7 @@
 	var/mob/target = input ("Who do you want to project your mind to ?") as mob in creatures
 
 	var/say = input ("What do you wish to say")
-	if(target.mutations & mRemotetalk)
+	if(mRemotetalk in target.mutations)
 		target.show_message("\blue You hear [src.real_name]'s voice: [say]")
 	else
 		target.show_message("\blue You hear a voice: [say]")
@@ -434,7 +434,7 @@
 /mob/living/carbon/human/proc/remoteobserve()
 	set name = "Remote View"
 
-	if(!(src.mutations & mRemote))
+	if(!(mRemote in src.mutations))
 		src.verbs -= /mob/living/carbon/human/proc/remoteobserve
 		return
 
@@ -465,22 +465,22 @@
 	if(zombie == 1)
 		return
 
-	if(mutations & mSmallsize)
+	if(mSmallsize in mutations)
 		if(!(flags & TABLEPASS))
 			flags |= TABLEPASS
 	else
 		if(flags & TABLEPASS)
 			flags &= ~TABLEPASS
 
-	if(mutations & mMorph)
+	if(mMorph in mutations)
 		if(!(/mob/living/carbon/human/proc/morph in src.verbs))
 			src.verbs += /mob/living/carbon/human/proc/morph
 
-	if(mutations & mRemote)
+	if(mRemote in mutations)
 		if(!(/mob/living/carbon/human/proc/remoteobserve in src.verbs))
 			src.verbs += /mob/living/carbon/human/proc/remoteobserve
 
-	if(mutations & mRemotetalk)
+	if(mRemotetalk in mutations)
 		if(!(/mob/living/carbon/human/proc/remotesay in src.verbs))
 			src.verbs += /mob/living/carbon/human/proc/remotesay
 
@@ -500,11 +500,11 @@
 		for(var/obj/a in hallucinations)
 			del a
 
-	if (mutations & mHallucination)
+	if(mHallucination in mutations)
 		hallucination = 100
 		halloss = 0
 
-	if (mutations & mRegen)
+	if(mRegen in mutations)
 		src.bruteloss -= 2
 		src.fireloss -= 2
 		src.oxyloss -= 2
@@ -633,7 +633,7 @@
 	..()
 
 /mob/living/carbon/human/breathe()
-	if(mutations & mNobreath) return
+	if(mNobreath in mutations) return
 	if(istype(loc, /obj/machinery/atmospherics/unary/cryo_cell)) return
 	if(reagents.has_reagent("lexorin"))
 		if (prob(70)) //High chance of gasping for air

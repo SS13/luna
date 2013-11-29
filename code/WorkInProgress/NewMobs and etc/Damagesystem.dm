@@ -173,7 +173,7 @@
 				var/obj/item/weapon/melee/baton/W = equipped()
 				if (world.time > lastDblClick+2)
 					lastDblClick = world.time
-					if((prob(40) || (prob(95) && mutations & CLUMSY)) && W.status)
+					if((prob(40) || (prob(95) && (CLUMSY in mutations))) && W.status)
 						src << "\red You accidentally stun yourself with the [W.name]."
 						weakened = max(12, weakened)
 						playsound(loc, 'Egloves.ogg', 50, 1, -1)
@@ -1210,7 +1210,7 @@
 					damage = max(damage, 0)
 
 				if(istype(affecting, /datum/organ/external) && prob(90) && affecting.status)
-					if (M.mutations & HULK || prob(10*cybermod))
+					if((HULK in M.mutations) || prob(10*cybermod))
 						damage += 5
 						spawn(0)
 							Weaken(2)
@@ -1561,7 +1561,7 @@
 
 /obj/equip_e/human/done()
 	var/mut = 0
-	if(source.mutations & 1)
+	if(TK in source.mutations)
 		mut = 1
 	if(!source || !target)						return
 	if(source.loc != s_loc && mut == 0)			return

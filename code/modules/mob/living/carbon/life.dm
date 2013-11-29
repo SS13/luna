@@ -270,15 +270,15 @@
 
 /mob/living/carbon/proc/handle_mutations_and_radiation()
 	if(fireloss)
-		if(mutations & 2)
+		if(COLD_RESISTANCE in mutations)
 			switch(fireloss)
 				if(1 to 50)
 					fireloss--
 				if(51 to 100)
 					fireloss -= 5
 
-	if (mutations & HULK && health <= 25)
-		mutations &= ~HULK
+	if ((HULK in mutations) && health <= 25)
+		mutations -= HULK
 		src << "\red You suddenly feel very weak."
 		weakened = 3
 		emote("collapse")
@@ -583,12 +583,12 @@
 					hallucination++
 
 
-	if(breath.temperature > (T0C+66) && !(mutations & 2)) // Hot air hurts :(
+	if(breath.temperature > (T0C+66) && !(COLD_RESISTANCE in mutations)) // Hot air hurts :(
 		if(prob(20))
 			src << "\red You feel a searing heat in your lungs!"
 		fire_alert = max(fire_alert, 1)
 	else
-		if(breath.temperature < (T0C) && !(mutations & 2))
+		if(breath.temperature < (T0C) && !(COLD_RESISTANCE in mutations))
 			if(prob(20))
 				src << "\blue Your throat feels like ice!"
 		fire_alert = 0
@@ -713,7 +713,7 @@
 		thermal_protection += 0.1
 	if(shoes && (shoes.body_parts_covered & FEET))
 		thermal_protection += 0.1
-	if(mutations & 2)
+	if(COLD_RESISTANCE in mutations)
 		thermal_protection += 5
 	if(head && wear_suit && (wear_suit.flags & SUITSPACE) && (head.flags & HEADSPACE))
 		thermal_protection += 4

@@ -17,8 +17,9 @@
 		if(!istype(dongle)) return
 		if(dongle.translate_hive) return 1
 
-/mob/living/say(var/message)
-	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
+/mob/living/say(var/message, var/presanitize = 1)
+	if(presanitize)
+		message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
 
 	// sdisabilities & 2 is the mute disability
 	if (!message || muted || stat == 1 || istype(wear_mask, /obj/item/clothing/mask/muzzle) || sdisabilities & 2)
@@ -30,7 +31,6 @@
 	// emotes
 	if (copytext(message, 1, 2) == "*" && !stat)
 		return emote(copytext(message, 2))
-
 
 	if(silent)
 		return
@@ -123,7 +123,7 @@
 		//world << "channel_prefix=[channel_prefix]; message_mode=[message_mode]"
 		if (message_mode)
 			message = trim(copytext(message, 3))
-			if (!ishuman(src) && (message_mode=="department" || (message_mode in radiochannels)))
+			if (!ishuman(src) && !isrobot(src) && (message_mode=="department" || (message_mode in radiochannels)))
 				message_mode = null //only humans can use headsets
 
 	if(src.stunned > 0)
@@ -205,8 +205,7 @@
 
 			if ("binary")
 				if(robot_talk_understand || binarycheck())
-				//message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN)) //seems redundant
-					robot_talk(message)
+					robot_talk(message, 0)
 				return
 
 			/*if ("alientalk")
@@ -236,6 +235,20 @@
 						used_radios += src:ears
 					message_range = 1
 					italics = 1
+
+	else // For bots
+		switch(message_mode)
+			if("binary")
+				if(robot_talk_understand || binarycheck())
+					robot_talk(message, 0)
+				return
+
+			else
+				if(src:radio)
+					src:radio.talk_into(src, message, message_mode)
+				italics = 1
+				message_range = 0
+
 
 	for (var/obj/O in view(message_range, src))
 		spawn (0)
@@ -367,3 +380,51 @@
 
 //headfindback
 	log_m("Said [message]")
+
+
+/mob/living/proc/robot_talk(var/message, var/presanitize = 1)
+	log_say("[key_name(src)] : [message]")
+
+	if(presanitize)
+		message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
+
+	if(!message)
+		return
+
+	var/message_a = say_quote(message)
+	var/rendered = "<i><span class='game say'>Binary, <span class='name'>[name]</span> <span class='message'>[message_a]</span></span></i>"
+	for(var/mob/living/M in world)
+		if(!M.stat && M.client && M.binarycheck())
+			M.show_message(rendered, 2)
+
+	var/list/listening = hearers(1, src)
+	listening -= src
+	listening += src
+
+	var/list/heard = list()
+	for (var/mob/M in listening)
+		if(!istype(M, /mob/living/silicon))
+			heard += M
+
+
+	if (length(heard))
+		var/message_b
+
+		message_b = "beep beep beep"
+		message_b = say_quote(message_b)
+		message_b = "<i>[message_b]</i>"
+
+		rendered = "<i><span class='game say'><span class='name'>[voice_name]</span> <span class='message'>[message_b]</span></span></i>"
+
+		for (var/mob/M in heard)
+			M.show_message(rendered, 2)
+
+	message = say_quote(message)
+
+	rendered = "<i><span class='game say'>Binary, <span class='name'>[name]</span> <span class='message'>[message_a]</span></span></i>"
+
+	for (var/client/C)
+		if (istype(C.mob, /mob/new_player))
+			continue
+		if (C.mob.stat > 1)
+			C.mob.show_message(rendered, 2)

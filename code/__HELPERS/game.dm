@@ -32,7 +32,7 @@
 		return 1
 	else
 		if (istype(user, /mob/living/carbon))
-			if (user:mutations & TK)
+			if(TK in user:mutations)
 				var/X = source:x
 				var/Y = source:y
 				var/Z = source:z

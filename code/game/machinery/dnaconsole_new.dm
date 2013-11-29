@@ -164,7 +164,7 @@
 			var/mob/living/occupant = src.connected.occupant
 			dat = "<font color='blue'><B>Occupant Statistics:</B></FONT><BR>" //Blah obvious
 			if(occupant && occupant.dna) //is there REALLY someone in there?
-				if(/*NOCLONE in occupant.mutations*/0)
+				if(NOCLONE in occupant.mutations)
 					dat += "The occupant's DNA structure is ruined beyond recognition, please insert a subject with an intact DNA structure.<BR><BR>" //NOPE. -Pete
 					dat += text("<A href='?src=\ref[];buffermenu=1'>View/Edit/Transfer Buffer</A><BR><BR>", src)
 					dat += text("<A href='?src=\ref[];radset=1'>Radiation Emitter Settings</A><BR><BR>", src)

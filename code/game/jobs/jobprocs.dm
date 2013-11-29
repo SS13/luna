@@ -347,7 +347,7 @@
 			src.equip_if_possible(new /obj/item/weapon/reagent_containers/food/snacks/grown/banana(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/bikehorn(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/clown(src), slot_back)
-			src.mutations |= CLUMSY
+			src.mutations += CLUMSY
 
 		if ("Mime")
 			src.equip_if_possible(new /obj/item/device/pda/mime(src), slot_belt)

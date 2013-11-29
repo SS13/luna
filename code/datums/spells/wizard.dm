@@ -40,7 +40,7 @@
 	range = -1
 	include_user = 1
 
-	mutations = 110
+	mutations = list(HULK, XRAY, COLD_RESISTANCE, mNobreath)
 	duration = 300
 
 /obj/effect/proc_holder/spell/targeted/inflict_handler/disintegrate

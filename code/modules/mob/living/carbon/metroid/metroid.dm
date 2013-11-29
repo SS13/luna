@@ -16,6 +16,7 @@
 	see_in_dark = 8
 	update_slimes = 0
 
+
 	// canstun and canweaken don't affect slimes because they ignore stun and weakened variables
 	// for the sake of cleanliness, though, here they are.
 	status_flags = CANPARALYSE|CANPUSH

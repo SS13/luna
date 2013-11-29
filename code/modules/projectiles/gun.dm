@@ -49,7 +49,7 @@
 		if(clumsy_check)
 			if(istype(user, /mob/living))
 				var/mob/living/M = user
-				if ((user.mutations & CLUMSY) && prob(20))
+				if ((CLUMSY in user.mutations) && prob(20))
 					M << "<span class='danger'>You shoot yourself in the foot with the [src]!</span>"
 					afterattack(user, user)
 					M.drop_item()

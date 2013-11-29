@@ -221,12 +221,11 @@
 //Robot syringes
 //Not special in any way, code wise. They don't have added variables or procs.
 /obj/item/weapon/reagent_containers/syringe/robot
-	name = "Syringe (mixed)"
-	desc = "Contains inaprovaline & anti-toxins."
+	name = "syringe (tricordrazine)"
+	desc = "Contains tricordrazine."
 	New()
 		..()
-		reagents.add_reagent("inaprovaline", 7)
-		reagents.add_reagent("anti_toxin", 8)
+		reagents.add_reagent("tricordrazine", 15)
 		mode = SYRINGE_INJECT
 		update_icon()
 
@@ -249,11 +248,10 @@
 		update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/robot/mixed
-	name = "syringe (mixed)"
-	desc = "Contains inaprovaline & anti-toxins."
+	name = "syringe (tricordrazine)"
+	desc = "Contains tricordrazine."
 	New()
 		..()
-		reagents.add_reagent("inaprovaline", 7)
-		reagents.add_reagent("anti_toxin", 8)
+		reagents.add_reagent("tricordrazine", 15)
 		mode = SYRINGE_INJECT
 		update_icon()

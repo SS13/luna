@@ -335,7 +335,7 @@
 	name = "Telepathy Syndrome"
 	stage = 3
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.mutations |= 512
+		mob.mutations += 512
 
 /datum/disease2/effect/greater/noface
 	name = "Identity Loss syndrome"

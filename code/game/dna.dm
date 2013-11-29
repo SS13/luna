@@ -302,63 +302,63 @@
 
 	M.disabilities = 0
 	M.sdisabilities = 0
-	var/oldmut = M.mutations
-	M.mutations = 0
+	var/list/oldmut = M.mutations
+	M.mutations = list()
 
 	M.see_in_dark = 2
 	M.see_invisible = 0
 
 	if(ismuton(NOBREATHBLOCK,M))
-		if(inj || prob(30) || (oldmut & mNobreath))
+		if(inj || prob(30) || (mNobreath in oldmut))
 			M << "\blue You stop breathing"
-			M.mutations |= mNobreath
+			M.mutations += mNobreath
 	if(ismuton(REMOTEVIEWBLOCK,M))
-		if(inj || prob(30) || (oldmut & mRemote))
+		if(inj || prob(30) || (mRemote in oldmut))
 			M << "\blue Your mind expands"
-			M.mutations |= mRemote
+			M.mutations += mRemote
 	if(ismuton(REGENERATEBLOCK,M))
-		if(inj || prob(30) || (oldmut & mRegen))
+		if(inj || prob(30) || (mRegen in oldmut))
 			M << "\blue You feel strange"
-			M.mutations |= mRegen
+			M.mutations += mRegen
 	if(ismuton(INCREASERUNBLOCK,M))
-		if(inj || prob(30) || (oldmut & mRun))
+		if(inj || prob(30) || (mRun in oldmut))
 			M << "\blue You feel quick"
-			M.mutations |= mRun
+			M.mutations += mRun
 	if(ismuton(REMOTETALKBLOCK,M))
-		if(inj || prob(30) || (oldmut & mRemotetalk))
+		if(inj || prob(30) || (mRemotetalk in oldmut))
 			M << "\blue You expand your mind outwards"
-			M.mutations |= mRemotetalk
+			M.mutations += mRemotetalk
 	if(ismuton(MORPHBLOCK,M))
-		if(inj || prob(30) || (oldmut & mMorph))
-			M.mutations |= mMorph
+		if(inj || prob(30) || (mMorph in oldmut))
+			M.mutations += mMorph
 			M << "\blue Your skin feels strange"
 	if(ismuton(BLENDBLOCK,M))
-		if(inj || prob(30) || (oldmut & mBlend))
-			M.mutations |= mBlend
+		if(inj || prob(30) || (mBlend in oldmut))
+			M.mutations += mBlend
 			M << "\blue You feel alone"
 	if(ismuton(HALLUCINATIONBLOCK,M))
-		if(inj || prob(30) || (oldmut & mHallucination))
-			M.mutations |= mHallucination
+		if(inj || prob(30) || (mHallucination in oldmut))
+			M.mutations += mHallucination
 			M << "\blue Your mind says 'Hello'"
 	if(ismuton(NOPRINTSBLOCK,M))
-		if(inj || prob(30) || (oldmut & mFingerprints))
-			M.mutations |= mFingerprints
+		if(inj || prob(30) || (mFingerprints in oldmut))
+			M.mutations += mFingerprints
 			M << "\blue Your fingers feel numb"
 	if(ismuton(SHOCKIMMUNITYBLOCK,M))
-		if(inj || prob(30) || (oldmut & mShock))
-			M.mutations |= mShock
+		if(inj || prob(30) || (mShock in oldmut))
+			M.mutations += mShock
 			M << "\blue You feel strange"
 	if(ismuton(SMALLSIZEBLOCK,M))
-		if(inj || prob(30) || (oldmut & mSmallsize))
+		if(inj || prob(30) || (mSmallsize in oldmut))
 			M << "\blue Your skin feels rubbery"
-			M.mutations |= mSmallsize
+			M.mutations += mSmallsize
 
 
 
 	if (isblockon(getblock(M.dna.struc_enzymes, HULKBLOCK,3),HULKBLOCK))
-		if(inj || prob(15) || (oldmut & HULK))
+		if(inj || prob(15) || (HULK in oldmut))
 			M << "\blue Your muscles hurt."
-			M.mutations |= HULK
+			M.mutations += HULK
 	if (isblockon(getblock(M.dna.struc_enzymes, HEADACHEBLOCK,3),HEADACHEBLOCK))
 		M.disabilities |= 2
 		M << "\red You get a headache."
@@ -376,31 +376,31 @@
 		M << "\red You start coughing."
 	if (isblockon(getblock(M.dna.struc_enzymes, CLUMSYBLOCK,3),CLUMSYBLOCK))
 		M << "\red You feel lightheaded."
-		M.mutations |= 16
+		M.mutations += CLUMSY
 	if (isblockon(getblock(M.dna.struc_enzymes, TWITCHBLOCK,3),TWITCHBLOCK))
 		M.disabilities |= 8
 		M << "\red You twitch."
 	if (isblockon(getblock(M.dna.struc_enzymes, XRAYBLOCK,3),XRAYBLOCK))
-		if(inj || prob(30) || (oldmut & XRAY))
+		if(inj || prob(30) || (XRAY in oldmut))
 			M << "\blue The walls suddenly disappear."
 			M.sight |= (SEE_MOBS|SEE_OBJS|SEE_TURFS)
 			M.see_in_dark = 8
 			M.see_invisible = 2
-			M.mutations |= XRAY
+			M.mutations += XRAY
 	if (isblockon(getblock(M.dna.struc_enzymes, NERVOUSBLOCK,3),NERVOUSBLOCK))
 		M.disabilities |= 16
 		M << "\red You feel nervous."
 	if (isblockon(getblock(M.dna.struc_enzymes, FIREBLOCK,3),FIREBLOCK))
-		if(inj || prob(30) || (oldmut & COLD_RESISTANCE))
+		if(inj || prob(30) || (COLD_RESISTANCE in oldmut))
 			M << "\blue Your body feels warm."
-			M.mutations |= COLD_RESISTANCE
+			M.mutations += COLD_RESISTANCE
 	if (isblockon(getblock(M.dna.struc_enzymes, BLINDBLOCK,3),BLINDBLOCK))
 		M.sdisabilities |= 1
 		M << "\red You can't seem to see anything."
 	if (isblockon(getblock(M.dna.struc_enzymes, TELEBLOCK,3),TELEBLOCK))
-		if(inj || prob(20) || (oldmut & TK))
+		if(inj || prob(20) || (TK in oldmut))
 			M << "\blue You feel smarter."
-			M.mutations |= TK
+			M.mutations += TK
 	if (isblockon(getblock(M.dna.struc_enzymes, DEAFBLOCK,3),DEAFBLOCK))
 		M.sdisabilities |= 4
 		M.ear_deaf = 1

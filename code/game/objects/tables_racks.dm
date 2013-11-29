@@ -42,7 +42,7 @@
 	return
 
 /obj/structure/table/attack_paw(mob/user as mob)
-	if ((usr.mutations & HULK))
+	if (HULK in usr.mutations)
 		usr << text("\blue You destroy the table.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -72,7 +72,7 @@
 	return
 
 /obj/structure/table/attack_hand(mob/user as mob)
-	if ((usr.mutations & HULK))
+	if (HULK in usr.mutations)
 		usr << text("\blue You destroy the table.")
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))
@@ -83,7 +83,7 @@
 			new /obj/item/weapon/table_parts( src.loc )
 		src.density = 0
 		del(src)
-	if (usr.mutations & mSmallsize)
+	if (mSmallsize in usr.mutations)
 		step(user, get_dir(user, src))
 		if (user.loc == src.loc)
 			user.layer = TURF_LAYER

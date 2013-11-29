@@ -32,7 +32,7 @@
 		if(3)
 			if(prob(1))
 				if (affected_mob.nutrition > 100)
-					affected_mob.Stun(rand(4,6))
+					affected_mob.Weaken(4)
 					affected_mob.visible_message("<span class='warning'>[affected_mob] throws up!</span>")
 					playsound(affected_mob.loc, 'sound/effects/splat.ogg', 50, 1)
 					var/turf/location = affected_mob.loc
@@ -42,5 +42,5 @@
 					affected_mob.adjustToxLoss(-1)
 				else
 					affected_mob << "<span class='warning'>You gag as you want to throw up, but there's nothing in your stomach!</span>"
-					affected_mob.Weaken(10)
+					affected_mob.Weaken(4)
 					affected_mob.adjustToxLoss(3)

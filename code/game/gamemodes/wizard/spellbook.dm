@@ -230,8 +230,8 @@
 							max_uses--*/
 						if("scrying")
 							new /obj/item/weapon/scrying(get_turf(H))
-							if (!(H.mutations & XRAY))
-								H.mutations |= XRAY
+							if (!(XRAY in H.mutations))
+								H.mutations += XRAY
 								H << "\blue The walls suddenly disappear."
 							temp = "You have purchased a scrying orb, and gained x-ray vision."
 							max_uses--

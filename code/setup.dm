@@ -251,18 +251,21 @@ var/const
 #define HULK			8
 #define CLUMSY			16
 
-#define mNobreath 32
-#define mRemote 64
-#define mRegen 128
-#define mRun 256
+#define mNobreath 		32
+#define mRemote 		64
+#define mRegen 			128
+#define mRun 			256
 
-#define mSmallsize 32768
-#define mShock 16384
-#define mFingerprints 8192
-#define mHallucination 4096
-#define mBlend 2048
-#define mMorph 1024
-#define mRemotetalk 512
+#define mRemotetalk 	512
+#define mMorph 			1024
+#define mBlend 			2048
+#define mHallucination 	4096
+#define mFingerprints 	8192
+#define mShock 			16384
+#define mSmallsize 		32768
+
+#define HUSK	 		65536
+#define NOCLONE	 		131072
 
 #define TABBED_PM	1
 

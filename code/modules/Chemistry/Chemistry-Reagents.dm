@@ -601,7 +601,7 @@ datum
 
 			on_mob_life(var/mob/living/M)
 				if(!M) M = holder.my_atom
-				M.mutations = 0
+				M.mutations = list()
 				M.disabilities = 0
 				M.sdisabilities = 0
 				..()
