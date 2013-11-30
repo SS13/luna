@@ -30,7 +30,7 @@ var/datum/siberia_controller/siberia_controller
 			maint_status = "closed"
 
 	proc/get_points(var/name = "Unknown") // Returns points by prisoner's name.
-		if(!prisoners[name])
+		if(!(name in prisoners))
 			prisoners[name] = 500 // If there is no prisoner, create him!
 		return prisoners[name]
 
@@ -47,4 +47,6 @@ var/datum/siberia_controller/siberia_controller
 		return get_points(name)
 
 	proc/get_prisoners_list()
-		return prisoners - "Unknown" // Unknown is easter egg, shitcurity mustn't know about him.
+		var/list/rt = prisoners
+		rt -= "Unknown" // Unknown is easter egg, shitcurity mustn't know about him.
+		return rt

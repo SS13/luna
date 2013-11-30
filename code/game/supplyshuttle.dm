@@ -72,27 +72,26 @@ var/supply_shuttle_points = 50
 			if (prob(5))
 				del(src)
 
-/area/supplyshuttle/
+/area/supplyshuttle
 	name = "Supply Shuttle"
 	icon_state = "supply"
 	requires_power = 0
 
-/obj/machinery/computer/cargo/supplycomp
-	name = "Supply shuttle console"
-	icon = 'computer.dmi'
-	icon_state = "shuttle"
-	req_access = list(access_cargo)
+/obj/machinery/computer/cargo
 	var/temp = null
 	var/hacked = 0
-
-/obj/machinery/computer/cargo/ordercomp
-	name = "Supply ordering console"
-	icon = 'computer.dmi'
-	icon_state = "supply"
-	var/temp = null
 	brightnessred = 2
 	brightnessgreen = 2
 	brightnessblue = 2
+
+/obj/machinery/computer/cargo/supplycomp
+	name = "Supply shuttle console"
+	icon_state = "shuttle"
+	req_access = list(access_cargo)
+
+/obj/machinery/computer/cargo/ordercomp
+	name = "Supply ordering console"
+	icon_state = "supply"
 
 /obj/marker/supplymarker
 	icon_state = "X"

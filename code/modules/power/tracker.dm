@@ -97,15 +97,17 @@
 
 		if(istype(W, /obj/item/stack/sheet/glass) || istype(W, /obj/item/stack/sheet/rglass))
 			var/obj/item/stack/sheet/S = W
+			var/glass_type = S.type
 			if(S.use(2))
 				playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
 				user.visible_message("<span class='notice'>[user] places the glass on the solar assembly.</span>")
 				var/obj/machinery/power/solar/solar
 				if(tracker)
-					solar = new /obj/machinery/power/tracker(get_turf(src), src)
+					solar = new /obj/machinery/power/tracker(get_turf(src))
 				else
-					solar = new /obj/machinery/power/solar(get_turf(src), src)
-				solar.glass_type = W.type
+					solar = new /obj/machinery/power/solar(get_turf(src))
+				solar.glass_type = glass_type
+				del(src)
 			return 1
 
 	if(!tracker)
