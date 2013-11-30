@@ -244,10 +244,12 @@
 				return
 
 			else
-				if(src:radio)
-					src:radio.talk_into(src, message, message_mode)
-				italics = 1
-				message_range = 0
+				if(isrobot(src))
+					var/mob/living/silicon/robot/R = src
+					if(R.radio)
+						R.radio.talk_into(src, message, message_mode)
+						italics = 1
+						message_range = 0
 
 
 	for (var/obj/O in view(message_range, src))
@@ -278,7 +280,7 @@
 
 	var/rendered = null
 
-	if (length(heard_a))
+	if(length(heard_a))
 		var/message_a = say_quote(message, custommode)
 		var/test = say_test(message)
 		var/image/test2 = image('talk.dmi',src,"h[test]")
@@ -292,14 +294,14 @@
 		else
 			rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] <span class='message'>[message_a]</span></span>"
 
-		for (var/mob/M in heard_a) // Sending over the message to mobs who can understand
+		for(var/mob/M in heard_a) // Sending over the message to mobs who can understand
 			M.show_message(rendered, 6)
 			M << test2
 		spawn(30) del(test2)
 
 	var/renderedold = rendered // Used for the voice recorders below
 
-	if (length(heard_b))
+	if(length(heard_b))
 		var/message_b
 
 		if(say_unknown())
@@ -320,16 +322,16 @@
 			M.show_message(rendered, 6)
 
 	message = say_quote(message, custommode)
-	if (italics)
+	if(italics)
 		message = "<i>[message]</i>"
 
-	if (!istype(src, /mob/living/carbon/human) || istype(wear_mask, /obj/item/clothing/mask/gas/voice))
+	if(!istype(src, /mob/living/carbon/human) || istype(wear_mask, /obj/item/clothing/mask/gas/voice))
 		rendered = "<span class='game say'><span class='name'>[name]</span> <span class='message'>[message]</span></span>"
 	else if (face_dmg)
 		rendered = "<span class='game say'><span class='name'>Unknown</span>[alt_name] <span class='message'>[message]</span></span>"
 	else
 		rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] <span class='message'>[message]</span></span>"
-	for (var/client/C)
+	for(var/client/C)
 		if (C.mob)
 			if (istype(C.mob, /mob/new_player))
 				continue
