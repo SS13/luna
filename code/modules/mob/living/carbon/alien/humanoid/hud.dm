@@ -45,7 +45,7 @@
 	station_explosion.mouse_opacity = 0
 	station_explosion.screen_loc = "1,3"
 
-	var/obj/screen/using
+	var/obj/effect/screen/using
 
 	using = new h_type( src )
 	using.name = "act_intent"
@@ -221,43 +221,43 @@
 	using.mouse_opacity = 0
 	vimpaired += using
 
-	mymob.throw_icon = new /obj/screen(null)
+	mymob.throw_icon = new /obj/effect/screen(null)
 	mymob.throw_icon.icon = 'screen1_alien.dmi'
 	mymob.throw_icon.icon_state = "act_throw_off"
 	mymob.throw_icon.name = "throw"
 	mymob.throw_icon.screen_loc = ui_throw
 
-	mymob.oxygen = new /obj/screen( null )
+	mymob.oxygen = new /obj/effect/screen( null )
 	mymob.oxygen.icon = 'screen1_alien.dmi'
 	mymob.oxygen.icon_state = "oxy0"
 	mymob.oxygen.name = "oxygen"
 	mymob.oxygen.screen_loc = ui_oxygen
 
-	mymob.toxin = new /obj/screen( null )
+	mymob.toxin = new /obj/effect/screen( null )
 	mymob.toxin.icon = 'screen1_alien.dmi'
 	mymob.toxin.icon_state = "tox0"
 	mymob.toxin.name = "toxin"
 	mymob.toxin.screen_loc = ui_toxin
 
-	mymob.fire = new /obj/screen( null )
+	mymob.fire = new /obj/effect/screen( null )
 	mymob.fire.icon = 'screen1_alien.dmi'
 	mymob.fire.icon_state = "fire0"
 	mymob.fire.name = "fire"
 	mymob.fire.screen_loc = ui_fire
 
-	mymob.healths = new /obj/screen( null )
+	mymob.healths = new /obj/effect/screen( null )
 	mymob.healths.icon = 'screen1_alien.dmi'
 	mymob.healths.icon_state = "health0"
 	mymob.healths.name = "health"
 	mymob.healths.screen_loc = ui_health
 
-	mymob.pullin = new /obj/screen( null )
+	mymob.pullin = new /obj/effect/screen( null )
 	mymob.pullin.icon = 'screen1_alien.dmi'
 	mymob.pullin.icon_state = "pull0"
 	mymob.pullin.name = "pull"
 	mymob.pullin.screen_loc = ui_pull
 
-	mymob.blind = new /obj/screen( null )
+	mymob.blind = new /obj/effect/screen( null )
 	mymob.blind.icon = 'screen1_alien.dmi'
 	mymob.blind.icon_state = "black"
 	mymob.blind.name = " "
@@ -265,34 +265,34 @@
 	mymob.blind.layer = 0
 	mymob.blind.mouse_opacity = 0
 
-	mymob.flash = new /obj/screen( null )
+	mymob.flash = new /obj/effect/screen( null )
 	mymob.flash.icon = 'screen1_alien.dmi'
 	mymob.flash.icon_state = "blank"
 	mymob.flash.name = "flash"
 	mymob.flash.screen_loc = "1,1 to 15,15"
 	mymob.flash.layer = 17
 
-	mymob.hands = new /obj/screen( null )
+	mymob.hands = new /obj/effect/screen( null )
 	mymob.hands.icon = 'screen1_alien.dmi'
 	mymob.hands.icon_state = "hand"
 	mymob.hands.name = "hand"
 	mymob.hands.screen_loc = ui_hand
 	mymob.hands.dir = NORTH
 
-	mymob.sleep = new /obj/screen( null )
+	mymob.sleep = new /obj/effect/screen( null )
 	mymob.sleep.icon = 'screen1_alien.dmi'
 	mymob.sleep.icon_state = "sleep0"
 	mymob.sleep.name = "sleep"
 	mymob.sleep.screen_loc = ui_sleep
 
-	mymob.rest = new /obj/screen( null )
+	mymob.rest = new /obj/effect/screen( null )
 	mymob.rest.icon = 'screen1_alien.dmi'
 	mymob.rest.icon_state = "rest0"
 	mymob.rest.name = "rest"
 	mymob.rest.screen_loc = ui_rest
 
 
-	mymob.zone_sel = new /obj/screen/zone_sel( null )
+	mymob.zone_sel = new /obj/effect/screen/zone_sel( null )
 	mymob.zone_sel.overlays = null
 	mymob.zone_sel.overlays += image("icon" = 'zone_sel.dmi', "icon_state" = text("[]", mymob.zone_sel.selecting))
 

@@ -6,7 +6,7 @@
 
 /obj/item/weapon/storage/belt/MouseDrop(obj/over_object as obj, src_location, over_location)
 	var/mob/M = usr
-	if (!istype(over_object, /obj/screen))
+	if (!istype(over_object, /obj/effect/screen))
 		return ..()
 
 	playsound(src.loc, "rustle", 50, 1, -5)

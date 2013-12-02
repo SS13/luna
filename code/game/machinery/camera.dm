@@ -57,7 +57,7 @@
 			continue
 		if(M.invisibility) //cloaked
 			continue
-		if(istype(M.loc,/obj/dummy))
+		if(istype(M.loc,/obj/effect/dummy))
 			continue
 		else if (M == usr)
 			continue
@@ -91,7 +91,7 @@
 				usr << "Follow camera mode ended."
 				usr:cameraFollow = null
 				return
-			else if(istype(target.loc,/obj/dummy))
+			else if(istype(target.loc,/obj/effect/dummy))
 				usr << "Follow camera mode ended."
 				usr:cameraFollow = null
 				return

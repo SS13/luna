@@ -93,7 +93,7 @@ var/supply_shuttle_points = 50
 	name = "Supply ordering console"
 	icon_state = "supply"
 
-/obj/marker/supplymarker
+/obj/effect/landmark/supplymarker
 	icon_state = "X"
 	icon = 'mark.dmi'
 	name = "X"
@@ -169,7 +169,7 @@ var/supply_shuttle_points = 50
 	if(!supply_shuttle_shoppinglist.len) return
 
 	for(var/turf/T in get_area_turfs(shuttleat))
-		for(var/obj/marker/supplymarker/D in T)
+		for(var/obj/effect/landmark/supplymarker/D in T)
 			markers += D
 
 	for(var/datum/supply_order/S in supply_shuttle_shoppinglist)

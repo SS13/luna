@@ -1,19 +1,19 @@
 /obj/item/clothing/suit/storage/
-	var/obj/screen/storage/boxes
-	var/obj/screen/close/closer
+	var/obj/effect/screen/storage/boxes
+	var/obj/effect/screen/close/closer
 	var/obj/slot1
 	var/obj/slot2
 	var/storage_slots = 2
 
 
 /obj/item/clothing/suit/storage/New()
-	src.boxes = new /obj/screen/storage(  )
+	src.boxes = new /obj/effect/screen/storage(  )
 	src.boxes.name = "storage"
 	src.boxes.master = src
 	src.boxes.icon_state = "block"
 	src.boxes.screen_loc = "7,7 to 9,7"
 	src.boxes.layer = 19
-	src.closer = new /obj/screen/close(  )
+	src.closer = new /obj/effect/screen/close(  )
 	src.closer.master = src
 	src.closer.icon_state = "x"
 	src.closer.layer = 20
@@ -57,13 +57,13 @@
 	W.dropped(user)
 /*/obj/item/clothing/suit/storage/New()
 
-	src.boxes = new /obj/screen/storage(  )
+	src.boxes = new /obj/effect/screen/storage(  )
 	src.boxes.name = "storage"
 	src.boxes.master = src
 	src.boxes.icon_state = "block"
 	src.boxes.screen_loc = "7,7 to 10,8"
 	src.boxes.layer = 19
-	src.closer = new /obj/screen/close(  )
+	src.closer = new /obj/effect/screen/close(  )
 	src.closer.master = src
 	src.closer.icon_state = "x"
 	src.closer.layer = 20

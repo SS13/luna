@@ -16,7 +16,7 @@
 	src.throw_mode_off()
 	if(usr.stat)
 		return
-	if(target.type == /obj/screen) return
+	if(target.type == /obj/effect/screen) return
 
 	var/atom/movable/item = src.equipped()
 

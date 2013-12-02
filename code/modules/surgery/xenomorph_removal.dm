@@ -26,7 +26,7 @@
 /*			if(prob(10))
 				A.AttemptGrow()*/
 		user.visible_message("<span class='notice'>[user] successfully extracts the xenomorph from [target]!</span>")
-		if(A.stage == 5 || A.stage == 4  && prob(30))
+		if(A.stage == 5 || (A.stage == 4 && prob(30)))
 			new/mob/living/carbon/alien/larva(target.loc)
 		else
 			new/obj/item/weapon/alien_embryo(target.loc)

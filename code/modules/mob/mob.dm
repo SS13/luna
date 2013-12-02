@@ -19,28 +19,28 @@
 	var/datum/mind/mind
 
 	var/uses_hud = 0
-	var/obj/screen/flash = null
-	var/obj/screen/pain = null
-	var/obj/screen/blind = null
-	var/obj/screen/hands = null
-	var/obj/screen/mach = null
-	var/obj/screen/sleep = null
-	var/obj/screen/rest = null
-	var/obj/screen/pullin = null
-	var/obj/screen/internals = null
-	var/obj/screen/oxygen = null
-	var/obj/screen/i_select = null
-	var/obj/screen/m_select = null
-	var/obj/screen/toxin = null
-	var/obj/screen/fire = null
-	var/obj/screen/bodytemp = null
-	var/obj/screen/healths = null
-	var/obj/screen/throw_icon = null
-	var/obj/screen/panel_icon = null
-	var/obj/screen/cell_icon = null
-	var/obj/screen/exttemp = null
-	var/obj/screen/store = null
-	var/obj/screen/module_icon = null
+	var/obj/effect/screen/flash = null
+	var/obj/effect/screen/pain = null
+	var/obj/effect/screen/blind = null
+	var/obj/effect/screen/hands = null
+	var/obj/effect/screen/mach = null
+	var/obj/effect/screen/sleep = null
+	var/obj/effect/screen/rest = null
+	var/obj/effect/screen/pullin = null
+	var/obj/effect/screen/internals = null
+	var/obj/effect/screen/oxygen = null
+	var/obj/effect/screen/i_select = null
+	var/obj/effect/screen/m_select = null
+	var/obj/effect/screen/toxin = null
+	var/obj/effect/screen/fire = null
+	var/obj/effect/screen/bodytemp = null
+	var/obj/effect/screen/healths = null
+	var/obj/effect/screen/throw_icon = null
+	var/obj/effect/screen/panel_icon = null
+	var/obj/effect/screen/cell_icon = null
+	var/obj/effect/screen/exttemp = null
+	var/obj/effect/screen/store = null
+	var/obj/effect/screen/module_icon = null
 
 	var/list/spell_list = list()
 
@@ -52,7 +52,7 @@
 
 	var/last_special = 0
 
-	var/obj/screen/zone_sel/zone_sel = null
+	var/obj/effect/screen/zone_sel/zone_sel = null
 
 	var/emote_allowed = 1
 	var/computer_id = null
@@ -455,7 +455,7 @@ mob/verb/turnwest()
 	name = "grab"
 	icon = 'screen1.dmi'
 	icon_state = "grabbed"
-	var/obj/screen/grab/hud1 = null
+	var/obj/effect/screen/grab/hud1 = null
 	var/mob/affecting = null
 	var/mob/assailant = null
 	var/state = 1
@@ -532,7 +532,7 @@ mob/verb/turnwest()
 		affecting.losebreath = min(affecting.losebreath + 2, 3)
 	return
 
-/obj/item/weapon/grab/proc/s_click(obj/screen/S as obj)
+/obj/item/weapon/grab/proc/s_click(obj/effect/screen/S as obj)
 	if (assailant.next_move > world.time)
 		return
 	if (!assailant.canmove  || assailant.lying)
@@ -557,7 +557,7 @@ mob/verb/turnwest()
 		else
 	return
 
-/obj/item/weapon/grab/proc/s_dbclick(obj/screen/S as obj)
+/obj/item/weapon/grab/proc/s_dbclick(obj/effect/screen/S as obj)
 	if(assailant.next_move > world.time && !(last_suffocate < world.time + 2))
 		return
 	if(!assailant.canmove || assailant.lying)
@@ -620,7 +620,7 @@ mob/verb/turnwest()
 
 /obj/item/weapon/grab/New()
 	..()
-	hud1 = new /obj/screen/grab( src )
+	hud1 = new /obj/effect/screen/grab( src )
 	hud1.icon_state = "reinforce"
 	hud1.name = "Reinforce Grab"
 	hud1.id = 1
@@ -657,7 +657,7 @@ mob/verb/turnwest()
 	..()
 	return
 
-/obj/screen/zone_sel/MouseDown(location, control,params)		//(location, icon_x, icon_y)
+/obj/effect/screen/zone_sel/MouseDown(location, control,params)		//(location, icon_x, icon_y)
 	// Changes because of 4.0
 
 
@@ -809,21 +809,21 @@ mob/verb/turnwest()
 
 	return
 
-/obj/screen/grab/Click()
+/obj/effect/screen/grab/Click()
 	master:s_click(src)
 	return
 
-/obj/screen/grab/DblClick()
+/obj/effect/screen/grab/DblClick()
 	master:s_dbclick(src)
 	return
 
-/obj/screen/grab/attack_hand()
+/obj/effect/screen/grab/attack_hand()
 	return
 
-/obj/screen/grab/attackby()
+/obj/effect/screen/grab/attackby()
 	return
 
-/obj/screen/Click(location, control, params)
+/obj/effect/screen/Click(location, control, params)
 
 	var/list/pa = params2list(params)
 
@@ -1118,11 +1118,11 @@ mob/verb/turnwest()
 			DblClick()
 	return
 
-/obj/screen/attack_hand(mob/user as mob, using)
+/obj/effect/screen/attack_hand(mob/user as mob, using)
 	user.db_click(name, using)
 	return
 
-/obj/screen/attack_paw(mob/user as mob, using)
+/obj/effect/screen/attack_paw(mob/user as mob, using)
 	user.db_click(name, using)
 	return
 
@@ -1525,7 +1525,7 @@ mob/verb/turnwest()
 	if(!client)
 		log_game("[usr.key] AM failed due to disconnect.")
 		return
-	for(var/obj/screen/t in usr.client.screen)
+	for(var/obj/effect/screen/t in usr.client.screen)
 		if (t.loc == null)
 			//t = null
 			del(t)
@@ -1815,9 +1815,11 @@ mob/verb/turnwest()
 
 	set src in oview(1)
 
-	if (!( usr ))
-		return
-	if (!( anchored ))
+	if(!usr) return
+	if(src in usr) return
+	if(anchored) return
+
+	if(src in oview(1))	// Extra check, added because ctrl-click
 		usr.pulling = src
 	return
 
@@ -1826,7 +1828,7 @@ mob/verb/turnwest()
 	set category = "IC"
 	set src in oview(12)	//make it work from farther away
 
-	if (!( usr ))
+	if (!usr)
 		return
 	usr << "This is \an [name]."
 	usr << desc
@@ -2385,7 +2387,7 @@ mob/verb/turnwest()
 		if(!M)
 			return 0
 
-		var/obj/screen/boom = M.hud_used.station_explosion
+		var/obj/effect/screen/boom = M.hud_used.station_explosion
 
 		if(!boom)
 			return 0

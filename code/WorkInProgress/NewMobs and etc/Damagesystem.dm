@@ -502,6 +502,8 @@
 		r_store = null
 	else if (W == l_store)
 		l_store = null
+	else if (W == s_store)
+		s_store = null
 	else if (W == back)
 		back = null
 	else if (W == handcuffed)
@@ -974,7 +976,7 @@
 					return
 			else
 			//disarm
-				if (!( lying ))
+				if (!lying)
 					if (w_uniform)
 						w_uniform.add_fingerprint(M)
 					var/randn = rand(1, 100)

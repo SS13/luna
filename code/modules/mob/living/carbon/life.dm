@@ -25,9 +25,6 @@
 	//to find it.
 	blinded = null
 
-	//Disease Check
-	handle_virus_updates()
-
 	//Handle temperature/pressure differences between body and environment
 	var/datum/gas_mixture/environment = loc.return_air(1)
 	handle_environment(environment)
@@ -120,47 +117,6 @@
 			if (internals)
 				internals.icon_state = "internal0"
 	return null
-
-/mob/living/carbon/proc/handle_virus_updates()
-
-	if(!virus)
-		if(prob(40))
-			for(var/mob/living/carbon/M in oviewers(4, src))
-				if(M.virus && M.virus.spread == "Airborne")
-					if(M.virus.affected_species.Find(species))
-						if(resistances.Find(M.virus.type))
-							continue
-						var/datum/disease/D = new M.virus.type //Making sure strain_data is preserved
-						D.strain_data = M.virus.strain_data
-						contract_disease(D)
-			for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
-				if(B.virus && B.virus.spread == "Airborne")
-					if(B.virus.affected_species.Find(species))
-						if(resistances.Find(B.virus.type))
-							continue
-						var/datum/disease/D = new B.virus.type
-						D.strain_data = B.virus.strain_data
-						contract_disease(D)
-	else
-		virus.stage_act()
-
-
-	if(!virus2)
-		for(var/mob/living/carbon/M in oviewers(4,src))
-			if(M.virus2)
-				infect_virus2(src,M.virus2)
-		for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
-			if(B.virus2)
-				infect_virus2(src,B.virus2)
-		for(var/obj/virus/V in src.loc)
-			infect_virus2(src,V.D)
-	else if(get_infection_chance())
-		virus2.activate(src)
-		var/obj/virus/V = new(src.loc)
-		step_rand(V)
-		step_rand(V)
-		V.D = virus2.getcopy()
-//VIRUS FIX THESES
 
 
 #define CAN_CONTAMINATE 1.5
@@ -262,7 +218,7 @@
 
 			if(prob(60)) handle_temperature_damage(FEET, environment.temperature, environment_heat_capacity*transfer_coefficient)
 
-	if(stat==2)
+	if(stat == DEAD)
 		bodytemperature += 0.1*(environment.temperature - bodytemperature)*environment_heat_capacity/(environment_heat_capacity + 270000)
 
 	//Account for massive pressure differences
@@ -280,7 +236,7 @@
 	if ((HULK in mutations) && health <= 25)
 		mutations -= HULK
 		src << "\red You suddenly feel very weak."
-		weakened = 3
+		Weaken(3)
 		emote("collapse")
 
 	if (radiation)
@@ -331,8 +287,8 @@
 		if(M.loc != src)
 			stomach_contents.Remove(M)
 			continue
-		if(istype(M, /mob/living/carbon) && stat != 2)
-			if(M.stat == 2)
+		if(istype(M, /mob/living/carbon) && stat != DEAD)
+			if(M.stat == DEAD)
 				M.death(1)
 				stomach_contents.Remove(M)
 				if(M.client)
@@ -694,14 +650,14 @@
 		thermal_protection += (1-head.heat_transfer_coefficient)/6
 		thermal_protection += 0.2
 		if(head.flags & HEADSPACE)
-			thermal_protection += 1
+			thermal_protection += 0.5
 
 	if(wear_suit && (wear_suit.body_parts_covered & CHEST))
 		thermal_protection += (1-wear_suit.heat_transfer_coefficient)/2
 		thermal_protection += (1-wear_suit.gas_transfer_coefficient)/6
 		thermal_protection += 0.2
 		if(wear_suit.flags & SUITSPACE)
-			thermal_protection += 2
+			thermal_protection += 1.5
 
 	if(w_uniform && (w_uniform.body_parts_covered & CHEST))
 		thermal_protection += 0.1

@@ -8,7 +8,7 @@
 
 	if ((istype(usr, /mob/living/carbon/human) || (ticker && ticker.mode.name == "monkey")))
 		var/mob/M = usr
-		if (!( istype(over_object, /obj/screen) ))
+		if (!( istype(over_object, /obj/effect/screen) ))
 			return ..()
 		playsound(src.loc, "rustle", 50, 1, -5)
 		if ((!( M.restrained() ) && !( M.stat ) && M.back == src))

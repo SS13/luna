@@ -2,7 +2,7 @@
 	name = "Mounted Sleeper"
 	desc = "Mounted Sleeper. (Can be attached to: Medical Exosuits)"
 	icon = 'icons/obj/Cryogenic2.dmi'
-	icon_state = "sleeper_0"
+	icon_state = "sleeper"
 	origin_tech = "programming=2;biotech=3"
 	energy_drain = 20
 	range = MELEE

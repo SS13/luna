@@ -1,7 +1,7 @@
 /obj/item/weapon/secstorage
 	name = "secstorage"
-	var/obj/screen/storage/boxes = null
-	var/obj/screen/close/closer = null
+	var/obj/effect/screen/storage/boxes = null
+	var/obj/effect/screen/close/closer = null
 	var/icon_locking = "secureb"
 	var/icon_sparking = "securespark"
 	var/icon_open = "secure0"
@@ -233,13 +233,13 @@
 
 /obj/item/weapon/secstorage/New()
 
-	src.boxes = new /obj/screen/storage(  )
+	src.boxes = new /obj/effect/screen/storage(  )
 	src.boxes.name = "storage"
 	src.boxes.master = src
 	src.boxes.icon_state = "block"
 	src.boxes.screen_loc = "7,7 to 10,8"
 	src.boxes.layer = 19
-	src.closer = new /obj/screen/close(  )
+	src.closer = new /obj/effect/screen/close(  )
 	src.closer.master = src
 	src.closer.icon_state = "x"
 	src.closer.layer = 20
@@ -248,6 +248,6 @@
 		return
  	return
 
-/obj/screen/storage/attackby(W, mob/user as mob)
+/obj/effect/screen/storage/attackby(W, mob/user as mob)
 	src.master.attackby(W, user)
 	return

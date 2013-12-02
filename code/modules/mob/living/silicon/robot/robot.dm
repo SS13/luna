@@ -10,7 +10,7 @@
 	var/module_state_2 = null
 	var/module_state_3 = null
 	var/module_selected = 0
-	var/obj/screen/module_selector = null
+	var/obj/effect/screen/module_selector = null
 
 	var/mob/living/silicon/ai/connected_ai = null
 	var/obj/item/weapon/cell/cell = null
@@ -700,7 +700,7 @@
 
 /mob/living/silicon/robot/proc/select_module(var/num)
 	if(!module_selector)
-		module_selector = new /obj/screen()
+		module_selector = new /obj/effect/screen()
 		module_selector.icon = 'screen1_robot.dmi'
 		module_selector.icon_state = "module_select"
 		module_selector.mouse_opacity = 0

@@ -3,7 +3,7 @@
 //I dont fucking care. It looks pretty awesome.
 
 //////////////////////////////////////////////////////////
-/obj/dummy/liquid
+/obj/effect/dummy/liquid
 	name = "water"
 	icon = 'effects.dmi'
 	icon_state = "nothing"
@@ -155,7 +155,7 @@
 	if(H.stat) return
 	spawn(0)
 		var/mobloc = get_turf(H.loc)
-		var/obj/dummy/liquid/holder = new /obj/dummy/liquid( mobloc )
+		var/obj/effect/dummy/liquid/holder = new /obj/effect/dummy/liquid( mobloc )
 		var/atom/movable/overlay/animation = new /atom/movable/overlay( mobloc )
 		animation.name = "water"
 		animation.density = 0
@@ -216,7 +216,7 @@
 		del(holder)
 
 
-/obj/dummy/liquid/relaymove(var/mob/user, direction)
+/obj/effect/dummy/liquid/relaymove(var/mob/user, direction)
 	if (!src.canmove) return
 	//writing my own movement because step is broken.
 	switch(direction)
@@ -243,9 +243,9 @@
 	src.canmove = 0
 	spawn(20) canmove = 1
 
-/obj/dummy/liquid/ex_act(blah)
+/obj/effect/dummy/liquid/ex_act(blah)
 	return
-/obj/dummy/liquid/bullet_act(blah,blah)
+/obj/effect/dummy/liquid/bullet_act(blah,blah)
 	return
 
 

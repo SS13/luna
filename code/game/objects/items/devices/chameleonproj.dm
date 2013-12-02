@@ -1,4 +1,4 @@
-/obj/dummy/chameleon
+/obj/effect/dummy/chameleon
 	name = ""
 	desc = ""
 	density = 0
@@ -38,7 +38,7 @@
 	throw_range = 5
 	w_class = 2.0
 	var/can_use = 1
-	var/obj/dummy/chameleon/active_dummy = null
+	var/obj/effect/dummy/chameleon/active_dummy = null
 	var/saved_item = "/obj/item/weapon/shard"
 	origin_tech = "syndicate=4;magnets=4"
 
@@ -74,7 +74,7 @@
 			playsound(src, 'pop.ogg', 100, 1, 1)
 			var/obj/O = new saved_item (src)
 			if(!O) return
-			var/obj/dummy/chameleon/C = new/obj/dummy/chameleon(get_turf(src))
+			var/obj/effect/dummy/chameleon/C = new/obj/effect/dummy/chameleon(get_turf(src))
 			C.name = O.name
 			C.desc = O.desc
 			C.icon = O.icon
