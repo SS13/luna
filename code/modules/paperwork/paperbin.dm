@@ -20,7 +20,7 @@
 	if(over_object == M)
 		M.put_in_hands(src)
 
-	else if(istype(over_object, /obj/screen))
+	else if(istype(over_object, /obj/effect/screen))
 		switch(over_object.name)
 			if("r_hand")
 				M.u_equip(src)

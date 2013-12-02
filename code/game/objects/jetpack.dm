@@ -36,7 +36,7 @@
 /obj/item/weapon/tank/jetpack/MouseDrop(obj/over_object as obj)
 	if (istype(usr, /mob/living/carbon/human) || (ticker && ticker.mode.name == "monkey"))
 		var/mob/M = usr
-		if (!istype(over_object, /obj/screen))
+		if (!istype(over_object, /obj/effect/screen))
 			return ..()
 		if (!M.restrained() && !M.stat && M.back == src)
 			if (over_object.name == "r_hand")

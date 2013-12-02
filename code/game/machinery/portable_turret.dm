@@ -719,7 +719,7 @@
 				return
 
 		if(4)
-			if(isprox(I))
+			if(istype(I, /obj/item/device/prox_sensor))
 				build_step = 5
 				user << "<span class='notice'>You add the prox sensor to the turret.</span>"
 				user.before_take_item(I)

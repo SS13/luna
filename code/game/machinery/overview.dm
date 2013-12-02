@@ -161,7 +161,7 @@
 
 
 	for(var/i=0; i<icount;i++)
-		var/obj/screen/H = new /obj/screen()
+		var/obj/effect/screen/H = new /obj/effect/screen()
 
 		H.screen_loc = "[5 + i%icx],[6+ round(i/icx)]"
 
@@ -292,7 +292,7 @@
 
 
 	for(var/i=0; i<icount;i++)
-		var/obj/screen/H = new /obj/screen()
+		var/obj/effect/screen/H = new /obj/effect/screen()
 
 		H.screen_loc = "[5 + i%icx],[6+ round(i/icx)]"
 
@@ -349,7 +349,7 @@ proc/getb(col)
 
 /mob/proc/clearmap()
 	src.client.screen -= src.mapobjs
-	for(var/obj/screen/O in mapobjs)
+	for(var/obj/effect/screen/O in mapobjs)
 		del(O)
 
 	mapobjs = null

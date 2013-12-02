@@ -82,19 +82,19 @@
 	var/list/mov_int = null
 	var/list/mon_blo = null
 	var/list/m_ints = null
-	var/obj/screen/druggy = null
+	var/obj/effect/screen/druggy = null
 	var/vimpaired = null
-	var/obj/screen/alien_view = null
-	var/obj/screen/g_dither = null
-	var/obj/screen/r_dither = null
-	var/obj/screen/gray_dither = null
-	var/obj/screen/lp_dither = null
-	var/obj/screen/blurry = null
-	var/obj/screen/breath = null
-	var/obj/screen/welding = null
+	var/obj/effect/screen/alien_view = null
+	var/obj/effect/screen/g_dither = null
+	var/obj/effect/screen/r_dither = null
+	var/obj/effect/screen/gray_dither = null
+	var/obj/effect/screen/lp_dither = null
+	var/obj/effect/screen/blurry = null
+	var/obj/effect/screen/breath = null
+	var/obj/effect/screen/welding = null
 	var/list/darkMask = null
-	var/obj/screen/station_explosion = null
-	var/h_type = /obj/screen
+	var/obj/effect/screen/station_explosion = null
+	var/h_type = /obj/effect/screen
 
 
 mob/living/carbon/uses_hud = 1
@@ -125,8 +125,8 @@ mob/living/silicon/robot/uses_hud = 1
 
 
 /obj/hud/var/show_otherinventory = 1
-/obj/hud/var/obj/screen/action_intent
-/obj/hud/var/obj/screen/move_intent
+/obj/hud/var/obj/effect/screen/action_intent
+/obj/hud/var/obj/effect/screen/move_intent
 
 /obj/hud/proc/instantiate()
 

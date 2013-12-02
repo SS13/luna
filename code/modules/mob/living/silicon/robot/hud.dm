@@ -46,7 +46,7 @@
 	station_explosion.mouse_opacity = 0
 	station_explosion.screen_loc = "1,3"
 
-	var/obj/screen/using
+	var/obj/effect/screen/using
 
 	using = new h_type( src )
 	using.name = "act_intent"
@@ -147,81 +147,81 @@
 	using.mouse_opacity = 0
 	vimpaired += using
 
-	mymob.module_icon = new /obj/screen(null)
+	mymob.module_icon = new /obj/effect/screen(null)
 	mymob.module_icon.icon = 'screen1_robot.dmi'
 	mymob.module_icon.icon_state = "blank"
 	mymob.module_icon.name = "module"
 	mymob.module_icon.screen_loc = ui_dropbutton
 
-	mymob.panel_icon = new /obj/screen(null)
+	mymob.panel_icon = new /obj/effect/screen(null)
 	mymob.panel_icon.icon = 'screen1_robot.dmi'
 	mymob.panel_icon.icon_state = "panel"
 	mymob.panel_icon.name = "panel"
 	mymob.panel_icon.screen_loc = ui_throw
 
-	mymob.cell_icon = new /obj/screen( null )
+	mymob.cell_icon = new /obj/effect/screen( null )
 	mymob.cell_icon.icon = 'screen1_robot.dmi'
 	mymob.cell_icon.icon_state = "charge0"
 	mymob.cell_icon.name = "cell"
 	mymob.cell_icon.screen_loc = ui_internal
 
-	mymob.oxygen = new /obj/screen( null )
+	mymob.oxygen = new /obj/effect/screen( null )
 	mymob.oxygen.icon = 'screen1_robot.dmi'
 	mymob.oxygen.icon_state = "oxy0"
 	mymob.oxygen.name = "oxygen"
 	mymob.oxygen.screen_loc = ui_oxygen
 
-	mymob.toxin = new /obj/screen( null )
+	mymob.toxin = new /obj/effect/screen( null )
 	mymob.toxin.icon = 'screen1_robot.dmi'
 	mymob.toxin.icon_state = "tox0"
 	mymob.toxin.name = "toxin"
 	mymob.toxin.screen_loc = ui_toxin
 
-	mymob.fire = new /obj/screen( null )
+	mymob.fire = new /obj/effect/screen( null )
 	mymob.fire.icon = 'screen1_robot.dmi'
 	mymob.fire.icon_state = "fire0"
 	mymob.fire.name = "fire"
 	mymob.fire.screen_loc = ui_fire
 
-	mymob.exttemp = new /obj/screen ( null )
+	mymob.exttemp = new /obj/effect/screen ( null )
 	mymob.exttemp.icon = 'screen1_robot.dmi'
 	mymob.exttemp.icon_state = "temp0"
 	mymob.exttemp.name = "external temperature"
 	mymob.exttemp.screen_loc = ui_temp
 
-	mymob.healths = new /obj/screen( null )
+	mymob.healths = new /obj/effect/screen( null )
 	mymob.healths.icon = 'screen1_robot.dmi'
 	mymob.healths.icon_state = "health0"
 	mymob.healths.name = "health"
 	mymob.healths.screen_loc = ui_health
 
-	mymob.pullin = new /obj/screen( null )
+	mymob.pullin = new /obj/effect/screen( null )
 	mymob.pullin.icon = 'screen1_robot.dmi'
 	mymob.pullin.icon_state = "pull0"
 	mymob.pullin.name = "pull"
 	mymob.pullin.screen_loc = ui_pull
 
-	mymob.blind = new /obj/screen( null )
+	mymob.blind = new /obj/effect/screen( null )
 	mymob.blind.icon_state = "black"
 	mymob.blind.name = " "
 	mymob.blind.screen_loc = "1,1 to 15,15"
 	mymob.blind.layer = 0
 	mymob.blind.mouse_opacity = 0
 
-	mymob.flash = new /obj/screen( null )
+	mymob.flash = new /obj/effect/screen( null )
 	mymob.flash.icon_state = "blank"
 	mymob.flash.name = "flash"
 	mymob.flash.screen_loc = "1,1 to 15,15"
 	mymob.flash.layer = 17
 
-	mymob.store = new /obj/screen( null )
+	mymob.store = new /obj/effect/screen( null )
 	mymob.store.icon = 'screen1_robot.dmi'
 	mymob.store.icon_state = "store"
 	mymob.store.name = "store"
 	mymob.store.screen_loc = ui_hand
 	mymob.store.dir = NORTH
 
-	mymob.zone_sel = new /obj/screen/zone_sel( null )
+	mymob.zone_sel = new /obj/effect/screen/zone_sel( null )
 	mymob.zone_sel.overlays = null
 	mymob.zone_sel.overlays += image("icon" = 'zone_sel.dmi', "icon_state" = text("[]", mymob.zone_sel.selecting))
 

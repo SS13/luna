@@ -2,12 +2,12 @@
 	..()
 	for(var/S in client.screen)
 		del(S)
-	flash = new /obj/screen( null )
+	flash = new /obj/effect/screen( null )
 	flash.icon_state = "blank"
 	flash.name = "flash"
 	flash.screen_loc = "1,1 to 15,15"
 	flash.layer = 17
-	blind = new /obj/screen( null )
+	blind = new /obj/effect/screen( null )
 	blind.icon_state = "black"
 	blind.name = " "
 	blind.screen_loc = "1,1 to 15,15"

@@ -138,34 +138,6 @@
 	icon_state = "begin"
 	anchored = 1.0
 
-/obj/bullet
-	name = "bullet"
-	icon = 'projectiles.dmi'
-	icon_state = "bullet"
-	density = 1
-	var/yo = null
-	var/xo = null
-	var/current = null
-	anchored = 1.0
-	flags = TABLEPASS
-
-/obj/bullet/weakbullet
-
-
-/obj/bullet/electrode
-	name = "electrode"
-	icon_state = "spark"
-
-/obj/bullet/teleshot
-	name = "teleshot"
-	icon_state = "spark"
-	var/failchance = 5
-	var/obj/item/target = null
-
-/obj/bullet/cbbolt
-	name = "crossbow bolt"
-	icon_state = "cbbolt"
-
 /obj/datacore
 	name = "datacore"
 	var/list/medical = list(  )
@@ -409,26 +381,27 @@
 	name = "Projection"
 	anchored = 1.0
 
-/obj/screen
+/obj/effect/screen
 	name = "screen"
 	icon = 'screen1.dmi'
-	layer = 20.0
-	var/id = 0.0
+	layer = 20
+	anchored = 1
+	var/id = 0
 	var/obj/master
 
-/obj/screen/close
+/obj/effect/screen/close
 	name = "close"
 	master = null
 
-/obj/screen/grab
+/obj/effect/screen/grab
 	name = "grab"
 	master = null
 
-/obj/screen/storage
+/obj/effect/screen/storage
 	name = "storage"
 	master = null
 
-/obj/screen/zone_sel
+/obj/effect/screen/zone_sel
 	name = "Damage Zone"
 	icon = 'zone_sel.dmi'
 	icon_state = "blank"

@@ -2,25 +2,25 @@
 	icon = 'storage.dmi'
 	name = "storage"
 	var/list/can_hold = new/list()
-	var/obj/screen/storage/boxes = null
-	var/obj/screen/close/closer = null
+	var/obj/effect/screen/storage/boxes = null
+	var/obj/effect/screen/close/closer = null
 	w_class = 3.0
 	flags = FPRINT|TABLEPASS
 	var/foldable = null	// BubbleWrap - if set, can be folded (when empty) into a sheet of cardboard
 
-/obj/screen/storage/attackby(W, mob/user as mob)
+/obj/effect/screen/storage/attackby(W, mob/user as mob)
 	src.master.attackby(W, user)
 	return
 
 /obj/item/weapon/storage/New()
-	src.boxes = new /obj/screen/storage(  )
+	src.boxes = new /obj/effect/screen/storage(  )
 	src.boxes.name = "storage"
 	src.boxes.master = src
 	src.boxes.icon_state = "block"
 	src.boxes.screen_loc = "7,7 to 10,8"
 	src.boxes.layer = 19
 
-	src.closer = new /obj/screen/close(  )
+	src.closer = new /obj/effect/screen/close(  )
 	src.closer.master = src
 	src.closer.icon_state = "x"
 	src.closer.layer = 20

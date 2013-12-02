@@ -7,7 +7,7 @@
 		a.cell.charge = 0
 		if(prob(25))
 			del a.cell
-		else if(prob(50))
+		else if(prob(40))
 			a.set_broken()
 		calc += 1
 		if(calc > 50)
@@ -25,7 +25,7 @@
 			sleep(0)
 			calc = 0
 		if(prob(1) && prob(5))
-			if(locate(/obj/effect/landmark/derelict/noblast) in a) // whole aera of noblast
+			if(locate(/obj/effect/landmark/derelict/noblast) in a)
 				continue
 			explosion(a,3,5,7,9, 1)
 	world << "Destroying walls (SLOW)"
@@ -89,6 +89,7 @@
 		if(a.z > 4)	continue
 
 		for(var/obj/item/w in a)
+			if(w.anchored) continue
 			for(var/i = 0 to rand(1,5))
 				step(w,pick(cardinal))
 
