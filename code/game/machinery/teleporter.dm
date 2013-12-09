@@ -9,6 +9,24 @@
 /obj/machinery/computer/teleporter/attack_paw()
 	src.attack_hand()
 
+
+/obj/machinery/teleport
+	name = "teleport"
+	icon = 'stationobjs.dmi'
+	density = 1
+	anchored = 1.0
+
+/obj/machinery/teleport/hub
+	name = "hub"
+	icon_state = "tele0"
+
+/obj/machinery/teleport/station
+	name = "station"
+	icon_state = "controller"
+	var/active = 0
+	var/engaged = 0
+
+
 /obj/machinery/teleport/station/attack_ai()
 	src.attack_hand()
 

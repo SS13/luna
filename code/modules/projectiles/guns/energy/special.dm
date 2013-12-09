@@ -5,7 +5,7 @@
 	fire_sound = 'sound/weapons/Laser.ogg'
 	origin_tech = "combat=2;magnets=4"
 	w_class = 5
-	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBACK
+	flags =  FPRINT | CONDUCT | USEDELAY
 	slot_flags = SLOT_BACK
 	charge_cost = 100
 	projectile_type = "/obj/item/projectile/ion"
@@ -16,7 +16,7 @@
 /obj/item/weapon/gun/energy/ionrifle/htec
 	icon_state = "ionrifle_h"
 	w_class = 3
-	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBELT
+	flags =  FPRINT | CONDUCT | USEDELAY
 	slot_flags = SLOT_BELT
 	charge_cost = 150
 
@@ -38,7 +38,7 @@ obj/item/weapon/gun/energy/staff
 	icon_state = "staffofchange"
 	item_state = "staffofchange"
 	fire_sound = 'sound/weapons/emitter.ogg'
-	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY
+	flags =  FPRINT | USEDELAY
 	slot_flags = SLOT_BACK
 	w_class = 5
 	charge_cost = 200

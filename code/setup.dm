@@ -127,21 +127,22 @@ vs_control/var/FIRE_PLASMA_ENERGY_RELEASED_DESC = "Determines the temp increase 
 #define NOSLIP		1024 		//prevents from slipping on wet floors, in space etc
 
 //FLAGS BITMASK
-#define ONBACK 1			// can be put in back slot
-#define TABLEPASS 2			// can pass by a table or rack
-#define HALFMASK 4			// mask only gets 1/2 of air supply from internals
 
-#define HEADSPACE 4			// head wear protects against space
+//#define ONBACK 			1		// can be put in back slot - outdated flag
+//#define TABLEPASS 		2		// can pass by a table or rack - outdated flag
+#define HALFMASK 		4		// mask only gets 1/2 of air supply from internals
 
-#define MASKINTERNALS 	8	// mask allows internals
-#define SUITSPACE 		8	// suit protects against space
+#define HEADSPACE 		4		// head wear protects against space
 
-#define USEDELAY	16		// 1 second extra delay on use
-#define NOSHIELD	32		// weapon not affected by shield
-#define CONDUCT		64		// conducts electricity (metal etc.)
-#define ONBELT		128		// can be put in belt slot
-#define FPRINT		256		// takes a fingerprint
-#define ON_BORDER	512		// item has priority to check when entering or leaving
+#define MASKINTERNALS 	8		// mask allows internals
+#define SUITSPACE 		8		// suit protects against space
+
+#define USEDELAY		16		// 1 second extra delay on use
+#define NOSHIELD		32		// weapon not affected by shield
+#define CONDUCT			64		// conducts electricity (metal etc.)
+#define NOHIT			128		// no displaying ""
+#define FPRINT			256		// takes a fingerprint
+#define ON_BORDER		512		// item has priority to check when entering or leaving
 
 #define GLASSESCOVERSEYES	1024
 #define MASKCOVERSEYES		1024	// get rid of some of the other retardation in these flags

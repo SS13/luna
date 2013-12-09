@@ -37,7 +37,7 @@
 	desc = "A rubber pig mask."
 	icon_state = "pig"
 	item_state = "pig"
-	flags = FPRINT|TABLEPASS|BLOCKHAIR
+	flags = FPRINT|BLOCKHAIR
 	flags_inv = HIDEFACE
 	w_class = 2
 
@@ -46,7 +46,7 @@
 	desc = "A mask made of soft vinyl and latex, representing the head of a horse."
 	icon_state = "horsehead"
 	item_state = "horsehead"
-	flags = FPRINT|TABLEPASS|BLOCKHAIR
+	flags = FPRINT|BLOCKHAIR
 	flags_inv = HIDEFACE
 	w_class = 2
 	var/voicechange = 0
@@ -64,7 +64,7 @@
 	name = "cyborg suit"
 	icon_state = "death"
 	item_state = "death"
-	flags = FPRINT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	fire_resist = T0C+5200
 
 
@@ -147,5 +147,5 @@
 	icon = 'weapons.dmi'
 	icon_state = "baton"
 	item_state = "classic_baton"
-	flags = FPRINT | ONBELT | TABLEPASS
+	slot_flags = SLOT_BELT
 	force = 10

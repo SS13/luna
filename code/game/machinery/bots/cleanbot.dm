@@ -10,7 +10,6 @@
 	throw_range = 5
 	var/created_name
 	w_class = 3.0
-	flags = TABLEPASS
 
 
 //Cleanbot

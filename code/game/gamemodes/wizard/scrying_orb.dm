@@ -10,7 +10,6 @@
 	throwforce = 15
 	damtype = BURN
 	force = 15
-	flags = FPRINT | TABLEPASS
 	hitsound = 'sound/items/welder2.ogg'
 
 /obj/item/weapon/scrying/attack_self(mob/user as mob)

@@ -4,7 +4,7 @@
 	icon = 'icons/obj/gun.dmi'
 	icon_state = "detective"
 	item_state = "gun"
-	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBELT
+	flags =  FPRINT | CONDUCT | USEDELAY
 	slot_flags = SLOT_BELT
 	m_amt = 2000
 	w_class = 3
@@ -23,8 +23,11 @@
 	var/ejectshell = 1
 	var/clumsy_check = 1
 
+	proc/shoot_with_empty_chamber(mob/living/user as mob|obj)
+		user << "<span class='warning'>*click*</span>"
+		return
 
-	proc/load_into_chamber()
+	proc/process_chambered()
 		return 0
 
 	proc/special_check(var/mob/M) //Placeholder for any special checks, like detective's revolver.
@@ -50,7 +53,7 @@
 			if(istype(user, /mob/living))
 				var/mob/living/M = user
 				if ((CLUMSY in user.mutations) && prob(20))
-					M << "<span class='danger'>You shoot yourself in the foot with the [src]!</span>"
+					M << "<span class='danger'>You shoot yourself in the foot with \the [src]!</span>"
 					afterattack(user, user)
 					M.drop_item()
 					return
@@ -64,9 +67,8 @@
 
 		if(!special_check(user))
 			return
-		if(!load_into_chamber())
-			user << "<span class='warning'>*click*</span>"
-			return
+		if(!process_chambered())
+			shoot_with_empty_chamber(user)
 
 		if(!in_chamber)
 			return
@@ -85,11 +87,10 @@
 			playsound(user, fire_sound, 50, 1)
 			user.visible_message("<span class='danger'>[user] fires [src]!</span>", "<span class='danger'>You fire [src]!</span>", "You hear a [istype(in_chamber, /obj/item/projectile/beam) ? "laser blast" : "gunshot"]!")
 
-		prepare_shot(in_chamber)				//Set the projectile's properties
+		prepare_shot(in_chamber)	//Set the projectile's properties
 
 
-
-		if(targloc == curloc)			//Fire the projectile
+		if(targloc == curloc)		//Fire the projectile
 			user.bullet_act(in_chamber)
 			del(in_chamber)
 			update_icon()
@@ -118,4 +119,3 @@
 		update_icon()
 
 		user.update_clothing()
-

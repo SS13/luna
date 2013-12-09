@@ -18,7 +18,8 @@
 	var/list/channels = list() //see communications.dm for full list. First channes is a "default" for :h
 //			"Example" = FREQ_LISTENING|FREQ_BROADCASTING
 
-	flags = FPRINT | CONDUCT | TABLEPASS | ONBELT
+	flags = FPRINT | CONDUCT
+	slot_flags = SLOT_BELT
 	throw_speed = 2
 	throw_range = 9
 	w_class = 2

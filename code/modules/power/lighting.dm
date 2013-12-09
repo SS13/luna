@@ -17,7 +17,7 @@
 	desc = "Used for building lights."
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "tube-construct-item"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT| CONDUCT
 	var/fixture_type = "tube"
 	var/obj/machinery/light/newlight = null
 	var/sheets_refunded = 2
@@ -64,7 +64,7 @@
 	desc = "Used for building small lights."
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "bulb-construct-item"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT| CONDUCT
 	fixture_type = "bulb"
 	sheets_refunded = 1
 
@@ -656,7 +656,7 @@
 
 /obj/item/weapon/light
 	icon = 'lighting.dmi'
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	force = 2
 	throwforce = 5
 	var/status = 0		// LIGHT_OK, LIGHT_BURNED or LIGHT_BROKEN

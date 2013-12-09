@@ -9,7 +9,7 @@ GETLINEEEEEEEEEEEEEEEEEEEEE
 	icon_state = "flamethrower0"
 	item_state = "flamethrower0"
 	desc = "You are a firestarter!"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 3.0
 	throwforce = 10.0
 	throw_speed = 1

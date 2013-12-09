@@ -5,7 +5,7 @@
 	var/obj/effect/screen/storage/boxes = null
 	var/obj/effect/screen/close/closer = null
 	w_class = 3.0
-	flags = FPRINT|TABLEPASS
+	flags = FPRINT
 	var/foldable = null	// BubbleWrap - if set, can be folded (when empty) into a sheet of cardboard
 
 /obj/effect/screen/storage/attackby(W, mob/user as mob)

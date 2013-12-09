@@ -12,7 +12,7 @@
 	name = "cable coil"
 	icon_state = "redcoil3"
 	icon           = 'Coils.dmi'
-	flags          = TABLEPASS | USEDELAY | FPRINT | CONDUCT
+	flags          = USEDELAY | FPRINT | CONDUCT
 	throwforce     = 10
 	w_class        = 1.5
 	throw_speed    = 2

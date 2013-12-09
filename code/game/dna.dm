@@ -173,6 +173,22 @@
 	M.dna.uni_identity = newdna
 	return
 
+/proc/scramble(var/type, mob/M as mob, var/p)
+	if(!M)	return
+	M.dna.check_integrity()
+	if(type)
+		for(var/i = 1, i <= 13, i++)
+			if(prob(p))
+				M.dna.uni_identity = setblock(M.dna.uni_identity, i, add_zero2(num2hex(rand(1,4095), 1), 3), 3)
+		updateappearance(M, M.dna.uni_identity)
+
+	else
+		for(var/i = 1, i <= 13, i++)
+			if(prob(p))
+				M.dna.struc_enzymes = setblock(M.dna.struc_enzymes, i, add_zero2(num2hex(rand(1,4095), 1), 3), 3)
+		domutcheck(M, null)
+	return
+
 /proc/toggledblock(hnumber) //unused
 	var/temp3
 	var/chtemp

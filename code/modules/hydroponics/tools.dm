@@ -3,7 +3,7 @@
 	desc = "A very sharp axe blade upon a short fibremetal handle. It has a long history of chopping things, but now it is used for chopping wood."
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "hatchet"
-	flags = FPRINT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 15.0
 	w_class = 1.0
 	throwforce = 18.0

@@ -1,7 +1,7 @@
 datum/preferences
 	var/real_name
 	var/gender = MALE
-	var/age = 30.0
+	var/age = 30
 	var/b_type = "A+"
 
 	var/be_syndicate = 0
@@ -19,18 +19,18 @@ datum/preferences
 	var/h_style = "Short Hair"
 	var/f_style = "Shaved"
 	var/slotname
-	var/r_hair = 0.0
-	var/g_hair = 0.0
-	var/b_hair = 0.0
+	var/r_hair = 0
+	var/g_hair = 0
+	var/b_hair = 0
 	var/show = 1
-	var/r_facial = 0.0
-	var/g_facial = 0.0
-	var/b_facial = 0.0
+	var/r_facial = 0
+	var/g_facial = 0
+	var/b_facial = 0
 	var/bio = "bio goes here"
-	var/s_tone = 0.0
-	var/r_eyes = 0.0
-	var/g_eyes = 0.0
-	var/b_eyes = 0.0
+	var/s_tone = 0
+	var/r_eyes = 0
+	var/g_eyes = 0
+	var/b_eyes = 0
 	var/curslot = 0
 	var/icon/preview_icon = null
 	//var/UI = UI_B12
@@ -300,11 +300,11 @@ datum/preferences
 		var/HTML = "<body>"
 		HTML += "<tt><center>"
 		switch(occ)
-			if(1.0)
+			if(1)
 				HTML += "<b>Which occupation would you like most?</b><br><br>"
-			if(2.0)
+			if(2)
 				HTML += "<b>Which occupation would you like if you couldn't have your first?</b><br><br>"
-			if(3.0)
+			if(3)
 				HTML += "<b>Which occupation would you like if you couldn't have the others?</b><br><br>"
 			else
 		for(var/job in uniquelist(occupations + assistant_occupations) )
@@ -361,9 +361,9 @@ datum/preferences
 		ShowChoices(user)
 		return
 	proc/SetJob(mob/user, occ=1, job="Captain")
-		if ((!( occupations.Find(job) ) && !( assistant_occupations.Find(job) ) && job != "Captain") && job != "No Preference")
+		if (!occupations.Find(job) && !assistant_occupations.Find(job) && job != "Captain" && job != "No Preference")
 			return
-		if (job=="AI" && (!config.allow_ai))
+		if (job=="AI" && !config.allow_ai)
 			return
 		if (jobban_isbanned(user, job))
 			return
@@ -623,13 +623,13 @@ datum/preferences
 					underwear = 1
 
 		if (link_tags["b_syndicate"])
-			be_syndicate = !( be_syndicate )
+			be_syndicate = !be_syndicate
 
 		if (link_tags["b_nuke_agent"])
-			be_nuke_agent = !( be_nuke_agent )
+			be_nuke_agent = !be_nuke_agent
 
 		if (link_tags["b_takeover_agent"])
-			be_takeover_agent = !( be_takeover_agent )
+			be_takeover_agent = !be_takeover_agent
 
 		if (link_tags["b_random_name"])
 			be_random_name = !be_random_name

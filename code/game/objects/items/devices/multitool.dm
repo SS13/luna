@@ -6,7 +6,7 @@
 /obj/item/device/multitool
 	name = "multitool"
 	icon_state = "multitool"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 5.0
 	w_class = 2.0
 	throwforce = 5.0

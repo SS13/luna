@@ -1829,7 +1829,7 @@
 	icon = 'hydromisc.dmi'
 	icon_state = "plantanalyzer"
 	w_class = 1.0
-	flags = ONBELT
+	slot_flags = SLOT_BELT
 	//mats = 4	 Strumpetplaya - commenting this out as it has components we don't support.
 
 /obj/item/weapon/reagent_containers/glass/wateringcan/

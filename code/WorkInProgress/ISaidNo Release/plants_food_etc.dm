@@ -1702,7 +1702,7 @@
 	name = "carved pumpkin"
 	desc = "Spookier!"
 	icon_state = "pumpkin"
-	flags = FPRINT | TABLEPASS | HEADSPACE | HEADCOVERSEYES | HEADCOVERSMOUTH
+	flags = FPRINT | HEADSPACE | HEADCOVERSEYES | HEADCOVERSMOUTH
 	see_face = 0.0
 	item_state = "pumpkin"
 

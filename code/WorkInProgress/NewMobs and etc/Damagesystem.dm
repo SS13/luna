@@ -542,7 +542,7 @@
 				return
 			if (!istype(W, /obj/item))
 				return
-			if (!( W.flags & ONBACK ))
+			if (!(W.slot_flags & SLOT_BACK))
 				return
 			u_equip(W)
 			back = W
@@ -582,7 +582,9 @@
 				if(emptyHand)
 					belt.DblClick()
 				return
-			if(!W || !W.flags || !(W.flags & ONBELT))
+			if (!istype(W, /obj/item))
+				return
+			if(!(W.slot_flags & SLOT_BELT))
 				return
 			u_equip(W)
 			belt = W

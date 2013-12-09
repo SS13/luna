@@ -1,4 +1,4 @@
-var/global/list/possiblethemes = list("organharvest","cult","wizden","cavein","xenoden","hitech","speakeasy","plantlab")
+var/global/list/possiblethemes = list("organharvest","cult","wizden","cavein",/*"xenoden",*/"hitech","speakeasy","plantlab")
 
 var/global/max_secret_rooms = 3
 
@@ -59,18 +59,18 @@ proc/make_mining_asteroid_secret()
 		if("organharvest")
 			walltypes = list(/turf/simulated/wall/r_wall=2,/turf/simulated/wall=2,/turf/simulated/mineral/random/high_chance=1)
 			floortypes = list(/turf/simulated/floor,/turf/simulated/floor/engine)
-			treasureitems = list(/obj/item/device/mass_spectrometer/adv=1,/obj/item/clothing/glasses/hud/health=1,/obj/machinery/bot/medbot/mysterious=1)
+			treasureitems = list(/obj/item/device/mass_spectrometer/adv=1,/obj/machinery/bot/medbot/mysterious=1)
 			fluffitems = list(/obj/effect/decal/cleanable/blood=5,/obj/item/organ/appendix=2,/obj/structure/closet/crate/freezer=2,
 							  /obj/structure/optable=1,/obj/item/weapon/surgical/scalpel=1,/obj/item/weapon/storage/firstaid/regular=3,
-							  /obj/item/weapon/tank/anesthetic=1, /obj/item/weapon/surgical_drapes=2)
+							  /obj/item/weapon/tank/anesthetic=1, /obj/item/clothing/glasses/hud/health=1, /obj/item/weapon/surgical_drapes=2)
 
-		if("cult")
+/*		if("cult")
 			theme = "cult"
 			walltypes = list(/turf/simulated/wall/cult=3,/turf/simulated/mineral/random/high_chance=1)
 			floortypes = list(/turf/simulated/floor/engine/cult)
 			treasureitems = list(/mob/living/simple_animal/hostile/creature=2,/obj/item/organ/heart=1,/obj/item/device/soulstone=2)
 			fluffitems = list(/obj/effect/gateway=1,/obj/effect/gibspawner=1,/obj/structure/cult/talisman=1,/obj/item/toy/crayon/red=2,
-							  /obj/effect/decal/cleanable/blood=4,/obj/structure/table/woodentable=2,/obj/item/weapon/ectoplasm=3)
+							  /obj/effect/decal/cleanable/blood=4,/obj/structure/table/woodentable=2,/obj/item/weapon/ectoplasm=3)*/
 
 		if("wizden")
 			theme = "wizden"
@@ -88,12 +88,12 @@ proc/make_mining_asteroid_secret()
 			fluffitems = list(/obj/effect/decal/cleanable/blood=3,/obj/effect/decal/remains/human=1,/obj/item/clothing/under/overalls=1,
 							  /obj/item/weapon/reagent_containers/food/snacks/grown/chili=1,/obj/item/weapon/tank/oxygen/red=2)
 
-		if("xenoden")
+/*		if("xenoden")
 			theme = "xenoden"
 			walltypes = list(/turf/simulated/mineral/random/high_chance=1)
 			floortypes = list(/turf/simulated/floor/plating/airless/asteroid)
 			treasureitems = list(/obj/item/clothing/mask/facehugger=1)
-			fluffitems = list(/obj/effect/decal/remains/human=1,/obj/effect/decal/cleanable/xenoblood/xsplatter=5)
+			fluffitems = list(/obj/effect/decal/remains/human=1,/obj/effect/decal/cleanable/xenoblood/xsplatter=5)*/
 
 		if("hitech")
 			theme = "hitech"
@@ -107,8 +107,8 @@ proc/make_mining_asteroid_secret()
 		if("speakeasy")
 			theme = "speakeasy"
 			floortypes = list(/turf/simulated/floor,/turf/simulated/floor/wood)
-			treasureitems = list(/obj/item/weapon/melee/energy/sword/pirate=1,/obj/structure/closet/syndicate/resources=2)
-			fluffitems = list(/obj/structure/table/woodentable=2,/obj/structure/reagent_dispensers/beerkeg=1,/obj/item/weapon/spacecash/c500=4,
+			treasureitems = list(/obj/item/weapon/melee/energy/sword/pirate=1/*,/obj/structure/closet/syndicate/resources=2*/)
+			fluffitems = list(/obj/structure/table/woodentable=2,/obj/structure/reagent_dispensers/beerkeg=1,
 							  /obj/item/weapon/reagent_containers/food/drinks/shaker=1,/obj/item/weapon/reagent_containers/food/drinks/bottle/wine=3,
 							  /obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey=3,/obj/item/clothing/shoes/laceup=2)
 

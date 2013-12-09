@@ -40,22 +40,17 @@
 	return
 
 /atom/proc/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/device/detective_scanner))
+	if(!(W.flags & NOHIT))
 		for(var/mob/O in viewers(src, null))
-			if ((O.client && !( O.blinded )))
-				O << "\red [src] has been scanned by [user] with the [W]"
-	else
-		if (!( istype(W, /obj/item/weapon/grab) ) || !(istype(W, /obj/item/weapon/reagent_containers/spray/cleaner)))
-			for(var/mob/O in viewers(src, null))
-				if ((O.client && !( O.blinded )))
-					O << "\red <B>[src] has been hit by [user] with [W]</B>"
+			if (O.client && !O.blinded)
+				O << "\red <B>[src] has been hit by [user] with [W]</B>"
 	return
 
 /atom/proc/add_fingerprint(mob/living/carbon/human/M as mob)
-	if ((!( istype(M, /mob/living/carbon/human) ) || !( istype(M.dna, /datum/dna) )))
+	if (!istype(M, /mob/living/carbon/human) || !istype(M.dna, /datum/dna))
 		return 0
 	add_fibers(M)
-	if (!( src.flags ) & 256)
+	if (!(src.flags & FPRINT))
 		return
 	if (M.gloves)
 		if(src.fingerprintslast != M.key)
@@ -87,65 +82,87 @@
 	return
 
 
+//returns 1 if made bloody, returns 0 otherwise
 /atom/proc/add_blood(mob/living/carbon/human/M as mob)
-	if (!( istype(M, /mob/living/carbon/human) )) return 0
-	if (!( src.flags ) & 256) return
-	if(istype(src, /obj/item/clothing/gloves)) return //dirty hack to prevent stungloves from becoming invisible
+	if (!istype(M, /mob/living/carbon/human))
+		return 0
 
-	if (!( src.blood_DNA ))
-		if (istype(src, /obj/item))
-			var/obj/item/source2 = src
-			source2.icon_old = src.icon
-			var/icon/I = new /icon(src.icon, src.icon_state)
-			I.Blend(new /icon('blood.dmi', "thisisfuckingstupid"),ICON_ADD)
-			I.Blend(new /icon('blood.dmi', "itemblood"),ICON_MULTIPLY)
-			I.Blend(new /icon(src.icon, src.icon_state),ICON_UNDERLAY)
-			src.icon = I
-			src.blood_DNA = M.dna.unique_enzymes
-			src.blood_type = M.b_type
-		else if (istype(src, /turf/simulated))
-			var/turf/simulated/source2 = src
-			var/list/objsonturf = range(0,src)
-			var/i
-			for(i=1, i<=objsonturf.len, i++)
-				if(istype(objsonturf[i],/obj/effect/decal/cleanable/blood))
-					return 0
-			var/obj/effect/decal/cleanable/blood/this = new /obj/effect/decal/cleanable/blood(source2)
-			this.blood_DNA = M.dna.unique_enzymes
-			this.blood_type = M.b_type
-			this.virus = M.virus
-			if(M.virus2)
-				this.virus2 = M.virus2.getcopy()
-			this.blood_owner = M
-		else if (istype(src, /mob/living/carbon/human))
-			src.blood_DNA = M.dna.unique_enzymes
-			src.blood_type = M.b_type
-		else
-			return 0
-	else
-		var/list/L = params2list(src.blood_DNA)
-		L -= M.dna.unique_enzymes
-		while(L.len >= 3)
-			L -= L[1]
-		L += M.dna.unique_enzymes
-		src.blood_DNA = list2params(L)
-	return 1
+	if (!(src.flags & FPRINT))
+		return 0
+
+	if(!blood_DNA || !istype(blood_DNA, /list))	//if our list of DNA doesn't exist yet (or isn't a list) initialise it.
+		blood_DNA = list()
+
+	//adding blood to items
+	if (istype(src, /obj/item)&&!istype(src, /obj/item/weapon/melee/energy))//Only regular items. Energy melee weapon are not affected.
+		var/obj/item/O = src
+
+		//if we haven't made our blood_overlay already
+		if(!O.blood_overlay)
+			var/icon/I = new /icon(O.icon, O.icon_state)
+			I.Blend(new /icon('icons/effects/blood.dmi', "thisisfuckingstupid"), ICON_ADD) //fills the icon_state with white (except where it's transparent)
+			I.Blend(new /icon('icons/effects/blood.dmi', "itemblood"), ICON_MULTIPLY) //adds blood and the remaining white areas become transparant
+
+			//not sure if this is worth it. It attaches the blood_overlay to every item of the same type if they don't have one already made.
+			for(var/obj/item/A in world)
+				if(A.type == O.type && !A.blood_overlay)
+					A.blood_overlay = I
+
+		//apply the blood-splatter overlay if it isn't already in there
+		if(!blood_DNA.len)
+			O.overlays += O.blood_overlay
+
+		//if this blood isn't already in the list, add it
+
+		if(blood_DNA[M.dna.unique_enzymes])
+			return 0 //already bloodied with this blood. Cannot add more.
+		blood_DNA[M.dna.unique_enzymes] = M.b_type
+		return 1 //we applied blood to the item
+
+	//adding blood to turfs
+	else if (istype(src, /turf/simulated))
+		var/turf/simulated/T = src
+
+		//get one blood decal and infect it with virus from M.viruses
+		for(var/obj/effect/decal/cleanable/blood/B in T.contents)
+			if(!B.blood_DNA[M.dna.unique_enzymes])
+				B.blood_DNA[M.dna.unique_enzymes] = M.b_type
+			for(var/datum/disease/D in M.viruses)
+				var/datum/disease/newDisease = D.Copy(1)
+				B.viruses += newDisease
+				newDisease.holder = B
+			return 1 //we bloodied the floor
+
+		//if there isn't a blood decal already, make one.
+		var/obj/effect/decal/cleanable/blood/newblood = new /obj/effect/decal/cleanable/blood(T)
+		newblood.blood_DNA[M.dna.unique_enzymes] = M.b_type
+		for(var/datum/disease/D in M.viruses)
+			var/datum/disease/newDisease = D.Copy(1)
+			newblood.viruses += newDisease
+			newDisease.holder = newblood
+		return 1 //we bloodied the floor
+
+	//adding blood to humans
+	else if (istype(src, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = src
+		//if this blood isn't already in the list, add it
+		if(blood_DNA[H.dna.unique_enzymes])
+			return 0 //already bloodied with this blood. Cannot add more.
+		blood_DNA[H.dna.unique_enzymes] = H.b_type
+		H.update_clothing()	//handles bloody hands overlays and updating
+		return 1 //we applied blood to the item
+	return
 
 /atom/proc/clean_blood()
-	if(istype(src, /obj)) src:contaminated = 0
-	if (!( src.flags ) & 256)
+	if(istype(src, /obj))
+		src:contaminated = 0
+	if (!(src.flags & FPRINT))
 		return
-	if ( src.blood_DNA )
-		if (istype (src, /obj/item))
+	if(blood_DNA.len)
+		if(istype(src, /obj/item))
 			var/obj/item/source2 = src
-			source2.blood_DNA = null
-			var/icon/I = new /icon(source2.icon_old, source2.icon_state)
-			source2.icon = I
-		else if (istype(src, /turf/simulated))
-			var/obj/item/source2 = src
-			source2.blood_DNA = null
-			var/icon/I = new /icon(source2.icon_old, source2.icon_state)
-			source2.icon = I
+			source2.overlays -= source2.blood_overlay
+			src.blood_DNA = list()
 	return
 
 /atom/MouseDrop(atom/over_object as mob|obj|turf|area)

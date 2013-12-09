@@ -7,7 +7,8 @@
 	w_class = 2.0
 	throw_speed = 4
 	throw_range = 20
-	flags =  FPRINT | TABLEPASS | CONDUCT | ONBELT
+	flags =  FPRINT | CONDUCT
+	slot_flags = SLOT_BELT
 	var/state = null
 	var/det_time = 20.0
 
@@ -17,7 +18,8 @@
 /obj/item/weapon/grenade/smokebomb
 	desc = "It is set to detonate in 2 seconds."
 	name = "smoke bomb"
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT | USEDELAY
+	flags = FPRINT | CONDUCT | USEDELAY
+	slot_flags = SLOT_BELT
 	var/datum/effect/system/bad_smoke_spread/smoke
 
 /obj/item/weapon/grenade/incendiarygrenade

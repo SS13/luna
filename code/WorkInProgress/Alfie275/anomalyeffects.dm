@@ -1,9 +1,8 @@
-var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"repel"=1,"tele"=2)=4)
-
+var/list/anomalyeffects = list("emp" = 1, "heal"=2, "harm"=2, "march" = 1, "repel"=1, "tele"=1)
 
 /datum/anomalyeffect
 	var/effectname
-	var/obj/o
+	var/obj/anomaly_object
 	var/range
 	var/magnitude
 	var/cooldown
@@ -21,7 +20,6 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 
 /datum/anomalyeffect/proc/Activate()
 
-
 /datum/anomalyeffect/heal
 	effectname = "heal"
 	fluff = "Biological stabiliser field."
@@ -32,7 +30,7 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 
 /datum/anomalyeffect/emp
 	effectname = "emp"
-	fluff = "Electro Magnetic Pulse."
+	fluff = "Electromagnetic pulse."
 
 /datum/anomalyeffect/tele
 	effectname = "tele"
@@ -55,30 +53,26 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 
 
 /datum/anomalyeffect/tele/CalcCooldown()
-	src.cooldown = src.magnitude*2+src.range
+	cooldown = magnitude * 2 + range
 
 /datum/anomalyeffect/heal/Activate()
-	for(var/mob/living/carbon/m in range(src.range,get_turf(src.o)))
-		if(!CanAnom(m))
+	for(var/mob/living/carbon/C in range(src.range,get_turf(anomaly_object)))
+		if(!CanAnom(C))
 			continue
-		for(var/t in m.organs)
-			var/datum/organ/external/affecting = m.organs["[t]"]
-			if (affecting.heal_damage(src.magnitude/16, src.magnitude/8))
-				m.UpdateDamageIcon()
+		for(var/t in C.organs)
+			var/datum/organ/external/affecting = C.organs["[t]"]
+			if (affecting.heal_damage(magnitude/8, magnitude/4))
+				C.UpdateDamageIcon()
 			else
-				m.UpdateDamage()
-		m.oxyloss = max(0.0,m.oxyloss-src.magnitude)
-		m.toxloss = max(0.0,m.toxloss-src.magnitude)
-		m.fireloss = max(0.0,m.fireloss-src.magnitude)
-		m.bruteloss = max(0.0,m.bruteloss-src.magnitude)
-		m.health = min(m.health_full,m.health+src.magnitude)
-		m.updatehealth()
-		m << "\blue You feel a tingling sensation."
+				C.UpdateDamage()
+		C.adjustOxyLoss(-magnitude)
+		C.adjustToxLoss(-magnitude)
+		C << "\blue You feel a tingling sensation."
 
 
 /datum/anomalyeffect/emp/Activate()
-	playsound(o.loc, 'Welder2.ogg', 25, 1)
-	var/turf/T = get_turf(o)
+	playsound(anomaly_object.loc, 'Welder2.ogg', 25, 1)
+	var/turf/T = get_turf(anomaly_object)
 	if(T)
 		T.hotspot_expose(SPARK_TEMP,125)
 
@@ -130,20 +124,6 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 		M << "\red <B>Your equipment malfunctions.</B>" //Yeah, i realise that this WILL
 														//show if theyre not carrying anything
 														//that is affected. lazy.
-		for(var/obj/item/device/cloak/S in M)
-			S.active = 0
-			S.icon_state = "shield0"
-
-		for(var/obj/item/weapon/gun/energy/G in M)
-			G.emp_act(1)
-
-		if ((istype(M, /mob/living/carbon/human)) && (istype(M:glasses, /obj/item/clothing/glasses/thermal)))
-			M << "\red <B>Your thermals malfunction.</B>"
-			M.eye_blind = 3
-			M.eye_blurry = 5
-			M.disabilities |= 1
-			spawn(100)
-				M.disabilities &= ~1
 
 		if (locate(/obj/item/device/radio, M))
 			for(var/obj/item/device/radio/R in M) //Add something for the intercoms.
@@ -157,19 +137,6 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 		if (locate(/obj/item/weapon/melee/baton, M))
 			for(var/obj/item/weapon/melee/baton/B in M) //Add something for the intercoms.
 				B.charges = 0
-
-		if(locate(/obj/item/clothing/under/chameleon, M))
-			for(var/obj/item/clothing/under/chameleon/C in M) //Add something for the intercoms.
-				M << "\red <B>Your jumpsuit malfunctions</B>"
-				C.name = "psychedelic"
-				C.desc = "Groovy!"
-				C.icon_state = "psyche"
-				C.item_color = "psyche"
-				spawn(200)
-					C.name = "Black Jumpsuit"
-					C.icon_state = "bl_suit"
-					C.item_color = "black"
-					C.desc = null
 
 		M << "\red <B>BZZZT</B>"
 
@@ -186,17 +153,6 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 
 		spawn(10)
 			del(pulse2)
-
-		if(istype(A, /obj/machinery/turret))
-			A:enabled = 0
-			A:lasers = 0
-			A:power_change()
-
-		if(istype(A, /obj/machinery/computer) && prob(20))
-			A:set_broken()
-
-		if(istype(A, /obj/machinery/firealarm) && prob(50))
-			A:alarm()
 
 		if(istype(A, /obj/machinery/power/smes))
 			A:online = 0
@@ -281,16 +237,15 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 
 
 /datum/anomalyeffect/harm/Activate()
-	for(var/mob/living/carbon/m in range(src.range,get_turf(src.o)))
+	for(var/mob/living/carbon/m in range(src.range,get_turf(anomaly_object)))
 		if(!CanAnom(m))
 			continue
 		for(var/t in m.organs)
 			var/datum/organ/external/affecting = m.organs["[t]"]
-			if(rand(1))
-				if (affecting.take_damage(src.magnitude/16, src.magnitude/8,0,0))
-					m.UpdateDamageIcon()
-				else
-					m.UpdateDamage()
+			if (affecting.take_damage(magnitude/16, magnitude/8,0,0))
+				m.UpdateDamageIcon()
+			else
+				m.UpdateDamage()
 
 		m.updatehealth()
 		m << "\red You feel a searing pain."
@@ -300,13 +255,13 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 
 
 /datum/anomalyeffect/march/Activate()
-	var/turf/centre = get_turf(src.o)
+	var/turf/centre = get_turf(anomaly_object)
 	var/list/atom/A = list()
 	for(var/mob/living/carbon/m in range(src.range,centre))
-		if(!CanAnom(m)||m == o||o.loc==m)
+		if(!CanAnom(m) || m == anomaly_object || anomaly_object.loc == m)
 			continue
 		if(m.buckled)
-			if(m.buckled.CanAnom()&&!m.buckled.anchored)
+			if(CanAnom(m.buckled) && !m.buckled.anchored)
 				A.Add(m)
 		else
 			A.Add(m)
@@ -314,8 +269,8 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 	for(var/obj/ob in range(src.range,centre))
 		if(!CanAnom(ob))
 			continue
-		if(get_dist(ob,o)==0)
-			if(FindRecursive(o,ob))
+		if(get_dist(ob,anomaly_object)==0)
+			if(FindRecursive(anomaly_object,ob))
 				continue
 		if(!ob.anchored)
 			A.Add(ob)
@@ -331,7 +286,7 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 						a:say("*shake")
 						a<<"You free yourself from the force's grasp!"
 						A.Remove(A)
-				step_to(a,get_turf(o))
+				step_to(a,get_turf(anomaly_object))
 			dur-=1
 			sleep(10)
 
@@ -340,22 +295,22 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 
 
 /datum/anomalyeffect/repel/Activate()
-	var/turf/centre = get_turf(src.o)
+	var/turf/centre = get_turf(anomaly_object)
 	var/list/atom/A = list()
 	for(var/mob/living/carbon/m in range(src.range,centre))
-		if(!CanAnom(m)||m == o||o.loc==m)
+		if(!CanAnom(m) || m == anomaly_object || anomaly_object.loc==m)
 			continue
 		if(m.buckled)
-			if(m.buckled.CanAnom()&&!m.buckled.anchored)
+			if(CanAnom(m.buckled) && !m.buckled.anchored)
 				A.Add(m)
 		else
 			A.Add(m)
 			m<<"\blue You feel a compulsion to walk."
 	for(var/obj/ob in range(src.range,centre))
-		if(!CanAnom(ob)||ob==o)
+		if(!CanAnom(ob) || ob == anomaly_object)
 			continue
-		if(get_dist(ob,o)==0)
-			if(FindRecursive(o,ob))
+		if(get_dist(ob, anomaly_object)==0)
+			if(FindRecursive(anomaly_object, ob))
 				continue
 		if(!ob.anchored)
 			A.Add(ob)
@@ -371,14 +326,14 @@ var/list/anomalyeffects = list("emp" = 2, "heal"=2, "harm"=2, list("march" = 1,"
 						a:say("*shake")
 						a<<"You free yourself from the force's grasp!"
 						A.Remove(A)
-				step_away(a,get_turf(o))
+				step_away(a,get_turf(anomaly_object))
 			dur-=1
 			sleep(10)
 
 
 
 /datum/anomalyeffect/tele/Activate()
-	var/turf/centre = get_turf(src.o)
+	var/turf/centre = get_turf(anomaly_object)
 	var/list/mob/living/carbon/ms = list()
 	for(var/mob/living/carbon/m in range(src.range,centre))
 		if(!CanAnom(m))

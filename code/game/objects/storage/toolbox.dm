@@ -4,7 +4,7 @@
 	icon_state = "red"
 	item_state = "toolbox_red"
 	origin_tech = "combat=1"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 10.0
 	throwforce = 10.0
 	throw_speed = 1

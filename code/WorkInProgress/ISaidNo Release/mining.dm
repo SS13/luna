@@ -403,7 +403,7 @@
 		//if (src.ore2) score_oremined += 1		Strumpetplaya - Commented out as it is currently unsupported
 		switch(src.event)
 			if("artifact")
-				new/obj/item/weapon/artifact(src)
+				new/obj/item/weapon/ore/artifact(src)
 				for(var/mob/O in viewers(src, null)) O.show_message(text("\blue An artifact was unearthed!"), 1)
 			if("worm")
 				new/obj/critter/rockworm(src)

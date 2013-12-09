@@ -17,7 +17,7 @@
 	name = "brain"
 	desc = "A piece of juicy meat found in a person's head."
 	icon_state = "brain2"
-	flags = TABLEPASS
+	flags = 0
 	force = 1
 	w_class = 3
 	throwforce = 1.0

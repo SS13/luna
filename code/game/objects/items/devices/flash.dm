@@ -7,7 +7,7 @@
 	w_class = 1
 	throw_speed = 4
 	throw_range = 10
-	flags = FPRINT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	item_state = "electronic"
 	var/status = 1
 	origin_tech = "magnets=2;combat=1"
@@ -18,7 +18,7 @@
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "flashlight"
 	item_state = "flashlight"
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
+	slot_flags = SLOT_BELT
 
 
 /obj/item/device/flash/attack(mob/living/carbon/M as mob, mob/user as mob)

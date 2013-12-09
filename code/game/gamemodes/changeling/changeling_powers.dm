@@ -282,47 +282,42 @@
 	set category = "Changeling"
 	set name = "Regenerative Stasis"
 
-	if(usr.stat == 2)
-		usr << "\red We are dead."
-		return
-
 	usr << "\blue We will regenerate our form."
 
 	usr.lying = 1
 	usr.canmove = 0
-	usr.changeling_fakedeath = 1
+	usr.status_flags |= FAKEDEATH
 	usr.remove_changeling_powers()
 
 	usr.emote("deathgasp")
 
 	spawn(600*tick_multiplier)
-		if (usr.stat != 2)
-			if(istype(usr, /mob/living/carbon/human))
-				var/mob/living/carbon/human/H = usr
-				for(var/A in H.organs)
-					var/datum/organ/external/affecting = null
-					if(!H.organs[A])    continue
-					affecting = H.organs[A]
-					if(!istype(affecting, /datum/organ/external))    continue
-					affecting.heal_damage(1000, 1000)    //fixes getting hit after ingestion, killing you when game updates organ health
-				H.UpdateDamageIcon()
-			usr.fireloss = 0
-			usr.toxloss = 0
-			usr.bruteloss = 0
-			usr.oxyloss = 0
-			usr.paralysis = 0
-			usr.stunned = 0
-			usr.weakened = 0
-			usr.radiation = 0
-			usr.health = 100
-			usr.updatehealth()
-			usr.reagents.clear_reagents()
-			usr.lying = 0
-			usr.canmove = 1
-			usr << "\blue We have regenerated."
-			usr.visible_message(text("\red <B>[usr] appears to wake from the dead, having healed all wounds.</B>"))
+		if(istype(usr, /mob/living/carbon/human))
+			var/mob/living/carbon/human/H = usr
+			for(var/datum/organ/external/A in H.GetOrgans())
+				if(A.status == ORGAN_ROBOTIC)
+					continue
 
-		usr.changeling_fakedeath = 0
+				A.status = ORGAN_INTACT
+				A.heal_damage(1000, 1000, 1)    //fixes getting hit after ingestion, killing you when game updates organ health
+			H.UpdateDamageIcon()
+		usr.fireloss = 0
+		usr.toxloss = 0
+		usr.bruteloss = 0
+		usr.oxyloss = 0
+		usr.paralysis = 0
+		usr.stunned = 0
+		usr.weakened = 0
+		usr.radiation = 0
+		usr.health = 100
+		usr.updatehealth()
+		usr.reagents.clear_reagents()
+		usr.lying = 0
+		usr.canmove = 1
+		usr << "\blue We have regenerated."
+		usr.visible_message(text("\red <B>[usr] appears to wake from the dead, having healed all wounds.</B>"))
+
+		usr.status_flags &= ~ FAKEDEATH
 		if (usr.changeling_level == 1)
 			usr.make_lesser_changeling()
 		else if (usr.changeling_level == 2)
@@ -340,7 +335,7 @@
 		return
 
 	usr << "\blue We stealthily sting [T]."
-	T << "You feel a small prick and a burning sensation."
+	T << "You feel a tiny prick and a burning sensation."
 
 	T.reagents.add_reagent("toxin", 10)
 	T.reagents.add_reagent("stoxin", 20)
@@ -364,7 +359,7 @@
 
 	spawn(50*tick_multiplier) //Give the changeling a chance to calmly walk away before the target FREAKS THE FUCK OUT
 		if(T)
-			T.reagents.add_reagent("LSD", 30)
+			T.reagents.add_reagent("LSD", 50)
 
 	usr.verbs -= /client/proc/changeling_hallucinogenic_sting
 

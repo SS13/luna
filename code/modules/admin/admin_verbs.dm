@@ -863,7 +863,7 @@
 			eyes = /obj/item/clothing/glasses/thermal
 			mask = /obj/item/clothing/mask/gas/swat
 			over = /obj/item/clothing/suit/armor/swat
-			back2 = /obj/item/weapon/gun/projectile
+			back2 = /obj/item/weapon/gun/projectile/revolver/mateba
 			back1 = /obj/item/device/cloak
 			back3 = /obj/item/weapon/rcd
 			back4 = /obj/item/device/hacktool

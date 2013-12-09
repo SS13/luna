@@ -41,21 +41,18 @@
 "aO" = (/obj/machinery/door/airlock/glass,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
 "aP" = (/obj/machinery/door/airlock/highsec{req_access_txt = "90"},/turf/simulated/floor{tag = "icon-vault"; icon_state = "vault"; dir = 2},/area/asteroid)
 "aQ" = (/obj/structure/table{tag = "icon-tabledir (NORTHEAST)"; icon_state = "tabledir"; dir = 5},/obj/machinery/microwave,/turf/simulated/floor{tag = "icon-warnwhitecorner (WEST)"; icon_state = "warnwhitecorner"; dir = 8},/area/asteroid)
-"aR" = (/obj/machinery/vending/coffee,/turf/simulated/floor{tag = "icon-warnwhitecorner (EAST)"; icon_state = "warnwhitecorner"; dir = 4},/area/asteroid)
-"aS" = (/obj/structure/crate,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
-"aT" = (/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
-"aU" = (/obj/structure/table{icon_state = "tabledir"; dir = 4},/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
-"aV" = (/obj/structure/stool/bed/chair{dir = 8},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
-"aW" = (/obj/machinery/vending/snack,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
-"aX" = (/obj/structure/table{tag = "icon-tabledir (NORTHEAST)"; icon_state = "tabledir"; dir = 5},/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
-"aY" = (/obj/structure/safe/floor,/obj/item/weapon/gun/revolver,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/silver,/obj/item/weapon/coin/silver,/obj/item/weapon/coin/silver,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
-"aZ" = (/obj/structure/table{dir = 9; icon_state = "tabledir"; tag = ""},/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
-"ba" = (/obj/structure/table{tag = "icon-tabledir (SOUTHEAST)"; icon_state = "tabledir"; dir = 6},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
-"bb" = (/obj/machinery/light,/turf/simulated/floor{icon_state = "white"},/area)
-"bc" = (/obj/structure/crate/freezer,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
-"bd" = (/obj/structure/table{icon_state = "tabledir"; dir = 4},/obj/item/stack/sheet/metal{amount = 50},/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
-"be" = (/obj/machinery/light,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
-"bf" = (/obj/structure/table{icon_state = "tabledir"; dir = 8},/obj/item/stack/sheet/mineral/plasma,/obj/item/stack/sheet/mineral/plasma,/obj/item/stack/sheet/mineral/plasma,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aR" = (/turf/simulated/floor{tag = "icon-warnwhitecorner (EAST)"; icon_state = "warnwhitecorner"; dir = 4},/area/asteroid)
+"aS" = (/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aT" = (/obj/structure/table{icon_state = "tabledir"; dir = 4},/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aU" = (/obj/structure/stool/bed/chair{dir = 8},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aV" = (/obj/structure/table{tag = "icon-tabledir (NORTHEAST)"; icon_state = "tabledir"; dir = 5},/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aW" = (/obj/structure/safe/floor,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/silver,/obj/item/weapon/coin/silver,/obj/item/weapon/coin/silver,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aX" = (/obj/structure/table{dir = 9; icon_state = "tabledir"; tag = ""},/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aY" = (/obj/structure/table{tag = "icon-tabledir (SOUTHEAST)"; icon_state = "tabledir"; dir = 6},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aZ" = (/obj/machinery/light,/turf/simulated/floor{icon_state = "white"},/area)
+"ba" = (/obj/structure/table{icon_state = "tabledir"; dir = 4},/obj/item/stack/sheet/metal{amount = 50},/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"bb" = (/obj/machinery/light,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"bc" = (/obj/structure/table{icon_state = "tabledir"; dir = 8},/obj/item/stack/sheet/mineral/plasma,/obj/item/stack/sheet/mineral/plasma,/obj/item/stack/sheet/mineral/plasma,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
 
 (1,1,1) = {"
 aaaaaaaaaaaaaaababababababababab
@@ -67,8 +64,8 @@ aoasatatauabababavawaxayaxawazab
 aoaAaBaBaCaDaEaDaFaGaGaGaGaGaHab
 aoaIaJaJaKabababaLakakaMakakaNab
 apaoaoaoaoanaaababaOabababaPabab
-abaaaaaaaaaaaaabaQawaRabaSaTaSab
-aaaaaaaaaaaaaaabaUaVaWabaXaYaZab
-aaaaaaaaaaaaaaabbabbbcabbdbebfab
+abaaaaaaaaaaaaabaQawaRabaSaSaSab
+aaaaaaaaaaaaaaabaTaUaGabaVaWaXab
+aaaaaaaaaaaaaaabaYaZaGabbabbbcab
 aaaaaaaaaaaaaaababababababababab
 "}

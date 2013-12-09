@@ -365,7 +365,7 @@
 				if(1)
 					occupant_message("Switched HONK Mortar to Mousetrap. HONK!")
 					projectile = /obj/item/device/assembly/mousetrap/armed
-					launchtext = "Launched a mouse-trap"
+					launchtext = "Launched a mousetrap"
 				if(2)
 					occupant_message("Switched HONK Mortar to Pie. HONK!")
 					projectile = /obj/item/weapon/reagent_containers/food/snacks/pie/calm

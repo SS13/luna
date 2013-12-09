@@ -23,11 +23,12 @@ proc/remove_virus2(mob/by)
 			A.virus2 = null
 	for(var/obj/virus/A in world)
 		del(A)
-	for(var/obj/effect/decal/cleanable/blood/A in world)
-		if(A.virus2)
-			A.virus2 = null
+	for(var/datum/disease/D in world)
+		D.cure(0)
+
 	log_admin("[key_name(by)] removed all infections.")
 	message_admins("[key_name_admin(by)] just nuked the station with a medical bomb(Removed all virus stuff)", 1)
+
 /client/proc/cmd_admin_prison(mob/M as mob in world)
 	set category = "Special Verbs"
 	set name = "Prison"

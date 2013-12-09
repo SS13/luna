@@ -4,7 +4,8 @@
 
 	var/datum/gas_mixture/air_contents = null
 	var/distribute_pressure = ONE_ATMOSPHERE
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBACK
+	flags = FPRINT | CONDUCT
+	slot_flags = SLOT_BACK
 
 	pressure_resistance = ONE_ATMOSPHERE*5
 
@@ -301,7 +302,7 @@
 /obj/item/weapon/tank/emergency_oxygen
 	name = "emergency oxygen tank"
 	icon_state = "emergency"
-	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
+	slot_flags = SLOT_BELT
 	w_class = 2
 	force = 7.0
 
@@ -354,9 +355,9 @@
 	name = "double emergency oxygen tank"
 	icon_state = "emergency_double"
 	item_state = "emergency"
-	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
+	slot_flags = SLOT_BELT
 	w_class = 2.5
-	force = 6.0
+	force = 6
 /obj/item/weapon/tank/emergency_oxygen/double/New()
 	..()
 	src.air_contents.volume = 30 //liters

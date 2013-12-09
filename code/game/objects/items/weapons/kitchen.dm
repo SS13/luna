@@ -11,7 +11,7 @@ SPOON
 
 /obj/item/weapon/kitchen/utensil
 	w_class = 1.0
-	flags = FPRINT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 2
 	throwforce = 4
 	throw_speed = 3

@@ -81,7 +81,7 @@
 	icon = 'icons/obj/economy.dmi'
 	name = "coin"
 	icon_state = "coin_mythril_heads"
-	flags = FPRINT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 1
 	throwforce = 3
 	w_class = 1.0

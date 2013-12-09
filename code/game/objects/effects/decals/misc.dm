@@ -21,4 +21,5 @@
 /obj/effect/decal/chempuff
 	name = "chemicals"
 	icon = 'icons/obj/chempuff.dmi'
-	flags = TABLEPASS
+	flags = 0
+	pass_flags = PASSTABLE

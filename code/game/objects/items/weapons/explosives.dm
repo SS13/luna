@@ -5,7 +5,7 @@
 	icon = 'icons/obj/assemblies.dmi'
 	icon_state = "plastic-explosive0"
 	item_state = "plasticx"
-	flags = FPRINT | TABLEPASS | USEDELAY
+	flags = FPRINT | USEDELAY | NOHIT
 	w_class = 2.0
 	origin_tech = "syndicate=2"
 	var/datum/wires/explosive/plastic/wires = null

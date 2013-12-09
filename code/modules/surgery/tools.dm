@@ -1,7 +1,7 @@
 /obj/item/weapon/surgical
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "surgical_drapes"
-	flags = FPRINT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	w_class = 1
 	origin_tech = "materials=1;biotech=1"
 

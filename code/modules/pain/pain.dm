@@ -22,15 +22,16 @@ mob/proc/pain(var/partname, var/amount, var/force)
 	var/msg
 	switch(amount)
 		if(1 to 10)
-			if(prob(50)) flash_weak_pain()
-			msg = "<b>Your [partname] hurts a bit."
+			if(prob(25)) flash_weak_pain()
+			msg = "<b>Your [partname] hurts a bit.</b>"
 		if(11 to 90)
 			if(prob(50)) flash_weak_pain()
-			msg = "<b><font size=1>Ouch! Your [partname] hurts. </font>"
+			msg = "<b><font size=1>Ouch! Your [partname] hurts.</font></b>"
 		if(91 to 10000)
-			if(prob(50)) flash_pain()
-			msg = "<b><font size=3>OH GOD! Your [partname] is hurting terribly! </font>"
-	if(msg && prob(30) && (last_pain_message != msg || prob(20)))
+			if(prob(25)) flash_pain()
+			else if(prob(25)) flash_weak_pain()
+			msg = "<b><font size=3>OH GOD! Your [partname] is hurting terribly!</font></b>"
+	if(msg && prob(20) && (last_pain_message != msg || prob(20)))
 		last_pain_message = msg
 		src << msg
 	next_pain_time = world.time + (100 - amount) * tick_multiplier
@@ -41,7 +42,7 @@ mob/living/carbon/proc/handle_pain()
 	if(istype(src,/mob/living/carbon/human))
 		var/maxdam = 0
 		var/datum/organ/external/damaged_organ = null
-		for(var/datum/organ/external/E in src:organs)
+		for(var/datum/organ/external/E in src.organs)
 			if(E.status != ORGAN_INTACT)
 				continue
 			var/dam = E.get_damage()

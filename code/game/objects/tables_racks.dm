@@ -75,7 +75,7 @@
 	if (HULK in usr.mutations)
 		usr << text("\blue You destroy the table.")
 		for(var/mob/O in oviewers())
-			if ((O.client && !( O.blinded )))
+			if (O.client && !O.blinded)
 				O << text("\red [] destroys the table.", usr)
 		if(istype(src, /obj/structure/table/reinforced))
 			new /obj/item/weapon/table_parts/reinforced( src.loc )
@@ -96,7 +96,7 @@
 /obj/structure/table/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1
 
-	if ((mover.flags & 2 || istype(mover, /obj/effect/meteor)) )
+	if (mover.pass_flags & PASSTABLE)
 		return 1
 	else
 		return 0
@@ -245,7 +245,7 @@
 /obj/structure/rack/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1
 
-	if (mover.flags & 2)
+	if (mover.pass_flags & PASSTABLE)
 		return 1
 	else
 		return 0

@@ -21,7 +21,7 @@
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency_oxygen,/obj/item/weapon/extinguisher)
 	slowdown = 1.0
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL | STOPSPRESSUREDMAGE
+	flags = FPRINT | ONESIZEFITSALL | STOPSPRESSUREDMAGE
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
@@ -48,7 +48,7 @@
 	name = "bomb hood"
 	desc = "Use in case of boom."
 	icon_state = "bombsuit"
-	flags = FPRINT|TABLEPASS|HEADCOVERSEYES|HEADCOVERSMOUTH//|BLOCKHAIR
+	flags = FPRINT|HEADCOVERSEYES|HEADCOVERSMOUTH|BLOCKHAIR
 	armor = list(melee = 40, bullet = 20, laser = 30,energy = 20, bomb = 100, bio = 10, rad = 10)
 	protective_temperature = 1600
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES
@@ -67,7 +67,7 @@
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.01
 	protective_temperature = 1000
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	slowdown = 2
 	armor = list(melee = 40, bullet = 20, laser = 30,energy = 20, bomb = 100, bio = 20, rad = 20) // Matal plates makes it good but bulky armor
@@ -103,7 +103,7 @@
 	name = "radiation hood"
 	icon_state = "rad"
 	desc = "A hood with radiation protective properties. Label: Made with lead, do not eat insulation"
-	flags = FPRINT|TABLEPASS|HEADCOVERSEYES|HEADCOVERSMOUTH//|BLOCKHAIR
+	flags = FPRINT|HEADCOVERSEYES|HEADCOVERSMOUTH|BLOCKHAIR
 	armor = list(melee = 10, bullet = 0, laser = 10,energy = 10, bomb = 0, bio = 60, rad = 100)
 
 

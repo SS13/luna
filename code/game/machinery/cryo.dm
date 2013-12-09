@@ -267,14 +267,14 @@
 
 
 /mob/living/carbon/human/abiotic()
-	if ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || src.handcuffed)
+	if ((src.l_hand && !src.l_hand.abstract) || (src.r_hand && !src.r_hand.abstract) || src.handcuffed)
 		return 1
 	else
 		return 0
 	return
 
 /mob/proc/abiotic()
-	if ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || src.back || src.wear_mask || src.handcuffed)
+	if ((src.l_hand && !src.l_hand.abstract) || (src.r_hand && !src.r_hand.abstract) || src.back || src.wear_mask || src.handcuffed)
 		return 1
 	else
 		return 0

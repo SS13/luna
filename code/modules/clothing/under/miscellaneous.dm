@@ -24,7 +24,7 @@
 	name = "amish suit"
 	icon_state = "sl_suit"
 	item_color = "sl_suit"
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | ONESIZEFITSALL
 
 /obj/item/clothing/under/waiter
 	name = "waiter's outfit"
@@ -32,7 +32,7 @@
 	icon_state = "waiter"
 	item_state = "waiter"
 	item_color = "waiter"
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | ONESIZEFITSALL
 
 /obj/item/clothing/under/rank/mailman
 	name = "mailman's jumpsuit"
@@ -78,7 +78,7 @@
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.02
 	heat_transfer_coefficient = 0.01
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	protective_temperature = 3000
 //	cold_protection = CHEST | GROIN | LEGS | ARMS //Needs gloves and shoes with cold protection to be fully protected.
@@ -95,7 +95,7 @@
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.01
 	heat_transfer_coefficient = 0.01
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	armor = list(melee = 100, bullet = 100, laser = 100,energy = 100, bomb = 100, bio = 100, rad = 100)
 	protective_temperature = 30000
@@ -109,7 +109,7 @@
 	desc = "A jumpsuit with owl wings. Photorealistic owl feathers! Twooooo!"
 	icon_state = "owl"
 	item_color = "owl"
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | ONESIZEFITSALL
 
 /obj/item/clothing/under/johnny
 	name = "johnny~~ jumpsuit"

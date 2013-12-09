@@ -159,7 +159,7 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/destructive_analyzer
 	name = "Circuit board (Destructive Analyzer)"
-	build_path = "/obj/machinery/r_n_d/destructive_analyzer"
+	build_path = /obj/machinery/r_n_d/destructive_analyzer
 	origin_tech = "magnets=2;engineering=2;programming=2"
 	req_components = list(
 							"/obj/item/weapon/stock_parts/scanning_module" = 1,
@@ -168,7 +168,7 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/autolathe
 	name = "Circuit board (Autolathe)"
-	build_path = "/obj/machinery/autolathe"
+	build_path = /obj/machinery/autolathe
 	origin_tech = "engineering=2;programming=2"
 	req_components = list(
 							"/obj/item/weapon/stock_parts/matter_bin" = 3,
@@ -177,7 +177,7 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/protolathe
 	name = "Circuit board (Protolathe)"
-	build_path = "/obj/machinery/r_n_d/protolathe"
+	build_path = /obj/machinery/r_n_d/protolathe
 	origin_tech = "engineering=2;programming=2"
 	req_components = list(
 							"/obj/item/weapon/stock_parts/matter_bin" = 2,
@@ -187,7 +187,7 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/circuit_imprinter
 	name = "Circuit board (Circuit Imprinter)"
-	build_path = "/obj/machinery/r_n_d/circuit_imprinter"
+	build_path = /obj/machinery/r_n_d/circuit_imprinter
 	origin_tech = "engineering=2;programming=2"
 	req_components = list(
 							"/obj/item/weapon/stock_parts/matter_bin" = 1,
@@ -196,7 +196,7 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/pacman
 	name = "Circuit Board (PACMAN-type Generator)"
-	build_path = "/obj/machinery/power/port_gen/pacman"
+	build_path = /obj/machinery/power/port_gen/pacman
 	origin_tech = "programming=3:powerstorage=3;plasmatech=3;engineering=3"
 	req_components = list(
 							"/obj/item/weapon/stock_parts/matter_bin" = 1,
@@ -206,17 +206,17 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/pacman/super
 	name = "Circuit Board (SUPERPACMAN-type Generator)"
-	build_path = "/obj/machinery/power/port_gen/pacman/super"
+	build_path = /obj/machinery/power/port_gen/pacman/super
 	origin_tech = "programming=3;powerstorage=4;engineering=4"
 
 /obj/item/weapon/circuitboard/machine/pacman/mrs
 	name = "Circuit Board (MRSPACMAN-type Generator)"
-	build_path = "/obj/machinery/power/port_gen/pacman/mrs"
+	build_path = /obj/machinery/power/port_gen/pacman/mrs
 	origin_tech = "programming=3;powerstorage=5;engineering=5"
 
 /obj/item/weapon/circuitboard/machine/rdserver
 	name = "Circuit Board (R&D Server)"
-	build_path = "/obj/machinery/r_n_d/server"
+	build_path = /obj/machinery/r_n_d/server
 	origin_tech = "programming=3"
 	req_components = list(
 							"/obj/item/weapon/cable_coil" = 2,
@@ -224,7 +224,7 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/mechfab
 	name = "Circuit board (Exosuit Fabricator)"
-	build_path = "/obj/machinery/mecha_part_fabricator"
+	build_path = /obj/machinery/mecha_part_fabricator
 	origin_tech = "programming=3;engineering=3"
 	req_components = list(
 							"/obj/item/weapon/stock_parts/matter_bin" = 2,
@@ -234,7 +234,7 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/clonepod
 	name = "Circuit board (Clone Pod)"
-	build_path = "/obj/machinery/clonepod"
+	build_path = /obj/machinery/clonepod
 	origin_tech = "programming=3;biotech=3"
 	req_components = list(
 							"/obj/item/weapon/cable_coil" = 2,
@@ -244,11 +244,31 @@ to destroy them and players will be able to make replacements.
 
 /obj/item/weapon/circuitboard/machine/clonescanner
 	name = "Circuit board (Cloning Scanner)"
-	build_path = "/obj/machinery/dna_scannernew"
+	build_path = /obj/machinery/dna_scannernew
 	origin_tech = "programming=2;biotech=2"
 	req_components = list(
 							"/obj/item/weapon/stock_parts/scanning_module" = 1,
 							"/obj/item/weapon/stock_parts/manipulator" = 1,
 							"/obj/item/weapon/stock_parts/micro_laser" = 1,
 							"/obj/item/weapon/stock_parts/console_screen" = 1,
-							"/obj/item/weapon/cable_coil" = 2,)
+							"/obj/item/weapon/cable_coil" = 2)
+
+/obj/item/weapon/circuitboard/machine/anoscan
+	name = "Circuit board (Anomaly Analyser)"
+	build_path = /obj/machinery/artifact_device/analyser
+	origin_tech = "magnets=3;programming=3"
+	req_components = list(
+							"/obj/item/weapon/stock_parts/scanning_module" = 2,
+							"/obj/item/weapon/stock_parts/manipulator" = 1,
+							"/obj/item/weapon/stock_parts/micro_laser" = 1,
+							"/obj/item/weapon/stock_parts/console_screen" = 1)
+
+/obj/item/weapon/circuitboard/machine/anocol
+	name = "Circuit board (Exotic Particle Harvester)"
+	build_path = /obj/machinery/artifact_device/harvester
+	origin_tech = "magnets=3;programming=3;powerstorage=4"
+	req_components = list(
+							"/obj/item/weapon/stock_parts/capacitor" = 3,
+							"/obj/item/weapon/stock_parts/manipulator" = 1,
+							"/obj/item/weapon/stock_parts/micro_laser" = 1,
+							"/obj/item/weapon/stock_parts/console_screen" = 1)

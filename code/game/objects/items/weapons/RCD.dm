@@ -16,7 +16,7 @@ RCD
 	var/working = 0
 	var/mode = 1
 	origin_tech = "engineering=4;materials=2"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 10.0
 	throwforce = 10.0
 	throw_speed = 1
@@ -34,7 +34,7 @@ RCD
 	opacity = 0
 	density = 0
 	anchored = 0.0
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 10.0
 	throwforce = 10.0
 	throw_speed = 1

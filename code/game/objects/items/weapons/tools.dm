@@ -13,7 +13,7 @@ WELDINGTOOOL
 	desc = "A wrench with common uses. Can be found in your hand."
 	icon = 'items.dmi'
 	icon_state = "wrench"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 5.0
 	throwforce = 7.0
 	w_class = 2.0
@@ -112,7 +112,7 @@ WELDINGTOOOL
 	origin_tech = "engineering=1"
 	var/welding = 0.0
 	var/status = 0	//flamethrower construction :shobon:
-	flags = FPRINT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 3.0
 	throwforce = 5.0
 	throw_speed = 1
@@ -449,7 +449,7 @@ WELDINGTOOOL
 	item_state = "gun"
 	origin_tech = "materials=4;plasmatech=3;engineering=3"
 	desc = "A rock cutter that uses bursts of hot plasma. You could use it to cut limbs off of xenos! Or, you know, mine stuff."
-	flags = FPRINT | TABLEPASS| CONDUCT | OPENCONTAINER
+	flags = FPRINT | CONDUCT | OPENCONTAINER
 	force = 7
 	slash = 0
 	m_amt = 4500

@@ -54,8 +54,8 @@
 			affected_mob.toxloss += 10
 			affected_mob.updatehealth()
 			if(prob(40)) //So everyone can feel like robot Seth Brundle
-				var/turf/T = find_loc(affected_mob)
+				var/turf/T = get_turf(affected_mob)
 				if(T)
-					gibs(T)
+					gibs(T, affected_mob.viruses)
 				affected_mob:Robotize()
 				src.cure(0)

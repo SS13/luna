@@ -39,7 +39,6 @@
 
 
 /obj/item/device/lightreplacer
-
 	name = "light replacer"
 	desc = "A device to automatically replace lights. Refill with working lightbulbs."
 
@@ -47,7 +46,8 @@
 	icon_state = "lightreplacer0"
 	item_state = "electronic"
 
-	flags = FPRINT | CONDUCT | ONBELT
+	flags = FPRINT | CONDUCT
+	slot_flags = SLOT_BELT
 	origin_tech = "magnets=3;materials=2"
 
 	var/max_uses = 20

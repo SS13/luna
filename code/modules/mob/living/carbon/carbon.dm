@@ -94,8 +94,7 @@
 		else
 			H.bloody_hands = initial(bloody_hands)
 			H.bloody_hands_mob = null
-			H.blood_DNA = initial(blood_DNA)
-			H.blood_type = initial(blood_type)
+			H.blood_DNA = list()
 	update_clothing()
 
 

@@ -2,8 +2,7 @@
 	name = "backpack"
 	desc = "You wear this on your back and put items into it."
 	icon_state = "backpack"
-	w_class = 4.0
-	flags = 259.0
+	w_class = 4
 	slot_flags = SLOT_BACK
 
 /obj/item/weapon/storage/backpack/clown
@@ -101,7 +100,7 @@
 /obj/item/weapon/storage/briefcase
 	name = "briefcase"
 	icon_state = "briefcase"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 8.0
 	throw_speed = 1
 	throw_range = 4
@@ -375,5 +374,4 @@
 	throw_speed = 1
 	throw_range = 5
 	w_class = 3.0
-	flags = FPRINT | TABLEPASS
 	var/mob/affecting = null

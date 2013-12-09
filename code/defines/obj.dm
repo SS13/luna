@@ -118,7 +118,8 @@
 	var/current = null
 	var/life = 50.0
 	anchored = 1.0
-	flags = TABLEPASS
+	flags = 0
+	pass_flags = PASSTABLE
 
 /obj/beam/i_beam
 	name = "i beam"
@@ -130,7 +131,8 @@
 	var/visible = 0.0
 	var/left = null
 	anchored = 1.0
-	flags = TABLEPASS
+	flags = 0
+	pass_flags = PASSTABLE
 
 /obj/begin
 	name = "begin"
@@ -172,10 +174,11 @@
 	var/burn_point = null
 	var/burning = null
 	var/hitsound = null
-	var/w_class = 3.0
+	var/w_class = 3
 	var/slot_flags = 0
-	var/captured_by_securitron = 0
-	flags = FPRINT | TABLEPASS
+	var/icon/blood_overlay = null
+	flags = FPRINT
+	pass_flags = PASSTABLE
 	pressure_resistance = 50
 	var/slowdown = 0
 	var/canremove = 1
@@ -198,7 +201,8 @@
 	var/printing = 0.0
 	w_class = 2.0
 	item_state = "electronic"
-	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT | USEDELAY
+	flags = FPRINT | CONDUCT | USEDELAY | NOHIT
+	slot_flags = SLOT_BELT
 
 
 /obj/item/device/infra
@@ -208,7 +212,7 @@
 	var/obj/beam/i_beam/first = null
 	var/state = 0.0
 	var/visible = 0.0
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	w_class = 2.0
 	item_state = "electronic"
 	m_amt = 150
@@ -218,7 +222,7 @@
 	desc = "Scans for infrared beams in the vicinity."
 	icon_state = "infra_sensor"
 	var/passive = 1.0
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	item_state = "electronic"
 	m_amt = 150
 
@@ -227,7 +231,8 @@
 	desc = "A terahertz-ray emitter and scanner used to detect underfloor objects such as cables and pipes."
 	icon_state = "t-ray0"
 	var/on = 0
-	flags = FPRINT|ONBELT|TABLEPASS
+	flags = FPRINT
+	slot_flags = SLOT_BELT
 	w_class = 2
 	item_state = "electronic"
 	origin_tech = "magnets=2;engineering=2"
@@ -236,7 +241,7 @@
 /obj/item/device/multitool
 	name = "multitool"
 	icon_state = "multitool"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 5.0
 	w_class = 2.0
 	throwforce = 5.0
@@ -252,7 +257,7 @@
 	name = "hacktool"
 	icon_state = "hacktool"
 	origin_tech = "magnets=2;engineering=5;syndicate=3"
-	flags = FPRINT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 5.0
 	w_class = 2.0
 	throwforce = 5.0
@@ -268,7 +273,7 @@
 	var/state = 0.0
 	var/timing = 0.0
 	var/time = null
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	w_class = 2.0
 	item_state = "electronic"
 	m_amt = 300
@@ -280,7 +285,7 @@
 	item_state = "electronic"
 	var/timing = 0.0
 	var/time = null
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	w_class = 2.0
 	m_amt = 100
 
@@ -385,7 +390,7 @@
 	name = "screen"
 	icon = 'screen1.dmi'
 	layer = 20
-	anchored = 1
+	//anchored = 1
 	var/id = 0
 	var/obj/master
 

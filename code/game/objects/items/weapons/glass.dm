@@ -53,11 +53,11 @@ obj/item/weapon/shard
 /obj/item/weapon/shard/HasEntered(AM as mob|obj)
 	if(ismob(AM))
 		var/mob/M = AM
-		M << "\red <B>You step in the broken glass!</B>"
 		playsound(src.loc, 'glass_step.ogg', 50, 1)
 		if(ishuman(M))
 			var/mob/living/carbon/human/H = M
 			if(!H.shoes)
+				M << "\red <B>You step in the broken glass!</B>"
 				var/datum/organ/external/affecting = H.organs[pick("l_foot", "r_foot")]
 				H.weakened = max(3, H.weakened)
 				affecting.take_damage(5, 0)

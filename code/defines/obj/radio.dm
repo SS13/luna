@@ -7,7 +7,8 @@
 	var/e_pads = 0.0
 	frequency = 1449
 	w_class = 5.0
-	flags = 323
+	flags = 322
+	slot_flags = SLOT_BACK
 	item_state = "electropack"
 
 /obj/item/device/radio/signaler

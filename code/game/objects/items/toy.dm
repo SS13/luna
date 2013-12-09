@@ -59,7 +59,8 @@
 	name = "singularity engine"
 	desc = "A small but fully operational singularity engine. Can be used as lighter or disposal bin."
 	icon_state = "singulo_base"
-	flags = TABLEPASS | CONDUCT | ONBELT
+	flags = CONDUCT
+	slot_flags = SLOT_BELT
 	var/on = 0
 
 /obj/item/toy/minisingulo/New()
@@ -99,7 +100,7 @@
 	icon = 'icons/obj/gun.dmi'
 	icon_state = "revolver"
 	item_state = "gun"
-	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBELT
+	flags =  FPRINT | CONDUCT | USEDELAY
 	slot_flags = SLOT_BELT
 	w_class = 3.0
 	g_amt = 10
@@ -154,7 +155,7 @@
 	desc = "There are 7 caps left! Make sure to recyle the box in an autolathe when it gets empty."
 	icon = 'icons/obj/ammo.dmi'
 	icon_state = "357-7"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	w_class = 1.0
 	g_amt = 10
 	m_amt = 10
@@ -175,7 +176,7 @@
 	icon = 'icons/obj/gun.dmi'
 	icon_state = "crossbow"
 	item_state = "crossbow"
-	flags = FPRINT | TABLEPASS | USEDELAY
+	flags = FPRINT | USEDELAY
 	w_class = 2.0
 	attack_verb = list("attacked", "struck", "hit")
 	var/bullets = 5
@@ -270,7 +271,6 @@
 	name = "foam dart"
 	desc = "Its nerf or nothing! Ages 8 and up."
 	icon_state = "foamdart"
-	flags = FPRINT | TABLEPASS
 	w_class = 1.0
 
 /obj/effect/foam_dart_dummy
@@ -293,7 +293,7 @@
 	item_state = "sword0"
 	var/active = 0.0
 	w_class = 2.0
-	flags = FPRINT | TABLEPASS | NOSHIELD
+	flags = FPRINT | NOSHIELD
 	attack_verb = list("attacked", "struck", "hit")
 	New()
 		..()
@@ -323,7 +323,7 @@
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "katana"
 	item_state = "katana"
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBACK | ONBELT
+	flags = FPRINT | CONDUCT
 	slot_flags = SLOT_BELT | SLOT_BACK
 	force = 5
 	throwforce = 5
@@ -483,7 +483,7 @@
 	icon = 'icons/obj/assemblies.dmi'
 	icon_state = "plastic-explosive0"
 	item_state = "plasticx"
-	flags = FPRINT | TABLEPASS | USEDELAY
+	flags = FPRINT | USEDELAY | NOHIT
 	w_class = 2
 	var/timer = 10
 	var/atom/target = null

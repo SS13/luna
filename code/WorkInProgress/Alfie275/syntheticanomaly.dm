@@ -1,11 +1,9 @@
-
-
 /obj/item/weapon/anobattery
 	name = "anomaly power battery"
 	icon = 'anomaly.dmi'
 	icon_state = "anobattery0"
 	origin_tech = "powerstorage=3;bluespace=1;magnets=3"
-	var/list/datum/anomalyeffect/e = list()
+	var/list/datum/anomalyeffect/effects = list()
 	var/capacity = 200
 
 	var/list/power = list()
@@ -27,11 +25,11 @@
 		curpower += power["[v]"]
 	if(curpower+npower > capacity)
 		return 0
-	if(!e["[n.effectname]"])
-		e["[n.effectname]"]=n
+	if(!effects["[n.effectname]"])
+		effects["[n.effectname]"]=n
 		n.range=1
 		n.magnitude=1
-		n.o = src
+		n.anomaly_object = src
 	power["[n.effectname]"]+=npower
 	UpdateSprite()
 	return 1
@@ -78,8 +76,6 @@
 	icon_state = "anodev[s]"
 
 /obj/item/weapon/anodevice/interact(var/mob/user)
-
-
 	user.machine = src
 
 	var/dat
@@ -92,8 +88,8 @@
 		if(b)
 			dat += "<BR>[b.name] inserted <BR> Total Power - [b.GetTotalPower()]/[b.capacity]"
 			dat += "<BR>Effects:"
-			for(var/v in b.e)
-				var/datum/anomalyeffect/e = b.e["[v]"]
+			for(var/v in b.effects)
+				var/datum/anomalyeffect/e = b.effects["[v]"]
 				dat += "<BR>	[e.fluff] <BR>		power	[e.magnitude*(e.range+1)]/[b.power["[e.effectname]"]]<BR>magnitude [e.magnitude]<A href='?src=\ref[src];mu=[e.effectname]'>+</a> <A href='?src=\ref[src];muu=[e.effectname]'>++</a> <A href='?src=\ref[src];mdd=[e.effectname]'>--</a> <A href='?src=\ref[src];md=[e.effectname]'>-</a><BR>range [e.range]<A href='?src=\ref[src];ru=[e.effectname]'>+</a> <A href='?src=\ref[src];ruu=[e.effectname]'>++</a> <A href='?src=\ref[src];rdd=[e.effectname]'>-</a> <A href='?src=\ref[src];rd=[e.effectname]'>-</a>"
 			dat+="<BR> Estimated cooldown [round(ccooldown()/4)+1]"
 			dat += "<BR><A href='?src=\ref[src];a=1'>Activate</a>"
@@ -119,9 +115,9 @@
 			user << "You insert the battery."
 			user.drop_item()
 			I.loc = src
-			for(var/v in I:e)
-				var/datum/anomalyeffect/e = I:e["[v]"]
-				e.o = src
+			for(var/v in I:effects)
+				var/datum/anomalyeffect/e = I:effects["[v]"]
+				e.anomaly_object = src
 			src.b = I
 			UpdateSprite()
 	else
@@ -147,8 +143,8 @@
 				src.attack_self(M)
 		if(!time)
 			if(!cooldown)
-				for(var/v in b.e)
-					var/datum/anomalyeffect/e = b.e["[v]"]
+				for(var/v in b.effects)
+					var/datum/anomalyeffect/e = b.effects["[v]"]
 					b.TakePower(e,e.magnitude*(e.range+1))
 					e.Activate()
 				processing_items.Add(src)
@@ -164,8 +160,8 @@
 				m<<"The [src.name] [t]"
 			if(!timing)
 				processing_items.Remove(src)
-			for(var/v in b.e)
-				var/datum/anomalyeffect/e = b.e["[v]"]
+			for(var/v in b.effects)
+				var/datum/anomalyeffect/e = b.effects["[v]"]
 				if(e.magnitude*(e.range+1)>b.power["[e.effectname]"])
 					e.magnitude = 1
 					e.range = 0
@@ -175,8 +171,8 @@
 
 /obj/item/weapon/anodevice/proc/ccooldown()
 	var/power
-	for(var/v in b.e)
-		var/datum/anomalyeffect/e = b.e["[v]"]
+	for(var/v in b.effects)
+		var/datum/anomalyeffect/e = b.effects["[v]"]
 		power+=e.magnitude*(e.range+1)
 	return power
 
@@ -186,42 +182,42 @@
 
 		if (href_list["mu"])
 			var/effectname = href_list["mu"]
-			var/datum/anomalyeffect/e = b.e["[effectname]"]
+			var/datum/anomalyeffect/e = b.effects["[effectname]"]
 			if((e.magnitude+1)*(e.range+1)<=b.power["[effectname]"])
 				e.magnitude++
 		if (href_list["ru"])
 			var/effectname = href_list["ru"]
-			var/datum/anomalyeffect/e = b.e["[effectname]"]
+			var/datum/anomalyeffect/e = b.effects["[effectname]"]
 			if((e.range+2)*e.magnitude<=b.power["[effectname]"])
 				e.range++
 		if (href_list["md"])
 			var/effectname = href_list["md"]
-			var/datum/anomalyeffect/e = b.e["[effectname]"]
+			var/datum/anomalyeffect/e = b.effects["[effectname]"]
 			if(e.magnitude>0)
 				e.magnitude--
 		if (href_list["rd"])
 			var/effectname = href_list["rd"]
-			var/datum/anomalyeffect/e = b.e["[effectname]"]
+			var/datum/anomalyeffect/e = b.effects["[effectname]"]
 			if(e.range>0)
 				e.range--
 		if (href_list["muu"])
 			var/effectname = href_list["muu"]
-			var/datum/anomalyeffect/e = b.e["[effectname]"]
+			var/datum/anomalyeffect/e = b.effects["[effectname]"]
 			if((e.magnitude+10)*(e.range+1)<=b.power["[effectname]"])
 				e.magnitude+=10
 		if (href_list["ruu"])
 			var/effectname = href_list["ruu"]
-			var/datum/anomalyeffect/e = b.e["[effectname]"]
+			var/datum/anomalyeffect/e = b.effects["[effectname]"]
 			if((e.range+11)*e.magnitude<=b.power["[effectname]"])
 				e.range+=10
 		if (href_list["mdd"])
 			var/effectname = href_list["mdd"]
-			var/datum/anomalyeffect/e = b.e["[effectname]"]
+			var/datum/anomalyeffect/e = b.effects["[effectname]"]
 			if(e.magnitude-10>0)
 				e.magnitude-=10
 		if (href_list["rdd"])
 			var/effectname = href_list["rrd"]
-			var/datum/anomalyeffect/e = b.e["[effectname]"]
+			var/datum/anomalyeffect/e = b.effects["[effectname]"]
 			if(e.range-10>=0)
 				e.range-=10
 		if(href_list["st"])
@@ -239,8 +235,8 @@
 				time -= amt
 
 		if (href_list["a"])
-			for(var/v in b.e)
-				var/datum/anomalyeffect/e = b.e["[v]"]
+			for(var/v in b.effects)
+				var/datum/anomalyeffect/e = b.effects["[v]"]
 				b.TakePower(e,e.magnitude*(e.range+1))
 				e.Activate()
 
@@ -249,9 +245,9 @@
 			cooldown=round(ccooldown()/4)+1
 		if (href_list["ejectb"])
 			src.b.loc = get_turf(src)
-			for(var/v in b.e)
-				var/datum/anomalyeffect/e = b.e["[v]"]
-				e.o = b
+			for(var/v in b.effects)
+				var/datum/anomalyeffect/e = b.effects["[v]"]
+				e.anomaly_object = b
 			src.b = null
 			UpdateSprite()
 		if (href_list["close"])
