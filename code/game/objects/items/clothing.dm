@@ -125,7 +125,7 @@ DEATH COMMANDO GAS MASK
 	name = "Death Commando Suit"
 	icon_state = "death_commando_suit"
 	item_state = "death_commando_suit"
-	flags = FPRINT | TABLEPASS | SUITSPACE
+	flags = FPRINT | SUITSPACE
 
 /obj/item/clothing/mask/gas/death_commando
 	name = "Death Commando Mask"

@@ -1396,7 +1396,7 @@ datum
 					M:adjustFireLoss(5 * max(1, volume / 10))
 
 			reaction_obj(var/obj/O, var/volume)
-				if(istype(O,/obj/item/weapon/artifact))
+				if(istype(O,/obj/item/weapon/ore/artifact))
 					O:acid(volume)
 					return
 				if(istype(O,/obj/item) && prob(10) && !O.unacidable)
@@ -1445,7 +1445,7 @@ datum
 					M:adjustFireLoss(5 * max(1, volume / 10))
 
 			reaction_obj(var/obj/O, var/volume)
-				if(istype(O,/obj/item/weapon/artifact))
+				if(istype(O,/obj/item/weapon/ore/artifact))
 					O:acid(volume)
 					return
 				if(istype(O,/obj/item) && !O.unacidable)

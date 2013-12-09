@@ -2,7 +2,7 @@
 #define THERMAL_RELEASE_MODIFIER 50		//Higher == less heat released during reaction
 #define PLASMA_RELEASE_MODIFIER 750		//Higher == less plasma released by reaction
 #define OXYGEN_RELEASE_MODIFIER 1500	//Higher == less oxygen released at high temperature/power
-#define REACTION_POWER_MODIFIER 1.5		//Higher == more overall power
+#define REACTION_POWER_MODIFIER 1.4		//Higher == more overall power
 
 /obj/machinery/engine/supermatter
 	name = "Supermatter"
@@ -18,7 +18,7 @@
 	var/previousdet = 0
 	var/const/explosiondet = 3500
 
-	var/const/warningtime = 50 	// Make the CORE OVERLOAD message repeat only every aprox. ?? seconds
+	var/const/warningtime = 60 	// Make the CORE OVERLOAD message repeat only every aprox. ?? seconds
 	var/lastwarning = 0			// Time in 1/10th of seconds since the last sent warning
 
 /obj/machinery/engine/klaxon
@@ -49,10 +49,10 @@
 	var/datum/gas_mixture/removed = env.remove(transfer_moles)
 
 	previousdet = det
-	det += (removed.temperature - 1500) / 150
+	det += (removed.temperature - 1100) / 150
 	det = max(det, 0)
 
-	if(det > 0 && removed.temperature > 1500) // while the core is still damaged and it's still worth noting its status
+	if(det > 0 && removed.temperature > 1100) // while the core is still damaged and it's still worth noting its status
 		if((world.realtime - lastwarning) / 10 >= warningtime)
 			lastwarning = world.realtime
 			if(explosiondet - det <= 300)
@@ -109,7 +109,7 @@
 
 	for(var/mob/living/l in range(src, 6)) // you have to be seeing the core to get hallucinations
 		if(prob(10) && !(l.glasses && istype(l.glasses, /obj/item/clothing/glasses/meson)))
-			l.hallucination += 30
+			l.hallucination += 20
 
 	for(var/mob/living/l in range(src,3))
 		l.gib()

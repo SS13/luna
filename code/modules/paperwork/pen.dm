@@ -14,7 +14,8 @@
 	name = "pen"
 	icon = 'icons/obj/bureaucracy.dmi'
 	icon_state = "pen"
-	flags = FPRINT | ONBELT | TABLEPASS
+	flags = FPRINT
+	slot_flags = SLOT_BELT
 	throwforce = 0
 	w_class = 1.0
 	throw_speed = 7
@@ -41,7 +42,8 @@
 /obj/item/weapon/pen/sleepypen
 	desc = "It's a normal black ink pen with a sharp point."
 	origin_tech = "materials=2;syndicate=5"
-	flags = FPRINT | ONBELT | TABLEPASS | OPENCONTAINER
+	flags = FPRINT | OPENCONTAINER
+	slot_flags = SLOT_BELT
 
 /obj/item/weapon/pen/sleepypen/New()
 	var/datum/reagents/R = new/datum/reagents(120)
@@ -70,7 +72,8 @@
 /obj/item/weapon/pen/deathpen
 	desc = "It's a normal black ink pen with a sharp point."
 	origin_tech = "materials=2;syndicate=5"
-	flags = FPRINT | ONBELT | TABLEPASS | OPENCONTAINER
+	flags = FPRINT | OPENCONTAINER
+	slot_flags = SLOT_BELT
 
 /obj/item/weapon/pen/sleepypen/New()
 	var/datum/reagents/R = new/datum/reagents(80)

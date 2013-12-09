@@ -53,7 +53,7 @@
 	return
 
 /obj/machinery/bodyscanner/proc/go_out()
-	if ((!( src.occupant ) || src.locked))
+	if (!src.occupant || src.locked)
 		return
 	for(var/obj/O in src)
 		O.loc = src.loc
@@ -67,7 +67,7 @@
 	return
 
 /obj/machinery/bodyscanner/attackby(obj/item/weapon/grab/G as obj, user as mob)
-	if ((!( istype(G, /obj/item/weapon/grab) ) || !( ismob(G.affecting) )))
+	if (!istype(G, /obj/item/weapon/grab) || !ismob(G.affecting))
 		return
 	if (src.occupant)
 		user << "\blue <B>The scanner is already occupied!</B>"
@@ -84,9 +84,8 @@
 	src.icon_state = "body_scanner_1"
 	for(var/obj/O in src)
 		O.loc = src.loc
-		//Foreach goto(154)
+
 	src.add_fingerprint(user)
-	//G = null
 	del(G)
 	return
 
@@ -241,6 +240,9 @@
 				dat += "<th>Other Wounds</th>"
 				dat += "</tr>"
 				for(var/datum/organ/external/e in occupant.GetOrgans())
+					if(!e.status)
+						continue
+
 					dat += "<tr>"
 					var/AN = ""
 					var/open = ""

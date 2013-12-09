@@ -37,7 +37,7 @@
 	icon_state = "rig-engineering"
 	item_state = "eng_hardsuit"
 	slowdown = 1
-	armor = list(melee = 10, bullet = 5, laser = 10,energy = 5, bomb = 10, bio = 100, rad = 75)
+	armor = list(melee = 10, bullet = 5, laser = 10,energy = 10, bomb = 10, bio = 100, rad = 75)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/t_scanner, /obj/item/weapon/rcd)
 	airflowprot = 1
 
@@ -70,7 +70,7 @@
 	icon_state = "rig0-white"
 	item_state = "ce_helm"
 	item_color = "white"
-	armor = list(melee = 40, bullet = 10, laser = 15,energy = 15, bomb = 50, bio = 100, rad = 90)
+	armor = list(melee = 40, bullet = 10, laser = 15,energy = 30, bomb = 50, bio = 100, rad = 90)
 	protective_temperature = 30000
 //	heat_protection = HEAD
 //	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
@@ -81,7 +81,7 @@
 	desc = "An advanced suit that protects against hazardous, low pressure environments. Shines with a high polish."
 	item_state = "ce_hardsuit"
 	slowdown = 0
-	armor = list(melee = 40, bullet = 10, laser = 15,energy = 15, bomb = 50, bio = 100, rad = 90)
+	armor = list(melee = 40, bullet = 10, laser = 15,energy = 30, bomb = 50, bio = 100, rad = 90)
 	protective_temperature = 30000
 	reflectchance = 20 //So shiny!
 //	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS

@@ -4,6 +4,7 @@
 	item_state = "assembly"
 	var/status = 0.0
 	throwforce = 10
+	flags = FPRINT | CONDUCT
 	w_class = 3.0
 	throw_speed = 4
 	throw_range = 10
@@ -16,7 +17,6 @@
 	var/obj/item/device/igniter/part2 = null
 	var/obj/item/clothing/suit/armor/vest/part3 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/m_i_ptank
 	desc = "A very intricate igniter and proximity sensor electrical assembly mounted onto top of a plasma tank."
@@ -25,8 +25,6 @@
 	var/obj/item/device/prox_sensor/part1 = null
 	var/obj/item/device/igniter/part2 = null
 	var/obj/item/weapon/tank/plasma/part3 = null
-	status = 0.0
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/prox_ignite
 	name = "Proximity/Igniter Assembly"
@@ -35,7 +33,6 @@
 	var/obj/item/device/prox_sensor/part1 = null
 	var/obj/item/device/igniter/part2 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/r_i_ptank
 	desc = "A very intricate igniter and signaller electrical assembly mounted onto top of a plasma tank."
@@ -44,8 +41,6 @@
 	var/obj/item/device/radio/signaler/part1 = null
 	var/obj/item/device/igniter/part2 = null
 	var/obj/item/weapon/tank/plasma/part3 = null
-	status = 0.0
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/anal_ignite
 	name = "Health-Analyzer/Igniter Assembly"
@@ -54,7 +49,6 @@
 	var/obj/item/device/healthanalyzer/part1 = null
 	var/obj/item/device/igniter/part2 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 	item_state = "electronic"
 
 /obj/item/assembly/time_ignite
@@ -65,7 +59,6 @@
 	var/obj/item/device/igniter/part2 = null
 	var/init = 0
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/t_i_ptank
 	desc = "A very intricate igniter and timer assembly mounted onto top of a plasma tank."
@@ -74,8 +67,6 @@
 	var/obj/item/device/timer/part1 = null
 	var/obj/item/device/igniter/part2 = null
 	var/obj/item/weapon/tank/plasma/part3 = null
-	status = 0.0
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/rad_ignite
 	name = "Radio/Igniter Assembly"
@@ -84,7 +75,6 @@
 	var/obj/item/device/radio/signaler/part1 = null
 	var/obj/item/device/igniter/part2 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/rad_infra
 	name = "Signaller/Infrared Assembly"
@@ -93,7 +83,6 @@
 	var/obj/item/device/radio/signaler/part1 = null
 	var/obj/item/device/infra/part2 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/rad_prox
 	name = "Signaller/Prox Sensor Assembly"
@@ -102,7 +91,6 @@
 	var/obj/item/device/radio/signaler/part1 = null
 	var/obj/item/device/prox_sensor/part2 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/rad_time
 	name = "Signaller/Timer Assembly"
@@ -111,16 +99,13 @@
 	var/obj/item/device/radio/signaler/part1 = null
 	var/obj/item/device/timer/part2 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/shock_kit
 	name = "Shock Kit"
 	icon_state = "shock_kit"
 	var/obj/item/clothing/head/helmet/part1 = null
 	var/obj/item/device/radio/electropack/part2 = null
-	status = 0.0
 	w_class = 5.0
-	flags = FPRINT | TABLEPASS| CONDUCT
 
 /obj/item/assembly/weld_rod
 	desc = "A welding torch with metal rods attached to the flame tip."
@@ -130,7 +115,6 @@
 	var/obj/item/weapon/weldingtool/part1 = null
 	var/obj/item/stack/rods/part2 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 	force = 3.0
 	throwforce = 5.0
 	throw_speed = 1
@@ -146,7 +130,6 @@
 	var/obj/item/stack/rods/part2 = null
 	var/obj/item/device/igniter/part3 = null
 	status = null
-	flags = FPRINT | TABLEPASS| CONDUCT
 	force = 3.0
 	throwforce = 5.0
 	throw_speed = 1

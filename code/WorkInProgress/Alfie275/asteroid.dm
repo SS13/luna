@@ -1,4 +1,3 @@
-
 /obj/effect/landmark/mapload
 	name = "Mapload marker"
 

@@ -774,10 +774,14 @@
 
 		if(!istype(src.loc, /turf/space))
 			var/obj/effect/decal/cleanable/blood/B = new(src.loc)
-			B.blood_DNA = H.dna.unique_enzymes
-			B.blood_type = H.b_type
-			if(H.virus2)
-				B.virus2 = H.virus2.getcopy()
+			if(B.blood_DNA[H.dna.unique_enzymes])
+				return 0 //already bloodied with this blood. Cannot add more.
+			B.blood_DNA[H.dna.unique_enzymes] = H.b_type
+
+			for(var/datum/disease/D in H.viruses)
+				var/datum/disease/newDisease = D.Copy(1)
+				B.viruses += newDisease
+				newDisease.holder = B
 
 		bloodiness += 4
 

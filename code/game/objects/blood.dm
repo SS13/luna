@@ -14,8 +14,7 @@
 			sleep(3)
 			if (i > 0)
 				var/obj/effect/decal/cleanable/blood/b = new /obj/effect/decal/cleanable/blood/splatter(src.loc)
-				if (src.virus)
-					b.virus = src.virus
+				b.CopyBlood(src)
 			if (step_to(src, get_step(src, direction), 0))
 				break
 
@@ -42,7 +41,7 @@
 
 	New()
 		..()
-		ul_SetLuminosity(1)
+		ul_SetLuminosity(0,1,0)
 
 		spawn(1200)		// 2 minutes
 			del(src)

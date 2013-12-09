@@ -7,11 +7,28 @@
 	icon = 'blood.dmi'
 	icon_state = "floor1"
 	random_icon_states = list("floor1", "floor2", "floor3", "floor4", "floor5", "floor6", "floor7")
-	var/datum/disease/virus = null
-	var/datum/disease2/virus2 = null
-	blood_DNA = null
-	blood_type = null
 	var/mob/blood_owner = null
+
+/obj/effect/decal/cleanable/blood/proc/AddHumanBlood(var/mob/living/carbon/human/M)
+	blood_DNA[M.dna.unique_enzymes] = M.b_type
+	for(var/datum/disease/D in M.viruses)
+		var/datum/disease/newDisease = D.Copy(1)
+		viruses += newDisease
+		newDisease.holder = src
+	blood_owner = src
+
+/obj/effect/decal/cleanable/blood/proc/CopyBlood(var/obj/effect/decal/cleanable/blood/B)
+	blood_DNA += B.blood_DNA.Copy()
+	for(var/datum/disease/D in B.viruses)
+		var/datum/disease/newDisease = D.Copy(1)
+		viruses += newDisease
+		newDisease.holder = src
+
+/obj/effect/decal/cleanable/blood/proc/CopyViruses(var/list/vir)
+	for(var/datum/disease/D in vir)
+		var/datum/disease/newDisease = D.Copy(1)
+		viruses += newDisease
+		newDisease.holder = src
 
 /obj/effect/decal/cleanable/blood/drip
 	name = "drips of blood"
@@ -21,8 +38,6 @@
 	layer = 2
 	icon = 'drip.dmi'
 	icon_state = "1"
-	blood_DNA = null
-	blood_type = null
 /obj/effect/decal/cleanable/blood/splatter
 	random_icon_states = list("gibbl1", "gibbl2", "gibbl3", "gibbl4", "gibbl5")
 

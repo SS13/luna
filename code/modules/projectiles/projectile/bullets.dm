@@ -8,7 +8,7 @@
 
 
 /obj/item/projectile/bullet/weakbullet
-	damage = 10
+	damage = 15
 	stun = 5
 	weaken = 10
 
@@ -75,5 +75,8 @@
 
 /obj/item/projectile/bullet/dart/syringe
 	name = "syringe"
-	icon = 'chemical.dmi'
-	icon_state = "syringeproj"
+	icon_state = "syringe"
+
+/obj/item/projectile/bullet/implanter
+	name = "implant"
+	var/obj/item/weapon/implant/imp = null

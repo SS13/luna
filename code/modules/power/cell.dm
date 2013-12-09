@@ -9,7 +9,7 @@
 	icon_state = "cell"
 	item_state = "cell"
 	origin_tech = "powerstorage=1"
-	flags = FPRINT|TABLEPASS
+	flags = FPRINT | CONDUCT
 	force = 5.0
 	throwforce = 5.0
 	throw_speed = 3

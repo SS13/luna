@@ -188,7 +188,6 @@
 
 //Changeling mode stuff
 	var/changeling_absorbing = 0
-	var/changeling_fakedeath = 0
 	var/changeling_level = 0
 	var/list/absorbed_dna = list()
 
@@ -462,6 +461,7 @@ mob/verb/turnwest()
 	var/killing = 0
 	var/allow_upgrade = 1
 	var/last_suffocate = 1
+	flags = NOHIT
 	layer = 21
 	abstract = 1
 	item_state = "nothing"
@@ -1497,10 +1497,13 @@ mob/verb/turnwest()
 		usr << "\blue <B>You must be dead to use this!</B>"
 		return
 
-	if (!abandon_allowed && !ticker.mode.name == "Sandbox")
+	if(!ticker.mode)
 		return
 
-	if (ticker.mode.name == "AutoTraitor")
+	if(!abandon_allowed && ticker.mode.name != "Sandbox")
+		return
+
+	if(ticker.mode.name == "AutoTraitor")
 		var/deathtime = world.time - src.timeofdeath
 		var/deathtimeminutes = round(deathtime / 600)
 		var/pluralcheck = "minute"
@@ -2189,7 +2192,7 @@ mob/verb/turnwest()
 
 /mob/proc/gib(give_medal)
 	if (istype(src, /mob/dead/observer))
-		gibs(loc, virus)
+		gibs(loc, viruses)
 		return
 	death(1)
 	var/atom/movable/overlay/animation = null
@@ -2211,15 +2214,15 @@ mob/verb/turnwest()
 		src:client:mob = newmob
 		mind.transfer_to(newmob)
 		if(istype(src,/mob/living/silicon/robot))	//Robots don't gib like humans! - Strumpetplaya
-			robogibs(loc,virus)
+			robogibs(loc,viruses)
 		else
-			gibs(loc, virus)
+			gibs(loc, viruses)
 
 	else if (!client)
 		if(istype(src,/mob/living/silicon/robot))
-			robogibs(loc,virus)
+			robogibs(loc,viruses)
 		else
-			gibs(loc, virus,src:virus2)
+			gibs(loc, viruses)
 	var/mob/M = src
 	for(var/obj/item/W in M)
 		if (istype(W,/obj/item))

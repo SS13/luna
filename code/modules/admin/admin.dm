@@ -695,22 +695,21 @@
 			alert("Cannot make this mob a traitor")
 		*/
 
-	if (href_list["create_object"])
-		if (src.rank in list("Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"))
-			return create_object(usr)
-		else
-			alert("You are not a high enough administrator! Sorry!!!!")
+	if (href_list["create"])
 
-	if (href_list["create_turf"])
-		if (src.rank in list("Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"))
-			return create_turf(usr)
+		if(src.rank in list("Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"))
+			switch(href_list["create"])
+				if("object")
+					return create_object(usr)
+				if("turf")
+					return create_turf(usr)
+				if("mob")
+					return create_mob(usr)
+				if("item")
+					return create_item(usr)
 		else
-			alert("You are not a high enough administrator! Sorry!!!!")
-	if (href_list["create_mob"])
-		if (src.rank in list("Super Administrator", "Coder", "Host"))
-			return create_mob(usr)
-		else
-			alert("You are not a high enough administrator! Sorry!!!!")
+			alert("You are not a high enough administrator")
+
 	if (href_list["vmode"])
 		vmode()
 
@@ -1366,11 +1365,12 @@
 
 	dat += "<BR>"
 
-	if(lvl >= 3 )
-		dat += "<A href='?src=\ref[src];create_object=1'>Create Object</A><br>"
-		dat += "<A href='?src=\ref[src];create_turf=1'>Create Turf</A><br>"
+	if(lvl >= 3)
+		dat += "<A href='?src=\ref[src];create=object'>Create Object</A><br>"
+		dat += "<A href='?src=\ref[src];create=item'>Create Item</A><br>"
+		dat += "<A href='?src=\ref[src];create=turf'>Create Turf</A><br>"
 	if(lvl >= 5)
-		dat += "<A href='?src=\ref[src];create_mob=1'>Create Mob</A><br>"
+		dat += "<A href='?src=\ref[src];create=mob'>Create Mob</A><br>"
 //			if(lvl == 6 )
 	if(lvl >= 3)
 		dat += "<br><A href='?src=\ref[src];editairflow=1'>Edit Airflow</A>"

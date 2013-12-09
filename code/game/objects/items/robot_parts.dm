@@ -6,7 +6,8 @@
 	icon = 'robot_parts.dmi'
 	item_state = "buildpipe"
 	icon_state = "blank"
-	flags = FPRINT | ONBELT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
+	slot_flags = SLOT_BELT
 
 /obj/item/robot_parts/l_arm
 	name = "cyborg left arm"

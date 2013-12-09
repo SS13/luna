@@ -1,0 +1,74 @@
+"aa" = (/turf/simulated/mineral/random,/area/asteroid)
+"ab" = (/turf/simulated/wall,/area/asteroid)
+"ac" = (/obj/structure/table{dir = 10; icon_state = "tabledir"; tag = ""},/obj/item/weapon/reagent_containers/glass/beaker/large,/obj/item/weapon/reagent_containers/dropper,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"ad" = (/obj/structure/table{icon_state = "tabledir"; dir = 2},/obj/machinery/light{dir = 1},/obj/item/weapon/reagent_containers/glass/bottle/pacid,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"ae" = (/obj/structure/table{tag = "icon-tabledir (SOUTHEAST)"; icon_state = "tabledir"; dir = 6},/obj/item/weapon/storage/box/pillbottle,/obj/item/weapon/storage/box/pillbottle,/obj/item/weapon/storage/box/pillbottle,/obj/item/weapon/storage/box/pillbottle,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"af" = (/obj/structure/table{icon_state = "tabledir"; dir = 2},/obj/machinery/light{dir = 1},/obj/item/stack/sheet/mineral/plasma,/obj/item/weapon/reagent_containers/glass/bottle/mutagen,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"ag" = (/obj/machinery/chem_dispenser,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"ah" = (/obj/structure/stool/bed/chair{dir = 1},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"ai" = (/obj/machinery/chem_master{pixel_x = -4},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aj" = (/obj/structure/table{dir = 5; icon_state = "tabledir"},/obj/item/weapon/storage/box/beaker,/obj/item/weapon/storage/box/syringes,/turf/simulated/floor{dir = 2; icon_state = "warnwhitecorner"; tag = "icon-warnwhitecorner (SOUTHWEST)"},/area/asteroid)
+"ak" = (/turf/simulated/floor{tag = "icon-warnwhite"; icon_state = "warnwhite"; dir = 2},/area/asteroid)
+"al" = (/obj/structure/closet,/obj/item/clothing/gloves/latex,/obj/item/clothing/shoes/white,/obj/item/clothing/under/color/white,/obj/item/weapon/storage/box/syringes,/obj/item/weapon/storage/box/beaker,/obj/item/clothing/suit/storage/labcoat,/turf/simulated/floor{tag = "icon-warnwhitecorner (NORTH)"; icon_state = "warnwhitecorner"; dir = 1},/area/asteroid)
+"am" = (/obj/structure/table{dir = 5; icon_state = "tabledir"},/obj/item/weapon/storage/box/beaker,/obj/item/weapon/storage/box/syringes,/obj/item/weapon/reagent_containers/pill/cyanide,/turf/simulated/floor{dir = 2; icon_state = "warnwhitecorner"; tag = "icon-warnwhitecorner (SOUTHWEST)"},/area/asteroid)
+"an" = (/obj/machinery/light{dir = 1},/turf/simulated/floor/plating/airless/asteroid,/area/asteroid)
+"ao" = (/turf/simulated/floor/plating/airless/asteroid,/area/asteroid)
+"ap" = (/obj/machinery/light,/turf/simulated/floor/plating/airless/asteroid,/area/asteroid)
+"aq" = (/obj/machinery/door/airlock/glass{name = "Lab 1"},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"ar" = (/obj/machinery/door/airlock/glass{name = "Lab 2"},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"as" = (/turf/simulated/floor/airless{tag = "icon-asteroidwarning (NORTHWEST)"; name = "floor"; icon_state = "asteroidwarning"; dir = 9},/area/asteroid)
+"at" = (/turf/simulated/floor/airless{tag = "icon-asteroidwarning (NORTH)"; name = "floor"; icon_state = "asteroidwarning"; dir = 1},/area/asteroid)
+"au" = (/turf/simulated/floor/airless{tag = "icon-asteroidwarning (NORTHEAST)"; name = "floor"; icon_state = "asteroidwarning"; dir = 5},/area/asteroid)
+"av" = (/obj/machinery/portable_atmospherics/canister/oxygen,/turf/simulated/floor{tag = "icon-warnwhite (NORTHWEST)"; icon_state = "warnwhite"; dir = 9},/area/asteroid)
+"aw" = (/turf/simulated/floor{tag = "icon-warnwhite (NORTH)"; icon_state = "warnwhite"; dir = 1},/area/asteroid)
+"ax" = (/obj/structure/sink{pixel_y = 28},/turf/simulated/floor{tag = "icon-warnwhite (NORTH)"; icon_state = "warnwhite"; dir = 1},/area/asteroid)
+"ay" = (/obj/machinery/light{dir = 1},/turf/simulated/floor{tag = "icon-warnwhite (NORTH)"; icon_state = "warnwhite"; dir = 1},/area/asteroid)
+"az" = (/obj/machinery/vending/soda,/turf/simulated/floor{tag = "icon-warnwhite (NORTHEAST)"; icon_state = "warnwhite"; dir = 5},/area/asteroid)
+"aA" = (/turf/simulated/floor/airless{tag = "icon-asteroidwarning (WEST)"; name = "floor"; icon_state = "asteroidwarning"; dir = 8},/area/asteroid)
+"aB" = (/turf/simulated/floor/airless{tag = "icon-asteroidfloor (NORTHWEST)"; name = "floor"; icon_state = "asteroidfloor"; dir = 9},/area/asteroid)
+"aC" = (/turf/simulated/floor/airless{tag = "icon-asteroidwarning (EAST)"; name = "floor"; icon_state = "asteroidwarning"; dir = 4},/area/asteroid)
+"aD" = (/obj/machinery/door/airlock/external,/turf/simulated/floor/airless{tag = "icon-asteroidfloor (NORTHWEST)"; name = "floor"; icon_state = "asteroidfloor"; dir = 9},/area/asteroid)
+"aE" = (/obj/machinery/light/small{dir = 1},/turf/simulated/floor/airless{tag = "icon-asteroidfloor (NORTHWEST)"; name = "floor"; icon_state = "asteroidfloor"; dir = 9},/area/asteroid)
+"aF" = (/turf/simulated/floor{dir = 8; icon_state = "warnwhite"; tag = "icon-caution_east"},/area/asteroid)
+"aG" = (/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aH" = (/obj/structure/closet,/obj/item/weapon/reagent_containers/spray/cleaner,/obj/item/weapon/storage/box/light/tubes,/obj/item/weapon/storage/box/light/tubes,/obj/item/weapon/storage/box/light/mixed,/turf/simulated/floor{tag = "icon-warnwhite (EAST)"; icon_state = "warnwhite"; dir = 4},/area/asteroid)
+"aI" = (/turf/simulated/floor/airless{tag = "icon-asteroidwarning (SOUTHWEST)"; name = "floor"; icon_state = "asteroidwarning"; dir = 10},/area/asteroid)
+"aJ" = (/turf/simulated/floor/airless{icon_state = "asteroidwarning"; name = "floor"; tag = "icon-asteroidwarning"},/area/asteroid)
+"aK" = (/turf/simulated/floor/airless{tag = "icon-asteroidwarning (SOUTHEAST)"; name = "floor"; icon_state = "asteroidwarning"; dir = 6},/area/asteroid)
+"aL" = (/obj/machinery/portable_atmospherics/canister/air,/turf/simulated/floor{tag = "icon-warnwhite (SOUTHWEST)"; icon_state = "warnwhite"; dir = 10},/area/asteroid)
+"aM" = (/obj/machinery/light,/turf/simulated/floor{tag = "icon-warnwhite"; icon_state = "warnwhite"; dir = 2},/area/asteroid)
+"aN" = (/obj/structure/closet/toolcloset,/turf/simulated/floor{tag = "icon-warnwhite (SOUTHEAST)"; icon_state = "warnwhite"; dir = 6},/area/asteroid)
+"aO" = (/obj/machinery/door/airlock/glass,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aP" = (/obj/machinery/door/airlock/highsec{req_access_txt = "90"},/turf/simulated/floor{tag = "icon-vault"; icon_state = "vault"; dir = 2},/area/asteroid)
+"aQ" = (/obj/structure/table{tag = "icon-tabledir (NORTHEAST)"; icon_state = "tabledir"; dir = 5},/obj/machinery/microwave,/turf/simulated/floor{tag = "icon-warnwhitecorner (WEST)"; icon_state = "warnwhitecorner"; dir = 8},/area/asteroid)
+"aR" = (/obj/machinery/vending/coffee,/turf/simulated/floor{tag = "icon-warnwhitecorner (EAST)"; icon_state = "warnwhitecorner"; dir = 4},/area/asteroid)
+"aS" = (/obj/structure/crate,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aT" = (/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aU" = (/obj/structure/table{icon_state = "tabledir"; dir = 4},/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/obj/item/weapon/storage/box/donkpocket,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aV" = (/obj/structure/stool/bed/chair{dir = 8},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aW" = (/obj/machinery/vending/snack,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"aX" = (/obj/structure/table{tag = "icon-tabledir (NORTHEAST)"; icon_state = "tabledir"; dir = 5},/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aY" = (/obj/structure/safe/floor,/obj/item/weapon/gun/revolver,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/gold,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/diamond,/obj/item/weapon/coin/silver,/obj/item/weapon/coin/silver,/obj/item/weapon/coin/silver,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"aZ" = (/obj/structure/table{dir = 9; icon_state = "tabledir"; tag = ""},/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/obj/item/stack/sheet/mineral/uranium,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"ba" = (/obj/structure/table{tag = "icon-tabledir (SOUTHEAST)"; icon_state = "tabledir"; dir = 6},/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"bb" = (/obj/machinery/light,/turf/simulated/floor{icon_state = "white"},/area)
+"bc" = (/obj/structure/crate/freezer,/turf/simulated/floor{icon_state = "white"},/area/asteroid)
+"bd" = (/obj/structure/table{icon_state = "tabledir"; dir = 4},/obj/item/stack/sheet/metal{amount = 50},/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"be" = (/obj/machinery/light,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+"bf" = (/obj/structure/table{icon_state = "tabledir"; dir = 8},/obj/item/stack/sheet/mineral/plasma,/obj/item/stack/sheet/mineral/plasma,/obj/item/stack/sheet/mineral/plasma,/turf/simulated/floor{tag = "icon-vault (NORTHEAST)"; icon_state = "vault"; dir = 5},/area/asteroid)
+
+(1,1,1) = {"
+aaaaaaaaaaaaaaababababababababab
+aaaaaaaaaaaaaaabacadaeabacafaeab
+aaaaaaaaaaaaaaabagahaiabagahaiab
+abaaaaaaaaaaaaabajakalabamakalab
+anaoaoaoaoapaaababaqabababarabab
+aoasatatauabababavawaxayaxawazab
+aoaAaBaBaCaDaEaDaFaGaGaGaGaGaHab
+aoaIaJaJaKabababaLakakaMakakaNab
+apaoaoaoaoanaaababaOabababaPabab
+abaaaaaaaaaaaaabaQawaRabaSaTaSab
+aaaaaaaaaaaaaaabaUaVaWabaXaYaZab
+aaaaaaaaaaaaaaabbabbbcabbdbebfab
+aaaaaaaaaaaaaaababababababababab
+"}

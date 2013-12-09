@@ -72,7 +72,6 @@
 		if (C.client)
 			C.client.screen -= src
 
-		src.captured_by_securitron = 1 // If you plan to use moveto in other cases unrelated to securitrons, move this line before moveto calls below
 		src.loc = I
 		src.layer = initial(src.layer)
 		return
@@ -81,7 +80,7 @@
 	..()
 	src.icon_state = "secbot[src.on]"
 	spawn(3)
-		src.botcard = new /obj/item/weapon/card/id(src)
+		src.botcard = new /obj/item/weapon/card/id()
 		src.botcard.access = get_all_accesses()
 		src.cam = new /obj/machinery/camera(src)
 		src.cam.c_tag = src.name
@@ -89,7 +88,7 @@
 		if(radio_controller)
 			radio_controller.add_object(src, control_freq, filter = RADIO_SECBOT)
 			radio_controller.add_object(src, beacon_freq, filter = RADIO_NAVBEACONS)
-		radio = new /obj/item/device/radio/headset/headset_sec(src)
+		radio = new /obj/item/device/radio/headset/headset_sec()
 		//radio.set_security_frequency(1399)
 		radio.listening = 0
 
@@ -673,11 +672,11 @@ Auto Patrol: []"},
 			var/found = 0
 			if(istype(perp:belt,obj) || istype(perp.l_hand,obj) || istype(perp.r_hand,obj))
 				found = 1
-			if(perp:l_hand && perp:l_hand.type == /obj/item/weapon/gun/projectile/)
+			if(perp:l_hand && perp:l_hand.type == /obj/item/weapon/gun/projectile/revolver)
 				found = 1
-			if(perp:r_hand && perp:r_hand.type == /obj/item/weapon/gun/projectile/)
+			if(perp:r_hand && perp:r_hand.type == /obj/item/weapon/gun/projectile/revolver)
 				found = 1
-			if(perp:belt && perp:belt.type == /obj/item/weapon/gun/projectile/)
+			if(perp:belt && perp:belt.type == /obj/item/weapon/gun/projectile/revolver)
 				found = 1
 			if(found)
 				arrestreasons += "Carrying syndicate contraband"
@@ -805,9 +804,7 @@ Auto Patrol: []"},
 		new /obj/item/robot_parts/l_arm(Loc)
 
 	for(var/obj/item/A in src.contents) // Dropping the contraband
-		if(A.captured_by_securitron == 1)
-			A.loc = Loc
-			A.captured_by_securitron = 0
+		A.loc = Loc
 
 	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread // Sparks!
 	s.set_up(3, 1, src)

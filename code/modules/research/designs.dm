@@ -776,7 +776,7 @@ other types of metals and chemistry for reagents).
 
 /datum/design/mech_repair_droid
 	name = "Exosuit Module Design (Repair Droid Module)"
-	desc = "Automated Repair Droid. BEEP BOOP"
+	desc = "Automated Repair Droid. BEEP BOOP!"
 	id = "mech_repair_droid"
 	build_type = MECHFAB
 	req_tech = list("magnets" = 3, "programming" = 3, "engineering" = 3)
@@ -802,7 +802,7 @@ other types of metals and chemistry for reagents).
 	category = "Exosuit Equipment"
 
 /datum/design/mech_ccw_armor
-	name = "Exosuit Module Design(Reactive Armor Booster Module)"
+	name = "Exosuit Module Design (Reactive Armor Booster Module)"
 	desc = "Exosuit-mounted armor booster."
 	id = "mech_ccw_armor"
 	build_type = MECHFAB
@@ -811,7 +811,7 @@ other types of metals and chemistry for reagents).
 	category = "Exosuit Equipment"
 
 /datum/design/mech_proj_armor
-	name = "Exosuit Module Design(Reflective Armor Booster Module)"
+	name = "Exosuit Module Design (Reflective Armor Booster Module)"
 	desc = "Exosuit-mounted armor booster."
 	id = "mech_proj_armor"
 	build_type = MECHFAB
@@ -820,7 +820,7 @@ other types of metals and chemistry for reagents).
 	category = "Exosuit Equipment"
 
 /datum/design/mech_syringe_gun
-	name = "Exosuit Module Design(Syringe Gun)"
+	name = "Exosuit Module Design (Syringe Gun)"
 	desc = "Exosuit-mounted syringe gun and chemical synthesizer."
 	id = "mech_syringe_gun"
 	build_type = MECHFAB
@@ -1123,6 +1123,15 @@ other types of metals and chemistry for reagents).
 	build_path = "/obj/item/weapon/cell/hyper"
 	category = "Misc"
 
+/datum/design/anodevice
+	name = "Anomaly Power Utilizer"
+	id = "anodevice"
+	req_tech = list("magnets" = 4, "bluespace" = 2)
+	reliability_base = 70
+	build_type = PROTOLATHE
+	materials = list("$metal" = 200)
+	build_path = "/obj/item/weapon/anodevice"
+
 /datum/design/anomaly_cell
 	name = "Advanced Anomaly Power Cell"
 	id = "ano_cell"
@@ -1208,7 +1217,23 @@ other types of metals and chemistry for reagents).
 	materials = list("$glass" = 2000, "sacid" = 20)
 	build_path = "/obj/item/weapon/circuitboard/machine/mechfab"
 
+/datum/design/anoscan
+	name = "Anomaly Analyser Board"
+	desc = "The circuit board for an Anomaly Analyser"
+	id = "anoscan"
+	req_tech = list("programming" = 3, "magnets" = 3)
+	build_type = IMPRINTER
+	materials = list("$glass" = 2000, "sacid" = 20)
+	build_path = "/obj/item/weapon/circuitboard/machine/anoscan"
 
+/datum/design/anocol
+	name = "Exotic Particle Harvester Board"
+	desc = "The circuit board for an Exotic Particle Harvester"
+	id = "anocol"
+	req_tech = list("programming" = 3, "magnets" = 3, "powerstorage" = 4)
+	build_type = IMPRINTER
+	materials = list("$glass" = 2000, "sacid" = 20)
+	build_path = "/obj/item/weapon/circuitboard/machine/anocol"
 /////////////////////////////////////////
 ////////////Power Stuff//////////////////
 /////////////////////////////////////////
@@ -1385,7 +1410,7 @@ other types of metals and chemistry for reagents).
 	req_tech = list("combat" = 3, "materials" = 3, "engineering" = 3, "biotech" = 2)
 	build_type = PROTOLATHE
 	materials = list("$metal" = 5000, "$glass" = 1000)
-	build_path = "/obj/item/weapon/gun/syringe/rapid"
+	build_path = "/obj/item/weapon/gun/syringe/rapidsyringe"
 
 /datum/design/largecrossbow
 	name = "Energy Crossbow"
@@ -1436,13 +1461,13 @@ other types of metals and chemistry for reagents).
 	locked = 1
 
 /datum/design/ammo_9mm
-	name = "Ammunition Box (9mm)"
+	name = "Ammo Magazine (9mm)"
 	desc = "A box of prototype 9mm ammunition."
 	id = "ammo_9mm"
 	req_tech = list("combat" = 4, "materials" = 3)
 	build_type = PROTOLATHE
 	materials = list("$metal" = 3750, "$silver" = 100)
-	build_path = "/obj/item/ammo_magazine/c9mm"
+	build_path = "/obj/item/ammo_magazine/external/msmg9mm"
 
 /datum/design/stunshell
 	name = "Stun Shell"

@@ -10,7 +10,7 @@ would spawn and follow the beaker, even if it is carried or thrown.
 	name = "effects"
 	icon = 'effects.dmi'
 	mouse_opacity = 0
-	flags = TABLEPASS
+	flags = 0
 
 /obj/effects/smoke
 	name = "smoke"

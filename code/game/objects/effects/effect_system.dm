@@ -11,14 +11,14 @@ would spawn and follow the beaker, even if it is carried or thrown.
 	icon = 'icons/effects/effects.dmi'
 	mouse_opacity = 0
 	unacidable = 1//So effect are not targeted by alien acid.
-	flags = TABLEPASS
+	flags = 0
 
 /obj/effect/effect/water
 	name = "water"
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "extinguish"
 	var/life = 15.0
-	flags = TABLEPASS
+	pass_flags = PASSTABLE
 	mouse_opacity = 0
 
 /obj/effect/effect/smoke
@@ -325,8 +325,9 @@ steam.start() -- spawns the effect
 					sleep(10)
 					step(smoke,direction)
 				spawn(75+rand(10,30))
-					smoke.delete()
-					src.total_smoke--
+					if(smoke)
+						smoke.delete()
+						src.total_smoke--
 
 
 /////////////////////////////////////////////

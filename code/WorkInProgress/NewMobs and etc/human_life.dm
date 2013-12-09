@@ -166,12 +166,7 @@
 	var/obj/effect/decal/cleanable/blood/drip/this = new(T)
 	var/hax = pick("1","2","3","4","5")
 	this.icon_state = hax
-	this.blood_DNA = src.dna.unique_enzymes
-	this.blood_type = src.b_type
-	this.virus = src.virus
-	this.blood_owner = src
-	if(src.virus2)
-		this.virus2 = src.virus2.getcopy()
+	this.AddHumanBlood(src)
 
 /mob/living/carbon/human/handle_regular_status_updates()
 	for(var/datum/organ/external/E in GetOrgans())
@@ -222,7 +217,7 @@
 	if (stat != 2) //Alive.
 		if(nutrition > 0)
 			nutrition--
-		if (paralysis || stunned || weakened || changeling_fakedeath) //Stunned etc.
+		if (paralysis || stunned || weakened || (status_flags & FAKEDEATH)) //Stunned etc.
 			if (stunned > 0)
 				stunned--
 				stat = 0
@@ -466,11 +461,11 @@
 		return
 
 	if(mSmallsize in mutations)
-		if(!(flags & TABLEPASS))
-			flags |= TABLEPASS
+		if(!(pass_flags & PASSTABLE))
+			pass_flags |= PASSTABLE
 	else
-		if(flags & TABLEPASS)
-			flags &= ~TABLEPASS
+		if(pass_flags & PASSTABLE)
+			pass_flags &= ~PASSTABLE
 
 	if(mMorph in mutations)
 		if(!(/mob/living/carbon/human/proc/morph in src.verbs))

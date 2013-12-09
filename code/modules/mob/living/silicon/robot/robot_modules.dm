@@ -4,7 +4,7 @@
 	icon_state = "std_module"
 	w_class = 2.0
 	item_state = "electronic"
-	flags = FPRINT|TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
 	var/list/modules = list()
 
 /obj/item/weapon/robot_module/standard

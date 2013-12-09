@@ -7,7 +7,7 @@
 	icon_state = "pda"
 	item_state = "electronic"
 	w_class = 2.0
-	flags = FPRINT | TABLEPASS | ONBELT
+	slot_flags = SLOT_BELT
 
 	//Main variables
 	var/owner = null

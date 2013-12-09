@@ -4,7 +4,8 @@
 	icon = 'icons/obj/janitor.dmi'
 	icon_state = "cleaner"
 	item_state = "cleaner"
-	flags = TABLEPASS|OPENCONTAINER|FPRINT|USEDELAY|ONBELT
+	flags = OPENCONTAINER|FPRINT|USEDELAY|NOHIT
+	slot_flags = SLOT_BELT
 	throwforce = 3
 	w_class = 2.0
 	throw_speed = 2
@@ -256,4 +257,4 @@
 /obj/effect/decal/chempuff
 	name = "chemicals"
 	icon = 'icons/obj/chempuff.dmi'
-	flags = TABLEPASS
+	pass_flags = PASSTABLE

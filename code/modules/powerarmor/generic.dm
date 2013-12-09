@@ -5,7 +5,7 @@
 	item_state = "swat"
 	w_class = 4//bulky item
 
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS
 	armor = list(melee = 40, bullet = 30, laser = 20,energy = 15, bomb = 25, bio = 10, rad = 10)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/gun,/obj/item/weapon/handcuffs,/obj/item/weapon/tank/emergency_oxygen)
@@ -205,7 +205,7 @@
 	name = "Powered armor"
 	icon_state = "swat"
 	desc = "Not for rookies."
-	flags = FPRINT | TABLEPASS | HEADCOVERSEYES | HEADCOVERSMOUTH
+	flags = FPRINT | HEADCOVERSEYES | HEADCOVERSMOUTH
 	see_face = 0
 	var/brightness_on = 5 //luminosity when on
 	var/on = 0
@@ -306,7 +306,7 @@
 	name = "Powered armor"
 	icon_state = "swat"
 	desc = "Not for rookies."
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	item_state = "swat"
 	armor = list(melee = 40, bullet = 30, laser = 20,energy = 15, bomb = 25, bio = 10, rad = 10)
 
@@ -314,6 +314,6 @@
 	name = "Powered armor"
 	icon_state = "swat"
 	desc = "Not for rookies."
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	item_state = "swat"
 	armor = list(melee = 40, bullet = 30, laser = 20,energy = 15, bomb = 25, bio = 10, rad = 10)

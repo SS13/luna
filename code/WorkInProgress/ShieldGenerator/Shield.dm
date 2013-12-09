@@ -5,7 +5,7 @@
 	name = "shield"
 	desc = "An energy shield."
 	icon = 'effects.dmi'
-	icon_state = "shieldsparkles"
+	icon_state = "shieldsparkles0"
 	anchored = 1
 	invisibility = 101
 	density = 0

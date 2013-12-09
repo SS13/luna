@@ -49,7 +49,6 @@ CIGS
 	icon_state = "matchbox"
 	item_state = "zippo"
 	w_class = 2
-	flags = TABLEPASS | ONBELT
 	slot_flags = SLOT_BELT
 	can_hold = list("/obj/item/weapon/match")
 
@@ -77,7 +76,7 @@ CIGS
 	item_state = "cigpacket"
 	w_class = 1
 	throwforce = 2
-	flags = ONBELT | TABLEPASS
+	slot_flags = SLOT_BELT
 
 	var/allowreagents = 1
 	var/list/cigtypes = list(/obj/item/clothing/mask/cigarette)
@@ -560,7 +559,7 @@ CIGS
 	var/icon_off = "lighter-g"
 	w_class = 1
 	throwforce = 4
-	flags = TABLEPASS | ONBELT
+	slot_flags = SLOT_BELT
 	attack_verb = list("burnt", "singed")
 	var/lit = 0
 
@@ -571,7 +570,8 @@ CIGS
 	item_state = "zippo"
 	icon_on = "zippoon"
 	icon_off = "zippo"
-	flags = TABLEPASS | CONDUCT | ONBELT
+	flags = CONDUCT | FPRINT
+	slot_flags = SLOT_BELT
 
 
 /obj/item/weapon/lighter/random

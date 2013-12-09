@@ -20,7 +20,7 @@ CLASSIC BATON
 	throw_speed = 1
 	throw_range = 5
 	w_class = 2.0
-	flags = FPRINT | TABLEPASS | NOSHIELD
+	flags = FPRINT | NOSHIELD
 	origin_tech = "magnets=3;syndicate=4"
 
 
@@ -49,13 +49,6 @@ CLASSIC BATON
 		playsound(user, 'sound/weapons/saberon.ogg', 50, 1)
 		user << "\blue The sword is now active."
 		src.force = 30
-		throwforce = 20
-		if(src.blood_DNA)
-			var/icon/I = new /icon(initial(src.icon), src.icon_state)
-			I.Blend(new /icon('blood.dmi', "thisisfuckingstupid"),ICON_ADD)
-			I.Blend(new /icon('blood.dmi', "itemblood"),ICON_MULTIPLY)
-			I.Blend(new /icon(initial(src.icon), src.icon_state),ICON_UNDERLAY) //motherfucker
-			src.icon = I
 		src.w_class = 4
 		src.slash = 1
 	else
@@ -66,12 +59,6 @@ CLASSIC BATON
 		else
 			icon_state = "sword0"
 		playsound(user, 'sound/weapons/saberoff.ogg', 50, 1)
-		if(src.blood_DNA)
-			var/icon/I = new /icon(initial(src.icon), src.icon_state)
-			I.Blend(new /icon('blood.dmi', "thisisfuckingstupid"),ICON_ADD)
-			I.Blend(new /icon('blood.dmi', "itemblood"),ICON_MULTIPLY)
-			I.Blend(new /icon(initial(src.icon), src.icon_state),ICON_UNDERLAY) //motherfucker
-			src.icon = I
 		src.w_class = 1
 		src.slash = 0
 	src.add_fingerprint(user)
@@ -103,7 +90,7 @@ CLASSIC BATON
 	throw_range = 5
 	slash = 1
 	w_class = 3.0
-	flags = FPRINT | CONDUCT | NOSHIELD | TABLEPASS
+	flags = FPRINT | CONDUCT | NOSHIELD
 
 /obj/item/weapon/melee/energy/axe/attack_self(mob/user as mob)
 	src.active = !( src.active )
@@ -128,7 +115,8 @@ CLASSIC BATON
 	desc = "A stun baton for hitting people with."
 	icon_state = "stunbaton"
 	item_state = "baton"
-	flags = FPRINT | ONBELT | TABLEPASS
+	flags = FPRINT
+	slot_flags = SLOT_BELT
 	force = 10
 	throwforce = 7
 	w_class = 3
@@ -143,7 +131,7 @@ CLASSIC BATON
 		icon_state = "stunbaton_active"
 	else
 		icon_state = "stunbaton"
-	if(src.blood_DNA)
+	if(src.blood_DNA.len)
 		var/icon/I = new /icon(initial(src.icon), src.icon_state)
 		I.Blend(new /icon('blood.dmi', "thisisfuckingstupid"),ICON_ADD)
 		I.Blend(new /icon('blood.dmi', "itemblood"),ICON_MULTIPLY)

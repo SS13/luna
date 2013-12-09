@@ -68,7 +68,7 @@ GAS ANALYZER
 
 /obj/item/device/detective_scanner/attack_self(mob/user as mob)
 
-	src.printing = !( src.printing )
+	src.printing = !src.printing
 	if(src.printing)
 		user << "\blue Printing turned on"
 	else
@@ -78,11 +78,10 @@ GAS ANALYZER
 	return
 
 /obj/item/device/detective_scanner/attack(mob/living/carbon/human/M as mob, mob/user as mob)
-
-	if (( !( istype(M.dna, /datum/dna) ) || M.gloves) )
+	if (!istype(M.dna, /datum/dna) || M.gloves)
 		user << "\blue No fingerprints found on [M]"
 	else
-		if ((src.amount < 1 && src.printing))
+		if (src.amount < 1 && src.printing)
 			user << text("\blue Fingerprints scanned on [M]. Need more cards to print.")
 			src.printing = 0
 		src.icon_state = text("forensic[]", src.printing)
@@ -95,32 +94,45 @@ GAS ANALYZER
 			F.name = text("FPrintC- '[M.name]'")
 			user << "\blue Done printing."
 		user << text("\blue [M]'s Fingerprints: [md5(M.dna.uni_identity)]")
-	if ( !(M.blood_DNA) )
+	if (!M.blood_DNA.len)
 		user << "\blue No blood found on [M]"
 	else
 		user << "\blue Blood found on [M]. Analysing..."
-		spawn(15)
-			user << "\blue Blood type: [M.blood_type]\nDNA: [M.blood_DNA]"
+		for(var/dna in M.blood_DNA)
+			sleep(15)
+			user << "\blue Blood type: [M.blood_DNA[dna]] DNA: [dna]"
 	return
 
 /obj/item/device/detective_scanner/afterattack(atom/A as mob|obj|turf|area, mob/user as mob)
 	src.add_fingerprint(user)
+
+	for(var/mob/O in viewers(src, null))
+		if (O.client && !O.blinded)
+			O << "\red [src] has been scanned by [user] with the [W]"
+
 	if (istype(A, /obj/effect/decal/cleanable/blood))
-		if(A.blood_DNA)
-			user << "\blue Blood type: [A.blood_type]\nDNA: [A.blood_DNA]"
-		if(A:virus)
-			user << "\red Warning, virus found in the blood! Name: [A:virus.name]"
-	else if (A.blood_DNA)
+		if(A.blood_DNA.len)
+			user << "\blue Blood found. Analysing..."
+			for(var/dna in A.blood_DNA)
+				sleep(15)
+				user << "\blue Blood type: [A.blood_DNA[dna]] DNA: [dna]"
+		if(A:viruses.len)
+			for(var/datum/disease/D in A:viruses)
+				if(!D.hidden[SCANNER])
+					user.show_message(text("\red <b>Warning: [D.form] detected in blood!</b>\nName: [D.name].\nType: [D.spread]."))
+
+	else if (A.blood_DNA.len)
 		user << "\blue Blood found on [A]. Analysing..."
-		sleep(15)
-		user << "\blue Blood type: [A.blood_type]\nDNA: [A.blood_DNA]"
+		for(var/dna in A.blood_DNA)
+			sleep(15)
+			user << "\blue Blood type: [A.blood_DNA[dna]] DNA: [dna]"
 	else
 		user << "\blue No blood found on [A]."
 	if (!( A.fingerprints ))
 		user << "\blue Unable to locate any fingerprints on [A]!"
 		return 0
 	else
-		if ((src.amount < 1 && src.printing))
+		if (src.amount < 1 && src.printing)
 			user << "\blue Fingerprints found. Need more cards to print."
 			src.printing = 0
 	src.icon_state = text("forensic[]", src.printing)
@@ -143,7 +155,8 @@ GAS ANALYZER
 	icon_state = "health"
 	item_state = "analyzer"
 	desc = "A hand-held body scanner able to distinguish vital signs of the subject."
-	flags = FPRINT | ONBELT | TABLEPASS | CONDUCT
+	flags = FPRINT | CONDUCT
+	slot_flags = SLOT_BELT
 	throwforce = 3
 	w_class = 1.0
 	throw_speed = 5
@@ -276,7 +289,7 @@ GAS ANALYZER
 	icon_state = "spectrometer"
 	item_state = "analyzer"
 	w_class = 2.0
-	flags = FPRINT | TABLEPASS| CONDUCT | OPENCONTAINER | ONBELT
+	flags = FPRINT | CONDUCT | OPENCONTAINER
 	slot_flags = SLOT_BELT
 	throwforce = 5
 	throw_speed = 4

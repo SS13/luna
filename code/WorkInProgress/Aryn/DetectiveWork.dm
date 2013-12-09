@@ -174,12 +174,13 @@ obj/machinery/computer/forensic_scanning
 					scan_process = 0
 					scan_name = scanning.name
 					scan_data = "<u>[scanning]</u><br><br>"
-					if (scanning.blood_DNA)
+					if (scanning.blood_DNA.len)
 						scan_data += "Blood Found:<br>"
-						scan_data += "-Blood type: [scanning.blood_type]\nDNA: [scanning.blood_DNA]<br><br>"
+						for(var/dna in scanning.blood_DNA)
+							scan_data += "\blue Blood type: [scanning.blood_DNA[dna]] DNA: [dna]"
 					else
 						scan_data += "No Blood Found<br><br>"
-					if (!( scanning.fingerprints ))
+					if (!scanning.fingerprints)
 						scan_data += "No Fingerprints Found<br><br>"
 					else
 						var/list/L = params2list(scanning.fingerprints)
@@ -278,9 +279,7 @@ turf/proc/add_bloody_footprints(mob/living/carbon/human/M,leaving,d,info)
 			if((leaving && T.icon_state == "steps2") || (!leaving && T.icon_state == "steps1"))
 				T.desc = "These bloody footprints appear to have been made by [info]."
 				if(istype(M,/mob/living/carbon/human))
-					T.blood_DNA = M.dna.unique_enzymes
-					T.blood_type = M.b_type
-					T.virus = M.virus
+					T.AddHumanBlood(M)
 				return
 	var/obj/effect/decal/cleanable/blood/tracks/this = new(src)
 	if(leaving)
@@ -290,9 +289,7 @@ turf/proc/add_bloody_footprints(mob/living/carbon/human/M,leaving,d,info)
 	this.dir = d
 	this.desc = "These bloody footprints appear to have been made by [info]."
 	if(istype(M,/mob/living/carbon/human))
-		this.blood_DNA = M.dna.unique_enzymes
-		this.blood_type = M.b_type
-		this.virus = M.virus
+		this.AddHumanBlood(M)
 
 proc/get_tracks(mob/M)
 	if(istype(M,/mob/living))

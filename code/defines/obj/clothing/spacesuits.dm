@@ -4,7 +4,7 @@
 	icon_state = "space"
 	gas_transfer_coefficient = 0.01
 	item_state = "s_suit"
-	flags = FPRINT | TABLEPASS | SUITSPACE | PLASMAGUARD
+	flags = FPRINT | SUITSPACE | PLASMAGUARD
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	permeability_coefficient = 0.02
 	protective_temperature = 1000
@@ -14,7 +14,7 @@
 /obj/item/clothing/head/helmet/space
 	name = "Space helmet"
 	icon_state = "space"
-	flags = FPRINT |TABLEPASS| HEADSPACE | HEADCOVERSEYES | HEADCOVERSMOUTH | PLASMAGUARD
+	flags = FPRINT | HEADSPACE | HEADCOVERSEYES | HEADCOVERSMOUTH | PLASMAGUARD
 	see_face = 0.0
 	item_state = "space"
 

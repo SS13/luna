@@ -2,7 +2,7 @@
 	name = "Glasses"
 	icon = 'glasses.dmi'
 	w_class = 2.0
-	flags = GLASSESCOVERSEYES | TABLEPASS
+	flags = GLASSESCOVERSEYES
 
 	var/see_turfs = 0
 	var/see_mobs = 0

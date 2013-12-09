@@ -348,9 +348,9 @@
 
 /datum/supply_packs/ballistic
 	name = "Shotguns crate"
-	contains = list(/obj/item/weapon/gun/projectile/shotgun/pump/combat,
-					/obj/item/weapon/gun/projectile/shotgun/pump/combat,
-					/obj/item/weapon/gun/projectile/shotgun/pump/combat)
+	contains = list(/obj/item/weapon/gun/projectile/shotgun/combat,
+					/obj/item/weapon/gun/projectile/shotgun/combat,
+					/obj/item/weapon/gun/projectile/shotgun/combat)
 	cost = 30
 	containertype = /obj/structure/closet/crate/secure/weapon
 	containername = "combat shotgun crate"

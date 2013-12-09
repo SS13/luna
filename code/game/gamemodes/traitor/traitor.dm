@@ -13,8 +13,8 @@
 /obj/item/clothing/shoes/syndigaloshes:2:No-Slip Syndicate Shoes;
 /obj/item/device/encryptionkey/syndicate:1:Binary Encryption Key;
 /obj/item/clothing/under/chameleon:2:Chameleon Jumpsuit;
-/obj/item/weapon/gun/projectile:7:Revolver;
-/obj/item/ammo_magazine/a357:3:Revolver Ammo;
+/obj/item/weapon/gun/projectile/revolver:7:Revolver;
+/obj/item/ammo_magazine/box/a357:3:Revolver Ammo;
 /obj/item/weapon/card/emag:3:Cryptographic Sequencer;
 /obj/item/weapon/card/id/syndicate:4:Fake ID;
 /obj/item/clothing/glasses/thermal:4:Thermal Glasses;

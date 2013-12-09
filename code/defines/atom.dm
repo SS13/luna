@@ -5,8 +5,7 @@
 	var/fingerprints = null
 	var/list/fingerprintshidden = new/list()
 	var/fingerprintslast = null
-	var/blood_DNA = null
-	var/blood_type = null
+	var/list/blood_DNA = list()
 	var/last_bumped = 0
 	var/list/logs = list()
 	var/list/overlayslist = list()
@@ -46,7 +45,7 @@
 /atom/proc/checkpass(passflag)
 	return pass_flags&passflag
 
-obj
+/obj
 	assume_air(datum/air_group/giver)
 		if(loc)
 			return loc.assume_air(giver)

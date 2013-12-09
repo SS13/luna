@@ -1,6 +1,7 @@
 /obj/item/weapon/storage/belt
 	icon = 'icons/obj/clothing/belts.dmi'
-	flags = FPRINT | TABLEPASS | ONBELT
+	flags = FPRINT
+	slot_flags = SLOT_BELT
 	icon_state = "utilitybelt"
 	item_state = "burger"
 

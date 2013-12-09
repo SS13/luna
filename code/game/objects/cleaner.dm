@@ -4,9 +4,8 @@
 	icon = 'janitor.dmi'
 	icon_state = "mopbucket"
 	density = 1
-	flags = FPRINT
 	pressure_resistance = ONE_ATMOSPHERE
-	flags = FPRINT | TABLEPASS | OPENCONTAINER
+	flags = FPRINT | OPENCONTAINER
 
 /obj/structure/mopbucket/New()
 	var/datum/reagents/R = new/datum/reagents(50)
@@ -16,7 +15,7 @@
 
 /obj/structure/mopbucket/examine()
 	..()
-	usr << text("\icon[] [] contains [] units of water left!", src, src.name, src.reagents.total_volume)
+	usr << text("\icon[src] [src.name] contains [src.reagents.total_volume] units of water left!")
 
 /obj/structure/mopbucket/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/mop))
@@ -43,7 +42,7 @@
 				return
 
 /obj/structure/mopbucket/tunderdome
-	name = "lube mopbucket"
+	name = "lube mop bucket"
 	anchored = 1
 	New()
 		var/datum/reagents/R = new/datum/reagents(100)

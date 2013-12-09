@@ -8,7 +8,7 @@
 	icon_state = "atmos"
 	item_state = "analyzer"
 	w_class = 2.0
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	throwforce = 5
 	w_class = 2.0
 	throw_speed = 4
@@ -88,7 +88,7 @@
 	icon = 'device.dmi'
 	icon_state = "shield0"
 	var/active = 0.0
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	item_state = "electronic"
 	throwforce = 10.0
 	throw_speed = 2
@@ -100,7 +100,7 @@
 	name = "crowbar"
 	icon = 'items.dmi'
 	icon_state = "crowbar"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 5.0
 	throwforce = 7.0
 	item_state = "wrench"
@@ -118,7 +118,7 @@
 	name = "dummy"
 	invisibility = 101.0
 	anchored = 0
-	flags = TABLEPASS
+	flags = 0
 
 /obj/item/weapon/f_card
 	name = "Finger Print Card"
@@ -175,7 +175,8 @@
 	desc = "Use this to keep prisoners in line."
 	icon = 'icons/obj/items.dmi'
 	icon_state = "handcuff"
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
+	flags = FPRINT | CONDUCT
+	slot_flags = SLOT_BELT
 	throwforce = 5
 	w_class = 2.0
 	throw_speed = 2
@@ -200,7 +201,7 @@
 	throw_speed = 1
 	throw_range = 5
 	w_class = 3.0
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 
 
 /obj/item/weapon/paint
@@ -399,13 +400,13 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	name = "rack parts"
 	icon = 'items.dmi'
 	icon_state = "rack_parts"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 
 /obj/item/weapon/screwdriver
 	name = "screwdriver"
 	icon = 'items.dmi'
 	icon_state = "screwdriver"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 5.0
 	w_class = 1.0
 	slash = 1
@@ -420,7 +421,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	desc = "A tool used by great men to placate the frothing masses."
 	icon_state = "chain"
 	item_state = "chain"
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
+	flags = FPRINT | CONDUCT
 	slot_flags = SLOT_BELT
 	force = 10
 	throwforce = 7
@@ -438,7 +439,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	throw_speed = 1
 	throw_range = 5
 	w_class = 2.0
-	flags = FPRINT | TABLEPASS | NOSHIELD
+	flags = FPRINT | NOSHIELD
 	attack_verb = list("bludgeoned", "whacked", "disciplined")
 
 /obj/item/weapon/staff/broom
@@ -450,7 +451,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	name = "wirecutters"
 	icon = 'items.dmi'
 	icon_state = "cutters"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	force = 6.0
 	slash = 1
 	throw_speed = 2
@@ -510,7 +511,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	icon_state = "std_module"
 	w_class = 2.0
 	item_state = "electronic"
-	flags = FPRINT|TABLEPASS|CONDUCT
+	flags = FPRINT|CONDUCT
 	var/mtype = 1						// 1=electronic 2=hardware
 
 /obj/item/weapon/module/card_reader

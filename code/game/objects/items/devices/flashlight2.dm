@@ -5,7 +5,8 @@
 	icon_state = "flashlight"
 	item_state = "flashlight"
 	w_class = 2
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
+	flags = FPRINT | CONDUCT
+	slot_flags = SLOT_BELT
 	m_amt = 50
 	g_amt = 20
 	var/on = 0
@@ -122,7 +123,6 @@
 	desc = "A pen-sized light, used by medical staff."
 	icon_state = "penlight"
 	item_state = ""
-	flags = FPRINT | TABLEPASS | CONDUCT
 	brightness_on_r = 2 //luminosity when on, R
 	brightness_on_g = 2 //luminosity when on, G
 	brightness_on_b = 2 //luminosity when on, B
@@ -138,7 +138,6 @@
 	brightness_on_g = 6 //luminosity when on, G
 	brightness_on_b = 6 //luminosity when on, B
 	w_class = 4
-	flags = FPRINT | TABLEPASS | CONDUCT
 	m_amt = 0
 	g_amt = 0
 	on = 1
@@ -226,7 +225,8 @@
 	icon_state = "slime"
 	item_state = "slime"
 	w_class = 2
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
+	flags = FPRINT
+	slot_flags = SLOT_BELT
 	m_amt = 0
 	g_amt = 0
 	brightness_on_r = 6 //luminosity when on, R

@@ -2,7 +2,7 @@
 	name = "shield"
 	icon_state = "shield0"
 	var/active = 0.0
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 	item_state = "electronic"
 	throwforce = 4.0
 	throw_speed = 1
@@ -14,7 +14,8 @@
 	desc = "A shield adept at blocking blunt objects from connecting with the torso of the shield wielder."
 	icon = 'weapons.dmi'
 	icon_state = "riot"
-	flags = FPRINT | TABLEPASS| CONDUCT | ONBACK
+	flags = FPRINT | CONDUCT
+	slot_flags = SLOT_BACK
 	force = 10.0
 	throwforce = 5.0
 	throw_speed = 1
@@ -45,7 +46,7 @@
 	desc = "A shield capable of stopping most projectile and melee attacks. It can be retracted, expanded, and stored anywhere."
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "eshield0" // eshield1 for expanded
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	force = 3.0
 	throwforce = 5.0
 	throw_speed = 1

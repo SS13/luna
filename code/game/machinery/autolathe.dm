@@ -33,7 +33,7 @@ var/global/list/autolathe_recipes = list( \
 		new /obj/item/weapon/reagent_containers/glass/beaker/large(), \
 		new /obj/item/ammo_casing/shotgun/blank(), \
 		new /obj/item/ammo_casing/shotgun/beanbag(), \
-		new /obj/item/ammo_magazine/c38(), \
+		new /obj/item/ammo_magazine/box/c38(), \
 		new /obj/item/device/taperecorder(), \
 		new /obj/item/device/radio/headset(), \
 		new /obj/item/device/radio(), \
@@ -57,10 +57,10 @@ var/global/list/autolathe_recipes_hidden = list( \
 		new /obj/item/device/radio/electropack(), \
 		new /obj/item/weapon/weldingtool/industrial(), \
 		new /obj/item/weapon/handcuffs(), \
-		new /obj/item/ammo_magazine/a357(), \
-		new /obj/item/ammo_magazine/a12mm(), \
-		new /obj/item/ammo_magazine/a762(), \
-		new /obj/item/ammo_magazine/a75(), \
+		new /obj/item/ammo_magazine/box/a357(), \
+		new /obj/item/ammo_magazine/external/m12mm(), \
+		new /obj/item/ammo_magazine/external/m762(), \
+		new /obj/item/ammo_magazine/external/m75(), \
 		new /obj/item/device/infra(), \
 		new /obj/item/device/infra_sensor(), \
 		new /obj/item/ammo_casing/shotgun(), \

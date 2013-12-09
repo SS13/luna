@@ -13,7 +13,8 @@
 	force = 2.0
 	var/stage = 0
 	var/list/beakers = new/list()
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT | USEDELAY
+	flags = FPRINT | CONDUCT | USEDELAY
+	slot_flags = SLOT_BELT
 
 	New()
 		var/datum/reagents/R = new/datum/reagents(1000)
@@ -192,110 +193,3 @@
 		beakers += B2
 */
 ///////////////////////////////Grenades
-
-/obj/syringe_gun_dummy
-	name = ""
-	desc = ""
-	icon = 'chemical.dmi'
-	icon_state = "null"
-	anchored = 1
-	density = 0
-
-	New()
-		create_reagents(50)
-
-/obj/item/weapon/gun/syringe
-	name = "syringe gun"
-	icon = 'gun.dmi'
-	icon_state = "syringegun"
-	item_state = "syringegun"
-	w_class = 3.0
-	throw_speed = 2
-	throw_range = 10
-	force = 4.0
-	var/list/syringes = new/list()
-	var/max_syringes = 1
-	m_amt = 2000
-
-	examine()
-		set src in view(2)
-		..()
-		usr << "\icon [src] Syringe gun:"
-		usr << "\blue [syringes.len] / [max_syringes] Syringes."
-
-	attackby(obj/item/I as obj, mob/user as mob)
-		if(istype(I, /obj/item/weapon/reagent_containers/syringe))
-			if(syringes.len < max_syringes)
-				user.drop_item()
-				I.loc = src
-				syringes += I
-				user << "\blue You put the syringe in the syringe gun."
-				user << "\blue [syringes.len] / [max_syringes] Syringes."
-			else
-				usr << "\red The syringe gun cannot hold more syringes."
-
-	attack()
-		return 1
-
-	afterattack(obj/target, mob/user , flag)
-		if(!isturf(target.loc)) return
-
-		if(syringes.len)
-			if(target != user)
-				spawn(0) fire_syringe(target,user)
-			else
-				var/obj/item/weapon/reagent_containers/syringe/S = syringes[1]
-				S.reagents.trans_to(user, S.reagents.total_volume)
-				syringes -= S
-				del(S)
-				for(var/mob/O in viewers(world.view, user))
-					O.show_message(text("\red [] shot \himself with a syringe gun!", user), 1)
-		else
-			usr << "\red The syringe gun is empty."
-
-	proc
-		fire_syringe(atom/target, mob/user)
-			var/turf/trg = get_turf(target)
-			var/obj/syringe_gun_dummy/D = new/obj/syringe_gun_dummy(get_turf(src))
-			var/obj/item/weapon/reagent_containers/syringe/S = syringes[1]
-			S.reagents.trans_to(D, S.reagents.total_volume)
-			syringes -= S
-			del(S)
-			D.icon_state = "syringeproj"
-			D.name = "syringe"
-			playsound(user.loc, 'syringeproj.ogg', 50, 1)
-			shoot:
-				for(var/i=0, i<6, i++)
-					if(D.loc == trg) break
-					step_towards_3d(D,trg)
-
-					for(var/mob/living/carbon/M in D.loc)
-						if(!istype(M,/mob/living/carbon)) continue
-						if(M == user) continue
-						D.reagents.trans_to(M, D.reagents.total_volume)
-						M.adjustBruteLoss(5)
-
-						for(var/mob/O in viewers(world.view, D))
-							O.show_message(text("\red [] was hit by the syringe!", M), 1)
-
-						del(D)
-						break shoot
-
-					for(var/atom/A in D.loc)
-						if(A == user) continue
-						if(A.density)
-							del(D)
-							break shoot
-
-					sleep(1)
-
-			spawn(10)
-				del(D)
-
-			return
-
-/obj/item/weapon/gun/syringe/rapid
-	name = "rapid syringe gun"
-	icon_state = "rapidsyringegun"
-	max_syringes = 6
-	m_amt = 20000

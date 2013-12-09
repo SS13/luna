@@ -101,7 +101,7 @@
 		return 1
 
 /obj/machinery/portable_atmospherics/canister/process()
-	if (destroyed)
+	if (destroyed || !loc)
 		return
 
 	..()

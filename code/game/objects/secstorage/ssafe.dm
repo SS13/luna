@@ -5,7 +5,7 @@
 	icon_open = "safe0"
 	icon_locking = "safeb"
 	icon_sparking = "safespark"
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	force = 8.0
 	w_class = 4.0
 	anchored = 1.0

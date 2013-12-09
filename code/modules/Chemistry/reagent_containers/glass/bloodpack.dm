@@ -4,7 +4,7 @@
 	icon = 'bloodpack.dmi'
 	icon_state = "bloodpack_100"
 	amount_per_transfer_from_this = 10
-	flags = FPRINT | TABLEPASS | OPENCONTAINER
+	flags = FPRINT | OPENCONTAINER
 	volume = 100
 
 

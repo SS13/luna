@@ -112,7 +112,7 @@
 	anchored = 1.0
 
 /obj/machinery/igniter
-	name = "floor-mounted Igniter"
+	name = "floor-mounted igniter"
 	icon = 'stationobjs.dmi'
 	icon_state = "igniter1"
 	var/id = null
@@ -274,22 +274,6 @@
 /obj/machinery/shuttle/engine/router
 	name = "router"
 	icon_state = "router"
-
-/obj/machinery/teleport
-	name = "teleport"
-	icon = 'stationobjs.dmi'
-	density = 1
-	anchored = 1.0
-
-/obj/machinery/teleport/hub
-	name = "hub"
-	icon_state = "tele0"
-
-/obj/machinery/teleport/station
-	name = "station"
-	icon_state = "controller"
-	var/active = 0
-	var/engaged = 0
 
 /obj/machinery/wire
 	name = "wire"

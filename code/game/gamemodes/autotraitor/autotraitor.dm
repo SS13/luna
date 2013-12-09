@@ -9,8 +9,8 @@
 /obj/item/weapon/storage/box/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
 /obj/item/weapon/storage/box/syndie_kit/imp_compress:5:Compressed matter implant, with injector;
 /obj/item/weapon/storage/box/syndie_kit/imp_explosive:6:Explosive implant, with injector;
-/obj/item/weapon/gun/projectile:7:Revolver;
-/obj/item/ammo_magazine/a357:3:Revolver Ammo;
+/obj/item/weapon/gun/projectile/revolver:7:Revolver;
+/obj/item/ammo_magazine/box/a357:3:Revolver Ammo;
 /obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;
 /obj/item/weapon/melee/energy/sword:5:Energy sword;
 /obj/item/device/hacktool:4:Hacktool;

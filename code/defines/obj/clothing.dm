@@ -43,7 +43,7 @@
 	var/wired = 0
 	var/obj/item/weapon/cell/cell = 0
 	body_parts_covered = HANDS
-	flags = TABLEPASS
+	flags = FPRINT
 
 
 // HATS. OH MY WHAT A FINE CHAPEAU, GOOD SIR.
@@ -58,31 +58,30 @@
 	icon_state = "bio_hood"
 	item_state = "bio_hood"
 	permeability_coefficient = 0.01
-	flags = FPRINT|TABLEPASS|HEADSPACE|HEADCOVERSEYES|HEADCOVERSMOUTH|PLASMAGUARD
+	flags = FPRINT|HEADSPACE|HEADCOVERSEYES|HEADCOVERSMOUTH|PLASMAGUARD
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 10, bomb = 0, bio = 100, rad = 20)
+	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES
+
 
 /obj/item/clothing/head/caphat
 	name = "Captain's hat"
 	icon_state = "captain"
-	flags = FPRINT|TABLEPASS
 	item_state = "caphat"
 
 /obj/item/clothing/head/det_hat
 	name = "hat"
 	desc = "Someone who wears this will look very smart"
 	icon_state = "detective"
-	flags = FPRINT | TABLEPASS
 
 /obj/item/clothing/head/chefhat
 	name = "Chef's hat"
 	icon_state = "chef"
 	item_state = "chef"
-	flags = FPRINT | TABLEPASS
 
 /obj/item/clothing/head/beret
 	name = "red beret"
 	icon_state = "beret"
 	item_state = "secsoft"
-	flags = FPRINT | TABLEPASS
 
 
 // CHUMP HELMETS: COOKING THEM DESTROYS THE CHUMP HELMET SPAWN.
@@ -90,7 +89,7 @@
 /obj/item/clothing/head/helmet
 	name = "helmet"
 	icon_state = "helmet"
-	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+	flags = FPRINT | HEADCOVERSEYES
 	item_state = "helmet"
 
 	protective_temperature = 500
@@ -99,51 +98,47 @@
 /obj/item/clothing/head/helmet/riot
 	name = "riot helmet"
 	icon_state = "riot"
-	flags = FPRINT | TABLEPASS | HEADCOVERSEYES | HEADCOVERSMOUTH
+	flags = FPRINT | HEADCOVERSEYES | HEADCOVERSMOUTH
 	item_state = "helmet"
 
 /obj/item/clothing/head/helmet/swat
 	name = "SWAT helmet"
 	icon_state = "swat"
-	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+	flags = FPRINT | HEADCOVERSEYES
 	item_state = "swat"
 
 /obj/item/clothing/head/helmet/thunderdome
 	name = "thunderdome helmet"
 	icon_state = "thunderdome"
-	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+	flags = FPRINT | HEADCOVERSEYES
 	item_state = "thunderdome"
 
 
 /obj/item/clothing/head/helmet/plump
 	name = "plump helmet helmet"
 	icon_state = "plump"
-	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+	flags = FPRINT | HEADCOVERSEYES
 	item_state = "plump"
 
 /obj/item/clothing/head/helmet/cargosoft
 	name = "yellow cap"
 	icon_state = "cargosoft"
 	item_state = "cargosoft"
-	flags = FPRINT | TABLEPASS
 
 /obj/item/clothing/head/helmet/secsoft
 	name = "red cap"
 	icon_state = "secsoft"
 	item_state = "secsoft"
-	flags = FPRINT | TABLEPASS
 
 /obj/item/clothing/head/helmet/Policehat
 	name = "police hat"
 	icon_state = "policehelm"
 	item_state = "that"
-	flags = FPRINT | TABLEPASS
 
 /obj/item/clothing/head/helmet/wardencap
 	name = "Warden Cap"
 	icon_state = "wardencap"
 	item_state = "that"
-	flags = FPRINT | TABLEPASS
 
 // MASK WAS THAT MOVIE WITH THAT GUY WITH THE MESSED UP FACE. WHAT'S HIS NAME . . . JIM CARREY, I THINK.
 
@@ -152,13 +147,13 @@
 	icon = 'masks.dmi'
 	var/vchange = 0
 	body_parts_covered = HEAD
-	flags = TABLEPASS
+	flags = FPRINT
 
 /obj/item/clothing/mask/gas
 	name = "gas mask"
 	desc = "A close-fitting mask that can filter some environmental toxins or be connected to an air supply."
 	icon_state = "gas_mask"
-	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKCOVERSEYES | MASKINTERNALS
+	flags = FPRINT | MASKCOVERSMOUTH | MASKCOVERSEYES | MASKINTERNALS
 	w_class = 3.0
 	see_face = 0.0
 	item_state = "gas_mask"
@@ -265,7 +260,6 @@
 	slowdown = -1
 
 	body_parts_covered = FEET
-	flags = FPRINT | TABLEPASS
 
 	protective_temperature = 500
 	heat_transfer_coefficient = 0.10
@@ -274,7 +268,7 @@
 
 /obj/item/clothing/shoes/magnetic
 	name = "magboots"
-	flags = FPRINT | TABLEPASS | NOSLIP | CONDUCT
+	flags = FPRINT | NOSLIP | CONDUCT
 	icon_state = "magboots"
 	item_state = "o_shoes"
 
@@ -286,7 +280,6 @@
 	icon = 'suits.dmi'
 	name = "Suit"
 	var/fire_resist = T0C+100
-	flags = FPRINT | TABLEPASS
 	var/airflowprot = 0
 	var/reflectchance = 0
 
@@ -299,9 +292,13 @@
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.01
 	heat_transfer_coefficient = 0.30
-	slowdown = 1
+	slowdown = 0.8
+	allowed = list(/obj/item/weapon/tank/emergency_oxygen,/obj/item/weapon/pen,/obj/item/device/flashlight/pen)
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 10, bomb = 0, bio = 100, rad = 20)
+	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 
-	flags = FPRINT|TABLEPASS|PLASMAGUARD
+
+	flags = FPRINT|PLASMAGUARD
 
 /obj/item/clothing/suit/storage
     name = "Storage"
@@ -382,13 +379,13 @@
 	armor = list(melee = 15, bullet = 5, laser = 10, energy = 5, bomb = 5, bio = 0, rad = 0)
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	flags_inv = HIDEJUMPSUIT
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | ONESIZEFITSALL
 
 /obj/item/clothing/head/helmet/HoS
 	name = "Head of Security Hat"
 	desc = "The hat of the Head of Security. For showing the officers who's in charge."
 	icon_state = "hoscap"
-	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+	flags = FPRINT | HEADCOVERSEYES
 	armor = list(melee = 20, bullet = 10, laser = 15,energy = 10, bomb = 10, bio = 10, rad = 0)
 	flags_inv = HIDEEARS
 
@@ -421,7 +418,7 @@
 	icon_state = "warden_jacket"
 	item_state = "r_suit"
 	body_parts_covered = CHEST|GROIN|ARMS
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | ONESIZEFITSALL
 
 // ARMOR
 
@@ -431,7 +428,7 @@
 	icon_state = "armor"
 	item_state = "armor"
 	body_parts_covered = CHEST|GROIN
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | ONESIZEFITSALL
 
 /obj/item/clothing/suit/armor/laserproof
 	name = "ablative armor vest"
@@ -448,7 +445,7 @@
 	icon_state = "gearharness"
 	item_state = "gearharness"
 	body_parts_covered = CHEST|GROIN
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | ONESIZEFITSALL
 
 /obj/item/clothing/suit/storage/armor/rigvest
 	name = "armor rig vest"
@@ -456,7 +453,7 @@
 	icon_state = "armourrigvest"
 	item_state = "armourrigvest"
 	body_parts_covered = CHEST|GROIN
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	flags = FPRINT | ONESIZEFITSALL
 
 /obj/item/clothing/suit/armor/a_i_a_ptank
 	desc = "A wearable bomb with a health analyzer attached"
@@ -468,7 +465,7 @@
 	var/obj/item/weapon/tank/plasma/part4 = null
 	var/obj/item/clothing/suit/armor/vest/part3 = null
 	var/status = 0
-	flags = FPRINT | TABLEPASS | CONDUCT | ONESIZEFITSALL
+	flags = FPRINT | CONDUCT | ONESIZEFITSALL
 	body_parts_covered = CHEST
 
 /obj/item/clothing/suit/armor/captain

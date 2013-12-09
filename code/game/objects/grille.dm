@@ -187,16 +187,15 @@
 		return
 //window placing end
 
-	else if(istype(W, /obj/item/weapon/shard))	// can't get a shock by attacking with glass shard
-		src.health -= W.force * 0.5
-	else						// anything else, chance of a shock
-		if(!shock(user, 70))
-			playsound(src.loc, 'grillehit.ogg', 80, 1)
-			switch(W.damtype)
-				if("fire")
-					src.health -= W.force
-				if("brute")
-					src.health -= W.force * 0.5
+	else
+		if(W.flags && CONDUCT) 	// anything conductive, chance of a shock
+			shock(user, 70)
+		playsound(src.loc, 'grillehit.ogg', 80, 1)
+		switch(W.damtype)
+			if("fire")
+				src.health -= W.force
+			if("brute")
+				src.health -= W.force * 0.5
 
 	src.healthcheck()
 	..()

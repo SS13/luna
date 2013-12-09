@@ -2,7 +2,7 @@
 	name = "hard hat"
 	desc = "A piece of headgear used in dangerous working conditions to protect the head. Comes with a built-in flashlight."
 	icon_state = "hardhat0_yellow"
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 	item_state = "hardhat0_yellow"
 	armor = list(melee = 30, bullet = 5, laser = 20,energy = 10, bomb = 20, bio = 10, rad = 20)
 	var/on = 0
@@ -19,7 +19,7 @@
 	item_color = "red"
 	name = "firefighter helmet"
 	protective_temperature = 16000
-//	flags = FPRINT | TABLEPASS | STOPSPRESSUREDMAGE
+//	flags = FPRINT | STOPSPRESSUREDMAGE
 //	heat_protection = HEAD
 //	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
 //	cold_protection = HEAD
@@ -30,7 +30,7 @@
 	item_state = "hardhat0_white"
 	item_color = "white"
 	protective_temperature = 16000
-//	flags = FPRINT | TABLEPASS | STOPSPRESSUREDMAGE
+//	flags = FPRINT | STOPSPRESSUREDMAGE
 //	heat_protection = HEAD
 //	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
 //	cold_protection = HEAD

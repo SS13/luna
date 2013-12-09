@@ -11,7 +11,7 @@ RACK PARTS
 	name = "table parts"
 	icon = 'items.dmi'
 	icon_state = "table_parts"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | CONDUCT
 
 
 /obj/item/weapon/table_parts/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -46,7 +46,7 @@ RACK PARTS
 	name = "wooden table parts"
 	desc = "Keep away from fire."
 	icon_state = "wood_tableparts"
-	flags = FPRINT | TABLEPASS
+	flags = FPRINT
 
 /obj/item/weapon/table_parts/wood/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/wrench))

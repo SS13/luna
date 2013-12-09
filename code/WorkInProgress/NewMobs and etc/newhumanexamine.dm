@@ -15,8 +15,8 @@
 		t_him = "her"
 
 	if (w_uniform)
-		if (w_uniform.blood_DNA)
-			usr << "\red [name] is wearing a[w_uniform.blood_DNA ? " bloody " : " "] \icon[w_uniform] [w_uniform.name]!"
+		if (w_uniform.blood_DNA.len)
+			usr << "\red [name] is wearing a[w_uniform.blood_DNA.len ? " bloody " : " "] \icon[w_uniform] [w_uniform.name]!"
 		else
 			usr << "\blue [name] is wearing a \icon[w_uniform] [w_uniform.name]."
 
@@ -24,8 +24,8 @@
 		usr << "\blue [name] is \icon[handcuffed] handcuffed!"
 
 	if (wear_suit)
-		if (wear_suit.blood_DNA)
-			usr << "\red [name] has a[wear_suit.blood_DNA ? " bloody " : " "] \icon[wear_suit] [wear_suit.name] on!"
+		if (wear_suit.blood_DNA.len)
+			usr << "\red [name] has a[wear_suit.blood_DNA.len ? " bloody " : " "] \icon[wear_suit] [wear_suit.name] on!"
 		else
 			usr << "\blue [name] has a \icon[wear_suit] [wear_suit.name] on."
 	if (glasses)
@@ -34,36 +34,36 @@
 		usr << "\blue [name] has a \icon[ears] [ears.name] by [t_his] ear."
 
 	if (wear_mask)
-		if (wear_mask.blood_DNA)
-			usr << "\red [name] has a[wear_mask.blood_DNA ? " bloody " : " "] \icon[wear_mask] [wear_mask.name] on [t_his] face!"
+		if (wear_mask.blood_DNA.len)
+			usr << "\red [name] has a[wear_mask.blood_DNA.len ? " bloody " : " "] \icon[wear_mask] [wear_mask.name] on [t_his] face!"
 		else
 			usr << "\blue [name] has a \icon[wear_mask] [wear_mask.name] on [t_his] face."
 
 	if (l_hand)
-		if (l_hand.blood_DNA)
-			usr << "\red [name] has a[l_hand.blood_DNA ? " bloody " : " "] \icon[l_hand] [l_hand.name] in [t_his] left hand!"
+		if (l_hand.blood_DNA.len)
+			usr << "\red [name] has a[l_hand.blood_DNA.len ? " bloody " : " "] \icon[l_hand] [l_hand.name] in [t_his] left hand!"
 		else
 			usr << "\blue [name] has a \icon[l_hand] [l_hand.name] in [t_his] left hand."
 
 	if (r_hand)
-		if (r_hand.blood_DNA)
-			usr << "\red [name] has a[r_hand.blood_DNA ? " bloody " : " "] \icon[r_hand] [r_hand.name] in [t_his] right hand!"
+		if (r_hand.blood_DNA.len)
+			usr << "\red [name] has a bloody \icon[r_hand] [r_hand.name] in [t_his] right hand!"
 		else
 			usr << "\blue [name] has a \icon[r_hand] [r_hand.name] in [t_his] right hand."
 
 	if (belt)
-		if (belt.blood_DNA)
-			usr << "\red [name] has a[belt.blood_DNA ? " bloody " : " "] \icon[belt] [belt.name] on [t_his] belt!"
+		if (belt.blood_DNA.len)
+			usr << "\red [name] has a bloody \icon[belt] [belt.name] on [t_his] belt!"
 		else
 			usr << "\blue [name] has a \icon[belt] [belt.name] on [t_his] belt."
 
 	if (gloves)
-		if (gloves.blood_DNA)
+		if (gloves.blood_DNA.len)
 			usr << "\red [name] has bloody \icon[gloves] [gloves.name] on [t_his] hands!"
 		else
 			usr << "\blue [name] has \icon[gloves] [gloves.name] on [t_his] hands."
-	else if (blood_DNA)
-		usr << "\red [name] has[blood_DNA ? " bloody " : " "] hands!"
+	else if (blood_DNA.len)
+		usr << "\red [name] has[blood_DNA.len ? " bloody " : " "]hands!"
 
 	if (back)
 		usr << "\blue [name] has a \icon[back] [back.name] on [t_his] back."
@@ -101,7 +101,7 @@
 		else
 			usr << "\red <B>[name] looks severely burned!</B>"
 
-	if (stat == 2 || changeling_fakedeath == 1 || zombie)
+	if (stat == 2 || (status_flags & FAKEDEATH) || zombie)
 		if(distance <= 1)
 			if(istype(usr, /mob/living/carbon/human) && usr.stat == 0)
 				for(var/mob/O in viewers(usr.loc, null))

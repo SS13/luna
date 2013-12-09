@@ -110,6 +110,10 @@
 	var/itemnumber = 0
 	for(var/atom/A in the_turf)
 		if(A.invisibility) continue
+
+		if(A.pixel_x > 20 || A.pixel_x < -20 || A.pixel_y > 20 || A.pixel_y < -20)
+			continue
+
 		if(ismob(A))
 			var/icon/X = build_composite_icon(A)
 			X.Scale(22,20)
@@ -140,8 +144,6 @@
 					mob_detail += "You can also see [A] on the photo[A:health < 75 ? " - [A] looks hurt":""].[holding ? " [holding]":"."]"
 
 		else
-			if(A.pixel_x > 20 || A.pixel_y > 20)
-				continue
 
 			if(itemnumber < 5)
 				var/icon/X = build_composite_icon(A)

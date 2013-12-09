@@ -63,12 +63,11 @@
 	new src.type(T)
 
 /turf/simulated/mineral/random
-	name = "Mineral deposit"
-	var/mineralSpawnChanceList = list("Uranium" = 5, "Iron" = 50, "Diamond" = 1, "Gold" = 5, "Silver" = 5, "Plasma" = 25/*, "Adamantine" =5*/)//Currently, Adamantine won't spawn as it has no uses. -Durandan
+	name = "mineral deposit"
+	var/mineralSpawnChanceList = list("Uranium" = 5, "Iron" = 50, "Diamond" = 1, "Gold" = 5, "Silver" = 5, "Plasma" = 25, "Artifact" = 2, "Artifact Ore" = 5/*, "Adamantine" =5*/)//Currently, Adamantine won't spawn as it has no uses. -Durandan
 	var/mineralChance = 10  //means 10% chance of this plot changing to a mineral deposit
 
 /turf/simulated/mineral/random/New()
-	..()
 	if (prob(mineralChance))
 		var/mName = pickweight(mineralSpawnChanceList) //temp mineral name
 
@@ -87,19 +86,24 @@
 					M = new/turf/simulated/mineral/silver(src)
 				if("Plasma")
 					M = new/turf/simulated/mineral/plasma(src)
+				if("Artifact")
+					M = new/turf/simulated/mineral/artifact(src)
+				if("Artifact Ore")
+					M = new/turf/simulated/mineral/artifactore(src)
 				/*if("Adamantine")
 					M = new/turf/simulated/mineral/adamantine(src)*/
 			if(M)
+				..()
 				src = M
 				M.levelupdate()
 	return
 
 /turf/simulated/mineral/random/high_chance
 	mineralChance = 25
-	mineralSpawnChanceList = list("Uranium" = 10, "Iron" = 30, "Diamond" = 2, "Gold" = 10, "Silver" = 10, "Plasma" = 25)
+	mineralSpawnChanceList = list("Uranium" = 10, "Iron" = 30, "Diamond" = 2, "Gold" = 10, "Silver" = 10, "Plasma" = 25, "Artifact" = 4,  "Artifact Ore" = 8)
 
 /turf/simulated/mineral/uranium
-	name = "Uranium deposit"
+	name = "uranium deposit"
 	icon_state = "rock_Uranium"
 	mineralName = "Uranium"
 	mineralAmt = 5
@@ -107,7 +111,7 @@
 	spread = 1
 
 /turf/simulated/mineral/iron
-	name = "Iron deposit"
+	name = "iron deposit"
 	icon_state = "rock_Iron"
 	mineralName = "Iron"
 	mineralAmt = 5
@@ -115,7 +119,7 @@
 	spread = 1
 
 /turf/simulated/mineral/diamond
-	name = "Diamond deposit"
+	name = "diamond deposit"
 	icon_state = "rock_Diamond"
 	mineralName = "Diamond"
 	mineralAmt = 5
@@ -123,7 +127,7 @@
 	spread = 1
 
 /turf/simulated/mineral/gold
-	name = "Gold deposit"
+	name = "gold deposit"
 	icon_state = "rock_Gold"
 	mineralName = "Gold"
 	mineralAmt = 5
@@ -131,7 +135,7 @@
 	spread = 1
 
 /turf/simulated/mineral/silver
-	name = "Silver deposit"
+	name = "silver deposit"
 	icon_state = "rock_Silver"
 	mineralName = "Silver"
 	mineralAmt = 5
@@ -139,7 +143,7 @@
 	spread = 1
 
 /turf/simulated/mineral/plasma
-	name = "Plasma deposit"
+	name = "plasma deposit"
 	icon_state = "rock_Plasma"
 	mineralName = "Plasma"
 	mineralAmt = 5
@@ -147,12 +151,26 @@
 	spread = 1
 
 /turf/simulated/mineral/clown
-	name = "Bananium deposit"
+	name = "bananium deposit"
 	icon_state = "rock_Clown"
 	mineralName = "Clown"
 	mineralAmt = 5
 	spreadChance = 0
 	spread = 0
+
+/turf/simulated/mineral/artifactore
+	mineralName = "Artifact"
+	mineralAmt = 5
+	spreadChance = 25
+	spread = 1
+
+/turf/simulated/mineral/artifact
+	spreadChance = 0
+	spread = 0
+
+	New()
+		..()
+		new /obj/machinery/artifact(src)
 
 /turf/simulated/mineral/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/pickaxe) || istype(W, /obj/item/weapon/weldingtool/plasmacutter))
@@ -194,6 +212,8 @@
 				new /obj/item/weapon/ore/diamond(src)
 			if (src.mineralName == "Clown")
 				new /obj/item/weapon/ore/clown(src)
+			if (src.mineralName == "Artifact")
+				new /obj/item/weapon/ore/artifact(src)
 	var/turf/simulated/floor/plating/airless/asteroid/N = ChangeTurf(/turf/simulated/floor/plating/airless/asteroid)
 	N.fullUpdateMineralOverlays()
 	return

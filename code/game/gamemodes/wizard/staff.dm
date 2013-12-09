@@ -1,5 +1,5 @@
 /obj/item/weapon/staff/magical //Now with REAL MAGIC
-	flags = FPRINT | TABLEPASS | NOSHIELD | USEDELAY
+	flags = FPRINT | NOSHIELD | USEDELAY
 
 	var/obj/effect/proc_holder/spell/mob_spell
 	var/obj/effect/proc_holder/spell/turf_spell
@@ -61,3 +61,11 @@
 	//obj_spell - not sure what spell to give
 	door_spell = new /obj/effect/proc_holder/spell/aoe_turf/knock()
 	attackself_spell = new /obj/effect/proc_holder/spell/targeted/ethereal_jaunt()
+
+
+
+/obj/item/weapon/staff/magical/random/New()
+	..()
+	cooldown = 200 + rand(-100, 200)
+	if(prob(20))
+		door_spell = new /obj/effect/proc_holder/spell/aoe_turf/knock()

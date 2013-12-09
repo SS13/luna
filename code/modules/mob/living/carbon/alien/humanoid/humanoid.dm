@@ -115,7 +115,7 @@
 		return
 
 	else if (stat == 2 && !client)
-		gibs(loc, virus)
+		gibs(loc, viruses)
 		del(src)
 		return
 
@@ -325,7 +325,7 @@
 		if (!t1)
 			t1 = wear_suit.icon_state
 		overlays += image("icon" = 'mob.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		if (wear_suit.blood_DNA)
+		if (wear_suit.blood_DNA.len)
 			if (istype(wear_suit, /obj/item/clothing/suit/armor))
 				overlays += image("icon" = 'blood.dmi', "icon_state" = "armorblood[!lying ? "" : "2"]", "layer" = MOB_LAYER)
 			else
@@ -350,7 +350,7 @@
 		if (!t1)
 			t1 = head.icon_state
 		overlays += image("icon" = 'mob.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		if (head.blood_DNA)
+		if (head.blood_DNA.len)
 			overlays += image("icon" = 'blood.dmi', "icon_state" = "helmetblood[!lying ? "" : "2"]", "layer" = MOB_LAYER)
 		head.screen_loc = ui_oclothing
 

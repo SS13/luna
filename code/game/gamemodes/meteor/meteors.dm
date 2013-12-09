@@ -78,6 +78,7 @@
 	name = "meteor"
 	icon = 'meteor.dmi'
 	icon_state = "flaming"
+	pass_flags = PASSTABLE
 	density = 1
 	anchored = 1.0
 	var/hits = 1

@@ -26,8 +26,10 @@
 	blinded = null
 
 	//Handle temperature/pressure differences between body and environment
-	var/datum/gas_mixture/environment = loc.return_air(1)
-	handle_environment(environment)
+	if(loc)
+		var/datum/gas_mixture/environment = loc.return_air(1)
+		handle_environment(environment)
+	// else world << "I hate badmins."
 
 	//Mutations and radiation
 	handle_mutations_and_radiation()
@@ -242,7 +244,7 @@
 	if (radiation)
 		if (radiation > 100)
 			radiation = 100
-			weakened = 10
+			Weaken(10)
 			src << "\red You feel weak."
 			emote("collapse")
 
@@ -260,8 +262,8 @@
 				radiation -= 2
 				toxloss++
 				if(prob(5))
-					radiation -= 5
-					weakened = 3
+					radiation -= 15
+					Weaken(3)
 					src << "\red You feel weak."
 					emote("collapse")
 				updatehealth()
@@ -277,6 +279,7 @@
 						randmutg(src)
 					domutcheck(src,null, 1)
 					emote("gasp")
+					radiation -= 50
 				updatehealth()
 
 /mob/living/carbon/proc/handle_chemicals_in_body()
@@ -431,7 +434,7 @@
 		density = !lying
 
 /mob/living/carbon/proc/update_canmove()
-	if(paralysis || stunned || weakened || buckled || changeling_fakedeath)
+	if(paralysis || stunned || weakened || buckled || (status_flags & FAKEDEATH))
 		canmove = 0
 	else
 		canmove = 1

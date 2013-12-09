@@ -28,8 +28,8 @@
 /obj/item/clothing/shoes/syndigaloshes:1:No-Slip Syndicate Shoes;
 /obj/item/device/encryptionkey/syndicate:1:Binary Encryption Key;
 /obj/item/clothing/under/chameleon:2:Chameleon Jumpsuit;
-/obj/item/weapon/gun/projectile:6:Revolver;
-/obj/item/ammo_magazine/a357:3:Revolver Ammo;
+/obj/item/weapon/gun/projectile/revolver:6:Revolver;
+/obj/item/ammo_magazine/box/a357:3:Revolver Ammo;
 /obj/item/weapon/card/emag:2:Cryptographic Sequencer;
 /obj/item/weapon/card/id/syndicate:1:Fake ID;
 /obj/item/clothing/glasses/thermal:4:Thermal Glasses;
@@ -65,6 +65,9 @@
 	var/list/possible_syndicates = list()
 	possible_syndicates = get_possible_syndicates()
 	var/agent_number = 0
+
+	if(!possible_syndicates)
+		return 0
 
 	if(possible_syndicates.len < 1)
 		return 0
