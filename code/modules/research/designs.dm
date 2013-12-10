@@ -303,14 +303,14 @@ other types of metals and chemistry for reagents).
 	materials = list("$glass" = 2000, "sacid" = 20)
 	build_path = "/obj/item/weapon/circuitboard/computer/rdconsole"
 
-/*/datum/design/ordercomp
+/datum/design/ordercomp
 	name = "Circuit Design (Supply ordering console)"
 	desc = "Allows for the construction of circuit boards used to build a Supply ordering console."
 	id = "ordercomp"
 	req_tech = list("programming" = 2)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
-	build_path = "/obj/item/weapon/circuitboard/ordercomp"
+	build_path = "/obj/item/weapon/circuitboard/computer/ordercomp"
 
 /datum/design/supplycomp
 	name = "Circuit Design (Supply shuttle console)"
@@ -319,7 +319,7 @@ other types of metals and chemistry for reagents).
 	req_tech = list("programming" = 3)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
-	build_path = "/obj/item/weapon/circuitboard/supplycomp"*/
+	build_path = "/obj/item/weapon/circuitboard/computer/supplycomp"
 
 /*/datum/design/comm_monitor
 	name = "Circuit Design (Telecommunications Monitoring Console)"

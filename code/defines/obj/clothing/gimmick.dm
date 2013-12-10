@@ -2,7 +2,6 @@
 	name = "red shoes"
 	icon_state = "red"
 
-
 /obj/item/clothing/head/helmet/space/santahat
 	name = "Santa's hat"
 	icon_state = "santahat"
@@ -15,12 +14,12 @@
 
 
 /obj/item/clothing/mask/gas/owl
-	name = "Owl mask"
+	name = "owl mask"
 	desc = "Twoooo!"
 	icon_state = "owl"
 
 /obj/item/clothing/under/owl
-	name = "Owl uniform"
+	name = "owl uniform"
 	desc = "Twoooo!"
 	icon_state = "owl"
 	item_color = "owl"

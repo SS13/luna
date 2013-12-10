@@ -244,3 +244,39 @@
 /mob/proc/spellremove(var/mob/M as mob)
 	for(var/obj/effect/proc_holder/spell/spell_to_remove in src.spell_list)
 		del(spell_to_remove)
+
+/obj/item/weapon/spellbook/oneuse
+	name = "magic scroll"
+	icon = 'icons/obj/wizard.dmi'
+	icon_state ="scroll2f"
+	desc = "This scroll seems to radiate power."
+	var/spell_path
+	var/spell_name = "nothing"
+	uses = 1
+
+/obj/item/weapon/spellbook/oneuse/attack_self(mob/user as mob)
+	if(!uses) return
+
+	uses--
+	user.spell_list += new spell_path(user)
+	user << "You have learned [spell_name]!"
+
+/obj/item/weapon/spellbook/oneuse/fireball
+	spell_path = /obj/effect/proc_holder/spell/dumbfire/fireball
+	spell_name = "fireball"
+	desc = "This scroll feels warm to the touch."
+
+/obj/item/weapon/spellbook/oneuse/blink
+	spell_path = /obj/effect/proc_holder/spell/targeted/smoke
+	spell_name = "blink"
+	desc = "This scroll is hard to hold in hands."
+
+/obj/item/weapon/spellbook/oneuse/smoke
+	spell_path = /obj/effect/proc_holder/spell/targeted/smoke
+	spell_name = "smoke"
+	desc = "This scroll is overflowing with the dank arts."
+
+/obj/item/weapon/spellbook/oneuse/forcewall
+	spell_path = /obj/effect/proc_holder/spell/aoe_turf/conjure/forcewall
+	spell_name = "forcewall"
+	desc = "This scroll is dedicated to mimes."

@@ -135,7 +135,7 @@ Pod/Blast Doors computer
 		playsound(src.loc, 'Screwdriver.ogg', 50, 1)
 		if(do_after(user, 20))
 			var/obj/structure/frame/computer/A = new /obj/structure/frame/computer( src.loc )
-			var/obj/item/weapon/circuitboard/computer/M = new circuit( A )
+			var/obj/item/weapon/circuitboard/computer/M = new circuit(A)
 			A.circuit = M
 			A.anchored = 1
 			for (var/obj/C in src)
