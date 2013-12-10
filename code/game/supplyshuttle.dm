@@ -72,6 +72,14 @@ var/supply_shuttle_points = 50
 			if (prob(5))
 				del(src)
 
+/obj/effect/landmark/supplymarker
+	icon_state = "X"
+	icon = 'mark.dmi'
+	name = "X"
+	invisibility = 101
+	anchored = 1
+	opacity = 0
+
 /area/supplyshuttle
 	name = "Supply Shuttle"
 	icon_state = "supply"
@@ -88,18 +96,12 @@ var/supply_shuttle_points = 50
 	name = "Supply shuttle console"
 	icon_state = "shuttle"
 	req_access = list(access_cargo)
+	circuit = /obj/item/weapon/circuitboard/computer/supplycomp
 
 /obj/machinery/computer/cargo/ordercomp
 	name = "Supply ordering console"
 	icon_state = "supply"
-
-/obj/effect/landmark/supplymarker
-	icon_state = "X"
-	icon = 'mark.dmi'
-	name = "X"
-	invisibility = 101
-	anchored = 1
-	opacity = 0
+	circuit = /obj/item/weapon/circuitboard/computer/ordercomp
 
 /datum/supply_order
 	var/datum/supply_packs/object = null
@@ -231,30 +233,12 @@ var/supply_shuttle_points = 50
 
 	return
 
-/obj/machinery/computer/cargo/ordercomp/attackby(I as obj, user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/computer/cargo/ordercomp/attack_ai(var/mob/user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/computer/cargo/ordercomp/attack_paw(var/mob/user as mob)
-	return src.attack_hand(user)
 
 /obj/machinery/computer/cargo/supplycomp/attackby(I as obj, user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/computer/cargo/supplycomp/attack_ai(var/mob/user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/computer/cargo/supplycomp/attack_paw(var/mob/user as mob)
-	return src.attack_hand(user)
-
-/obj/machinery/computer/cargo/supplycomp/attackby(I as obj, user as mob)
+	..()
 	if(istype(I,/obj/item/weapon/card/emag) && !emagged)
 		user << "\blue Special supplies unlocked."
 		emagged = 1
-	else
-		return src.attack_hand(user)
 
 /obj/machinery/computer/cargo/ordercomp/attack_hand(var/mob/user as mob)
 	if(..())

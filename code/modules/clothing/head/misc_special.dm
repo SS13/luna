@@ -15,13 +15,13 @@
 	name = "welding helmet"
 	desc = "A head-mounted face cover designed to protect the wearer completely from space-arc eye."
 	icon_state = "welding"
-	flags = (FPRINT | HEADCOVERSEYES | HEADCOVERSMOUTH)
+	flags = FPRINT | HEADCOVERSEYES | HEADCOVERSMOUTH
 	item_state = "welding"
 	m_amt = 3000
 	g_amt = 1000
 	var/up = 0
 	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
-	flags_inv = (HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE)
+	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE
 
 /obj/item/clothing/head/helmet/welding/attack_self()
 	toggle()

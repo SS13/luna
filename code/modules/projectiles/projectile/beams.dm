@@ -52,8 +52,6 @@
 		if(istype(target, /turf/simulated/mineral))
 			var/turf/simulated/mineral/turf = target
 			turf.gets_drilled()
-		else if(istype(target, /turf/simulated/wall))
-			target.ex_act(3)
 
 /obj/item/projectile/bluetag
 	name = "lasertag beam"

@@ -1,6 +1,6 @@
 /obj/item/weapon/circuitboard
 	w_class = 2.0
-	name = "Circuit board"
+	name = "circuit board"
 	icon = 'icons/obj/module.dmi'
 	icon_state = "id_mod"
 	item_state = "electronic"
@@ -11,6 +11,7 @@
 	var/frequency = null
 	var/computertype = null
 	var/list/records = null
+	var/hacked = 0
 
 /obj/item/weapon/circuitboard/circuitry
 	name = "Circuitry"
@@ -20,111 +21,150 @@
 
 /obj/item/weapon/circuitboard/computer/security
 	name = "Circuit board (Security)"
-	computertype = "/obj/machinery/computer/security"
-	/obj/item/weapon/circuitboard/computer/aiupload
+	computertype = /obj/machinery/computer/security
+
+/obj/item/weapon/circuitboard/computer/aiupload
 	name = "Circuit board (AI Upload)"
-	computertype = "/obj/machinery/computer/aiupload"
+	computertype = /obj/machinery/computer/aiupload
 	origin_tech = "programming=4"
+
 /obj/item/weapon/circuitboard/computer/med_data
 	name = "Circuit board (Medical)"
-	computertype = "/obj/machinery/computer/med_data"
-	/obj/item/weapon/circuitboard/computer/scan_consolenew
+	computertype = /obj/machinery/computer/med_data
+
+/obj/item/weapon/circuitboard/computer/scan_consolenew
 	name = "Circuit board (DNA Machine)"
-	computertype = "/obj/machinery/scan_consolenew"
+	computertype = /obj/machinery/scan_consolenew
 	origin_tech = "programming=2;biotech=2"
+
 /obj/item/weapon/circuitboard/computer/communications
 	name = "Circuit board (Communications)"
-	computertype = "/obj/machinery/computer/communications"
+	computertype = /obj/machinery/computer/communications
 	origin_tech = "programming=2;magnets=2"
+
 /obj/item/weapon/circuitboard/computer/card
 	name = "Circuit board (ID Computer)"
-	computertype = "/obj/machinery/computer/card"
+	computertype = /obj/machinery/computer/card
+
 /obj/item/weapon/circuitboard/computer/teleporter
 	name = "Circuit board (Teleporter)"
-	computertype = "/obj/machinery/computer/teleporter"
+	computertype = /obj/machinery/computer/teleporter
 	origin_tech = "programming=2;bluespace=2"
+
 /obj/item/weapon/circuitboard/computer/secure_data
 	name = "Circuit board (Secure Data)"
-	computertype = "/obj/machinery/computer/secure_data"
+	computertype = /obj/machinery/computer/secure_data
+
 /obj/item/weapon/circuitboard/computer/atmospherealerts
 	name = "Circuit board (Atmosphere alerts)"
-	computertype = "/obj/machinery/computer/atmosphere/alerts"
+	computertype = /obj/machinery/computer/atmosphere/alerts
+
 /obj/item/weapon/circuitboard/computer/atmospheresiphonswitch
 	name = "Circuit board (Atmosphere siphon control)"
-	computertype = "/obj/machinery/computer/atmosphere/siphonswitch"
+	computertype = /obj/machinery/computer/atmosphere/siphonswitch
+
 /obj/item/weapon/circuitboard/computer/air_management
 	name = "Circuit board (Atmospheric monitor)"
-	computertype = "/obj/machinery/computer/general_air_control"
+	computertype = /obj/machinery/computer/general_air_control
+
 /obj/item/weapon/circuitboard/computer/injector_control
 	name = "Circuit board (Injector control)"
-	computertype = "/obj/machinery/computer/general_air_control/fuel_injection"
+	computertype = /obj/machinery/computer/general_air_control/fuel_injection
+
 /obj/item/weapon/circuitboard/computer/general_alert
 	name = "Circuit board (General Alert)"
-	computertype = "/obj/machinery/computer/general_alert"
+	computertype = /obj/machinery/computer/general_alert
+
 /obj/item/weapon/circuitboard/computer/pod
 	name = "Circuit board (Massdriver control)"
-	computertype = "/obj/machinery/computer/pod"
+	computertype = /obj/machinery/computer/pod
+
 /obj/item/weapon/circuitboard/computer/robotics
 	name = "Circuit board (Robotics Control)"
-	computertype = "/obj/machinery/computer/robotics"
+	computertype = /obj/machinery/computer/robotics
 	origin_tech = "programming=3"
+
 /obj/item/weapon/circuitboard/computer/cloning
 	name = "Circuit board (Cloning)"
-	computertype = "/obj/machinery/computer/cloning"
+	computertype = /obj/machinery/computer/cloning
 	origin_tech = "programming=3;biotech=3"
+
 /obj/item/weapon/circuitboard/computer/arcade
 	name = "Circuit board (Arcade)"
-	computertype = "/obj/machinery/computer/arcade"
+	computertype = /obj/machinery/computer/arcade
 	origin_tech = "programming=1"
+
 /obj/item/weapon/circuitboard/computer/turbine_control
 	name = "Circuit board (Turbine control)"
-	computertype = "/obj/machinery/computer/turbine_computer"
+	computertype = /obj/machinery/computer/turbine_computer
+
 /obj/item/weapon/circuitboard/computer/solar_control
 	name = "Circuit board (Solar control)"
-	computertype = "/obj/machinery/power/solar_control"
+	computertype = /obj/machinery/power/solar_control
 	origin_tech = "programming=2;powerstorage=2"
+
 /obj/item/weapon/circuitboard/computer/powermonitor
 	name = "Circuit board (Massdriver control)"
-	computertype = "/obj/machinery/power/monitor"
+	computertype = /obj/machinery/power/monitor
+
 /obj/item/weapon/circuitboard/computer/olddoor
 	name = "Circuit board (DoorMex)"
-	computertype = "/obj/machinery/computer/pod/old"
+	computertype = /obj/machinery/computer/pod/old
+
 /obj/item/weapon/circuitboard/computer/syndicatedoor
 	name = "Circuit board (ProComp Executive)"
-	computertype = "/obj/machinery/computer/pod/old/syndicate"
+	computertype = /obj/machinery/computer/pod/old/syndicate
+
 /obj/item/weapon/circuitboard/computer/swfdoor
 	name = "Circuit board (Magix)"
-	computertype = "/obj/machinery/computer/pod/old/swf"
-/obj/item/weapon/circuitboard/computer/curer
-	name = "Circuit board (Cure machine)"
-	computertype = "/obj/machinery/computer/curer"
-/obj/item/weapon/circuitboard/computer/diseaseanalyser
-	name = "Circuit board (Disease Analyser)"
-	computertype = "/obj/machinery/computer/diseaseanalyer"
-/obj/item/weapon/circuitboard/computer/diseasesplicer
-	name = "Circuit board (Disease Splicer)"
-	computertype = "/obj/machinery/computer/diseasesplicer"
+	computertype = /obj/machinery/computer/pod/old/swf
+
 /obj/item/weapon/circuitboard/computer/operating
 	name = "Circuit board (Operating Computer)"
-	computertype = "/obj/machinery/computer/operating"
+	computertype = /obj/machinery/computer/operating
 	origin_tech = "programming=2;biotech=2"
+
 /obj/item/weapon/circuitboard/computer/rdservercontrol
 	name = "Circuit Board (R&D Server Control)"
-	computertype = "/obj/machinery/computer/rdservercontrol"
+	computertype = /obj/machinery/computer/rdservercontrol
 	origin_tech = "programming=3"
+
 /obj/item/weapon/circuitboard/computer/rdconsole
 	name = "Circuit Board (R&D Console)"
-	computertype = "/obj/machinery/computer/rdconsole/core"
+	computertype = /obj/machinery/computer/rdconsole/core
+
 /obj/item/weapon/circuitboard/computer/pandemic
 	name = "Circuit board (PanD.E.M.I.C. 2200)"
-	computertype = "/obj/machinery/computer/pandemic"
+	computertype = /obj/machinery/computer/pandemic
 	origin_tech = "programming=2;biotech=2"
+
 /obj/item/weapon/circuitboard/computer/mecha_control
 	name = "Circuit Board (Exosuit Control Console)"
-	computertype = "/obj/machinery/computer/mecha"
+	computertype = /obj/machinery/computer/mecha
+
 /obj/item/weapon/circuitboard/computer/prisoner
 	name = "Circuit board (Prisoner Management Console)"
-	computertype = "/obj/machinery/computer/prisoner"
+	computertype = /obj/machinery/computer/prisoner
+
+/obj/item/weapon/circuitboard/computer/ordercomp
+	name = "Circuit board (Supply Ordering Console)"
+	computertype = /obj/machinery/computer/cargo/ordercomp
+
+/obj/item/weapon/circuitboard/computer/supplycomp
+	name = "Circuit board (Supply shuttle console)"
+	computertype = /obj/machinery/computer/cargo/supplycomp
+	origin_tech = "programming=3"
+
+/obj/item/weapon/circuitboard/computer/supplycomp/attackby(obj/item/I as obj, mob/user as mob)
+	if(istype(I,/obj/item/device/multitool))
+		switch(alert("Current receiver spectrum is set to: [hacked ? "BROAD" : "STANDARD"]","Multitool-Circuitboard interface","Switch to [!hacked ? "BROAD" : "STANDARD"]","Cancel") )
+			if("Switch to STANDARD","Switch to BROAD")
+				hacked = !hacked
+
+			if("Cancel")
+				return
+	return
+
 
 /obj/structure/frame
 	density = 1
@@ -219,13 +259,16 @@
 				user << "\blue You remove the glass panel."
 				src.state = 3
 				src.icon_state = "3"
-				var/obj/item/stack/sheet/glass/A = new /obj/item/stack/sheet/glass( src.loc )
+				var/obj/item/stack/sheet/glass/A = new /obj/item/stack/sheet/glass(src.loc)
 				A.amount = 2
 			if(istype(P, /obj/item/weapon/screwdriver))
 				playsound(src.loc, 'Screwdriver.ogg', 50, 1)
 				user << "\blue You connect the monitor."
-				var/B = new src.circuit.computertype ( src.loc )
+				var/B = new src.circuit.computertype(src.loc)
+
 				if(circuit.id) B:id = circuit.id
 				if(circuit.records) B:records = circuit.records
 				if(circuit.frequency) B:frequency = circuit.frequency
+				if(circuit.hacked) B:hacked = circuit.hacked
+
 				del(src)
