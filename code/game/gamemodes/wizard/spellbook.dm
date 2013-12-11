@@ -267,7 +267,7 @@
 	desc = "This scroll feels warm to the touch."
 
 /obj/item/weapon/spellbook/oneuse/blink
-	spell_path = /obj/effect/proc_holder/spell/targeted/smoke
+	spell_path = /obj/effect/proc_holder/spell/targeted/turf_teleport/blink
 	spell_name = "blink"
 	desc = "This scroll is hard to hold in hands."
 

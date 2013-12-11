@@ -37,15 +37,15 @@
 		if(!src.locked)
 			if(src.active==1)
 				src.active = 0
-				user << "You turn off the [src]."
+				user << "You turn off [src]."
 			else
 				src.active = 1
-				user << "You turn on the [src]."
+				user << "You turn on [src]."
 			update_icon()
 		else
 			user << "\red The controls are locked!"
 	else
-		user << "\red The [src] needs to be firmly secured to the floor first."
+		user << "\red The [src.name] needs to be firmly secured to the floor first."
 		return 1
 
 /obj/machinery/mininglaser/process()
@@ -58,7 +58,7 @@
 
 	if(active) use_power(100)
 
-	if(((src.last_shot + src.fire_delay) <= world.time) && (src.active == 1))
+	if(((src.last_shot + src.fire_delay) <= world.time) && src.active)
 		src.last_shot = world.time
 		use_power(300)
 		var/obj/item/projectile/beam/emitter/A = new /obj/item/projectile/beam/emitter( src.loc )
