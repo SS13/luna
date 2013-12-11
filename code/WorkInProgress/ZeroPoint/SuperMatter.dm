@@ -63,11 +63,15 @@
 			else						  // Phew, we're safe
 				radioalert("Core control computer", "Core returning to safe operating levels.")
 
-/*	if(det > explosiondet)
+	if(det > explosiondet)
 		roundinfo.core = 1
 		//proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, force = 0)
-		explosion(src.loc,8,15,20,30,1)
-		det = 0 */
+		explosion(src.loc,6,12,18,30,1)
+		det = 0
+		spawn(600)
+			if(!ticker && main_shuttle.location != 0 && !LaunchControl.online)
+				LaunchControl.start()
+				world << "\blue <B>Alert: Escape pods launching in [round(LaunchControl.timeleft()/60)] minutes.</B>"
 
 	if (!removed)
 		return 1

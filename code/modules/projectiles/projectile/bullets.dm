@@ -8,17 +8,17 @@
 
 
 /obj/item/projectile/bullet/weakbullet
-	damage = 15
+	damage = 10
 	stun = 5
 	weaken = 10
 
 
 /obj/item/projectile/bullet/midbullet
-	damage = 20
+	damage = 25
 	weaken = 3
 
 /obj/item/projectile/bullet/midbullet2
-	damage = 25
+	damage = 30
 
 /obj/item/projectile/bullet/suffocationbullet//How does this even work?
 	name = "co bullet"
