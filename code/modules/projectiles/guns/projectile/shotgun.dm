@@ -73,7 +73,7 @@
 	force = 10
 	slot_flags = SLOT_BACK
 	origin_tech = "combat=3;materials=1"
-	mag_type = /obj/item/ammo_magazine/internal/cylinder/dualshot
+	mag_type = /obj/item/ammo_magazine/internal/dualshot
 
 /obj/item/weapon/gun/projectile/revolver/doublebarrel/attackby(var/obj/item/A as obj, mob/user as mob)
 	..()

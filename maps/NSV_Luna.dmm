@@ -5190,7 +5190,7 @@
 "bVP" = (/turf/simulated/floor/plating,/area/maintenance/hangarequip)
 "bVQ" = (/obj/cabling/power{icon_state = "2-4"},/turf/simulated/floor/plating,/area/maintenance/hangarequip)
 "bVR" = (/obj/machinery/power/terminal{tag = "icon-term (EAST)"; icon_state = "term"; dir = 4},/obj/cabling/power{icon_state = "0-8"},/obj/machinery/power/monitor,/turf/simulated/floor/plating,/area/maintenance/hangarequip)
-"bVS" = (/obj/machinery/power/smes{charge = 500000; chargelevel = 0; chargemode = 1; desc = "A high-capacity superconducting magnetic energy storage (SMES) unit.  This one is set to maintain the supply of power to the hangar in case of emergency"; name = "Hangar Backup Power Supply"; output = 0},/turf/simulated/floor/plating,/area/maintenance/hangarequip)
+"bVS" = (/obj/machinery/power/smes{charge = 500000; chargelevel = 500000; chargemode = 1; desc = "A high-capacity superconducting magnetic energy storage (SMES) unit.  This one is set to maintain the supply of power to the hangar in case of emergency"; name = "Hangar Backup Power Supply"; output = 0},/turf/simulated/floor/plating,/area/maintenance/hangarequip)
 "bVT" = (/turf/simulated/floor/plating{tag = "icon-warnplate (EAST)"; icon_state = "warnplate"; dir = 4},/area/maintenance/starboard1)
 "bVU" = (/obj/structure/grille,/obj/machinery/door/firedoor/border_only{name = "Emergency Shutter"},/obj/structure/window/reinforced{tag = "icon-rwindow (EAST)"; icon_state = "rwindow"; dir = 4},/obj/structure/window/reinforced{tag = "icon-rwindow (WEST)"; icon_state = "rwindow"; dir = 8},/turf/simulated/floor/plating,/area/maintenance/starboard1)
 "bVV" = (/turf/simulated/wall,/area/hallway/primary/services)
