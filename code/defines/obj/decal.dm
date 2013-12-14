@@ -10,7 +10,7 @@
 	var/mob/blood_owner = null
 
 /obj/effect/decal/cleanable/blood/proc/AddHumanBlood(var/mob/living/carbon/human/M)
-	blood_DNA[M.dna.unique_enzymes] = M.b_type
+	blood_DNA[M.dna.unique_enzymes] = M.dna.blood_type
 	for(var/datum/disease/D in M.viruses)
 		var/datum/disease/newDisease = D.Copy(1)
 		viruses += newDisease

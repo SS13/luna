@@ -37,6 +37,9 @@
 	//Chemicals in the body
 	handle_chemicals_in_body()
 
+	// Ling stuff, chem regeneration
+	handle_changeling()
+
 	//stuff in the stomach
 	handle_stomach()
 

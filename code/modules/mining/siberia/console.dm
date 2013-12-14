@@ -86,11 +86,6 @@
 
 		src.updateUsrDialog()
 
-	process()
-		if(!..())
-			src.updateDialog()
-		return
-
 /obj/machinery/computer/siberia/control/wall
 	name = "Labor Camp Console"
 	icon = 'icons/obj/machines/mining_machines.dmi'

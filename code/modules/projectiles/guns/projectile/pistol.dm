@@ -133,7 +133,7 @@
 /obj/item/weapon/gun/projectile/automatic/pistol/syndie/New()
 	..()
 	del(magazine)
-	magazine = new /obj/item/ammo_magazine/external/mc9mm/extra()
+	magazine = new /obj/item/ammo_magazine/external/mc9mm/extra(src)
 
 
 /obj/item/weapon/silencer

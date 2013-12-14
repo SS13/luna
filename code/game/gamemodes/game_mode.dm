@@ -3,13 +3,24 @@
 	var/config_tag = null
 	var/votable = 1
 	var/probability = 1
-	// this includes admin-appointed traitors and multitraitors. Easy!
+
+	// Antags.
 	var/list/datum/mind/traitors = list()
+	var/list/datum/mind/changelings = list()
+	var/list/datum/mind/head_revolutionaries = list()
+	var/list/datum/mind/revolutionaries = list()
+	var/list/datum/mind/syndicates = list()
+	var/list/datum/mind/wizards = list()
+	var/list/datum/mind/cult = list()
+	// this includes admin-appointed antags and multiantags. Easy!
+
 	var/list/logtraitors = list()
 
 	var/uplink_welcome
 	var/uplink_items
 	var/uplink_uses
+
+	var/list/allwords = list("travel","self","see","hell","blood","join","tech","destroy", "other", "hide")
 
 	var/enabled = 1
 

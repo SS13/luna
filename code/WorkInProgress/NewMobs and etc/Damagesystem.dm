@@ -20,7 +20,6 @@
 	var/b_eyes = 0
 	var/s_tone = 0
 	var/age = 30
-	var/b_type = "A+"
 	var/obj/overlay/hair
 
 	var/obj/item/weapon/r_store = null	//Left pocket
@@ -51,6 +50,7 @@
 	var/datum/organ/external/DEBUG_lfoot
 	var/datum/reagents/vessel
 
+	var/special_voice = ""
 	var/gender_ambiguous = 0 //if something goes wrong during gender reassignment this generates a line in examine
 
 	var/list/hud_list = list()
@@ -151,7 +151,7 @@
 /mob/living/carbon/human/proc/fixblood()
 	for(var/datum/reagent/blood/B in vessel.reagent_list)
 		if(B.id == "blood" && B.data)
-			B.data["blood_type"] = src.b_type
+			B.data["blood_type"] = src.dna.blood_type
 			B.data["blood_DNA"] = src.dna.unique_enzymes
 			if(viruses)
 				B.data["viruses"] = viruses
@@ -252,9 +252,14 @@
 				stat("Tank Pressure", internal.air_contents.return_pressure())
 				stat("Distribution Pressure", internal.distribute_pressure)
 
-	var/obj/item/device/assembly/health/H = locate() in src
-	if(H && H.scanning)
-		stat("Health", health)
+		if(mind)
+			if(mind.changeling)
+				stat("Chemical Storage", "[mind.changeling.chem_charges]/[mind.changeling.chem_storage]")
+				stat("Absorbed DNA", mind.changeling.absorbedcount)
+
+		var/obj/item/device/assembly/health/H = locate() in src
+		if(H && H.scanning)
+			stat("Health", health)
 
 
 /mob/living/carbon/human/ex_act(severity)
@@ -2123,3 +2128,7 @@
 
 				if(prob(bruteloss - 50))
 					gib()
+
+/mob/living/carbon/proc/handle_changeling()
+	if(mind && mind.changeling)
+		mind.changeling.regenerate()

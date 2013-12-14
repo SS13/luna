@@ -1,12 +1,8 @@
-/datum/game_mode
-	var/list/datum/mind/syndicates = list()
-
 /datum/game_mode/nuclear
 	name = "nuclear emergency"
 	config_tag = "nuclear"
 	enabled = 1
 
-//	var/list/datum/mind/syndicates = list()
 	var/finished = 0
 	var/nuke_detonated = 0 //Has the nuke gone off?
 	var/agents_possible = 0 //If we ever need more syndicate agents.
@@ -161,19 +157,6 @@
 		send_intercept()
 
 	return
-
-/datum/game_mode/nuclear/proc/equip_syndicate(mob/living/carbon/human/synd_mob)
-
-	synd_mob.equip_if_possible(new /obj/item/device/radio/headset/syndicate(synd_mob), synd_mob.slot_ears)
-
-	synd_mob.equip_if_possible(new /obj/item/clothing/under/syndicate(synd_mob), synd_mob.slot_w_uniform)
-	synd_mob.equip_if_possible(new /obj/item/clothing/shoes/black(synd_mob), synd_mob.slot_shoes)
-	synd_mob.equip_if_possible(new /obj/item/clothing/gloves/swat(synd_mob), synd_mob.slot_gloves)
-
-	synd_mob.equip_if_possible(new /obj/item/weapon/storage/backpack(synd_mob), synd_mob.slot_back)
-	synd_mob.equip_if_possible(new /obj/item/weapon/reagent_containers/pill/cyanide(synd_mob), synd_mob.slot_in_backpack)
-
-	synd_mob.update_clothing()
 
 /datum/game_mode/nuclear/check_win()
 	if (src.nuke_detonated)

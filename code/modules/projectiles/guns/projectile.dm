@@ -71,6 +71,7 @@
 					AM.stored_ammo -= AC
 					num_loaded++
 				else
+					AM.update_icon()
 					break
 		if(istype(A, /obj/item/ammo_casing))
 			var/obj/item/ammo_casing/AC = A

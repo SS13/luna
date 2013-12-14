@@ -91,7 +91,6 @@
 			/client/proc/clearmap,
 			/client/proc/cmd_admin_add_freeform_ai_law,
 			/client/proc/cmd_admin_alienize,
-			/client/proc/cmd_admin_changelinginize,
 			/client/proc/cmd_admin_delete,
 			/client/proc/cmd_admin_drop_everything,
 			/client/proc/cmd_admin_godmode,

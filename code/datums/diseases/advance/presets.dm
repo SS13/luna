@@ -1,5 +1,4 @@
 // Cold
-
 /datum/disease/advance/cold/New(var/process = 1, var/datum/disease/advance/D, var/copy = 0)
 	if(!D)
 		name = "Cold"
@@ -8,7 +7,6 @@
 
 
 // Flu
-
 /datum/disease/advance/flu/New(var/process = 1, var/datum/disease/advance/D, var/copy = 0)
 	if(!D)
 		name = "Flu"
@@ -16,17 +14,15 @@
 	..(process, D, copy)
 
 
-/* Voice Changing
-
+// Voice Changing
 /datum/disease/advance/voice_change/New(var/process = 1, var/datum/disease/advance/D, var/copy = 0)
 	if(!D)
 		name = "Epiglottis Mutation"
 		symptoms = list(new/datum/symptom/voice_change)
-	..(process, D, copy)*/
+	..(process, D, copy)
 
 
 // Toxin Filter
-
 /datum/disease/advance/heal/New(var/process = 1, var/datum/disease/advance/D, var/copy = 0)
 	if(!D)
 		name = "Liver Enhancer"
@@ -35,7 +31,6 @@
 
 
 // Hullucigen
-
 /datum/disease/advance/hullucigen/New(var/process = 1, var/datum/disease/advance/D, var/copy = 0)
 	if(!D)
 		name = "Reality Impairment"

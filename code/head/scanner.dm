@@ -13,7 +13,7 @@
 	var/mname = user.real_name
 	var/dna = user.dna.unique_enzymes
 	var/age = user.age
-	var/bloodtype = user.b_type
+	var/bloodtype = user.dna.blood_type
 	var/fingerprint = md5(user.dna.uni_identity)
 	var/mgender = user.gender
 	var/list/marks = list()

@@ -85,8 +85,7 @@ Bonus
 	M.visible_message("<B>[M]</B> vomits on the floor!")
 
 	// They lose blood and health.
-	var/brute_dam = M.getBruteLoss()
-	if(brute_dam < 50)
+	if(M.getBruteLoss() < 50)
 		M.adjustBruteLoss(3)
 
 	var/turf/pos = get_turf(M)

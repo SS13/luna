@@ -249,19 +249,19 @@ var/obj/machinery/blackbox_recorder/blackbox
 
 	feedback_set_details("radio_usage","")
 
-	feedback_add_details("radio_usage","COM-[msg_common.len]")
-	feedback_add_details("radio_usage","SCI-[msg_science.len]")
-	feedback_add_details("radio_usage","HEA-[msg_command.len]")
-	feedback_add_details("radio_usage","MED-[msg_medical.len]")
-	feedback_add_details("radio_usage","ENG-[msg_engineering.len]")
-	feedback_add_details("radio_usage","SEC-[msg_security.len]")
-	feedback_add_details("radio_usage","DTH-[msg_deathsquad.len]")
-	feedback_add_details("radio_usage","SYN-[msg_syndicate.len]")
-	feedback_add_details("radio_usage","MIN-[msg_mining.len]")
-	feedback_add_details("radio_usage","CAR-[msg_cargo.len]")
-	feedback_add_details("radio_usage","OTH-[messages.len]")
-	feedback_add_details("radio_usage","PDA-[pda_msg_amt]")
-	feedback_add_details("radio_usage","RC-[rc_msg_amt]")
+	//feedback_add_details("radio_usage","COM-[msg_common.len]")
+	//feedback_add_details("radio_usage","SCI-[msg_science.len]")
+	//feedback_add_details("radio_usage","HEA-[msg_command.len]")
+	//feedback_add_details("radio_usage","MED-[msg_medical.len]")
+	//feedback_add_details("radio_usage","ENG-[msg_engineering.len]")
+	//feedback_add_details("radio_usage","SEC-[msg_security.len]")
+	//feedback_add_details("radio_usage","DTH-[msg_deathsquad.len]")
+	//feedback_add_details("radio_usage","SYN-[msg_syndicate.len]")
+	//feedback_add_details("radio_usage","MIN-[msg_mining.len]")
+	//feedback_add_details("radio_usage","CAR-[msg_cargo.len]")
+	//feedback_add_details("radio_usage","OTH-[messages.len]")
+	//feedback_add_details("radio_usage","PDA-[pda_msg_amt]")
+	//feedback_add_details("radio_usage","RC-[rc_msg_amt]")
 
 
 	feedback_set_details("round_end","[time2text(world.realtime)]") //This one MUST be the last one that gets set.
@@ -342,7 +342,7 @@ proc/feedback_set_details(var/variable,var/details)
 
 	FV.set_details(details)
 
-proc/feedback_add_details(var/variable,var/details)
+proc///feedback_add_details(var/variable,var/details)
 	if(!blackbox) return
 
 	variable = sql_sanitize_text(variable)

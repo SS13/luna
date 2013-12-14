@@ -48,11 +48,13 @@
 	var/max_ammo = 7
 	var/multiple_sprites = 0
 
-
 	New()
 		for(var/i = 1, i <= max_ammo, i++)
 			stored_ammo += new ammo_type(src)
-		desc = "There are [ammo_count()] shell\s left!"
+
+	examine()
+		..()
+		usr << "There are [ammo_count()] shell\s left!"
 
 	update_icon()
 		switch(multiple_sprites)
@@ -67,8 +69,6 @@
 			if(5) // Round by 10, for REALLY BIG mags
 				icon_state = "[initial(icon_state)]-[round(ammo_count(), 10)]"
 
-		desc = "There are [ammo_count()] shell\s left!"
-
 	attackby(var/obj/item/A as obj, mob/user as mob)
 		var/num_loaded = 0
 
@@ -79,8 +79,8 @@
 					AM.stored_ammo -= AC
 					num_loaded++
 				else
+					AM.update_icon()
 					break
-			AM.update_icon()
 
 		if(istype(A, /obj/item/ammo_casing))
 			var/obj/item/ammo_casing/AC = A
@@ -120,11 +120,13 @@
 		return stored_ammo.len
 
 	proc/get_round(var/keep = 0)
-		if (!stored_ammo.len)
+		if(!stored_ammo.len)
 			return null
 		else
 			var/b = stored_ammo[stored_ammo.len]
 			stored_ammo -= b
 			if(keep)
 				stored_ammo.Insert(1,b)
+			else
+				update_icon()
 			return b

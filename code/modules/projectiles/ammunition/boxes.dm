@@ -16,6 +16,9 @@
 	max_ammo = 6
 	multiple_sprites = 1
 
+/obj/item/ammo_magazine/box/c38/e
+	ammo_type = /obj/item/ammo_casing/c38/e
+
 
 /obj/item/ammo_magazine/box/a418
 	name = "ammo box (.418)"
@@ -61,7 +64,7 @@
  * SHOTGUN AMMO BOXES
  */
 
-/obj/item/ammo_magazine/box/shotgunbox
+/obj/item/ammo_magazine/box/shotgun
 	name = "slug box"
 	icon_state = "gbox"
 	caliber = ".12"
@@ -71,7 +74,6 @@
 	multiple_sprites = 1
 
 	update_icon()
-		..()
 		icon_state = "[initial(icon_state)]-0"
 		overlays = list()
 		var/i = 0
@@ -80,33 +82,17 @@
 			overlays += icon('icons/obj/ammo.dmi', "[AC.icon_state]-[i]")
 
 
-/obj/item/ammo_magazine/box/shotgunbox/empty
-	icon_state = "gbox-0"
-	max_ammo = 0
-
-/obj/item/ammo_magazine/box/shotgunbox/dart
+/obj/item/ammo_magazine/box/shotgun/dart
 	name = "darts box"
 	icon_state = "blbox"
 	ammo_type = /obj/item/ammo_casing/shotgun/dart
 
-/obj/item/ammo_magazine/box/shotgunbox/dart/empty
-	icon_state = "blbox-0"
-	max_ammo = 0
-
-/obj/item/ammo_magazine/box/shotgunbox/stun
+/obj/item/ammo_magazine/box/shotgun/stun
 	name = "stunshells box"
 	icon_state = "stunbox"
 	ammo_type = /obj/item/ammo_casing/shotgun/stunshell
 
-/obj/item/ammo_magazine/box/shotgunbox/stun/empty
-	icon_state = "stunbox-0"
-	max_ammo = 0
-
-obj/item/ammo_magazine/box/shotgunbox/bean
+/obj/item/ammo_magazine/box/shotgun/bean
 	name = "beanbag box"
 	icon_state = "bbox"
 	ammo_type = /obj/item/ammo_casing/shotgun/beanbag
-
-/obj/item/ammo_magazine/box/shotgunbox/bean/empty
-	icon_state = "bbox-0"
-	max_ammo = 0

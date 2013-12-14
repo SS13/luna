@@ -116,7 +116,7 @@
 
 		if(blood_DNA[M.dna.unique_enzymes])
 			return 0 //already bloodied with this blood. Cannot add more.
-		blood_DNA[M.dna.unique_enzymes] = M.b_type
+		blood_DNA[M.dna.unique_enzymes] = M.dna.blood_type
 		return 1 //we applied blood to the item
 
 	//adding blood to turfs
@@ -126,7 +126,7 @@
 		//get one blood decal and infect it with virus from M.viruses
 		for(var/obj/effect/decal/cleanable/blood/B in T.contents)
 			if(!B.blood_DNA[M.dna.unique_enzymes])
-				B.blood_DNA[M.dna.unique_enzymes] = M.b_type
+				B.blood_DNA[M.dna.unique_enzymes] = M.dna.blood_type
 			for(var/datum/disease/D in M.viruses)
 				var/datum/disease/newDisease = D.Copy(1)
 				B.viruses += newDisease
@@ -135,7 +135,7 @@
 
 		//if there isn't a blood decal already, make one.
 		var/obj/effect/decal/cleanable/blood/newblood = new /obj/effect/decal/cleanable/blood(T)
-		newblood.blood_DNA[M.dna.unique_enzymes] = M.b_type
+		newblood.blood_DNA[M.dna.unique_enzymes] = M.dna.blood_type
 		for(var/datum/disease/D in M.viruses)
 			var/datum/disease/newDisease = D.Copy(1)
 			newblood.viruses += newDisease
@@ -148,7 +148,7 @@
 		//if this blood isn't already in the list, add it
 		if(blood_DNA[H.dna.unique_enzymes])
 			return 0 //already bloodied with this blood. Cannot add more.
-		blood_DNA[H.dna.unique_enzymes] = H.b_type
+		blood_DNA[H.dna.unique_enzymes] = H.dna.blood_type
 		H.update_clothing()	//handles bloody hands overlays and updating
 		return 1 //we applied blood to the item
 	return
@@ -639,3 +639,29 @@
 		// Make toxins vomit look different
 		if(toxvomit)
 			this.icon_state = "vomittox_[pick(1,4)]"
+
+		for(var/datum/disease/D in M.viruses)
+			var/datum/disease/newDisease = D.Copy(1)
+			this.viruses += newDisease
+			newDisease.holder = this
+
+// Only adds blood on the floor -- Skie
+/atom/proc/add_blood_floor(mob/living/carbon/M as mob)
+	if(istype(src, /turf/simulated))
+		if(M.dna)	//mobs with dna = (monkeys + humans at time of writing)
+			var/obj/effect/decal/cleanable/blood/B = locate() in contents
+			if(!B)	B = new(src)
+			B.blood_DNA[M.dna.unique_enzymes] = M.dna.blood_type
+
+			for(var/datum/disease/D in M.viruses)
+				var/datum/disease/newDisease = D.Copy(1)
+				B.viruses += newDisease
+				newDisease.holder = B
+
+		else if(istype(M, /mob/living/carbon/alien))
+			var/obj/effect/decal/cleanable/xenoblood/B = locate() in contents
+			if(!B)	B = new(src)
+			B.blood_DNA["UNKNOWN BLOOD"] = "X*"
+		else if(istype(M, /mob/living/silicon/robot))
+			var/obj/effect/decal/cleanable/oil/B = locate() in contents
+			if(!B)	B = new(src)
