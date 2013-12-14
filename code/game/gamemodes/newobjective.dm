@@ -80,12 +80,12 @@
 			totalweight += objective.weight
 			theftobjectives -= objective
 		else switch(selectobj)
-			if(1 to 50)		//Theft Objectives (50% chance)
+			if(1 to 45)		//Theft Objectives (45% chance)
 				var/datum/objective/objective = pick(theftobjectives)
 				chosenobjectives += objective
 				totalweight += objective.weight
 				theftobjectives -= objective
-			if(51 to 90)	//Assassination Objectives (40% chance)
+			if(46 to 85)	//Assassination Objectives (40% chance)
 				var/datum/objective/assassinate/objective = pick(killobjectives)
 				for(var/datum/objective/protection/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Assassinate somebody they need to Protect.
 					if(conflicttest.target == objective.target)
@@ -95,7 +95,7 @@
 					totalweight += objective.weight
 					killobjectives -= objective
 				conflict = 0
-			if(91 to 100)	//Protection Objectives (10% chance)
+			if(86 to 100)	//Protection Objectives (15% chance)
 				var/datum/objective/protection/objective = pick(protectobjectives)
 				for(var/datum/objective/assassinate/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Protect somebody they need to Assassinate.
 					if(conflicttest.target == objective.target)
@@ -106,12 +106,10 @@
 					protectobjectives -= objective
 				conflict = 0
 
-	var/hasendgame = 0
-	for(var/datum/objective/o in chosenobjectives)
-		if(o.type == /datum/objective/hijack)
-			hasendgame = 1
-	if(hasendgame == 0)
+	if(prob(90))
 		chosenobjectives += new /datum/objective/escape(null,job)
+	else
+		chosenobjectives += new /datum/objective/hijack(null,job)
 	return chosenobjectives
 
 /proc/SelectChangelingObjectives(var/job,/var/datum/mind/changeling)
@@ -121,7 +119,8 @@
 	var/totalweight
 	var/selectobj
 	var/conflict
-	chosenobjectives += new /datum/objective/absorb(null,job)
+
+	totalweight += 20 // absorb has weight too
 
 	while(totalweight < 100)
 		selectobj = rand(1,100)	//Randomly determine the type of objective to be given.
@@ -131,12 +130,12 @@
 			totalweight += objective.weight
 			theftobjectives -= objective
 		else switch(selectobj)
-			if(1 to 60)		//Theft Objectives (60% chance)
+			if(1 to 50)		//Theft Objectives (50% chance)
 				var/datum/objective/objective = pick(theftobjectives)
 				chosenobjectives += objective
 				totalweight += objective.weight
 				theftobjectives -= objective
-			if(61 to 100)	//Assassination Objectives (40% chance)
+			if(51 to 100)	//Assassination Objectives (50% chance)
 				var/datum/objective/assassinate/objective = pick(killobjectives)
 				for(var/datum/objective/protection/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Assassinate somebody they need to Protect.
 					if(conflicttest.target == objective.target)
@@ -147,12 +146,12 @@
 					killobjectives -= objective
 				conflict = 0
 
-	var/hasendgame = 0
-	for(var/datum/objective/o in chosenobjectives)
-		if(o.type == /datum/objective/hijack)
-			hasendgame = 1
-	if(hasendgame == 0)
+	chosenobjectives += new /datum/objective/absorb(null,job)
+
+	if(prob(70))
 		chosenobjectives += new /datum/objective/escape(null,job)
+	else
+		chosenobjectives += new /datum/objective/survive(null,job)
 	return chosenobjectives
 
 
@@ -294,10 +293,10 @@
 
 		check_completion()
 			if(target && target.current)
-				if(target.current.stat == 2)
+				if(target.current.stat == DEAD)
 					if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
 				else
-					if(!target.current.handcuffed)
+					if(!target.current.handcuffed && !target.current.stat) // N2O is fine too
 						return 0
 			else if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
 			return 1
@@ -329,10 +328,10 @@
 
 			for(var/datum/shuttle/s in shuttles)
 				if(location in locate(s.centcom))
-					for(var/mob/living/player in locate(s.centcom))
-						if (player.mind && (player.mind != owner))
-							if (player.stat != 2) //they're not dead
-								return 0
+					for(var/mob/living/carbon/player in locate(s.centcom))
+						if (player.mind && player.mind != owner && player.stat != DEAD)
+							return 0
+
 					return 1
 
 			return 0
@@ -344,16 +343,15 @@
 			if(main_shuttle.location<2)
 				return 0
 
-			if(!owner.current || owner.current.stat ==2)
+			if(!owner.current || owner.current.stat == DEAD || issilicon(owner.current))
 				return 0
 
-			var/turf/location = get_turf(owner.current.loc)
+			var/turf/location = get_turf(owner.current)
 			if(!location)
 				return 0
 
 			if(owner.current:handcuffed)
 				return 0
-
 
 			for(var/datum/shuttle/s in shuttles)
 				if(location in locate(s.centcom))
@@ -365,7 +363,7 @@
 		explanation_text = "Stay alive until the end."
 
 		check_completion()
-			if(!owner.current || owner.current.stat == 2)
+			if(!owner.current || owner.current.stat == DEAD || issilicon(owner.current))
 				return 0
 
 			return 1
@@ -515,7 +513,7 @@
 /datum/objective/stealreagent
 	var/datum/reagent/steal_reagent
 	var/target_name
-	weight = 20
+	weight = 35
 
 	var/global/possible_reagents[] = list(
 		"polytrinic acid" = /datum/reagent/pacid,

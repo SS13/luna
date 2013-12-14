@@ -129,24 +129,6 @@ FLASHBANG
 			for(var/obj/item/device/flash/F in M) //Add something for the intercoms.
 				F.attack_self()
 
-		if (locate(/obj/item/weapon/melee/baton, M))
-			for(var/obj/item/weapon/melee/baton/B in M) //Add something for the intercoms.
-				B.charges = 0
-
-		if(locate(/obj/item/clothing/under/chameleon, M))
-			for(var/obj/item/clothing/under/chameleon/C in M) //Add something for the intercoms.
-				M << "\red <B>Your jumpsuit malfunctions</B>"
-				C.name = "psychedelic"
-				C.desc = "Groovy!"
-				C.icon_state = "psyche"
-				C.item_color = "psyche"
-				spawn(200)
-					C.name = "Black Jumpsuit"
-					C.icon_state = "bl_suit"
-					C.item_color = "black"
-					C.desc = null
-
-		M << "\red <B>BZZZT</B>"
 
 
 	for(var/obj/machinery/A in range(world.view-1, T))

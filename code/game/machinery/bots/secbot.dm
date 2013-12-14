@@ -797,8 +797,7 @@ Auto Patrol: []"},
 
 	new /obj/item/device/prox_sensor(Loc) // Dropping a prox sensor
 
-	var/obj/item/weapon/melee/baton/B = new /obj/item/weapon/melee/baton(Loc) // Dropping a baton, no charges
-	B.charges = 0
+	new /obj/item/weapon/melee/baton(Loc) // Dropping a baton
 
 	if (prob(50)) // Dropping a robot left arm
 		new /obj/item/robot_parts/l_arm(Loc)

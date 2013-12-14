@@ -169,25 +169,24 @@
 			now_pushing = 0
 			return
 		if(istype(equipped(), /obj/item/weapon/melee/baton)) // add any other item paths you think are necessary
-			if(loc:ul_Luminosity() < 3 || blinded)
-				var/obj/item/weapon/melee/baton/W = equipped()
-				if (world.time > lastDblClick+2)
-					lastDblClick = world.time
-					if((prob(40) || (prob(95) && (CLUMSY in mutations))) && W.status)
-						src << "\red You accidentally stun yourself with the [W.name]."
-						weakened = max(12, weakened)
-						playsound(loc, 'Egloves.ogg', 50, 1, -1)
-						W:charges--
-					else if(W.status)
-						for(var/mob/M in viewers(src, null))
-							if(M.client)
-								M << "\red <B>[src] accidentally bumps into [tmob] with the [W.name]."
-						tmob.weakened = max(4, tmob.weakened)
-						tmob.stunned = max(4, tmob.stunned)
-						playsound(loc, 'Egloves.ogg', 50, 1, -1)
-						W:charges--
-					now_pushing = 0
-					return
+			var/obj/item/weapon/melee/baton/W = equipped()
+			if (world.time > lastDblClick+2)
+				lastDblClick = world.time
+				if((prob(40) || (prob(95) && (CLUMSY in mutations))) && W.status)
+					src << "\red You accidentally stun yourself with the [W.name]."
+					weakened = max(12, weakened)
+					playsound(loc, 'Egloves.ogg', 50, 1, -1)
+					W.deductcharge(1000)
+				else if(W.status)
+					for(var/mob/M in viewers(src, null))
+						if(M.client)
+							M << "\red <B>[src] accidentally bumps into [tmob] with the [W.name]."
+					tmob.weakened = max(4, tmob.weakened)
+					tmob.stunned = max(4, tmob.stunned)
+					playsound(loc, 'Egloves.ogg', 50, 1, -1)
+					W.deductcharge(1000)
+				now_pushing = 0
+				return
 	now_pushing = 0
 	spawn(0)
 		..()
