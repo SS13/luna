@@ -121,7 +121,7 @@
 	flags = 0
 
 /obj/item/weapon/f_card
-	name = "Finger Print Card"
+	name = "fingerprint card"
 	icon = 'card.dmi'
 	icon_state = "fingerprint0"
 	var/amount = 10.0
@@ -133,13 +133,13 @@
 
 
 /obj/item/weapon/fcardholder
-	name = "Finger Print Case"
+	name = "fingerprint case"
 	icon = 'items.dmi'
 	icon_state = "fcardholder0"
 	item_state = "clipboard"
 
 /obj/item/weapon/game_kit
-	name = "Gaming Kit"
+	name = "gaming kit"
 	icon = 'items.dmi'
 	icon_state = "game_kit"
 	var/selected = null

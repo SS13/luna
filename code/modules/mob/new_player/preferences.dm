@@ -733,7 +733,6 @@ datum/preferences
 		character.gender = gender
 
 		character.age = age
-		character.b_type = b_type
 
 		character.r_eyes = r_eyes
 		character.g_eyes = g_eyes
@@ -840,6 +839,7 @@ datum/preferences
 		character.update_face()
 		character.update_body()
 
+		character.dna.blood_type = b_type
 /*
 
 	if (!M.real_name || M.be_random_name)

@@ -776,7 +776,7 @@
 			var/obj/effect/decal/cleanable/blood/B = new(src.loc)
 			if(B.blood_DNA[H.dna.unique_enzymes])
 				return 0 //already bloodied with this blood. Cannot add more.
-			B.blood_DNA[H.dna.unique_enzymes] = H.b_type
+			B.blood_DNA[H.dna.unique_enzymes] = H.dna.blood_type
 
 			for(var/datum/disease/D in H.viruses)
 				var/datum/disease/newDisease = D.Copy(1)

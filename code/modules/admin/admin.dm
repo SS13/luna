@@ -298,8 +298,8 @@
 			<A href='?src=\ref[src];c_mode2=revolution'>Revolution</A><br>
 			<A href='?src=\ref[src];c_mode2=rp-revolution'>RP Revolution (Alpha)</A><br>
 			<A href='?src=\ref[src];c_mode2=malfunction'>AI Malfunction</A><br>
+			<A href='?src=\ref[src];c_mode2=changeling'>Changeling</A><br>
 			<A href='?src=\ref[src];c_mode2=deathmatch'>Death Commando Deathmatch</A><br>
-			<A href='?src=\ref[src];c_mode2=confliction'>Confliction (TESTING)</A><br>
 			<A href='?src=\ref[src];c_mode2=ctf'>Capture The Flag (Beta)</A><br><br>
 			<A href='?src=\ref[src];c_mode2=derelict'>Derelict (Beta)</A><br>
 			<A href='?src=\ref[src];c_mode2=zombie'>Zombie (Beta)</A><br>
@@ -310,61 +310,15 @@
 			usr << browse(dat, "window=c_mode")
 
 	if (href_list["c_mode2"])
-		if ((src.rank in list( "Secondary Administrator", "Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host"  )))
+		if ((src.rank in list("Secondary Administrator", "Administrator", "Primary Administrator", "Super Administrator", "Coder", "Host")))
 			if (ticker && ticker.mode)
 				return alert(usr, "The game has already started.", null, null, null, null)
-			switch(href_list["c_mode2"])
-				if("secret")
-					master_mode = "secret"
-				if("random")
-					master_mode = "random"
-				if("traitor")
-					master_mode = "traitor"
-				if("meteor")
-					master_mode = "meteor"
-				if("extended")
-					master_mode = "extended"
-				if("monkey")
-					master_mode = "monkey"
-				if("nuclear")
-					master_mode = "nuclear"
-				if("blob")
-					master_mode = "blob"
-				if("sandbox")
-					master_mode = "sandbox"
-				if("restructuring")
-					master_mode = "restructuring"
-				if("wizard")
-					master_mode = "wizard"
-				if("revolution")
-					master_mode = "revolution"
-				if("rp-revolution")
-					master_mode = "rp-revolution"
-				if("malfunction")
-					master_mode = "malfunction"
-				if("deathmatch")
-					master_mode = "deathmatch"
-				if("confliction")
-					master_mode = "confliction"
-				if("ctf")
-					master_mode = "ctf"
-				if("derelict")
-					master_mode = "derelict"
-				if("zombie")
-					master_mode = "zombie"
-				if("takeover")
-					master_mode = "takeover"
-				/*if("among")
-					master_mode = "traitoramongus"*/
-				if("Extend-A-Traitormongous")
-					master_mode = "Extend-A-Traitormongous"
-				else
+
+			master_mode = href_list["c_mode2"]
 			log_admin("[key_name(usr)] set the mode as [master_mode].")
 			message_admins("\blue [key_name_admin(usr)] set the mode as [master_mode].", 1)
 			if(!ticker.hide_mode)
 				world << "\blue <b>The mode is now: [master_mode]</b>"
-			else
-				world << "\blue <b>The mode is now: secret </b>"
 
 			world.save_mode(master_mode)
 
@@ -1243,7 +1197,7 @@
 					dat += "<table cellspacing=5><tr><th>Name</th><th>DNA</th><th>Blood Type</th></tr>"
 					for(var/mob/living/carbon/human/H in world)
 						if(H.dna && H.ckey)
-							dat += "<tr><td>[H]</td><td>[H.dna.unique_enzymes]</td><td>[H.b_type]</td></tr>"
+							dat += "<tr><td>[H]</td><td>[H.dna.unique_enzymes]</td><td>[H.dna.blood_type]</td></tr>"
 					dat += "</table>"
 					usr << browse(dat, "window=DNA;size=440x410")
 				if("fingerprints")
@@ -1765,23 +1719,19 @@
 /mob/proc/revive()
 	if(istype(src, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = src
-		for(var/A in H.organs)
-			var/datum/organ/external/affecting = null
-			if(!H.organs[A])    continue
-			affecting = H.organs[A]
-			if(!istype(affecting, /datum/organ/external))    continue
-			affecting.heal_damage(1000, 1000)    //fixes getting hit after ingestion, killing you when game updates organ health
-			affecting.broken = 0
+		for(var/datum/organ/external/affecting in H.GetOrgans())
+			affecting.heal_damage(1000, 1000, 1)    //fixes getting hit after ingestion, killing you when game updates organ health
 			affecting.status = ORGAN_INTACT
-
-			if(!getbrain(H)) // In case you was debrained or decapitated
-				var/obj/item/organ/brain/brain = new /obj/item/organ/brain()
-				H.internal_organs += brain
-				brain.owner = H
 
 			for(var/datum/organ/external/wound/W in affecting.wounds)
 				W.stopbleeding()
-		H.vessel = new/datum/reagents(560)
+
+		if(!getbrain(H)) // In case you was debrained or decapitated
+			var/obj/item/organ/brain/brain = new /obj/item/organ/brain()
+			H.internal_organs += brain
+			brain.owner = H
+
+		H.vessel = new /datum/reagents(560)
 		H.vessel.my_atom = src
 		H.vessel.add_reagent("blood",560)
 		H.UpdateDamageIcon()

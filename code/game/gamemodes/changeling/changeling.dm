@@ -2,51 +2,10 @@
 	name = "changeling"
 	config_tag = "changeling"
 
+	var/const/waittime_l = 600 //lower bound on time before intercept arrives (in tenths of seconds)
+	var/const/waittime_h = 1800 //upper bound on time before intercept arrives (in tenths of seconds)
 
-	var
-		list/datum/mind/changelings = list()
-
-		const
-			prob_int_murder_target = 50 // intercept names the assassination target half the time
-			prob_right_murder_target_l = 25 // lower bound on probability of naming right assassination target
-			prob_right_murder_target_h = 50 // upper bound on probability of naimg the right assassination target
-
-			prob_int_item = 50 // intercept names the theft target half the time
-			prob_right_item_l = 25 // lower bound on probability of naming right theft target
-			prob_right_item_h = 50 // upper bound on probability of naming the right theft target
-
-			prob_int_sab_target = 50 // intercept names the sabotage target half the time
-			prob_right_sab_target_l = 25 // lower bound on probability of naming right sabotage target
-			prob_right_sab_target_h = 50 // upper bound on probability of naming right sabotage target
-
-			prob_right_killer_l = 25 //lower bound on probability of naming the right operative
-			prob_right_killer_h = 50 //upper bound on probability of naming the right operative
-			prob_right_objective_l = 25 //lower bound on probability of determining the objective correctly
-			prob_right_objective_h = 50 //upper bound on probability of determining the objective correctly
-
-			laser = 1
-			hand_tele = 2
-			plasma_bomb = 3
-			jetpack = 4
-			captain_card = 5
-			captain_suit = 6
-
-			destroy_plasma = 1
-			destroy_ai = 2
-			kill_monkeys = 3
-			cut_power = 4
-
-			percentage_plasma_destroy = 70 // what percentage of the plasma tanks you gotta destroy
-			percentage_station_cut_power = 80 // what percentage of the tiles have to have power cut
-			percentage_station_evacuate = 80 // what percentage of people gotta leave - you also gotta change the objective in the traitor menu
-
-			waittime_l = 600 //lower bound on time before intercept arrives (in tenths of seconds)
-			waittime_h = 1800 //upper bound on time before intercept arrives (in tenths of seconds)
-
-		changelingdeathticker = 0
-
-/datum/game_mode/changeling/announce()
-	..()
+	var/changelingdeathticker = 0
 
 /datum/game_mode/changeling/pre_setup()
 		// Can't pick a changeling here, as we don't want him to then become the AI.
@@ -59,76 +18,15 @@
 	if(possible_changelings.len>0)
 		changeling = pick(possible_changelings)
 
-
-	grant_changeling_powers(changeling.current)
+	changeling.current.make_changeling()
 	changeling.special_role = "Changeling"
 	changelings += changeling
-
-		//OBJECTIVES - Always absorb 5 genomes, plus random traitor objectives.
-		//If they have two objectives as well as absorb, they must survive rather than escape
-		//No escape alone because changelings aren't suited for it and it'd probably just lead to rampant robusting
-		//If it seems like they'd be able to do it in play, add a 10% chance to have to escape alone
-
-	/*switch(rand(1,100))
-		if(1 to 45)
-
-			var/datum/objective/absorb/absorb_objective = new
-			absorb_objective.owner = changeling
-			absorb_objective.gen_num_to_eat()
-			changeling.objectives += absorb_objective
-
-			var/datum/objective/assassinate/kill_objective = new
-			kill_objective.owner = changeling
-			kill_objective.find_target()
-			changeling.objectives += kill_objective
-
-			var/datum/objective/escape/escape_objective = new
-			escape_objective.owner = changeling
-			changeling.objectives += escape_objective
-
-		if(46 to 90)
-
-			var/datum/objective/absorb/absorb_objective = new
-			absorb_objective.owner = changeling
-			absorb_objective.gen_num_to_eat()
-			changeling.objectives += absorb_objective
-
-			var/datum/objective/steal/steal_objective = new
-			steal_objective.owner = changeling
-			steal_objective.find_target()
-			changeling.objectives += steal_objective
-
-			var/datum/objective/escape/escape_objective = new
-			escape_objective.owner = changeling
-			changeling.objectives += escape_objective
-
-		else
-
-			var/datum/objective/absorb/absorb_objective = new
-			absorb_objective.owner = changeling
-			absorb_objective.gen_num_to_eat()
-			changeling.objectives += absorb_objective
-
-			var/datum/objective/assassinate/kill_objective = new
-			kill_objective.owner = changeling
-			kill_objective.find_target()
-			changeling.objectives += kill_objective
-
-			var/datum/objective/steal/steal_objective = new
-			steal_objective.owner = changeling
-			steal_objective.find_target()
-			changeling.objectives += steal_objective
-
-			var/datum/objective/survive/survive_objective = new
-			survive_objective.owner = changeling
-			changeling.objectives += survive_objective*/
-
 
 	changeling.current << "<B>\red You are a changeling!</B>"
 	changeling.current << "<B>You must complete the following tasks:</B>"
 
 	var/obj_count = 1
-	for(var/datum/objective/objective in SelectObjectives("void", changeling))
+	for(var/datum/objective/objective in SelectChangelingObjectives(changeling.assigned_role, changeling))
 		changeling.current << "<B>Objective #[obj_count]</B>: [objective.explanation_text]"
 		obj_count++
 
@@ -246,7 +144,7 @@
 		return null
 	return pick(names)
 
-/datum/game_mode/changeling/proc/grant_changeling_powers(mob/living/carbon/human/changeling_mob)
+/datum/game_mode/proc/grant_changeling_powers(mob/living/carbon/human/changeling_mob)
 	if (!istype(changeling_mob))
 		return
 	changeling_mob.make_changeling()

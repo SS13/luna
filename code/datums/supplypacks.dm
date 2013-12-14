@@ -133,7 +133,7 @@
 	name = "Virus crate"
 	contains = list(/obj/item/weapon/reagent_containers/glass/bottle/virus/flu_virion,
 					/obj/item/weapon/reagent_containers/glass/bottle/virus/cold,
-					//obj/item/weapon/reagent_containers/glass/bottle/virus/epiglottis_virion,
+					/obj/item/weapon/reagent_containers/glass/bottle/virus/epiglottis_virion,
 					/obj/item/weapon/reagent_containers/glass/bottle/virus/liver_enhance_virion,
 					/obj/item/weapon/reagent_containers/glass/bottle/virus/fake_gbs,
 					/obj/item/weapon/reagent_containers/glass/bottle/virus/magnitis,
@@ -348,7 +348,10 @@
 
 /datum/supply_packs/ballistic
 	name = "Shotguns crate"
-	contains = list(/obj/item/weapon/gun/projectile/shotgun/combat,
+	contains = list(/obj/item/ammo_magazine/box/shotgun,
+					/obj/item/ammo_magazine/box/shotgun,
+					/obj/item/ammo_magazine/box/shotgun,
+					/obj/item/weapon/gun/projectile/shotgun/combat,
 					/obj/item/weapon/gun/projectile/shotgun/combat,
 					/obj/item/weapon/gun/projectile/shotgun/combat)
 	cost = 30

@@ -8,11 +8,6 @@
 // If the game somtimes isn't registering a win properly, then ticker.mode.check_win() isn't being called somewhere.
 
 
-/datum/game_mode
-	var/list/datum/mind/head_revolutionaries = list()
-	var/list/datum/mind/revolutionaries = list()
-
-
 /datum/game_mode/revolution
 	name = "revolution"
 	config_tag = "revolution"
@@ -89,11 +84,8 @@
 	command_alert("Summary downloaded and printed out at all communications consoles.", "Enemy communication intercept. Security Level Elevated.")
 
 /datum/game_mode/revolution/post_setup()
-
-	var/list/revs_possible = list()
-	revs_possible = get_possible_revolutionaries()
-	var/list/heads = list()
-	heads = get_living_heads()
+	var/list/revs_possible = get_possible_revolutionaries()
+	var/list/heads = get_living_heads()
 	var/rev_number = 0
 
 	if(!revs_possible || !heads)
@@ -131,7 +123,7 @@
 	spawn (rand(waittime_l, waittime_h)*tick_multiplier)
 		send_intercept()
 
-/datum/game_mode/revolution/proc/equip_revolutionary(mob/living/carbon/human/rev_mob)
+/datum/game_mode/proc/equip_revolutionary(mob/living/carbon/human/rev_mob)
 	if(!istype(rev_mob))
 		return
 
@@ -247,144 +239,6 @@
 		update_rev_icons_removed(rev_mind)
 		for(var/mob/living/M in view(rev_mind.current))
 			M << "[rev_mind.current] looks like they just remembered their real allegiance!"
-
-/datum/game_mode/revolution/proc/update_all_rev_icons()
-	spawn(0)
-		for(var/datum/mind/head_rev_mind in head_revolutionaries)
-			if(head_rev_mind.current)
-				if(head_rev_mind.current.client)
-					for(var/image/I in head_rev_mind.current.client.images)
-						if(I.icon_state == "rev" || I.icon_state == "rev_head")
-							del(I)
-
-		for(var/datum/mind/rev_mind in revolutionaries)
-			if(rev_mind.current)
-				if(rev_mind.current.client)
-					for(var/image/I in rev_mind.current.client.images)
-						if(I.icon_state == "rev" || I.icon_state == "rev_head")
-							del(I)
-
-		for(var/datum/mind/head_rev in head_revolutionaries)
-			if(head_rev.current)
-				if(head_rev.current.client)
-					for(var/datum/mind/rev in revolutionaries)
-						if(rev.current)
-							var/I = image('mob.dmi', loc = rev.current, icon_state = "rev")
-							head_rev.current.client.images += I
-					for(var/datum/mind/head_rev_1 in head_revolutionaries)
-						if(head_rev_1.current)
-							var/I = image('mob.dmi', loc = head_rev_1.current, icon_state = "rev_head")
-							head_rev.current.client.images += I
-
-		for(var/datum/mind/rev in revolutionaries)
-			if(rev.current)
-				if(rev.current.client)
-					for(var/datum/mind/head_rev in head_revolutionaries)
-						if(head_rev.current)
-							var/I = image('mob.dmi', loc = head_rev.current, icon_state = "rev")
-							rev.current.client.images += I
-					for(var/datum/mind/rev_1 in revolutionaries)
-						if(rev_1.current)
-							var/I = image('mob.dmi', loc = rev_1.current, icon_state = "rev_head")
-							rev.current.client.images += I
-
-/datum/game_mode/revolution/proc/update_rev_icons_added(datum/mind/rev_mind)
-	spawn(0)
-		for(var/datum/mind/head_rev_mind in head_revolutionaries)
-			if(head_rev_mind.current)
-				if(head_rev_mind.current.client)
-					var/I = image('mob.dmi', loc = rev_mind.current, icon_state = "rev")
-					head_rev_mind.current.client.images += I
-			if(rev_mind.current)
-				if(rev_mind.current.client)
-					var/image/J = image('mob.dmi', loc = head_rev_mind.current, icon_state = "rev_head")
-					rev_mind.current.client.images += J
-
-		for(var/datum/mind/rev_mind_1 in revolutionaries)
-			if(rev_mind_1.current)
-				if(rev_mind_1.current.client)
-					var/I = image('mob.dmi', loc = rev_mind.current, icon_state = "rev")
-					rev_mind_1.current.client.images += I
-			if(rev_mind.current)
-				if(rev_mind.current.client)
-					var/image/J = image('mob.dmi', loc = rev_mind_1.current, icon_state = "rev")
-					rev_mind.current.client.images += J
-
-/datum/game_mode/revolution/proc/update_rev_icons_removed(datum/mind/rev_mind)
-	spawn(0)
-		for(var/datum/mind/head_rev_mind in head_revolutionaries)
-			if(head_rev_mind.current)
-				if(head_rev_mind.current.client)
-					for(var/image/I in head_rev_mind.current.client.images)
-						if(I.loc == rev_mind.current)
-							del(I)
-
-		for(var/datum/mind/rev_mind_1 in revolutionaries)
-			if(rev_mind_1.current)
-				if(rev_mind_1.current.client)
-					for(var/image/I in rev_mind_1.current.client.images)
-						if(I.loc == rev_mind.current)
-							del(I)
-		if(rev_mind.current)
-			if(rev_mind.current.client)
-				for(var/image/I in rev_mind.current.client.images)
-					if(I.icon_state == "rev" || I.icon_state == "rev_head")
-						del(I)
-
-/datum/game_mode/revolution/proc/get_possible_revolutionaries()
-	var/list/candidates = list()
-
-	for(var/mob/living/carbon/human/player in world)
-		if(player.client)
-			if(player.be_syndicate)
-				candidates += player.mind
-
-	if(candidates.len < 1)
-		for(var/mob/living/carbon/human/player in world)
-			if(player.client)
-				candidates += player.mind
-
-	var/list/uncons = get_unconvertables()
-	for(var/datum/mind/mind in uncons)
-		candidates -= mind
-
-	if(candidates.len < 1)
-		return null
-	else
-		return candidates
-
-/datum/game_mode/revolution/proc/get_living_heads()
-	var/list/heads = list()
-
-	for(var/mob/living/carbon/human/player in world)
-		if(player.mind)
-			var/role = player.mind.assigned_role
-			if(role in list("Captain", "Head of Security", "Head of Personnel", "Chief Engineer", "Research Director"))
-				heads += player.mind
-
-	return heads
-
-
-/datum/game_mode/revolution/proc/get_all_heads()
-	var/list/heads = list()
-
-	for(var/mob/player in world)
-		if(player.mind)
-			var/role = player.mind.assigned_role
-			if(role in list("Captain", "Head of Security", "Head of Personnel", "Chief Engineer", "Research Director"))
-				heads += player.mind
-
-	return heads
-
-/datum/game_mode/revolution/proc/get_unconvertables()
-	var/list/ucs = list()
-	for(var/mob/living/carbon/human/player in world)
-		if(player.mind)
-			var/role = player.mind.assigned_role
-			if(role in list("Captain", "Head of Security", "Head of Personnel", "Chief Engineer", "Research Director", "Security Officer", "Forensic Technician", "AI"))
-				ucs += player.mind
-
-	return ucs
 
 /datum/game_mode/revolution/proc/check_rev_victory()
 	for(var/datum/mind/rev_mind in head_revolutionaries)

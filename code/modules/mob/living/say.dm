@@ -1,20 +1,56 @@
+var/list/department_radio_keys = list(
+	  ":r" = "right hand",	"#r" = "right hand",	".r" = "right hand",
+	  ":l" = "left hand",	"#l" = "left hand",		".l" = "left hand",
+	  ":i" = "intercom",	"#i" = "intercom",		".i" = "intercom",
+	  ":h" = "department",	"#h" = "department",	".h" = "department",
+	  ":c" = "Command",		"#c" = "Command",		".c" = "Command",
+	  ":n" = "Science",		"#n" = "Science",		".n" = "Science",
+	  ":m" = "Medical",		"#m" = "Medical",		".m" = "Medical",
+	  ":e" = "Engineering", "#e" = "Engineering",	".e" = "Engineering",
+	  ":s" = "Security",	"#s" = "Security",		".s" = "Security",
+	  ":w" = "whisper",		"#w" = "whisper",		".w" = "whisper",
+	  ":b" = "binary",		"#b" = "binary",		".b" = "binary",
+	  ":a" = "alientalk",	"#a" = "alientalk",		".a" = "alientalk",
+	  ":t" = "Syndicate",	"#t" = "Syndicate",		".t" = "Syndicate",
+	  ":q" = "Supply",		"#q" = "Supply",		".q" = "Supply",
+	  ":g" = "changeling",	"#g" = "changeling",	".g" = "changeling",
+
+	  //kinda localization -- rastaf0
+	  //same keys as above, but on russian keyboard layout. This file uses cp1251 as encoding.
+	  ":ê" = "right hand",	"#ê" = "right hand",	".ê" = "right hand",
+	  ":ä" = "left hand",	"#ä" = "left hand",		".ä" = "left hand",
+	  ":ø" = "intercom",	"#ø" = "intercom",		".ø" = "intercom",
+	  ":ð" = "department",	"#ð" = "department",	".ð" = "department",
+	  ":ñ" = "Command",		"#ñ" = "Command",		".ñ" = "Command",
+	  ":ò" = "Science",		"#ò" = "Science",		".ò" = "Science",
+	  ":ü" = "Medical",		"#ü" = "Medical",		".ü" = "Medical",
+	  ":ó" = "Engineering",	"#ó" = "Engineering",	".ó" = "Engineering",
+	  ":û" = "Security",	"#û" = "Security",		".û" = "Security",
+	  ":ö" = "whisper",		"#ö" = "whisper",		".ö" = "whisper",
+	  ":è" = "binary",		"#è" = "binary",		".è" = "binary",
+	  ":ô" = "alientalk",	"#ô" = "alientalk",		".ô" = "alientalk",
+	  ":å" = "Syndicate",	"#å" = "Syndicate",		".å" = "Syndicate",
+	  ":é" = "Supply",		"#é" = "Supply",		".é" = "Supply",
+	  ":ï" = "changeling",	"#ï" = "changeling",	".ï" = "changeling"
+)
+
 /mob/living/proc/binarycheck() // /tg/ stuff, let it be  -- Nikie
 	//if (istype(src, /mob/living/silicon/pai)) return
 	if(issilicon(src)) return 1
-	if(!ishuman(src)) return
+	if(!ishuman(src)) return 0
 	var/mob/living/carbon/human/H = src
 	if (H.ears)
 		var/obj/item/device/radio/headset/dongle = H.ears
-		if(!istype(dongle)) return
+		if(!istype(dongle)) return 0
 		if(dongle.translate_binary) return 1
 
 /mob/living/proc/hivecheck()
 	if (isalien(src)) return 1
-	if (!ishuman(src)) return
+	if (!ishuman(src)) return 0
 	var/mob/living/carbon/human/H = src
 	if (H.ears)
 		var/obj/item/device/radio/headset/dongle = H.ears
-		if(!istype(dongle)) return
+		if(!istype(dongle)) return 0
 		if(dongle.translate_hive) return 1
 
 /mob/living/say(var/message, var/presanitize = 1)
@@ -22,10 +58,10 @@
 		message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
 
 	// sdisabilities & 2 is the mute disability
-	if (!message || muted || stat == 1 || istype(wear_mask, /obj/item/clothing/mask/muzzle) || sdisabilities & 2)
+	if(!message || muted || stat == 1 || istype(wear_mask, /obj/item/clothing/mask/muzzle) || sdisabilities & 2)
 		return
 
-	if (stat == 2)
+	if(stat == 2)
 		return say_dead(message)
 
 	// emotes
@@ -43,6 +79,20 @@
 		if(src.loc:overrideMobSay(message, src) != "not used") // if the obj has a custom effect
 			return
 
+	if(viruses.len)
+		for(var/datum/disease/pierrot_throat/D in viruses)
+			var/list/temp_message = text2list(message, " ") //List each word in the message
+			var/list/pick_list = list()
+			for(var/i = 1, i <= temp_message.len, i++) //Create a second list for excluding words down the line
+				pick_list += i
+			for(var/i=1, ((i <= D.stage) && (i <= temp_message.len)), i++) //Loop for each stage of the disease or until we run out of words
+				if(prob(3 * D.stage)) //Stage 1: 3% Stage 2: 6% Stage 3: 9% Stage 4: 12%
+					var/H = pick(pick_list)
+					if(findtext(temp_message[H], "*") || findtext(temp_message[H], ";") || findtext(temp_message[H], ":")) continue
+					temp_message[H] = "HONK"
+					pick_list -= H //Make sure that you dont HONK the same word twice
+				message = dd_list2text(temp_message, " ")
+
 	//custom modes
 	//if theres no space then theyre being a derpface
 	var/custommode = ""
@@ -52,7 +102,7 @@
 		message = copytext(message, firstspace+1)
 
 	var/alt_name = "" // In case your face is burnt or you're wearing a mask
-	if (istype(src, /mob/living/carbon/human) && (name != real_name || face_dmg))
+	if (istype(src, /mob/living/carbon/human) && name != GetVoice())
 		if(istype(src:wear_id,/obj/item/weapon/card/id))
 			if (src:wear_id:registered)
 				alt_name = " (as [src:wear_id:registered])"
@@ -81,45 +131,9 @@
 		message = copytext(message, 2)
 
 	else if (length(message) >= 2)
-		var/channel_prefix = copytext(message, 1, 3)
+		var/channel_prefix = lowertext(copytext(message, 1, 3))
 
-		var/list/keys = list(
-			  ":r" = "right hand",
-			  ":l" = "left hand",
-			  ":i" = "intercom",
-			  ":h" = "department",
-			  ":c" = "Command",
-			  ":n" = "Science",
-			  ":m" = "Medical",
-			  ":e" = "Engineering",
-			  ":s" = "Security",
-			  ":w" = "whisper",
-			  ":b" = "binary",
-			  ":a" = "alientalk",
-			  ":t" = "Syndicate",
-			  ":d" = "Mining",
-			  ":q" = "Supply",
-
-			  //kinda localization -- rastaf0
-			  //same keys as above, but on russian keyboard layout. This file uses cp1251 as encoding.
-			  ":ê" = "right hand",
-			  ":ä" = "left hand",
-			  ":ø" = "intercom",
-			  ":ð" = "department",
-			  ":ñ" = "Command",
-			  ":ò" = "Science",
-			  ":ü" = "Medical",
-			  ":ó" = "Engineering",
-			  ":û" = "Security",
-			  ":ö" = "whisper",
-			  ":è" = "binary",
-			  ":ô" = "alientalk",
-			  ":å" = "Syndicate",
-			  ":â" = "Mining",
-			  ":é" = "Supply",
-		)
-
-		message_mode = keys[channel_prefix]
+		message_mode = department_radio_keys[channel_prefix]
 		//world << "channel_prefix=[channel_prefix]; message_mode=[message_mode]"
 		if (message_mode)
 			message = trim(copytext(message, 3))
@@ -228,6 +242,16 @@
 				message_range = 1
 				italics = 1*/
 
+			if("changeling")
+				if(mind && mind.changeling)
+					for(var/mob/living/carbon/Changeling in world)
+						if(Changeling.mind && Changeling.mind.changeling)
+							Changeling << "<i><font color=#800080><b>[mind.changeling.changelingID]:</b> [message]</font></i>"
+					for(var/mob/dead/observer/ghost in world)
+						ghost << "<i><font color=#800080><b>[mind.changeling.changelingID]:</b> [message]</font></i>"
+
+					return
+
 			else // Special headsets
 				if (message_mode in radiochannels)
 					if (src:ears)
@@ -287,12 +311,7 @@
 		if (italics)
 			message_a = "<i>[message_a]</i>"
 
-		if (!istype(src, /mob/living/carbon/human) || istype(wear_mask, /obj/item/clothing/mask/gas/voice))
-			rendered = "<span class='game say'><span class='name'>[name]</span> <span class='message'>[message_a]</span></span>"
-		else if(face_dmg)
-			rendered = "<span class='game say'><span class='name'>Unknown</span>[alt_name] <span class='message'>[message_a]</span></span>"
-		else
-			rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] <span class='message'>[message_a]</span></span>"
+		rendered = "<span class='game say'><span class='name'>[GetVoice()]</span>[alt_name] <span class='message'>[message_a]</span></span>"
 
 		for(var/mob/M in heard_a) // Sending over the message to mobs who can understand
 			M.show_message(rendered, 6)
@@ -325,12 +344,7 @@
 	if(italics)
 		message = "<i>[message]</i>"
 
-	if(!istype(src, /mob/living/carbon/human) || istype(wear_mask, /obj/item/clothing/mask/gas/voice))
-		rendered = "<span class='game say'><span class='name'>[name]</span> <span class='message'>[message]</span></span>"
-	else if (face_dmg)
-		rendered = "<span class='game say'><span class='name'>Unknown</span>[alt_name] <span class='message'>[message]</span></span>"
-	else
-		rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] <span class='message'>[message]</span></span>"
+	rendered = "<span class='game say'><span class='name'>[GetVoice()]</span>[alt_name] <span class='message'>[message]</span></span>"
 	for(var/client/C)
 		if (C.mob)
 			if (istype(C.mob, /mob/new_player))
@@ -430,3 +444,37 @@
 			continue
 		if (C.mob.stat > 1)
 			C.mob.show_message(rendered, 2)
+
+
+/mob/living/proc/GetVoice()
+	return name
+
+/mob/living/carbon/human/GetVoice()
+	if(istype(src.wear_mask, /obj/item/clothing/mask/gas/voice))
+		var/obj/item/clothing/mask/gas/voice/V = src.wear_mask
+		if(V.vchange && V.voice != "Unknown")
+			return V.voice
+		else
+			return name
+
+	if(face_dmg)
+		return "Unknown"
+
+	if(mind && mind.changeling && mind.changeling.mimicing)
+		return mind.changeling.mimicing
+	if(GetSpecialVoice())
+		return GetSpecialVoice()
+	return real_name
+
+
+/mob/living/carbon/human/proc/SetSpecialVoice(var/new_voice)
+	if(new_voice)
+		special_voice = new_voice
+	return
+
+/mob/living/carbon/human/proc/UnsetSpecialVoice()
+	special_voice = ""
+	return
+
+/mob/living/carbon/human/proc/GetSpecialVoice()
+	return special_voice

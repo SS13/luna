@@ -1,19 +1,40 @@
-/proc/GetObjectives(var/job,var/datum/mind/traitor)
+/proc/get_all_thefts(var/job, var/datum/mind/traitor, var/reagents = 1)
 	var/list/datum/objective/objectives = list()
-	for(var/o in typesof(/datum/objective/steal))
-		if(o != /datum/objective/steal)		//Make sure not to get a blank steal objective.
-			objectives += new o(null,job)
-	//objectives += GenerateAssassinate(job,traitor)
+	var/list/possible_reagents = list(
+		"polytrinic acid", "space lube",
+		"unstable mutagen", "leporazine",
+		"cryptobiolin", "lexorin",
+	)
+
+	var/list/possible_items = list(
+		"the captain's antique laser gun", "a hand teleporter",
+		"a rapid construction device", "a jetpack",
+		"a pair of magboots", "28 moles of plasma (full tank)",
+		"the hypospray", "a bone gel bottle",
+		"an ablative armor vest", "the captain's pinpointer",
+		"a small singularity engine", "a completed cyborg shell (no brain)",
+		"a finished (but not booted up) AI construct with brain",
+	)
+
+	if(reagents)
+		for(var/r in possible_reagents)
+			var/datum/objective/stealreagent/O = new /datum/objective/stealreagent(null,job)
+			O.set_target(r)
+			objectives += O
+
+	for(var/i in possible_items)
+		var/datum/objective/steal/O = new /datum/objective/steal(null,job)
+		O.set_target(i)
+		objectives += O
+
 	return objectives
+
+/proc/GetObjectives(var/job,var/datum/mind/traitor)
+	return get_all_thefts(job, traitor)
 
 
 /proc/GetCObjectives(var/job,var/datum/mind/changeling)
-	var/list/datum/objective/objectives = list()
-	for(var/o in typesof(/datum/objective/steal))
-		if(o != /datum/objective/steal)		//Make sure not to get a blank steal objective.
-			objectives += new o(null,job)
-	//objectives += GenerateAssassinate(job,traitor)
-	return objectives
+	return get_all_thefts(job, changeling)
 
 /proc/GenerateAssassinate(var/job,var/datum/mind/traitor)
 	var/list/datum/objective/assassinate/missions = list()
@@ -24,25 +45,6 @@
 				missions +=	new /datum/objective/assassinate(null,job,target)
 	return missions
 
-/proc/GenerateCAssassinate(var/job,var/datum/mind/changeling)
-	var/list/datum/objective/assassinate/missions = list()
-
-	for(var/datum/mind/target in ticker.minds)
-		if(istype(target.current, /mob/living/carbon/human))
-			if(target && target.current)
-				missions +=	new /datum/objective/assassinate(null,job,target)
-	return missions
-
-/*
-/proc/GenerateFrame(var/job,var/datum/mind/traitor)
-	var/list/datum/objective/frame/missions = list()
-
-	for(var/datum/mind/target in ticker.minds)
-		if((target != traitor) && istype(target.current, /mob/living/carbon/human))
-			if(target && target.current)
-				missions +=	new /datum/objective/frame(null,job,target)
-	return missions
-*/
 /proc/GenerateProtection(var/job,var/datum/mind/traitor)
 	var/list/datum/objective/frame/missions = list()
 
@@ -53,23 +55,19 @@
 	return missions
 
 /proc/GenerateCProtection(var/job,var/datum/mind/changeling)
-	var/list/datum/objective/frame/missions = list()
+	return GenerateProtection(job, changeling)
 
-	for(var/datum/mind/target in ticker.minds)
-		if(istype(target.current, /mob/living/carbon/human))
-			if(target && target.current)
-				missions +=	new /datum/objective/protection(null,job,target)
-	return missions
+/proc/GenerateCAssassinate(var/job,var/datum/mind/changeling)
+	return GenerateAssassinate(job, changeling)
 
 
 
 /proc/SelectObjectives(var/job,var/datum/mind/traitor)
 	var/list/datum/objective/chosenobjectives = list()
-	var/list/datum/objective/theftobjectives = GetObjectives(job,traitor)		//Separated all the objective types so they can be picked independantly of each other.
+	var/list/datum/objective/theftobjectives = get_all_thefts(job, traitor)	//Separated all the objective types so they can be picked independantly of each other.
 	var/list/datum/objective/killobjectives = GenerateAssassinate(job,traitor)
-	//var/list/datum/objective/frameobjectives = GenerateFrame(job,traitor)
 	var/list/datum/objective/protectobjectives = GenerateProtection(job,traitor)
-	//var/points
+
 	var/totalweight
 	var/selectobj
 	var/conflict
@@ -82,12 +80,12 @@
 			totalweight += objective.weight
 			theftobjectives -= objective
 		else switch(selectobj)
-			if(1 to 50)		//Theft Objectives (50% chance)
+			if(1 to 45)		//Theft Objectives (45% chance)
 				var/datum/objective/objective = pick(theftobjectives)
 				chosenobjectives += objective
 				totalweight += objective.weight
 				theftobjectives -= objective
-			if(51 to 90)	//Assassination Objectives (35% chance)
+			if(46 to 85)	//Assassination Objectives (40% chance)
 				var/datum/objective/assassinate/objective = pick(killobjectives)
 				for(var/datum/objective/protection/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Assassinate somebody they need to Protect.
 					if(conflicttest.target == objective.target)
@@ -97,12 +95,7 @@
 					totalweight += objective.weight
 					killobjectives -= objective
 				conflict = 0
-			//if(86 to 95)	//Framing Objectives (10% chance) 	Removing fo now.
-			//	var/datum/objective/objective = pick(frameobjectives)
-			//	chosenobjectives += objective
-			//	totalweight += objective.weight
-			//	frameobjectives -= objective
-			if(91 to 100)	//Protection Objectives (5% chance)
+			if(86 to 100)	//Protection Objectives (15% chance)
 				var/datum/objective/protection/objective = pick(protectobjectives)
 				for(var/datum/objective/assassinate/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Protect somebody they need to Assassinate.
 					if(conflicttest.target == objective.target)
@@ -113,29 +106,25 @@
 					protectobjectives -= objective
 				conflict = 0
 
-	var/hasendgame = 0
-	for(var/datum/objective/o in chosenobjectives)
-		if(o.type == /datum/objective/hijack)
-			hasendgame = 1
-	if(hasendgame == 0)
+	if(prob(90))
 		chosenobjectives += new /datum/objective/escape(null,job)
+	else
+		chosenobjectives += new /datum/objective/hijack(null,job)
 	return chosenobjectives
 
 /proc/SelectChangelingObjectives(var/job,/var/datum/mind/changeling)
 	var/list/datum/objective/chosenobjectives = list()
-	var/list/datum/objective/theftobjectives = GetCObjectives(job,changeling)		//Separated all the objective types so they can be picked independantly of each other.
+	var/list/datum/objective/theftobjectives = get_all_thefts(job, changeling)		//Separated all the objective types so they can be picked independantly of each other.
 	var/list/datum/objective/killobjectives = GenerateCAssassinate(job,changeling)
-	//var/list/datum/objective/frameobjectives = GenerateFrame(job,traitor)
-	var/list/datum/objective/protectobjectives = GenerateCProtection(job,changeling)
-	//var/points
 	var/totalweight
 	var/selectobj
 	var/conflict
-	chosenobjectives += new /datum/objective/absorb(null,job)
+
+	totalweight += 20 // absorb has weight too
 
 	while(totalweight < 100)
 		selectobj = rand(1,100)	//Randomly determine the type of objective to be given.
-		if(!length(killobjectives) || !length(protectobjectives))	//If any of these lists are empty, just give them theft objectives.
+		if(!length(killobjectives))	//If any of these lists are empty, just give them theft objectives.
 			var/datum/objective/objective = pick(theftobjectives)
 			chosenobjectives += objective
 			totalweight += objective.weight
@@ -146,7 +135,7 @@
 				chosenobjectives += objective
 				totalweight += objective.weight
 				theftobjectives -= objective
-			if(51 to 90)	//Assassination Objectives (40% chance)
+			if(51 to 100)	//Assassination Objectives (50% chance)
 				var/datum/objective/assassinate/objective = pick(killobjectives)
 				for(var/datum/objective/protection/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Assassinate somebody they need to Protect.
 					if(conflicttest.target == objective.target)
@@ -156,670 +145,420 @@
 					totalweight += objective.weight
 					killobjectives -= objective
 				conflict = 0
-			//if(86 to 95)	//Framing Objectives (10% chance) 	Removing fo now.
-			//	var/datum/objective/objective = pick(frameobjectives)
-			//	chosenobjectives += objective
-			//	totalweight += objective.weight
-			//	frameobjectives -= objective
-			if(91 to 100)	//Protection Objectives (10% chance)
-				var/datum/objective/protection/objective = pick(protectobjectives)
-				for(var/datum/objective/assassinate/conflicttest in chosenobjectives)	//Check to make sure we aren't telling them to Protect somebody they need to Assassinate.
-					if(conflicttest.target == objective.target)
-						conflict = 1
-				if(!conflict)
-					chosenobjectives += objective
-					totalweight += objective.weight
-					protectobjectives -= objective
-				conflict = 0
 
-	var/hasendgame = 0
-	for(var/datum/objective/o in chosenobjectives)
-		if(o.type == /datum/objective/hijack)
-			hasendgame = 1
-	if(hasendgame == 0)
+	chosenobjectives += new /datum/objective/absorb(null,job)
+
+	if(prob(70))
 		chosenobjectives += new /datum/objective/escape(null,job)
+	else
+		chosenobjectives += new /datum/objective/survive(null,job)
 	return chosenobjectives
 
 
-datum
-	objective
-		var/datum/mind/owner
-		var/explanation_text = "text not set"
-		var/job
-		var/points = INFINITY //If this isn't set to something else, the objective is bugged and should be ignored
-		var/weight
 
-		New(var/text,var/joba)
-			if(text)
-				src.explanation_text = text
-			job=joba
-			points = get_points(job)
 
-		proc
-			check_completion()
-				return 1
-			get_points(var/job)
-				return INFINITY
 
-		frame
-			var/datum/mind/target
 
-			New(var/text,var/joba,var/datum/mind/targeta)
-				target = targeta
-				job = joba
-				points = get_points(job)
-				weight = 60
-				explanation_text = "Frame [target.current.real_name], the [target.assigned_role] for a crime and make sure they are arrested and brought back to the Centcom station alive.  We'll handle the rest from there."
 
-			check_completion()
-				if(main_shuttle.location<2)
-					return 0
+/datum/objective
+	var/datum/mind/owner
+	var/explanation_text = "Nothing"	//What that person is supposed to do.
+	var/datum/mind/target = null		//If they are focused on a particular person.
+	var/target_amount = 0 				//If they are focused on a particular number. Steal objectives have their own counter.
+	var/completed = 0					//currently only used for custom objectives.
 
-				if(target.current.stat == 2)
-					return 0
+	var/job
+	var/weight
 
-				var/turf/location = get_turf(target.current.loc)
-				if(!location)
-					return 0
+	New(var/text,var/joba)
+		if(text)
+			src.explanation_text = text
+		job = joba
 
-				if(!target.current:handcuffed)
-					return 0
+	proc/check_completion()
+		return 1
 
+	proc/find_target()
+		return null
 
-				for(var/datum/shuttle/s in shuttles)
-					if(location in locate(s.centcom))
-						return 1
 
-				return 0
 
-			get_points()
-				if(target)
-					switch(GetRank(target.assigned_role))
-						if(0)
-							return 30
-						if(1)
-							return 40
-						if(2)
-							return 50
-						if(3)
-							return 55
-						if(4)
-							return 60
-				else
-					return INFINITY
-
-
-		protection
-			var/datum/mind/target
-			New(var/text,var/joba,var/datum/mind/targeta)
-				target = targeta
-				job = joba
-				points = get_points(job)
-				weight = 30
-				explanation_text = "[target.current.real_name], the [target.assigned_role] is a relative of a high ranking Syndicate Leader.  Make sure they get off the ship safely."
-
-			check_completion()
-				if(main_shuttle.location < 2)
-					return 0
-
-				if(target.current.stat == 2)
-					return 0
-
-				var/turf/location = get_turf(target.current.loc)
-				if(!location)
-					return 0
-
-				for(var/datum/shuttle/s in shuttles)
-					if(location in locate(s.centcom))
-						return 1
-
-				return 0
-			get_points()
-				return INFINITY
-
-		assassinate
-			var/datum/mind/target
-
-			New(var/text,var/joba,var/datum/mind/targeta)
-				target = targeta
-				job = joba
-				points = get_points(job)
-				weight = 60
-				explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
-
-			check_completion()
-				if(target && target.current)
-					if(target.current.stat == 2)
-						return 1
-					else
-						return 0
-				else
-					return 1
-			get_points()
-				if(target)
-					switch(GetRank(target.assigned_role))
-						if(0)
-							return 30
-						if(1)
-							return 40
-						if(2)
-							return 50
-						if(3)
-							return 55
-						if(4)
-							return 60
-				else
-					return INFINITY
-
-			proc/find_target_by_role(var/role)
-				for(var/datum/mind/possible_target in ticker.minds)
-					if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human) && (possible_target.assigned_role == role))
-						target = possible_target
-						break
-
-				if(target && target.current)
-					explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
-				else
-					explanation_text = "Free Objective"
-
-				return target
-
-
-			proc/find_target()
-				var/list/possible_targets = list()
-
-				for(var/datum/mind/possible_target in ticker.minds)
-					if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human))
-						possible_targets += possible_target
-
-				if(possible_targets.len > 0)
-					target = pick(possible_targets)
-
-				if(target && target.current)
-					explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
-				else
-					explanation_text = "Free Objective"
-
-				return target
-
-		capture
-			var/datum/mind/target
-			var/separation_time = 0
-			var/almost_complete = 0
-
-			New(var/text,var/joba,var/datum/mind/targeta)
-				target = targeta
-				job = joba
-				explanation_text = "Capture [target.current.real_name], the [target.assigned_role]."
-
-			check_completion()
-				if(target && target.current)
-					if(target.current.stat == 2)
-						if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
-					else
-						if(!target.current.handcuffed)
-							return 0
-				else if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
-				return 1
-
-			proc/find_target_by_role(var/role)
-				for(var/datum/mind/possible_target in ticker.minds)
-					if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human) && (possible_target.assigned_role == role))
-						target = possible_target
-						break
-
-				if(target && target.current)
-					explanation_text = "Capture [target.current.real_name], the [target.assigned_role]."
-				else
-					explanation_text = "Free Objective"
-
-				return target
-
-
-		hijack
-			explanation_text = "Hijack the emergency shuttle by escaping alone."
-
-			check_completion()
-				if(main_shuttle.location<2)
-					return 0
-
-				if(!owner.current || owner.current.stat == 2)
-					return 0
-				var/turf/location = get_turf(owner.current.loc)
-
-				for(var/datum/shuttle/s in shuttles)
-					if(location in locate(s.centcom))
-						for(var/mob/living/player in locate(s.centcom))
-							if (player.mind && (player.mind != owner))
-								if (player.stat != 2) //they're not dead
-									return 0
-						return 1
-
-				return 0
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 65
-					if(2)
-						return 65
-					if(3)
-						return 50
-					if(4)
-						return 35
-
-		escape
-			explanation_text = "Escape on the shuttle alive, without being arrested."
-
-			check_completion()
-				if(main_shuttle.location<2)
-					return 0
-
-				if(!owner.current || owner.current.stat ==2)
-					return 0
-
-				var/turf/location = get_turf(owner.current.loc)
-				if(!location)
-					return 0
-
-				if(owner.current:handcuffed)
-					return 0
-
-
-				for(var/datum/shuttle/s in shuttles)
-					if(location in locate(s.centcom))
-						return 1
-
-				return 0
-			get_points()
-				return INFINITY
-
-		survive
-			explanation_text = "Stay alive until the end."
-
-			check_completion()
-				if(!owner.current || owner.current.stat == 2)
-					return 0
-
-				return 1
-			get_points()
-				return INFINITY
-
-
-		steal
-			var/obj/item/steal_target
-
-			check_completion()
-				if(steal_target)
-					if(owner.current.check_contents_for(steal_target))
-						return 1
-					else
-						return 0
-
-
-		steal/captainslaser
-			steal_target = /obj/item/weapon/gun/energy/laser/captain
-			explanation_text = "Steal the captain's antique laser gun."
-			weight = 20
-
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 60
-					if(1)
-						return 50
-					if(2)
-						return 40
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
-
-		steal/plasmatank
-			steal_target = /obj/item/weapon/tank/plasma
-			explanation_text = "Steal a small plasma tank."
-			weight = 20
-
-			get_points(var/job)
-				if(job == "Scientist")
-					return INFINITY
-				switch(IsResearcher(job))
-					if(0)
-						return 40
-					if(1)
-						return 25
-					if(2)
-						return INFINITY
-		/*Removing this as an objective.  Not necessary to have two theft objectives in the same room.
-		steal/captainssuit
-			steal_target = /obj/item/clothing/under/rank/captain
-			explanation_text = "Steal a captain's rank jumpsuit"
-			weight = 50
-
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
-		*/
-
-		steal/handtele
-			steal_target = /obj/item/device/hand_tele
-			explanation_text = "Steal a hand teleporter."
-			weight = 20
-
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
-
-		steal/capbackpack
-			steal_target = /obj/item/weapon/storage/backpack/captain
-			explanation_text = "Steal a captain's backpack."
-			weight = 20
-
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
-
-		steal/jetpack
-			steal_target = /obj/item/weapon/tank/jetpack
-			explanation_text = "Steal a jetpack."
-			weight = 20
-
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
-
-		steal/magnetic
-			steal_target = /obj/item/clothing/shoes/magnetic
-			explanation_text = "Steal a pair of \"NanoTrasen\" brand magnetic boots."
-			weight = 20
-
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 80
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 40
-					if(4)
-						return 30
-
-/*		steal/nukedisk
-			steal_target = /obj/item/weapon/disk/nuclear
-			explanation_text = "Steal the station's nuclear authentication disk."
-			weight = 20
-
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 80
-					if(1)
-						return 70
-					if(2)
-						return 50
-					if(3)
-						return 40
-					if(4)
-						return 25*/
-
-		steal/RCD
-			steal_target = /obj/item/weapon/rcd
-			explanation_text = "Steal a rapid construction device."
-			weight = 20
-
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
-
-		/*steal/burger add this back in after humanburgers can be made again
-			steal_target = /obj/item/weapon/reagent_containers/food/snacks/humanburger
-			explanation_text = "Steal a burger made out of human organs, this will be presented as proof of NanoTrasen's chronic lack of standards."
+	frame
+		New(var/text,var/joba,var/datum/mind/targeta)
+			target = targeta
+			job = joba
 			weight = 60
+			explanation_text = "Frame [target.current.real_name], the [target.assigned_role] for a crime and make sure they are arrested and brought back to the Centcom station alive.  We'll handle the rest from there."
 
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY*/
+		check_completion()
+			if(main_shuttle.location<2)
+				return 0
+
+			if(target.current.stat == 2)
+				return 0
+
+			var/turf/location = get_turf(target.current.loc)
+			if(!location)
+				return 0
+
+			if(!target.current:handcuffed)
+				return 0
 
 
-		/*Needs some work before it can be put in the game to differentiate ship implanters from syndicate implanters.
-		steal/implanter
-			steal_target = /obj/item/weapon/implanter
-			explanation_text = "Steal an implanter"
-			weight = 50
+			for(var/datum/shuttle/s in shuttles)
+				if(location in locate(s.centcom))
+					return 1
 
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
-		*/
-		steal/cyborg
-			steal_target = /obj/item/robot_parts/robot_suit
-			explanation_text = "Steal a completed cyborg shell (no brain)."
+			return 0
+
+	protection
+		New(var/text,var/joba,var/datum/mind/targeta)
+			target = targeta
+			job = joba
 			weight = 30
+			explanation_text = "[target.current.real_name], the [target.assigned_role] is a relative of a high ranking Syndicate Leader.  Make sure they get off the ship safely."
 
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
+		check_completion()
+			if(main_shuttle.location < 2)
+				return 0
 
-			check_completion()
-				if(steal_target)
-					for(var/obj/item/robot_parts/robot_suit/objective in owner.current.get_contents())
-						if(istype(objective,/obj/item/robot_parts/robot_suit) && objective.check_completion())
-							return 1
+			if(target.current.stat == 2)
+				return 0
+
+			var/turf/location = get_turf(target.current.loc)
+			if(!location)
+				return 0
+
+			for(var/datum/shuttle/s in shuttles)
+				if(location in locate(s.centcom))
+					return 1
+
+			return 0
+
+	assassinate
+		New(var/text,var/joba,var/datum/mind/targeta)
+			target = targeta
+			job = joba
+			weight = 60
+			explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+
+		check_completion()
+			if(target && target.current)
+				if(target.current.stat == 2 || issilicon(target.current))
+					return 1
+				else
 					return 0
-		steal/AI
-			steal_target = /obj/structure/AIcore
-			explanation_text = "Steal a finished (but not booted up) AI Construct with brain."
-			weight = 50
+			else
+				return 1
 
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
+		proc/find_target_by_role(var/role)
+			for(var/datum/mind/possible_target in ticker.minds)
+				if((possible_target != owner) && ishuman(possible_target.current) && (possible_target.assigned_role == role))
+					target = possible_target
+					break
 
-			check_completion()
-				if(steal_target)
-					for(var/datum/shuttle/s in shuttles)
-						for(var/obj/structure/AIcore/objective in locate(s.centcom))
-							if (objective.buildstate == 5)
-								return 1
-					return 0
+			if(target && target.current)
+				explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+			else
+				explanation_text = "Free Objective"
 
-		steal/drugs
-			steal_target = /datum/reagent/space_drugs
-			explanation_text = "Steal some space drugs."
-			weight = 40
+			return target
 
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
 
-			check_completion()
-				if(steal_target)
-					if(owner.current.check_contents_for_reagent(steal_target))
-						return 1
-					else
+		find_target()
+			var/list/possible_targets = list()
+
+			for(var/datum/mind/possible_target in ticker.minds)
+				if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human))
+					possible_targets += possible_target
+
+			if(possible_targets.len > 0)
+				target = pick(possible_targets)
+
+			if(target && target.current)
+				explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+			else
+				explanation_text = "Free Objective"
+
+			return target
+
+	capture
+		var/separation_time = 0
+		var/almost_complete = 0
+
+		New(var/text,var/joba,var/datum/mind/targeta)
+			target = targeta
+			job = joba
+			explanation_text = "Capture [target.current.real_name], the [target.assigned_role]."
+
+		check_completion()
+			if(target && target.current)
+				if(target.current.stat == DEAD)
+					if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
+				else
+					if(!target.current.handcuffed && !target.current.stat) // N2O is fine too
 						return 0
+			else if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
+			return 1
+
+		proc/find_target_by_role(var/role)
+			for(var/datum/mind/possible_target in ticker.minds)
+				if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human) && (possible_target.assigned_role == role))
+					target = possible_target
+					break
+
+			if(target && target.current)
+				explanation_text = "Capture [target.current.real_name], the [target.assigned_role]."
+			else
+				explanation_text = "Free Objective"
+
+			return target
 
 
-		steal/pacid
-			steal_target = /datum/reagent/pacid
-			explanation_text = "Steal some polytrinic acid."
-			weight = 40
+	hijack
+		explanation_text = "Hijack the emergency shuttle by escaping alone."
 
-			get_points(var/job)
-				switch(GetRank(job))
-					if(0)
-						return 75
-					if(1)
-						return 60
-					if(2)
-						return 50
-					if(3)
-						return 30
-					if(4)
-						return INFINITY
+		check_completion()
+			if(main_shuttle.location<2)
+				return 0
 
-			check_completion()
-				if(steal_target)
-					if(owner.current.check_contents_for_reagent(steal_target))
-						return 1
-					else
-						return 0
+			if(!owner.current || owner.current.stat == 2)
+				return 0
+			var/turf/location = get_turf(owner.current.loc)
+
+			for(var/datum/shuttle/s in shuttles)
+				if(location in locate(s.centcom))
+					for(var/mob/living/carbon/player in locate(s.centcom))
+						if (player.mind && player.mind != owner && player.stat != DEAD)
+							return 0
+
+					return 1
+
+			return 0
+
+	escape
+		explanation_text = "Escape on the shuttle alive, without being arrested."
+
+		check_completion()
+			if(main_shuttle.location<2)
+				return 0
+
+			if(!owner.current || owner.current.stat == DEAD || issilicon(owner.current))
+				return 0
+
+			var/turf/location = get_turf(owner.current)
+			if(!location)
+				return 0
+
+			if(owner.current:handcuffed)
+				return 0
+
+			for(var/datum/shuttle/s in shuttles)
+				if(location in locate(s.centcom))
+					return 1
+
+			return 0
+
+	survive
+		explanation_text = "Stay alive until the end."
+
+		check_completion()
+			if(!owner.current || owner.current.stat == DEAD || issilicon(owner.current))
+				return 0
+
+			return 1
 
 
 /*
+ NUCLEAR
+ */
+/datum/objective/nuclear
+	explanation_text = "Destroy the station with a nuclear device."
 
-		stealreagent
-			var/datum/reagent/steal_reagent
-			var/target_name
-			var/reagent_name
-			proc/find_target()
-				var/list/items = list("Sulphuric acid", "Polytrinic acid", "Space Lube", "Unstable mutagen",\
-				 "Leporazine", "Cryptobiolin", "Lexorin ",\
-				  "kelotane", "Dexalin", "Tricordrazine")
-				target_name = pick(items)
-				switch(target_name)
-					if("Sulphuric acid")
-						steal_reagent = /datum/reagent/acid
-					if("Polytrinic acid")
-						steal_reagent = /datum/reagent/pacid
-					if("Space Lube")
-						steal_reagent = /datum/reagent/lube
-					if("Unstable mutagen")
-						steal_reagent = /datum/reagent/mutagen
-					if("Leporazine")
-						steal_reagent = /datum/reagent/leporazine
-					if("Cryptobiolin")
-						steal_reagent =/datum/reagent/cryptobiolin
-					if("Lexorin")
-						steal_reagent = /datum/reagent/lexorin
-					if("kelotane")
-						steal_reagent = /datum/reagent/kelotane
-					if("Dexalin")
-						steal_reagent = /datum/reagent/dexalin
-					if("Tricordrazine")
-						steal_reagent = /datum/reagent/tricordrazine
+/*
+ CHANGELING
+ */
+
+/datum/objective/absorb
+	New()
+		..()
+		gen_amount_goal()
 
 
-				explanation_text = "Steal a container filled with [target_name]."
+	proc/gen_amount_goal(var/lowbound = 4, var/highbound = 6)
+		target_amount = rand (lowbound,highbound)
+		if (ticker)
+			var/n_p = 1 //autowin
+			if (ticker.current_state == GAME_STATE_SETTING_UP)
+				for(var/mob/new_player/P in player_list)
+					if(P.client && P.ready && P.mind!=owner)
+						n_p ++
+			else if (ticker.current_state == GAME_STATE_PLAYING)
+				for(var/mob/living/carbon/human/P in player_list)
+					if(P.client && !(P.mind in ticker.mode.changelings) && P.mind!=owner)
+						n_p ++
+			target_amount = min(target_amount, n_p)
 
-				return steal_reagent
+		explanation_text = "Extract [target_amount] compatible genome\s."
+		return target_amount
 
-			check_completion()
-				if(steal_reagent)
-					if(owner.current.check_contents_for_reagent(steal_reagent))
+	check_completion()
+		if(owner && owner.changeling && owner.changeling.absorbed_dna && (owner.changeling.absorbedcount >= target_amount))
+			return 1
+		else
+			return 0
+
+/datum/objective/steal
+	var/obj/item/steal_target
+	var/target_name
+	weight = 20
+
+	var/global/possible_items[] = list(
+		"the captain's antique laser gun" = /obj/item/weapon/gun/energy/laser/captain,
+		"a hand teleporter" = /obj/item/device/hand_tele,
+		"a rapid construction device" = /obj/item/weapon/rcd,
+		"a jetpack" = /obj/item/weapon/tank/jetpack,
+		"a pair of magboots" = /obj/item/clothing/shoes/magnetic,
+		"28 moles of plasma (full tank)" = /obj/item/weapon/tank,
+		"the hypospray" = /obj/item/weapon/reagent_containers/hypospray,
+		"a bone gel bottle" = /obj/item/weapon/surgical/bonegel,
+		"an ablative armor vest" = /obj/item/clothing/suit/armor/laserproof,
+		"the captain's pinpointer" = /obj/item/weapon/pinpointer,
+		"a small singularity engine" = /obj/item/toy/minisingulo,
+		"a completed cyborg shell (no brain)" = /obj/item/robot_parts/robot_suit,
+		"a finished (but not booted up) AI construct with brain" = /obj/structure/AIcore,
+	)
+
+	var/global/possible_items_special[] = list(
+		"an advanced energy gun" = /obj/item/weapon/gun/energy/gun/nuclear,
+		"a diamond drill" = /obj/item/weapon/pickaxe/diamonddrill,
+		"a bag of holding" = /obj/item/weapon/storage/backpack/holding,
+		"a hyper-capacity cell" = /obj/item/weapon/cell/hyper,
+		"10 diamonds" = /obj/item/stack/sheet/mineral/diamond,
+		"50 gold bars" = /obj/item/stack/sheet/mineral/gold,
+		"25 refined uranium bars" = /obj/item/stack/sheet/mineral/uranium,
+	)
+
+
+	proc/set_target(item_name)
+		target_name = item_name
+		steal_target = possible_items[target_name]
+		if (!steal_target)
+			steal_target = possible_items_special[target_name]
+		explanation_text = "Steal [target_name]."
+		return steal_target
+
+
+	find_target()
+		return set_target(pick(possible_items))
+
+
+	proc/select_target()
+		var/list/possible_items_all = possible_items+possible_items_special+"custom"
+		var/new_target = input("Select target:", "Objective target", steal_target) as null|anything in possible_items_all
+		if (!new_target) return
+		if (new_target == "custom")
+			var/obj/item/custom_target = input("Select type:","Type") as null|anything in typesof(/obj/item)
+			if (!custom_target) return
+			var/tmp_obj = new custom_target
+			var/custom_name = tmp_obj:name
+			del(tmp_obj)
+			custom_name = copytext(sanitize(input("Enter target name:", "Objective target", custom_name) as text|null),1,MAX_MESSAGE_LEN)
+			if (!custom_name) return
+			target_name = custom_name
+			steal_target = custom_target
+			explanation_text = "Steal [target_name]."
+		else
+			set_target(new_target)
+		return steal_target
+
+	check_completion()
+		if(!steal_target || !owner.current)	return 0
+		if(!isliving(owner.current))	return 0
+		var/list/all_items = owner.current.GetAllContents()	//this should get things in cheesewheels, books, etc.
+		switch(target_name)
+			if("28 moles of plasma (full tank)","10 diamonds","50 gold bars","25 refined uranium bars")
+				var/target_amount = text2num(target_name)//Non-numbers are ignored.
+				var/found_amount = 0.0//Always starts as zero.
+
+				for(var/obj/item/I in all_items) //Check for plasma tanks
+					if(istype(I, steal_target))
+						found_amount += (target_name=="28 moles of plasma (full tank)" ? (I:air_contents:toxins) : (I:amount))
+				return found_amount>=target_amount
+
+			if("an unused sample of slime extract")
+				for(var/obj/item/weapon/slime_extract/E in all_items)
+					if(E.Uses > 0)
 						return 1
-					else
-						return 0
-		*/
-		nuclear
-			explanation_text = "Destroy the station with a nuclear device."
+
+			if("a completed cyborg shell (no brain)")
+				for(var/obj/item/robot_parts/robot_suit/R in all_items)
+					if(R.check_completion())
+						return 1
+
+			if("a finished (but not booted up) AI construct with brain")
+				for(var/datum/shuttle/s in shuttles)
+					for(var/obj/structure/AIcore/objective in locate(s.centcom))
+						if (objective.buildstate == 5)
+							return 1
+
+			else
+				for(var/obj/I in all_items) //Check for items
+					if(istype(I, steal_target))
+						return 1
+		return 0
 
 
-		absorb
-			var/num_to_eat //this is supposed to be semi-random but fuck it for now, this is alpha
 
+/datum/objective/stealreagent
+	var/datum/reagent/steal_reagent
+	var/target_name
+	weight = 35
 
-			proc/gen_num_to_eat()  //this doesn't work -- should work now, changed it a bit -- Urist
-				num_to_eat = rand (4,6)
-				explanation_text = "Absorb [num_to_eat] compatible genomes."
-				return num_to_eat
+	var/global/possible_reagents[] = list(
+		"polytrinic acid" = /datum/reagent/pacid,
+		"space lube" = /datum/reagent/lube,
+		"unstable mutagen" = /datum/reagent/mutagen,
+	 	"leporazine" = /datum/reagent/leporazine,
+	 	"cryptobiolin" =/datum/reagent/cryptobiolin,
+	 	"lexorin" = /datum/reagent/lexorin,
+	)
 
-			check_completion()
-				if(owner && owner.current && owner.current.absorbed_dna && ((owner.current.absorbed_dna.len - 1) >= num_to_eat))
-					return 1
-				else
-					return 0
+	find_target()
+		target_name = pick(possible_reagents)
+		steal_reagent = possible_reagents[target_name]
+		explanation_text = "Steal a container filled with [target_name]."
 
+		return steal_reagent
+
+	proc/set_target(item_name)
+		target_name = item_name
+		steal_reagent = possible_reagents[target_name]
+		explanation_text = "Steal a container filled with [target_name]."
+		return steal_reagent
+
+	proc/select_target()
+		var/new_target = input("Select target:", "Objective target", steal_reagent) as null|anything in possible_reagents+"custom"
+		if (!new_target) return
+		if (new_target == "custom")
+			var/obj/item/custom_target = input("Select type:","Type") as null|anything in typesof(/datum/reagent)
+			if (!custom_target) return
+			var/tmp_obj = new custom_target
+			var/custom_name = tmp_obj:name
+			del(tmp_obj)
+			custom_name = copytext(sanitize(input("Enter target name:", "Objective target", custom_name) as text|null),1,MAX_MESSAGE_LEN)
+			if (!custom_name) return
+			target_name = custom_name
+			steal_reagent = custom_target
+		else
+			set_target(target_name)
+
+		explanation_text = "Steal a container filled with [target_name]."
+		return steal_reagent
+
+	check_completion()
+		if(steal_reagent)
+			if(owner.current.check_contents_for_reagent(steal_reagent))
+				return 1
+			else
+				return 0

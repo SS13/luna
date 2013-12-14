@@ -147,53 +147,12 @@
 	origin_tech = "combat=2;materials=2"
 
 
-// A gun to play Russian Roulette!
-// You can spin the chamber to randomize the position of the bullet.
-
-/obj/item/weapon/gun/projectile/revolver/russian
-	name = "Russian Revolver"
-	desc = "A Russian made revolver. Uses .357 ammo. It has a single slot in its chamber for a bullet."
-	origin_tech = "combat=2;materials=2"
-	mag_type = /obj/item/ammo_magazine/internal/cylinder/rus357
-	var/spun = 0
-
-/obj/item/weapon/gun/projectile/revolver/russian/New()
-	..()
-	Spin()
-	update_icon()
-
-/obj/item/weapon/gun/projectile/revolver/russian/proc/Spin()
-	chambered = null
-	var/random = rand(1, magazine.max_ammo)
-	if(random <= get_ammo(0,0))
-		chamber_round()
-	spun = 1
-
-/obj/item/weapon/gun/projectile/revolver/russian/attackby(var/obj/item/A as obj, mob/user as mob)
-	if(..(A, user, 0))
-		user.visible_message("<span class='warning'>[user] loads a single bullet into the revolver and spins the chamber.</span>", "<span class='warning'>You load a single bullet into the chamber and spin it.</span>")
-		Spin()
-		update_icon()
-		A.update_icon()
-	return
-
-/obj/item/weapon/gun/projectile/revolver/russian/attack_self(mob/user as mob)
-	if(!spun && get_ammo(0,0))
-		user.visible_message("<span class='warning'>[user] spins the chamber of the revolver.</span>", "<span class='warning'>You spin the revolver's chamber.</span>")
-		Spin()
-	else
-		..()
-
-/obj/item/weapon/gun/projectile/revolver/russian/afterattack(atom/target as mob|obj|turf, mob/living/user as mob|obj, flag, params)
-	..()
-	spun = 0
-
 /obj/item/weapon/gun/projectile/revolver/attack(atom/target as mob|obj|turf|area, mob/living/user as mob|obj)
-	if(!chambered)
-		user.visible_message("\red *click*", "\red *click*")
-		return
-
 	if(iscarbon(target) && isliving(user))
+		if(!chambered)
+			user.visible_message("\red *click*", "\red *click*")
+			return
+
 		if(target == user && user.zone_sel.selecting == "head")
 			var/mob/living/carbon/T = target
 			var/obj/item/ammo_casing/AC = chambered

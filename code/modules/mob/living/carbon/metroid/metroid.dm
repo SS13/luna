@@ -814,6 +814,25 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 	name = "sepia slime extract"
 	icon_state = "sepia slime extract"
 
+/obj/item/weapon/slime_extract/metroid
+	name = "metroid core"
+	icon_state = "metroid extract"
+	Uses = 999999999 // Almost unlimited.
+
+	attackby(obj/item/O as obj, mob/user as mob)
+		return
+
+/obj/item/weapon/slime_extract/metroid/spawner/New()
+	var/newtype = pick(typesof(/obj/item/weapon/slime_extract/metroid) - /obj/item/weapon/slime_extract/metroid/spawner)
+	new newtype(src.loc)
+	del(src)
+
+/obj/item/weapon/slime_extract/metroid/type1
+/obj/item/weapon/slime_extract/metroid/type2
+/obj/item/weapon/slime_extract/metroid/type3
+/obj/item/weapon/slime_extract/metroid/type4
+/obj/item/weapon/slime_extract/metroid/type5
+
 
 ////Pet Slime Creation///
 
@@ -913,32 +932,19 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "bottle17"
 
-	/*afterattack(obj/target, mob/user , flag)
-		if(istype(target, /obj/item/weapon/slime_extract))
-			if(target.enhanced == 1)
-				user << "\red This extract has already been enhanced!"
-				return ..()
-			if(target.Uses == 0)
-				user << "\red You can't enhance a used extract!"
-				return ..()
-			user <<"You apply the enhancer. It now has triple the amount of uses."
-			target.Uses = 3
-			target.enahnced = 1
-			del (src)*/
-
 ////////Adamantine Golem stuff I dunno where else to put it
 
-/*obj/item/clothing/under/golem
+/obj/item/clothing/under/golem
 	name = "adamantine skin"
 	desc = "a golem's skin"
 	icon_state = "golem"
 	item_state = "golem"
-	color = "golem"
+	item_color = "golem"
 	has_sensor = 0
 	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	canremove = 0
 
-/obj/item/clothing/suit/golem
+/obj/item/clothing/suit/space/golem
 	name = "adamantine shell"
 	desc = "a golem's thick outter shell"
 	icon_state = "golem"
@@ -950,10 +956,6 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 	slowdown = 1.0
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 	flags = FPRINT | ONESIZEFITSALL
-	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS | HEAD
-	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
-	cold_protection = CHEST | GROIN | LEGS | FEET | ARMS | HANDS | HEAD
-	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
 	canremove = 0
 	armor = list(melee = 80, bullet = 20, laser = 20, energy = 10, bomb = 0, bio = 0, rad = 0)
 
@@ -966,15 +968,6 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 	flags = NOSLIP
 	slowdown = 0
 
-
-/obj/item/clothing/mask/gas/golem
-	name = "golem's face"
-	desc = "the imposing face of an adamantine golem"
-	icon_state = "golem"
-	item_state = "golem"
-	canremove = 0
-	siemens_coefficient = 0
-	unacidable = 1
 
 /obj/item/clothing/mask/gas/golem
 	name = "golem's face"
@@ -998,16 +991,14 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 /obj/item/clothing/head/space/golem
 	icon_state = "golem"
 	item_state = "dermal"
-	color = "dermal"
+	item_color = "dermal"
 	name = "golem's head"
 	desc = "a golem's head"
 	canremove = 0
 	unacidable = 1
 	flags = FPRINT
-	heat_protection = HEAD
-	max_heat_protection_temperature = FIRE_HELM_MAX_TEMP_PROTECT
 	armor = list(melee = 80, bullet = 20, laser = 20, energy = 10, bomb = 0, bio = 0, rad = 0)
-
+/*
 /obj/effect/golemrune
 	anchored = 1
 	desc = "a strange rune used to create golems. It glows when spirits are nearby."
@@ -1021,7 +1012,7 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 		..()
 		processing_objects.Add(src)
 
-	process()
+	proc/process()
 		var/mob/dead/observer/ghost
 		for(var/mob/dead/observer/O in src.loc)
 			if(!O.client)	continue
@@ -1047,7 +1038,7 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 		G.dna.mutantrace = "adamantine"
 		G.real_name = text("Adamantine Golem ([rand(1, 1000)])")
 		G.equip_to_slot_or_del(new /obj/item/clothing/under/golem(G), slot_w_uniform)
-		G.equip_to_slot_or_del(new /obj/item/clothing/suit/golem(G), slot_wear_suit)
+		G.equip_to_slot_or_del(new /obj/item/clothing/suit/space/golem(G), slot_wear_suit)
 		G.equip_to_slot_or_del(new /obj/item/clothing/shoes/golem(G), slot_shoes)
 		G.equip_to_slot_or_del(new /obj/item/clothing/mask/gas/golem(G), slot_wear_mask)
 		G.equip_to_slot_or_del(new /obj/item/clothing/gloves/golem(G), slot_gloves)
@@ -1059,13 +1050,12 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 
 
 	proc/announce_to_ghosts()
-		for(var/mob/dead/observer/G in player_list)
+		for(var/mob/dead/observer/G in world)
 			if(G.client)
 				var/area/A = get_area(src)
 				if(A)
 					G << "Golem rune created in [A.name]."
 */
-
 
 //////////////////////////////Old shit from metroids/RoRos, and the old cores, would not take much work to re-add them////////////////////////
 

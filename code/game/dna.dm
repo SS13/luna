@@ -7,12 +7,15 @@
 	var/struc_enzymes = null
 	var/uni_identity = null
 	var/mutantrace = null
+	var/real_name //Stores the real name of the person who originally got this dna datum. Used primarely for changelings,
+	var/blood_type
 
 /datum/dna/proc/check_integrity()
 	//Lazy.
 //	if(length(uni_identity) != 39) uni_identity = "00600200A00E0110148FC01300B0095BD7FD3F4"
 //	if(length(struc_enzymes)!= STRUCDNASIZE*3) struc_enzymes = "2013E85C944C19A4B00185144725785DC6406A4508186248487555169453220780579106750610"
 	return
+
 /datum/dna/proc/ready_dna(mob/living/carbon/human/character)
 
 	var/temp
@@ -422,6 +425,11 @@
 		M.ear_deaf = 1
 		M << "\red Its kinda quiet..."
 
+	if(HUSK in oldmut)
+		M.mutations += HUSK
+
+	if(NOCLONE in oldmut)
+		M.mutations += NOCLONE
 //////////////////////////////////////////////////////////// Monkey Block
 	if (isblockon(getblock(M.dna.struc_enzymes, 14,3),14) && istype(M, /mob/living/carbon/human))
 	// human > monkey

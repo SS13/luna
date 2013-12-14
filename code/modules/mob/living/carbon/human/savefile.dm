@@ -1,10 +1,10 @@
 #define SAVEFILE_VERSION_MIN	2
 #define SAVEFILE_VERSION_MAX	2
 
-datum/preferences/proc/savefile_path(mob/user)
+/datum/preferences/proc/savefile_path(mob/user)
 	return "data/player_saves/[copytext(user.ckey, 1, 2)]/[user.ckey]/preferences.sav"
 
-datum/preferences/proc/savefile_load(mob/user, var/silent = 1,var/slot = 1)
+/datum/preferences/proc/savefile_load(mob/user, var/silent = 1,var/slot = 1)
 	if (IsGuestKey(user.key))
 		return 0
 	var/DBQuery/xquery = dbcon.NewQuery("SELECT * FROM `players` WHERE ckey='[user.ckey]' AND slot='[slot]'")

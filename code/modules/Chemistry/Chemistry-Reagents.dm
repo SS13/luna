@@ -178,7 +178,7 @@ datum
 					SetViruses(src, data)
 
 			on_mob_life(mob/M)
-				if (ishuman(M) && data && blood_incompatible(data["blood_type"],M:b_type))
+				if (ishuman(M) && data && blood_incompatible(data["blood_type"],M.dna.blood_type))
 					if(prob(40)) M:toxloss += 1
 					M:oxyloss += 2
 				..()

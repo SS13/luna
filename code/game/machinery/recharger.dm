@@ -75,8 +75,8 @@
 			return
 		if(istype(charging, /obj/item/weapon/melee/baton))
 			var/obj/item/weapon/melee/baton/B = charging
-			if (B.charges < B.maximum_charges)
-				B.charges++
+			if(B.bcell && B.bcell.charge < B.bcell.maxcharge)
+				B.bcell.give(250)
 				icon_state = "recharger1"
 				use_power(250)
 			else
