@@ -1,5 +1,5 @@
 /obj/machinery/walllocker
-	name = "Wall locker"
+	name = "wall locker"
 	icon = 'lockwall.dmi'
 	icon_state = "emerg"
 	anchored = 1
@@ -96,7 +96,7 @@
 				items_3.Add(I)
 
 /obj/machinery/walllocker/emerglocker
-	name = "Emergency locker"
+	name = "emergency locker"
 	desc = "It contains a set of three crowbars, oxygen tanks and masks"
 
 	item_1 = /obj/item/weapon/crowbar

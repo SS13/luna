@@ -13,7 +13,6 @@
 	var/list/synd_spawns = list()
 	var/list/disk_spawns = list()
 
-	uplink_welcome = "Syndicate Uplink Console:"
 	uplink_items = {"
 /obj/item/weapon/storage/box/syndie_kit/imp_freedom:2:Freedom Implant, with injector;
 /obj/item/weapon/storage/box/syndie_kit/imp_compress:5:Compressed matter implant, with injector;

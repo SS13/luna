@@ -6,5 +6,9 @@
 
 	update_clothing()
 
-	if (stat == 2)
-		verbs += /mob/proc/ghostize
+	if(mind && ticker && ticker.mode) // Updating game mode icons
+		if(mind in ticker.mode.get_all_revolutionaries())
+			ticker.mode.update_rev_icons_login(mind)
+
+	if(stat == DEAD)
+		verbs += /mob/living/proc/ghostize

@@ -1,5 +1,5 @@
 /obj/item/clothing/suit/space
-	name = "Space suit"
+	name = "space suit"
 	desc = "A suit that protects against low pressure environments."
 	icon_state = "space"
 	gas_transfer_coefficient = 0.01
@@ -9,10 +9,10 @@
 	permeability_coefficient = 0.02
 	protective_temperature = 1000
 	heat_transfer_coefficient = 0.02
-	slowdown = 4
+	slowdown = 3
 
 /obj/item/clothing/head/helmet/space
-	name = "Space helmet"
+	name = "space helmet"
 	icon_state = "space"
 	flags = FPRINT | HEADSPACE | HEADCOVERSEYES | HEADCOVERSMOUTH | PLASMAGUARD
 	see_face = 0.0

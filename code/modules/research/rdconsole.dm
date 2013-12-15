@@ -139,11 +139,6 @@ won't update every console in existence) but it's more of a hassle to do. Also, 
 /obj/machinery/computer/rdconsole/initialize()
 	SyncRDevices()
 
-/*	Instead of calling this every tick, it is only being called when needed
-/obj/machinery/computer/rdconsole/process()
-	griefProtection()
-*/
-
 /obj/machinery/computer/rdconsole/attackby(var/obj/item/weapon/D as obj, var/mob/user as mob)
 	//The construction/deconstruction of the console code.
 	if(istype(D, /obj/item/weapon/screwdriver))

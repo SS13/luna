@@ -25,19 +25,14 @@
 		name = corpse.real_name
 		verbs += /mob/dead/observer/proc/reenter_corpse
 
-/mob/proc/ghostize()
+/mob/living/proc/ghostize()
 	set name = "Ghost"
 	set desc = "You cannot be revived as a ghost"
 	if(client)
-		if(isturf(src.loc))
-			var/mob/dead/observer/newghost = new/mob/dead/observer(src.loc,src)
+		if(isturf(get_turf(src)))
+			var/mob/dead/observer/newghost = new/mob/dead/observer(get_turf(src),src)
 			newghost.timeofdeath = src.timeofdeath
 			client.mob = newghost
-
-		else
-			var/atom/object = src.loc
-			client.mob = new/mob/dead/observer(object.loc,src)
-			client.eye = client.mob
 	return
 
 

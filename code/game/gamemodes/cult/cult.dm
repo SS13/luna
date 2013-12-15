@@ -1,10 +1,3 @@
-//This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
-
-/datum/game_mode
-	var/list/datum/mind/cult = list()
-	var/list/allwords = list("travel","self","see","hell","blood","join","tech","destroy", "other", "hide")
-
-
 /proc/iscultist(mob/living/M as mob)
 	return istype(M) && M.mind && ticker && ticker.mode && (M.mind in ticker.mode.cult)
 
@@ -26,7 +19,6 @@
 	recommended_enemies = 4
 
 	uplink_welcome = "Nar-Sie Uplink Console:"
-	uplink_uses = 10
 
 	var/datum/mind/sacrifice_target = null
 	var/finished = 0
@@ -191,13 +183,9 @@
 			wordexp = "[worddestr] is destroy..."
 		if("other")
 			wordexp = "[wordother] is other..."
-//		if("hear")
-//			wordexp = "[wordhear] is hear..."
-//		if("free")
-//			wordexp = "[wordfree] is free..."
 		if("hide")
 			wordexp = "[wordhide] is hide..."
-	cult_mob << "\red [pick("You remember something from the dark teachings of your master","You hear a dark voice on the wind","Black blood oozes into your vision and forms into symbols","You have a vision of a [pick("crow","raven","vulture","parrot")] it squawks","You catch a brief glimmer of the otherside")]... [wordexp]"
+	cult_mob << "\red [pick("You remember something from the dark teachings of your master","You hear a dark voice on the wind","Black blood oozes into your vision and forms into symbols","You catch a brief glimmer of the otherside")]... [wordexp]"
 	cult_mob.mind.store_memory("<B>You remember that</B> [wordexp]", 0, 0)
 
 
@@ -282,7 +270,6 @@
 			ucs += player.mind
 	return ucs
 
-
 /datum/game_mode/cult/proc/check_cult_victory()
 	var/cult_fail = 0
 	if(objectives.Find("survive"))
@@ -330,28 +317,21 @@
 				if("survive")
 					if(!check_survive())
 						explanation = "Make sure at least [acolytes_needed] acolytes escape on the shuttle. <font color='green'><B>Success!</B></font>"
-						//feedback_add_details("cult_objective","cult_survive|SUCCESS|[acolytes_needed]")
 					else
 						explanation = "Make sure at least [acolytes_needed] acolytes escape on the shuttle. <font color='red'>Fail.</font>"
-						//feedback_add_details("cult_objective","cult_survive|FAIL|[acolytes_needed]")
 				if("sacrifice")
 					if(sacrifice_target)
 						if(sacrifice_target in sacrificed)
 							explanation = "Sacrifice [sacrifice_target.name], the [sacrifice_target.assigned_role]. <font color='green'><B>Success!</B></font>"
-							//feedback_add_details("cult_objective","cult_sacrifice|SUCCESS")
 						else if(sacrifice_target && sacrifice_target.current)
 							explanation = "Sacrifice [sacrifice_target.name], the [sacrifice_target.assigned_role]. <font color='red'>Fail.</font>"
-							//feedback_add_details("cult_objective","cult_sacrifice|FAIL")
 						else
 							explanation = "Sacrifice [sacrifice_target.name], the [sacrifice_target.assigned_role]. <font color='red'>Fail (Gibbed).</font>"
-							//feedback_add_details("cult_objective","cult_sacrifice|FAIL|GIBBED")
 				if("eldergod")
 					if(!eldergod)
 						explanation = "Summon Nar-Sie. <font color='green'><B>Success!</B></font>"
-						//feedback_add_details("cult_objective","cult_narsie|SUCCESS")
 					else
 						explanation = "Summon Nar-Sie. <font color='red'>Fail.</font>"
-						//feedback_add_details("cult_objective","cult_narsie|FAIL")
 			text += "<br><B>Objective #[obj_count]</B>: [explanation]"
 
 	world << text

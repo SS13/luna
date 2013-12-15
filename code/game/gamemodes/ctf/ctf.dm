@@ -1,4 +1,4 @@
-/*
+
 /datum/game_mode/ctf
 	name = "ctf"
 	config_tag = "ctf"
@@ -136,5 +136,3 @@
 			new /obj/machinery/green_injector(L.loc)
 		else
 			world << "No green team injector spawn point detected"
-
-*/

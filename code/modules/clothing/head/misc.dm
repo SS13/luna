@@ -134,7 +134,7 @@
 	icon_state = "pirate"
 	item_state = "pirate"
 
-/obj/item/clothing/head/hgpiratecap
+/obj/item/clothing/head/pirate/hgpiratecap
 	name = "pirate hat"
 	desc = "Yarr."
 	icon_state = "hgpiratecap"

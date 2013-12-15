@@ -104,7 +104,7 @@
 
 	special_check(var/mob/living/carbon/human/M)
 		if(ishuman(M))
-			if(istype(M.wear_suit, /obj/item/clothing/suit/bluetag))
+			if(istype(M.wear_suit, /obj/item/clothing/suit/tag/blue))
 				return 1
 			M << "\red You need to be wearing your laser tag vest!"
 		return 0
@@ -141,7 +141,7 @@
 
 	special_check(var/mob/living/carbon/human/M)
 		if(ishuman(M))
-			if(istype(M.wear_suit, /obj/item/clothing/suit/redtag))
+			if(istype(M.wear_suit, /obj/item/clothing/suit/tag/red))
 				return 1
 			M << "\red You need to be wearing your laser tag vest!"
 		return 0

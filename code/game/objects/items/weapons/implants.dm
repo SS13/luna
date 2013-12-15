@@ -55,7 +55,7 @@ IMPLANTER
 
 	else if(istype(I, /obj/item/weapon/implanter))
 		if (I:imp)
-			if ((src.imp || I:imp.implanted))
+			if (src.imp || I:imp.implanted)
 				return
 			I:imp.loc = src
 			src.imp = I:imp
@@ -81,7 +81,7 @@ IMPLANTER
 	desc = "A case containing a death alarm implant."
 	icon_state = "implantcase-b"
 	New()
-		src.imp = new /obj/item/weapon/implant/death_alarm( src )
+		src.imp = new /obj/item/weapon/implant/death_alarm(src)
 		..()
 		return
 
@@ -90,14 +90,14 @@ IMPLANTER
 	desc = "A case containing a chemical implant."
 	icon_state = "implantcase-b"
 	New()
-		src.imp = new /obj/item/weapon/implant/chem/prison( src )
+		src.imp = new /obj/item/weapon/implant/chem/prison(src)
 		..()
 		return
 
 /obj/item/weapon/implantcase/explosive
 	icon_state = "implantcase-s"
 	New()
-		src.imp = new /obj/item/weapon/implant/explosive( src )
+		src.imp = new /obj/item/weapon/implant/explosive(src)
 		..()
 		return
 
@@ -173,9 +173,8 @@ IMPLANTER
 	return
 
 /obj/item/weapon/implantpad/attackby(obj/item/weapon/implantcase/C as obj, mob/user as mob)
-
 	if (istype(C, /obj/item/weapon/implantcase))
-		if (!( src.case ))
+		if (!src.case)
 			user.drop_item()
 			C.loc = src
 			src.case = C
@@ -320,8 +319,8 @@ No Implant Specifics"}
 		R.my_atom = src
 
 	activate(var/cause)
-		if((!cause))	return 0
-		var/mob/living/carbon/R = src.loc
+		if(!cause)	return 0
+		var/mob/living/carbon/R = src.implanted
 		src.reagents.trans_to(R, cause)
 		R << "You hear a faint *beep*."
 		if(!src.reagents.total_volume)
@@ -632,19 +631,14 @@ mob/proc/endmindcontrol()
 				O.show_message("\red <B>[user] is trying to inject themselves with [src.name]!</B>", 1)
 		if(!do_mob(user, target,60)) return
 		var/picked = 0
-	//	world << "start"
+
 		if(istype(target,/mob/living/carbon))
 			var/mob/living/carbon/T = target
-		//	world << T
 			var/list/datum/organ/external/E = T.GetOrgans()
 			while(picked == 0 && E.len > 0)
 				var/datum/organ/external/O = pick(E)
-			//	world << O
-			//	world << E.len
-
 				E -= O
 				if(!E.implant)
-				//	world << "NO IMPLANT"
 					O.implant = src.imp
 					picked = 1
 		if(picked == 0)

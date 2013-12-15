@@ -12,7 +12,7 @@
 	force = 15
 	hitsound = 'sound/items/welder2.ogg'
 
-/obj/item/weapon/scrying/attack_self(mob/user as mob)
+/obj/item/weapon/scrying/attack_self(mob/living/user as mob)
 	user << "\blue You can see...everything!"
 	visible_message("\red <B>[usr] stares into [src], their eyes glazing over.</B>")
 	user.ghostize(1)

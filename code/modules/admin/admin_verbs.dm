@@ -440,15 +440,16 @@
 		return
 */
 	src.verbs -= /client/proc/admin_play
-	spawn( 1200 )										//change this to 1200
+	spawn(1200)										//change this to 1200
 		src.verbs += /client/proc/admin_play
 	var/rank = src.holder.rank
 	clear_admin_verbs()
 	src.holder.state = 2
 	update_admins(rank)
-	if(!istype(src.mob, /mob/dead/observer))
-		src.mob.ghostize()
-	src << "\blue You are now observing"
+	if(isliving(src.mob))
+		var/mob/living/M = src.mob
+		M.ghostize()
+		src << "\blue You are now observing"
 
 /client/proc/admin_play()
 	set category = "Admin"
@@ -464,8 +465,9 @@
 	src.holder.state = 1
 	update_admins(rank)
 	if(istype(src.mob, /mob/dead/observer))
-		src.mob:reenter_corpse()
-	src << "\blue You are now playing"
+		var/mob/dead/observer/O = src.mob
+		O.reenter_corpse()
+		src << "\blue You are now playing"
 
 /client/proc/get_admin_state()
 	set category = "Debug"
@@ -482,8 +484,8 @@
 /client/proc/UnpedalMe()
 	set name = "UnPedalMe!"
 	set category = "Admin"
-	log_admin("[key_name(usr)] has Unpedaling himself")
-	message_admins("[key_name_admin(usr)] has Unpedaling himself", 1)
+	log_admin("[key_name(usr)] has unpedaled himself")
+	message_admins("[key_name_admin(usr)] has unpedaled himself", 1)
 	src.clear_admin_verbs()
 	src.update_admins("Remove")
 	admins[src.ckey] = "Remove"

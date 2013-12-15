@@ -1330,14 +1330,14 @@ datum
 				data++
 				switch(data)
 					if(2 to 10)
-						M:confused += 2
-						M:drowsyness += 2
-						M:sleeping += 2
-					if(11 to 100)
-						M:sleeping += 3
-					if(101 to INFINITY)
-						M:sleeping += 4
-						M:toxloss += 2
+						M.confused += 2
+						M.drowsyness += 2
+						M.sleeping += 2
+					if(11 to 70)
+						M.sleeping += 3
+					if(71 to INFINITY)
+						M.sleeping += 4
+						M.toxloss += 3
 				..()
 				return
 

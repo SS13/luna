@@ -6,7 +6,6 @@
 	icon_state = "ba_suit"
 	item_state = "ba_suit"
 	item_color = "ba_suit"
-	flags = FPRINT | ONESIZEFITSALL
 
 /*
 /obj/item/clothing/under/rank/captain //Alright, technically not a 'civilian' but its better then giving a .dm file for a single define.
@@ -15,7 +14,7 @@
 	icon_state = "captain"
 	item_state = "caparmor"
 	item_color = "captain"
-	flags = FPRINT | ONESIZEFITSALL*/
+*/
 
 
 /obj/item/clothing/under/rank/cargo
@@ -25,13 +24,21 @@
 	item_state = "lb_suit"
 	item_color = "qm"
 
+/obj/item/clothing/under/rank/dispatch
+	name = "dispatcher's uniform"
+	desc = "A dress shirt and khakis with a security patch sewn on."
+	icon_state = "dispatch"
+	item_state = "dispatch"
+	item_color = "dispatch"
+	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 0.9
+
 /obj/item/clothing/under/rank/cargotech
 	name = "cargo technician's jumpsuit"
 	desc = "Shooooorts! They're comfy and easy to wear!"
 	icon_state = "cargo"
 	item_state = "cargo"
 	item_color = "cargo"
-	flags = FPRINT | ONESIZEFITSALL
 
 /obj/item/clothing/under/rank/chaplain
 	desc = "It's a black jumpsuit, often worn by religious folk."
@@ -39,7 +46,6 @@
 	icon_state = "chaplain"
 	item_state = "bl_suit"
 	item_color = "chapblack"
-	flags = FPRINT | ONESIZEFITSALL
 
 
 /obj/item/clothing/under/rank/chef
@@ -47,7 +53,6 @@
 	name = "chef's uniform"
 	icon_state = "chef"
 	item_color = "chef"
-	flags = FPRINT | ONESIZEFITSALL
 
 
 /obj/item/clothing/under/rank/clown
@@ -56,7 +61,6 @@
 	icon_state = "clown"
 	item_state = "clown"
 	item_color = "clown"
-	flags = FPRINT | ONESIZEFITSALL
 
 /*
 /obj/item/clothing/under/rank/head_of_personnel
@@ -75,7 +79,6 @@
 	item_state = "g_suit"
 	item_color = "hydroponics"
 	permeability_coefficient = 0.50
-	flags = FPRINT | ONESIZEFITSALL
 
 
 /obj/item/clothing/under/rank/janitor
@@ -84,13 +87,11 @@
 	icon_state = "janitor"
 	item_color = "janitor"
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 10, rad = 0)
-	flags = FPRINT | ONESIZEFITSALL
 
 
 /obj/item/clothing/under/lawyer
 	desc = "Slick threads."
 	name = "lawyer suit"
-	flags = FPRINT
 
 
 /obj/item/clothing/under/lawyer/black

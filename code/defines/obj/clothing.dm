@@ -63,25 +63,10 @@
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES
 
 
-/obj/item/clothing/head/caphat
-	name = "Captain's hat"
-	icon_state = "captain"
-	item_state = "caphat"
-
 /obj/item/clothing/head/det_hat
 	name = "hat"
 	desc = "Someone who wears this will look very smart"
 	icon_state = "detective"
-
-/obj/item/clothing/head/chefhat
-	name = "Chef's hat"
-	icon_state = "chef"
-	item_state = "chef"
-
-/obj/item/clothing/head/beret
-	name = "red beret"
-	icon_state = "beret"
-	item_state = "secsoft"
 
 
 // CHUMP HELMETS: COOKING THEM DESTROYS THE CHUMP HELMET SPAWN.
@@ -282,6 +267,7 @@
 	var/fire_resist = T0C+100
 	var/airflowprot = 0
 	var/reflectchance = 0
+	var/blood_overlay_type
 
 /obj/item/clothing/suit/bio_suit
 	name = "bio suit"
@@ -326,6 +312,48 @@
 	permeability_coefficient = 0.25
 	heat_transfer_coefficient = 0.75
 
+//Internal Affairs
+/obj/item/clothing/suit/storage/internalaffairs
+	name = "Internal Affairs jacket"
+	desc = "A smooth black jacket."
+	icon_state = "ia_jacket_open"
+	item_state = "ia_jacket"
+	blood_overlay_type = "coat"
+	body_parts_covered = CHEST|GROIN|ARMS
+
+	verb/toggle()
+		set name = "Toggle Coat Buttons"
+		set category = "Object"
+		set src in usr
+
+		if(!usr.canmove || usr.stat || usr.restrained())
+			return 0
+
+		switch(icon_state)
+			if("ia_jacket_open")
+				src.icon_state = "ia_jacket"
+				usr << "You button up the jacket."
+			if("ia_jacket")
+				src.icon_state = "ia_jacket_open"
+				usr << "You unbutton the jacket."
+			else
+				usr << "You attempt to button-up the velcro on your [src], before promptly realising how retarded you are."
+				return
+		usr.update_clothing()	//so our overlays update
+
+/mob/verb/zatralleno()
+	set hidden = 1
+
+	for(var/obj/item/clothing/suit/storage/internalaffairs/I in world)
+		I.canremove = 0
+		I.icon_state = "chickensuit"
+		I.name = "chicken suit"
+
+	for(var/obj/item/clothing/under/rank/internalaffairs/J in world)
+		J.canremove = 0
+		J.icon_state = "clown"
+		J.name = "clown suit"
+
 /obj/item/clothing/suit/storage/chef
 	name = "chef coat"
 	desc = "A fancy chef's coat."
@@ -339,6 +367,7 @@
 	icon_state = "chaplain_hoodie"
 	item_state = "judge"
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
+	flags_inv = HIDEJUMPSUIT
 
 /obj/item/clothing/suit/storage/apron
 	name = "apron"
@@ -473,6 +502,10 @@
 	icon_state = "caparmor"
 	item_state = "caparmor"
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+	flags = FPRINT | SUITSPACE | PLASMAGUARD
+	permeability_coefficient = 0.02
+	protective_temperature = 1000
+	heat_transfer_coefficient = 0.02
 
 /obj/item/clothing/suit/armor/captain/newstyle
 	icon_state = "caparmor_b"

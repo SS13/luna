@@ -170,9 +170,9 @@
 	else
 		if(istype(user,/mob/living/carbon/human))
 			var/mob/living/carbon/human/H = user
-			if(lasercolor == "b" && istype(H.wear_suit, /obj/item/clothing/suit/redtag))
+			if(lasercolor == "b" && istype(H.wear_suit, /obj/item/clothing/suit/tag/red))
 				return
-			if(lasercolor == "r" && istype(H.wear_suit, /obj/item/clothing/suit/bluetag))
+			if(lasercolor == "r" && istype(H.wear_suit, /obj/item/clothing/suit/tag/blue))
 				return
 		dat += text({"
 					<TT><B>Automatic Portable Turret Installation</B></TT><BR><BR>
@@ -535,7 +535,7 @@
 
 	if(lasercolor == "b")	//Lasertag turrets target the opposing team, how great is that? -Sieve
 		threatcount = 0		//But does not target anyone else
-		if(istype(perp.wear_suit, /obj/item/clothing/suit/redtag))
+		if(istype(perp.wear_suit, /obj/item/clothing/suit/tag/red))
 			threatcount += 4
 		if(istype(perp.r_hand,/obj/item/weapon/gun/energy/laser/redtag) || istype(perp.l_hand,/obj/item/weapon/gun/energy/laser/redtag))
 			threatcount += 4
@@ -544,7 +544,7 @@
 
 	if(lasercolor == "r")
 		threatcount = 0
-		if(istype(perp.wear_suit, /obj/item/clothing/suit/bluetag))
+		if(istype(perp.wear_suit, /obj/item/clothing/suit/tag/blue))
 			threatcount += 4
 		if((istype(perp.r_hand,/obj/item/weapon/gun/energy/laser/bluetag)) || (istype(perp.l_hand,/obj/item/weapon/gun/energy/laser/bluetag)))
 			threatcount += 4
@@ -902,9 +902,9 @@ Status: []<BR>"},
 	else
 		if(istype(user,/mob/living/carbon/human))
 			var/mob/living/carbon/human/H = user
-			if(Parent_Turret.lasercolor == "b" && istype(H.wear_suit, /obj/item/clothing/suit/redtag))
+			if(Parent_Turret.lasercolor == "b" && istype(H.wear_suit, /obj/item/clothing/suit/tag/red))
 				return
-			if(Parent_Turret.lasercolor == "r" && istype(H.wear_suit, /obj/item/clothing/suit/bluetag))
+			if(Parent_Turret.lasercolor == "r" && istype(H.wear_suit, /obj/item/clothing/suit/tag/blue))
 				return
 		dat += text({"
 					<TT><B>Automatic Portable Turret Installation</B></TT><BR><BR>

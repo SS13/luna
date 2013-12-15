@@ -34,30 +34,82 @@
 
 
 /obj/item/weapon/gun/energy/gun/mini
-	desc = "A basic energy-based gun with two settings: stun and kill. This one is small enough to fit in pocket."
+	desc = "A basic energy-based gun with two settings: stun and kill. This one is small enough to fit in pocket and has a built in flash."
 	icon_state = "energy_ministun100"
 	modifystate = "energy_ministun"
-	charge_cost = 150
+	charge_cost = 120
 	w_class = 2
 
 	attack_self(mob/living/user as mob)
 		switch(mode)
 			if(0)
 				mode = 1
-				charge_cost = 100
+				charge_cost = 150
 				fire_sound = 'sound/weapons/Laser.ogg'
 				user << "\red [src.name] is now set to kill."
 				projectile_type = "/obj/item/projectile/beam"
 				modifystate = "energy_minikill"
 			if(1)
 				mode = 0
-				charge_cost = 100
+				charge_cost = 120
 				fire_sound = 'sound/weapons/Taser.ogg'
 				user << "\red [src.name] is now set to stun."
 				projectile_type = "/obj/item/projectile/energy/electrode"
 				modifystate = "energy_ministun"
 		update_icon()
 		user.update_clothing()
+
+	attack(mob/living/carbon/M as mob, mob/user as mob)
+		if ((CLUMSY in usr.mutations) && prob(50))
+			usr << "\red The [src.name] slips out of your hand."
+			usr.drop_item()
+			return
+
+		if(power_supply.use(50))
+			playsound(src.loc, 'flash.ogg', 100, 1)
+			add_fingerprint(user)
+
+			var/safety = null
+			if (istype(M, /mob/living/carbon/human))
+				var/mob/living/carbon/human/H = M
+				if (istype(H.glasses, /obj/item/clothing/glasses/sunglasses) || (istype(H.head, /obj/item/clothing/head/helmet/welding) && !H.head:up))
+					safety = 1
+			if(isrobot(user))
+				spawn(0)
+					var/atom/movable/overlay/animation = new(user.loc)
+					animation.layer = user.layer + 1
+					animation.icon_state = "blank"
+					animation.icon = 'mob.dmi'
+					animation.master = user
+					flick("blspell", animation)
+					sleep(5)
+					del(animation)
+			if(!safety)
+				M.Weaken(10)
+				if(M.eye_stat > 15 && prob(M.eye_stat + 50))
+					flick("e_flash", M.flash)
+					M.eye_stat += rand(1, 2)
+				else
+					flick("flash", M.flash)
+					M.eye_stat += rand(0, 2)
+				if (M.eye_stat >= 20)
+					M << "\red You eyes start to burn badly!"
+					M.disabilities |= 1
+					if(prob(M.eye_stat - 20 + 1))
+						M << "\red You go blind!"
+						M.sdisabilities |= 1
+				if((user.mind in ticker.mode.head_revolutionaries) && ticker.mode.name != "rp-revolution")
+					ticker.mode.add_revolutionary(M.mind)
+
+			for(var/mob/O in viewers(user, null))
+				O.show_message(text("\red [user] blinds [M] with [src]'s flash!"))
+
+		else
+			user.show_message("\red *click*", 2)
+
+		update_icon()
+
+		return
 
 /obj/item/weapon/gun/energy/gun/nuclear
 	name = "advanced energy gun"

@@ -1,4 +1,3 @@
-/*
 /datum/game_mode/deathmatch
 	name = "deathmatch"
 	config_tag = "deathmatch"
@@ -63,4 +62,3 @@
 
 	check_win()
 		return 1
-*/

@@ -12,7 +12,7 @@
 	var/see_invisible = 0
 
 /obj/item/clothing/glasses/blindfold
-	name = "Blindfold"
+	name = "blindfold"
 	icon_state = "blindfold"
 	item_state = "blindfold"
 
@@ -61,19 +61,18 @@
 	vision_flags = SEE_OBJS*/
 
 /obj/item/clothing/glasses/regular
-	name = "Prescription Glasses"
+	name = "prescription glasses"
 	desc = "Made by Nerd. Co."
 	icon_state = "glasses"
 	item_state = "glasses"
 
 /obj/item/clothing/glasses/regular/hipster
-	name = "Prescription Glasses"
 	desc = "Made by Uncool. Co."
 	icon_state = "hipster_glasses"
 	item_state = "hipster_glasses"
 
 /obj/item/clothing/glasses/gglasses
-	name = "Green Glasses"
+	name = "green glasses"
 	desc = "Forest green glasses, like the kind you'd wear when hatching a nasty scheme."
 	icon_state = "gglasses"
 	item_state = "gglasses"
