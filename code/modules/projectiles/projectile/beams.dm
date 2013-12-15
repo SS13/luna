@@ -64,7 +64,7 @@
 	on_hit(var/atom/target, var/blocked = 0)
 		if(istype(target, /mob/living/carbon/human))
 			var/mob/living/carbon/human/M = target
-			if(istype(M.wear_suit, /obj/item/clothing/suit/redtag))
+			if(istype(M.wear_suit, /obj/item/clothing/suit/tag/red))
 				M.Weaken(5)
 		return 1
 
@@ -79,7 +79,7 @@
 	on_hit(var/atom/target, var/blocked = 0)
 		if(istype(target, /mob/living/carbon/human))
 			var/mob/living/carbon/human/M = target
-			if(istype(M.wear_suit, /obj/item/clothing/suit/bluetag))
+			if(istype(M.wear_suit, /obj/item/clothing/suit/tag/blue))
 				M.Weaken(5)
 		return 1
 
@@ -94,6 +94,6 @@
 	on_hit(var/atom/target, var/blocked = 0)
 		if(istype(target, /mob/living/carbon/human))
 			var/mob/living/carbon/human/M = target
-			if((istype(M.wear_suit, /obj/item/clothing/suit/bluetag))||(istype(M.wear_suit, /obj/item/clothing/suit/redtag)))
+			if((istype(M.wear_suit, /obj/item/clothing/suit/tag/blue))||(istype(M.wear_suit, /obj/item/clothing/suit/tag/red)))
 				M.Weaken(5)
 		return 1

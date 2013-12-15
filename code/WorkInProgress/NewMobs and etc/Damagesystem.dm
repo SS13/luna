@@ -669,10 +669,16 @@
 				if(emptyHand)
 					s_store.DblClick()
 				return
-			if(!istype(W, /obj/item) || !wear_suit || !W.type in wear_suit.allowed)
+			if(!istype(W, /obj/item) || !wear_suit || !wear_suit.allowed.len)
 				return
-			u_equip(W)
-			s_store = W
+			var/check = 0
+			for(var/itype in wear_suit.allowed)
+				if(istype(W, itype))
+					check = 1
+					break
+			if(check)
+				u_equip(W)
+				s_store = W
 
 	update_clothing()
 
@@ -1654,12 +1660,35 @@
 					W.layer = initial(W.layer)
 				W.add_fingerprint(source)
 			else
-				if ((istype(item, /obj) && item.flags & 128 && target.w_uniform))
+				if ((istype(item, /obj) && item.slot_flags & SLOT_BELT && target.w_uniform))
 					source.drop_item()
 					loc = target
 					item.layer = 20
 					target.belt = item
 					item.loc = target
+		if("suitstorage")
+			if (target.s_store)
+				var/obj/item/W = target.s_store
+				if(!W.canremove) return
+
+				target.u_equip(W)
+				if (target.client)
+					target.client.screen -= W
+				if (W)
+					W.loc = target.loc
+					W.dropped(target)
+					W.layer = initial(W.layer)
+				W.add_fingerprint(source)
+			else
+				if (istype(item, /obj) && target.wear_suit && target.wear_suit.allowed.len)
+					for(var/itype in target.wear_suit.allowed)
+						if(istype(W, itype))
+							source.drop_item()
+							loc = target
+							item.layer = 20
+							target.belt = item
+							item.loc = target
+							break
 		if("head")
 			if (target.head)
 				var/obj/item/W = target.head
@@ -1867,7 +1896,7 @@
 					W.layer = initial(W.layer)
 				W.add_fingerprint(source)
 			else
-				if ((istype(item, /obj/item) && item.flags & 1))
+				if ((istype(item, /obj/item) && item.slot_flags & SLOT_BACK))
 					source.drop_item()
 					loc = target
 					item.layer = 20

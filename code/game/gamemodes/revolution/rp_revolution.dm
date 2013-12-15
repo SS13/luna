@@ -1,54 +1,42 @@
-// To add a rev to the list of revolutionaries, make sure it's rev (with if(ticker.mode.name == "revolution)),
-// then call ticker.mode:add_revolutionary(_THE_PLAYERS_MIND_)
+// To add a rev to the list of revolutionaries,
+// call ticker.mode.add_revolutionary(_THE_PLAYERS_MIND_)
 // nothing else needs to be done, as that proc will check if they are a valid target.
 // Just make sure the converter is a head before you call it!
-// To remove a rev (from brainwashing or w/e), call ticker.mode:remove_revolutionary(_THE_PLAYERS_MIND_),
+// To remove a rev (from brainwashing or w/e), call ticker.mode.remove_revolutionary(_THE_PLAYERS_MIND_),
 // this will also check they're not a head, so it can just be called freely
-// If the rev icons start going wrong for some reason, ticker.mode:update_all_rev_icons() can be called to correct them.
+// If the rev icons start going wrong for some reason, ticker.mode.update_all_rev_icons() can be called to correct them.
 // If the game somtimes isn't registering a win properly, then ticker.mode.check_win() isn't being called somewhere.
 
 /datum/game_mode/rp_revolution
 	name = "rp-revolution"
 	config_tag = "rp-revolution"
 
-//	var/list/datum/mind/head_revolutionaries = list()
-//	var/list/datum/mind/revolutionaries = list()
 	var/finished = 0
 	var/const/waittime_l = 600 //lower bound on time before intercept arrives (in tenths of seconds)
 	var/const/waittime_h = 1800 //upper bound on time before intercept arrives (in tenths of seconds)
 	var/all_brigged = 0
 	var/brigged_time = 0
 
-	uplink_welcome = "Syndicate Uplink Console:"
 	uplink_items = {"
 /obj/item/weapon/storage/box/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
 /obj/item/weapon/storage/box/syndie_kit/imp_compress:5:Compressed matter implant, with injector;
-/obj/item/weapon/storage/box/syndie_kit/imp_explosive:6:Explosive implant, with injector;
 /obj/item/device/hacktool:4:Hacktool;
 /obj/item/weapon/storage/toolbox/syndicate:1:Fully Loaded Toolbox;
 /obj/item/weapon/soap/syndie:1:Syndicate Soap;
 /obj/item/clothing/shoes/syndigaloshes:2:No-Slip Syndicate Shoes;
 /obj/item/device/encryptionkey/syndicate:1:Binary Encryption Key;
 /obj/item/clothing/under/chameleon:2:Chameleon Jumpsuit;
-/obj/item/weapon/gun/projectile/revolver:7:Revolver;
-/obj/item/ammo_magazine/box/a357:3:Revolver Ammo;
 /obj/item/weapon/card/emag:3:Cryptographic Sequencer;
 /obj/item/weapon/card/id/syndicate:4:Fake ID;
 /obj/item/clothing/glasses/thermal:4:Thermal Glasses;
 /obj/item/weapon/storage/box/grenades/emp:4:Box of EMP grenades;
-/obj/item/device/powersink:5:Power sink;
 /obj/item/weapon/cartridge/syndicate:3:Detomatix PDA cart;
 /obj/item/device/chameleon:4:Chameleon projector;
-/obj/item/weapon/melee/energy/sword:5:Energy sword;
 /obj/item/weapon/pen/sleepypen:4:Sleepy pen;
-/obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;
 /obj/item/clothing/mask/gas/voice:3:Voice changer;
 /obj/item/weapon/aiModule/freeform:3:Freeform AI module;
-/obj/item/weapon/syndie/c4explosive:4:Low power explosive charge;
-/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge;
 /obj/item/weapon/reagent_containers/pill/cyanide:4:Cyanide Pill
 	"}
-	uplink_uses = 10
 
 
 /datum/game_mode/rp_revolution/announce()
@@ -198,21 +186,13 @@
 	else
 		return 0
 
-/datum/game_mode/rp_revolution/proc/add_revolutionary(datum/mind/rev_mind)
-	var/list/uncons = get_unconvertables()
-	if(!(rev_mind in revolutionaries) && !(rev_mind in head_revolutionaries) && !(rev_mind in uncons))
-		revolutionaries += rev_mind
-		rev_mind.current << "\red <FONT size = 3> You are now a revolutionary! Help your cause. Do not harm your fellow freedom fighters. You can identify your comrades by the red \"R\" icons, and your leaders by the blue \"R\" icons. Help them capture the heads to win the game!</FONT>"
+/datum/game_mode/rp_revolution/add_revolutionary(datum/mind/rev_mind)
+	if(..(rev_mind))
 		rev_mind.current.verbs += /mob/living/carbon/human/proc/RevConvert
-		update_rev_icons_added(rev_mind)
 
-/datum/game_mode/rp_revolution/proc/remove_revolutionary(datum/mind/rev_mind)
-	if(rev_mind in revolutionaries)
-		revolutionaries -= rev_mind
-		rev_mind.current << "\red <FONT size = 3><B>You are no longer a revolutionary!</B></FONT>"
+/datum/game_mode/rp_revolution/remove_revolutionary(datum/mind/rev_mind)
+	if(..(rev_mind))
 		rev_mind.current.verbs -= /mob/living/carbon/human/proc/RevConvert
-		update_rev_icons_removed(rev_mind)
-
 
 /datum/game_mode/rp_revolution/proc/check_rev_victory()
 	for(var/datum/mind/rev_mind in head_revolutionaries)

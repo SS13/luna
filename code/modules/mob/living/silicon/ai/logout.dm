@@ -7,5 +7,5 @@
 		client.eye = loc
 		client.perspective = EYE_PERSPECTIVE
 	if (stat == 2)
-		verbs += /mob/proc/ghostize
+		verbs += /mob/living/proc/ghostize
 	return

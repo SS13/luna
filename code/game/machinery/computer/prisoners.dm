@@ -30,7 +30,7 @@
 			var/turf/Tr = null
 			for(var/obj/item/weapon/implant/chem/prison/C in world)
 				Tr = get_turf(C)
-				if(Tr && !Tr.z < 5)	continue //Out of range
+				if(Tr && Tr.z > 4)	continue //Out of range
 				if(!C.implanted) continue
 				dat += "[C.implanted.name] | Remaining Units: [C.reagents.total_volume] | Inject: "
 				dat += "<A href='?src=\ref[src];inject1=\ref[C]'>(<font class='bad'>(1)</font>)</A>"
@@ -40,7 +40,7 @@
 			dat += "<HR>Tracking Implants<BR>"
 			for(var/obj/item/weapon/implant/tracking/T in world)
 				Tr = get_turf(T)
-				if(Tr && !Tr.z < 5)	continue //Out of range
+				if(Tr && Tr.z > 4)	continue //Out of range
 				if(!T.implanted) continue
 				var/loc_display = "Unknown"
 				var/mob/living/carbon/M = T.implanted
@@ -54,10 +54,8 @@
 
 		//user << browse(dat, "window=computer;size=400x500")
 		//onclose(user, "computer")
-		var/datum/browser/popup = new(user, "computer", "Prisoner Management Console", 400, 500)
-		popup.set_content(dat)
-		popup.set_title_image(user.browse_rsc_icon(src.icon, src.icon_state))
-		popup.open()
+		user << browse(dat, "window=prisonerconsole;size=575x500")
+		onclose(user, "prisonerconsole")
 		return
 
 

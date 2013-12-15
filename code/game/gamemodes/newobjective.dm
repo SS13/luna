@@ -183,190 +183,190 @@
 
 
 
-	frame
-		New(var/text,var/joba,var/datum/mind/targeta)
-			target = targeta
-			job = joba
-			weight = 60
-			explanation_text = "Frame [target.current.real_name], the [target.assigned_role] for a crime and make sure they are arrested and brought back to the Centcom station alive.  We'll handle the rest from there."
+/datum/objective/frame
+	New(var/text,var/joba,var/datum/mind/targeta)
+		target = targeta
+		job = joba
+		weight = 60
+		explanation_text = "Frame [target.current.real_name], the [target.assigned_role] for a crime and make sure they are arrested and brought back to the Centcom station alive.  We'll handle the rest from there."
 
-		check_completion()
-			if(main_shuttle.location<2)
-				return 0
-
-			if(target.current.stat == 2)
-				return 0
-
-			var/turf/location = get_turf(target.current.loc)
-			if(!location)
-				return 0
-
-			if(!target.current:handcuffed)
-				return 0
-
-
-			for(var/datum/shuttle/s in shuttles)
-				if(location in locate(s.centcom))
-					return 1
-
+	check_completion()
+		if(main_shuttle.location<2)
 			return 0
 
-	protection
-		New(var/text,var/joba,var/datum/mind/targeta)
-			target = targeta
-			job = joba
-			weight = 30
-			explanation_text = "[target.current.real_name], the [target.assigned_role] is a relative of a high ranking Syndicate Leader.  Make sure they get off the ship safely."
-
-		check_completion()
-			if(main_shuttle.location < 2)
-				return 0
-
-			if(target.current.stat == 2)
-				return 0
-
-			var/turf/location = get_turf(target.current.loc)
-			if(!location)
-				return 0
-
-			for(var/datum/shuttle/s in shuttles)
-				if(location in locate(s.centcom))
-					return 1
-
+		if(target.current.stat == 2)
 			return 0
 
-	assassinate
-		New(var/text,var/joba,var/datum/mind/targeta)
-			target = targeta
-			job = joba
-			weight = 60
-			explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+		var/turf/location = get_turf(target.current.loc)
+		if(!location)
+			return 0
 
-		check_completion()
-			if(target && target.current)
-				if(target.current.stat == 2 || issilicon(target.current))
-					return 1
-				else
-					return 0
-			else
+		if(!target.current:handcuffed)
+			return 0
+
+
+		for(var/datum/shuttle/s in shuttles)
+			if(location in locate(s.centcom))
 				return 1
 
-		proc/find_target_by_role(var/role)
-			for(var/datum/mind/possible_target in ticker.minds)
-				if((possible_target != owner) && ishuman(possible_target.current) && (possible_target.assigned_role == role))
-					target = possible_target
-					break
+		return 0
 
-			if(target && target.current)
-				explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+/datum/objective/protection
+	New(var/text,var/joba,var/datum/mind/targeta)
+		target = targeta
+		job = joba
+		weight = 30
+		explanation_text = "[target.current.real_name], the [target.assigned_role] is a relative of a high ranking Syndicate Leader.  Make sure they get off the ship safely."
+
+	check_completion()
+		if(main_shuttle.location < 2)
+			return 0
+
+		if(target.current.stat == 2)
+			return 0
+
+		var/turf/location = get_turf(target.current.loc)
+		if(!location)
+			return 0
+
+		for(var/datum/shuttle/s in shuttles)
+			if(location in locate(s.centcom))
+				return 1
+
+		return 0
+
+/datum/objective/assassinate
+	New(var/text,var/joba,var/datum/mind/targeta)
+		target = targeta
+		job = joba
+		weight = 60
+		explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+
+	check_completion()
+		if(target && target.current)
+			if(target.current.stat == 2 || issilicon(target.current))
+				return 1
 			else
-				explanation_text = "Free Objective"
+				return 0
+		else
+			return 1
 
-			return target
+	proc/find_target_by_role(var/role)
+		for(var/datum/mind/possible_target in ticker.minds)
+			if((possible_target != owner) && ishuman(possible_target.current) && (possible_target.assigned_role == role))
+				target = possible_target
+				break
+
+		if(target && target.current)
+			explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+		else
+			explanation_text = "Free Objective"
+
+		return target
 
 
-		find_target()
-			var/list/possible_targets = list()
+	find_target()
+		var/list/possible_targets = list()
 
-			for(var/datum/mind/possible_target in ticker.minds)
-				if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human))
-					possible_targets += possible_target
+		for(var/datum/mind/possible_target in ticker.minds)
+			if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human))
+				possible_targets += possible_target
 
-			if(possible_targets.len > 0)
-				target = pick(possible_targets)
+		if(possible_targets.len > 0)
+			target = pick(possible_targets)
 
-			if(target && target.current)
-				explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+		if(target && target.current)
+			explanation_text = "Assassinate [target.current.real_name], the [target.assigned_role]."
+		else
+			explanation_text = "Free Objective"
+
+		return target
+
+/datum/objective/capture
+	var/separation_time = 0
+	var/almost_complete = 0
+
+	New(var/text,var/joba,var/datum/mind/targeta)
+		target = targeta
+		job = joba
+		explanation_text = "Capture [target.current.real_name], the [target.assigned_role]."
+
+	check_completion()
+		if(target && target.current)
+			if(target.current.stat == DEAD)
+				if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
 			else
-				explanation_text = "Free Objective"
+				if(!target.current.handcuffed && !target.current.stat) // N2O is fine too
+					return 0
+		else if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
+		return 1
 
-			return target
+	proc/find_target_by_role(var/role)
+		for(var/datum/mind/possible_target in ticker.minds)
+			if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human) && (possible_target.assigned_role == role))
+				target = possible_target
+				break
 
-	capture
-		var/separation_time = 0
-		var/almost_complete = 0
-
-		New(var/text,var/joba,var/datum/mind/targeta)
-			target = targeta
-			job = joba
+		if(target && target.current)
 			explanation_text = "Capture [target.current.real_name], the [target.assigned_role]."
+		else
+			explanation_text = "Free Objective"
 
-		check_completion()
-			if(target && target.current)
-				if(target.current.stat == DEAD)
-					if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
-				else
-					if(!target.current.handcuffed && !target.current.stat) // N2O is fine too
+		return target
+
+
+/datum/objective/hijack
+	explanation_text = "Hijack the emergency shuttle by escaping alone."
+
+	check_completion()
+		if(main_shuttle.location<2)
+			return 0
+
+		if(!owner.current || owner.current.stat == DEAD)
+			return 0
+		var/turf/location = get_turf(owner.current.loc)
+
+		for(var/datum/shuttle/s in shuttles)
+			if(location in locate(s.centcom))
+				for(var/mob/living/carbon/player in locate(s.centcom))
+					if (player.mind && player.mind != owner && player.stat != DEAD)
 						return 0
-			else if(vsc.RPREV_REQUIRE_HEADS_ALIVE) return 0
-			return 1
 
-		proc/find_target_by_role(var/role)
-			for(var/datum/mind/possible_target in ticker.minds)
-				if((possible_target != owner) && istype(possible_target.current, /mob/living/carbon/human) && (possible_target.assigned_role == role))
-					target = possible_target
-					break
+				return 1
 
-			if(target && target.current)
-				explanation_text = "Capture [target.current.real_name], the [target.assigned_role]."
-			else
-				explanation_text = "Free Objective"
+		return 0
 
-			return target
+/datum/objective/escape
+	explanation_text = "Escape on the shuttle alive, without being arrested."
 
-
-	hijack
-		explanation_text = "Hijack the emergency shuttle by escaping alone."
-
-		check_completion()
-			if(main_shuttle.location<2)
-				return 0
-
-			if(!owner.current || owner.current.stat == 2)
-				return 0
-			var/turf/location = get_turf(owner.current.loc)
-
-			for(var/datum/shuttle/s in shuttles)
-				if(location in locate(s.centcom))
-					for(var/mob/living/carbon/player in locate(s.centcom))
-						if (player.mind && player.mind != owner && player.stat != DEAD)
-							return 0
-
-					return 1
-
+	check_completion()
+		if(main_shuttle.location<2)
 			return 0
 
-	escape
-		explanation_text = "Escape on the shuttle alive, without being arrested."
-
-		check_completion()
-			if(main_shuttle.location<2)
-				return 0
-
-			if(!owner.current || owner.current.stat == DEAD || issilicon(owner.current))
-				return 0
-
-			var/turf/location = get_turf(owner.current)
-			if(!location)
-				return 0
-
-			if(owner.current:handcuffed)
-				return 0
-
-			for(var/datum/shuttle/s in shuttles)
-				if(location in locate(s.centcom))
-					return 1
-
+		if(!owner.current || owner.current.stat == DEAD || issilicon(owner.current))
 			return 0
 
-	survive
-		explanation_text = "Stay alive until the end."
+		var/turf/location = get_turf(owner.current)
+		if(!location)
+			return 0
 
-		check_completion()
-			if(!owner.current || owner.current.stat == DEAD || issilicon(owner.current))
-				return 0
+		if(owner.current:handcuffed)
+			return 0
 
-			return 1
+		for(var/datum/shuttle/s in shuttles)
+			if(location in locate(s.centcom))
+				return 1
+
+		return 0
+
+/datum/objective/survive
+	explanation_text = "Stay alive until the end."
+
+	check_completion()
+		if(!owner.current || owner.current.stat == DEAD || issilicon(owner.current))
+			return 0
+
+		return 1
 
 
 /*

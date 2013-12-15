@@ -8,21 +8,22 @@
 /*
  * Lasertag
  */
-/obj/item/clothing/suit/bluetag
-	name = "blue laser tag armour"
-	desc = "Blue Pride, Station Wide"
+/obj/item/clothing/suit/tag
+	body_parts_covered = CHEST
+
+/obj/item/clothing/suit/tag/blue
+	name = "blue laser tag armor"
+	desc = "Blue Pride, Ship Wide"
 	icon_state = "bluetag"
 	item_state = "bluetag"
-	body_parts_covered = CHEST
-	allowed = list (/obj/item/weapon/gun/energy/laser/bluetag)
+	allowed = list(/obj/item/weapon/gun/energy/laser/bluetag)
 
-/obj/item/clothing/suit/redtag
-	name = "red laser tag armour"
+/obj/item/clothing/suit/tag/red
+	name = "red laser tag armor"
 	desc = "Pew pew pew"
 	icon_state = "redtag"
 	item_state = "redtag"
-	body_parts_covered = CHEST
-	allowed = list (/obj/item/weapon/gun/energy/laser/redtag)
+	allowed = list(/obj/item/weapon/gun/energy/laser/redtag)
 
 
 /*
@@ -36,12 +37,11 @@
 	flags = FPRINT
 
 
-/obj/item/clothing/suit/hgpirate
+/obj/item/clothing/suit/pirate/hg
 	name = "pirate captain coat"
 	desc = "Yarr."
 	icon_state = "hgpirate"
 	item_state = "hgpirate"
-	flags = FPRINT
 	flags_inv = HIDEJUMPSUIT
 
 /obj/item/clothing/suit/suspenders
@@ -96,7 +96,7 @@
 	flags_inv = HIDEJUMPSUIT
 
 
-/obj/item/clothing/suit/wcoat
+/obj/item/clothing/suit/storage/wcoat
 	name = "waistcoat"
 	desc = "For some classy, murderous fun."
 	icon_state = "vest"
@@ -104,7 +104,7 @@
 	body_parts_covered = CHEST
 
 
-/obj/item/clothing/suit/apron/overalls
+/obj/item/clothing/suit/storage/apron/overalls
 	name = "coveralls"
 	desc = "A set of denim overalls."
 	icon_state = "overalls"
@@ -176,13 +176,11 @@
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 
 
-/obj/item/clothing/suit/storage/holydaypriest
-	name = "holiday priest"
+/obj/item/clothing/suit/storage/chaplain_hoodie/holyday
+	name = "holiday priest suit"
 	desc = "This is a nice holiday my son."
 	icon_state = "holidaypriest"
 	item_state = "w_suit"
-	body_parts_covered = CHEST|GROIN|LEGS|ARMS
-	flags_inv = HIDEJUMPSUIT
 
 
 /obj/item/clothing/suit/cardborg

@@ -8,7 +8,7 @@
 
 /datum/game_mode/alien/announce()
 	world << "<B>The current game mode is - alien!</B>"
-	world << "<B>There is a syndicate alien on the station. Do not let the alien succeed!!</B>"
+	world << "<B>There is an alien on the station. Do not let the alien succeed!</B>"
 
 /datum/game_mode/alien/pre_setup()
 	var/list/possible_aliens = get_possible_aliens()

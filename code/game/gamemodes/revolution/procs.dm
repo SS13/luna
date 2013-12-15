@@ -44,6 +44,18 @@
 				var/image/J = image('mob.dmi', loc = rev_mind_1.current, icon_state = newicon_1)
 				rev_mind.current.client.images += J
 
+/datum/game_mode/proc/update_rev_icons_login(datum/mind/rev_mind)
+	spawn(0)
+		for(var/datum/mind/rev_mind_1 in get_all_revolutionaries())
+			if(rev_mind_1.current && rev_mind_1.current.client)
+				var/newicon = "rev"
+				if(rev_mind_1 in head_revolutionaries)
+					newicon = "rev_head"
+
+				var/image/J = image('mob.dmi', loc = rev_mind_1.current, icon_state = newicon)
+				rev_mind.current.client.images += J
+
+
 /datum/game_mode/proc/update_rev_icons_removed(datum/mind/rev_mind)
 	spawn(0)
 		for(var/datum/mind/rev_mind_1 in get_all_revolutionaries())
@@ -60,9 +72,8 @@
 	var/list/candidates = list()
 
 	for(var/mob/living/carbon/human/player in world)
-		if(player.client)
-			if(player.be_syndicate)
-				candidates += player.mind
+		if(player.client && player.be_syndicate)
+			candidates += player.mind
 
 	if(candidates.len < 1)
 		for(var/mob/living/carbon/human/player in world)
@@ -109,3 +120,20 @@
 			if(role in list("Captain", "Head of Security", "Head of Personnel", "Chief Engineer", "Research Director", "Security Officer", "Forensic Technician", "AI"))
 				ucs += player.mind
 	return ucs
+
+/datum/game_mode/proc/add_revolutionary(datum/mind/rev_mind)
+	if(!(rev_mind in revolutionaries) && !(rev_mind in head_revolutionaries) && !(rev_mind in get_unconvertables()))
+		revolutionaries += rev_mind
+		rev_mind.current << "\red <FONT size = 3> You are now a revolutionary! Help your cause. Do not harm your fellow freedom fighters. You can identify your comrades by the red \"R\" icons, and your leaders by the blue \"R\" icons. Help them kill the heads to win the game!</FONT>"
+		update_rev_icons_added(rev_mind)
+		return 1
+	return 0
+
+/datum/game_mode/proc/remove_revolutionary(datum/mind/rev_mind)
+	if(rev_mind in revolutionaries)
+		rev_mind.current << "\red <FONT size = 3><B>You have been brainwashed! You are no longer a revolutionary!</B></FONT>"
+		update_rev_icons_removed(rev_mind)
+		for(var/mob/living/M in view(rev_mind.current))
+			M << "[rev_mind.current] looks like they just remembered their real allegiance!"
+		return 1
+	return 0

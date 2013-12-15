@@ -61,7 +61,7 @@ rcd light flash thingy on matter drain
 	set category = "AI Modules"
 	set name = "Disable RCDs"
 	for(var/obj/item/weapon/rcd/rcd in world)
-		rcd = new /obj/item/weapon/rcd_fake(rcd)
+		rcd.crit_fail = 1
 
 /datum/game_mode/malfunction/AI_Module/small/overload_machine
 	module_name = "Machine overload"

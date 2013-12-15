@@ -988,7 +988,7 @@ mob/living/carbon/slime/temperature_resistance = T0C+75
 	canremove = 0
 
 
-/obj/item/clothing/head/space/golem
+/obj/item/clothing/head/helmet/space/golem
 	icon_state = "golem"
 	item_state = "dermal"
 	item_color = "dermal"

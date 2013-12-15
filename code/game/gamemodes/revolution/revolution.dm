@@ -1,10 +1,10 @@
-// To add a rev to the list of revolutionaries, make sure it's rev (with if(ticker.mode.name == "revolution)),
-// then call ticker.mode:add_revolutionary(_THE_PLAYERS_MIND_)
+// To add a rev to the list of revolutionaries,
+// call ticker.mode.add_revolutionary(_THE_PLAYERS_MIND_)
 // nothing else needs to be done, as that proc will check if they are a valid target.
 // Just make sure the converter is a head before you call it!
-// To remove a rev (from brainwashing or w/e), call ticker.mode:remove_revolutionary(_THE_PLAYERS_MIND_),
+// To remove a rev (from brainwashing or w/e), call ticker.mode.remove_revolutionary(_THE_PLAYERS_MIND_),
 // this will also check they're not a head, so it can just be called freely
-// If the rev icons start going wrong for some reason, ticker.mode:update_all_rev_icons() can be called to correct them.
+// If the rev icons start going wrong for some reason, ticker.mode.update_all_rev_icons() can be called to correct them.
 // If the game somtimes isn't registering a win properly, then ticker.mode.check_win() isn't being called somewhere.
 
 
@@ -12,44 +12,30 @@
 	name = "revolution"
 	config_tag = "revolution"
 
-//	var/list/datum/mind/head_revolutionaries = list()
-//	var/list/datum/mind/revolutionaries = list()
-	var/finished = 0
-	var/const/waittime_l = 600 //lower bound on time before intercept arrives (in tenths of seconds)
-	var/const/waittime_h = 1800 //upper bound on time before intercept arrives (in tenths of seconds)
-
-	uplink_welcome = "Syndicate Uplink Console:"
 	uplink_items = {"
 /obj/item/weapon/storage/box/syndie_kit/imp_freedom:3:Freedom Implant, with injector;
 /obj/item/weapon/storage/box/syndie_kit/imp_compress:5:Compressed matter implant, with injector;
-/obj/item/weapon/storage/box/syndie_kit/imp_explosive:6:Explosive implant, with injector;
 /obj/item/device/hacktool:4:Hacktool;
 /obj/item/weapon/storage/toolbox/syndicate:1:Fully Loaded Toolbox;
 /obj/item/weapon/soap/syndie:1:Syndicate Soap;
 /obj/item/clothing/shoes/syndigaloshes:2:No-Slip Syndicate Shoes;
 /obj/item/device/encryptionkey/syndicate:1:Binary Encryption Key;
 /obj/item/clothing/under/chameleon:2:Chameleon Jumpsuit;
-/obj/item/weapon/gun/projectile/revolver:7:Revolver;
-/obj/item/ammo_magazine/box/a357:3:Revolver Ammo;
 /obj/item/weapon/card/emag:3:Cryptographic Sequencer;
 /obj/item/weapon/card/id/syndicate:4:Fake ID;
 /obj/item/clothing/glasses/thermal:4:Thermal Glasses;
 /obj/item/weapon/storage/box/grenades/emp:4:Box of EMP grenades;
-/obj/item/device/powersink:5:Power sink;
 /obj/item/weapon/cartridge/syndicate:3:Detomatix PDA cart;
 /obj/item/device/chameleon:4:Chameleon projector;
-/obj/item/weapon/melee/energy/sword:5:Energy sword;
 /obj/item/weapon/pen/sleepypen:4:Sleepy pen;
-/obj/item/weapon/gun/energy/crossbow:5:Energy crossbow;
 /obj/item/clothing/mask/gas/voice:3:Voice changer;
 /obj/item/weapon/aiModule/freeform:3:Freeform AI module;
-/obj/item/weapon/syndie/c4explosive:4:Low power explosive charge;
-/obj/item/weapon/syndie/c4explosive/heavy:7:High (!) power explosive charge;
 /obj/item/weapon/reagent_containers/pill/cyanide:4:Cyanide Pill
 	"}
 
-	uplink_uses = 10
-
+	var/finished = 0
+	var/const/waittime_l = 600 //lower bound on time before intercept arrives (in tenths of seconds)
+	var/const/waittime_h = 1800 //upper bound on time before intercept arrives (in tenths of seconds)
 
 /datum/game_mode/revolution/announce()
 	world << "<B>The current game mode is - Revolution!</B>"
@@ -178,10 +164,12 @@
 			T.origradio = R
 			rev_mob << "The Syndicate have cunningly disguised a Syndicate Uplink as your [R.name] [loc]. Simply dial the frequency [format_frequency(freq)] to unlock it's hidden features.
 			rev_mob.mind.store_memory("<B>Radio Freq:</B> [format_frequency(freq)] ([R.name] [loc]).", 0, 0)*/
-		if (rev_mob.r_store)
+		if(rev_mob.r_store)
 			rev_mob.equip_if_possible(new /obj/item/device/flash(rev_mob), rev_mob.slot_l_store)
-		if (rev_mob.l_store)
+		if(rev_mob.l_store)
 			rev_mob.equip_if_possible(new /obj/item/device/flash(rev_mob), rev_mob.slot_r_store)
+
+
 
 /datum/game_mode/revolution/send_intercept()
 	var/intercepttext = "<FONT size = 3><B>Cent. Com. Update</B> Requested staus information:</FONT><HR>"
@@ -225,21 +213,6 @@
 	else
 		return 0
 
-/datum/game_mode/revolution/proc/add_revolutionary(datum/mind/rev_mind)
-	var/list/uncons = get_unconvertables()
-	if(!(rev_mind in revolutionaries) && !(rev_mind in head_revolutionaries) && !(rev_mind in uncons))
-		revolutionaries += rev_mind
-		rev_mind.current << "\red <FONT size = 3> You are now a revolutionary! Help your cause. Do not harm your fellow freedom fighters. You can identify your comrades by the red \"R\" icons, and your leaders by the blue \"R\" icons. Help them kill the heads to win the game!</FONT>"
-		update_rev_icons_added(rev_mind)
-
-/datum/game_mode/revolution/proc/remove_revolutionary(datum/mind/rev_mind)
-	if(rev_mind in revolutionaries)
-		revolutionaries -= rev_mind
-		rev_mind.current << "\red <FONT size = 3><B>You have been brainwashed! You are no longer a revolutionary!</B></FONT>"
-		update_rev_icons_removed(rev_mind)
-		for(var/mob/living/M in view(rev_mind.current))
-			M << "[rev_mind.current] looks like they just remembered their real allegiance!"
-
 /datum/game_mode/revolution/proc/check_rev_victory()
 	for(var/datum/mind/rev_mind in head_revolutionaries)
 		for(var/datum/objective/objective in rev_mind.objectives)
@@ -250,7 +223,7 @@
 
 /datum/game_mode/revolution/proc/check_heads_victory()
 	for(var/datum/mind/rev_mind in head_revolutionaries)
-		if(rev_mind.current.stat != 2)
+		if(rev_mind.current && rev_mind.current.stat != DEAD)
 			return 0
 	return 1
 
@@ -267,10 +240,8 @@
 		text = ""
 		if(rev_mind.current)
 			text += "[rev_mind.current.real_name]"
-			if(rev_mind.current.stat == 2)
-				text += " (Dead)"
-			else
-				text += " (Survived!)"
+			if(rev_mind.current.stat == DEAD)
+				text += " (died)"
 		else
 			text += "[rev_mind.key] (character destroyed)"
 
@@ -281,10 +252,8 @@
 	for(var/datum/mind/rev_nh_mind in revolutionaries)
 		if(rev_nh_mind.current)
 			text += "[rev_nh_mind.current.real_name]"
-			if(rev_nh_mind.current.stat == 2)
-				text += " (Dead)"
-			else
-				text += " (Survived!)"
+			if(rev_nh_mind.current.stat == DEAD)
+				text += " (died)"
 		else
 			text += "[rev_nh_mind.key] (character destroyed)"
 		text += ", "
@@ -292,16 +261,14 @@
 	world << text
 
 	world << "<FONT size = 2><B>The heads of staff were: </B></FONT>"
-	var/list/heads = list()
-	heads = get_all_heads()
-	for(var/datum/mind/head_mind in heads)
+	for(var/datum/mind/head_mind in get_all_heads())
 		text = ""
 		if(head_mind.current)
 			text += "[head_mind.current.real_name]"
 			if(head_mind.current.stat == 2)
-				text += " (Dead)"
+				text += " (died)"
 			else
-				text += " (Survived!)"
+				text += " (survived the revolution!)"
 		else
 			text += "[head_mind.key] (character destroyed)"
 

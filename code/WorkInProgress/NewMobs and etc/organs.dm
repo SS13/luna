@@ -85,6 +85,13 @@
 		if(O.parent == src)
 			O.robotize()
 
+/datum/organ/external/proc/isbleeding()
+	for(var/datum/organ/external/wound/W in wounds)
+		if(W.bleeding)
+			return 1
+	return 0
+
+
 /datum/organ/external/proc/createwound(var/size = 1)
 	if(ishuman(src.owner))
 		var/datum/organ/external/wound/W = new(src)

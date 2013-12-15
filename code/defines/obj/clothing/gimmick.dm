@@ -11,7 +11,15 @@
 	desc = "Festive!"
 	icon_state = "santa"
 	item_state = "santa"
+	slowdown = 0
 
+/obj/item/clothing/suit/space/soviet
+	name = "soviet suit"
+	desc = "For the Motherland!"
+	icon_state = "redarmycoat"
+	item_state = "redarmycoat"
+	item_color = "soviet"
+	slowdown = 0
 
 /obj/item/clothing/mask/gas/owl
 	name = "owl mask"

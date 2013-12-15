@@ -20,7 +20,7 @@
 	m_amt = 3000
 	g_amt = 1000
 	var/up = 0
-	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor = list(melee = 10, bullet = 5, laser = 10,energy = 20, bomb = 0, bio = 0, rad = 0)
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE
 
 /obj/item/clothing/head/helmet/welding/attack_self()
@@ -76,7 +76,7 @@
 
 /obj/item/clothing/head/cakehat/attack_self(mob/user as mob)
 	if(status > 1)	return
-	src.onfire = !( src.onfire )
+	src.onfire = !src.onfire
 	if (src.onfire)
 		src.force = 3
 		src.damtype = "fire"
@@ -92,14 +92,14 @@
 /*
  * Ushanka
  */
-/obj/item/clothing/head/ushanka
+/obj/item/clothing/head/helmet/ushanka
 	name = "ushanka"
 	desc = "Perfect for winter in Siberia, da?"
 	icon_state = "ushankadown"
 	item_state = "ushankadown"
 	flags_inv = HIDEEARS
 
-/obj/item/clothing/head/ushanka/attack_self(mob/user as mob)
+/obj/item/clothing/head/helmet/ushanka/attack_self(mob/user as mob)
 	if(src.icon_state == "ushankadown")
 		src.icon_state = "ushankaup"
 		src.item_state = "ushankaup"
@@ -157,7 +157,7 @@
 	var/icon/mob
 	var/icon/mob2
 
-/obj/item/clothing/head/kitty/equipped(mob/user, slot)
+/obj/item/clothing/head/kitty/equipped(mob/living/carbon/user, slot)
 	if(user && user:head == src)
 		update_icon(user)
 
