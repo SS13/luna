@@ -341,19 +341,6 @@
 				return
 		usr.update_clothing()	//so our overlays update
 
-/mob/verb/zatralleno()
-	set hidden = 1
-
-	for(var/obj/item/clothing/suit/storage/internalaffairs/I in world)
-		I.canremove = 0
-		I.icon_state = "chickensuit"
-		I.name = "chicken suit"
-
-	for(var/obj/item/clothing/under/rank/internalaffairs/J in world)
-		J.canremove = 0
-		J.icon_state = "clown"
-		J.name = "clown suit"
-
 /obj/item/clothing/suit/storage/chef
 	name = "chef coat"
 	desc = "A fancy chef's coat."
