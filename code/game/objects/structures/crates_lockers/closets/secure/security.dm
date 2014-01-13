@@ -90,6 +90,10 @@
 		new /obj/item/weapon/handcuffs(src)
 		new /obj/item/weapon/melee/baton(src)
 		new /obj/item/clothing/gloves/black(src)
+		new /obj/item/clothing/head/helmet/HoS/jensen(src)
+		new /obj/item/clothing/under/rank/head_of_security/jensen(src)
+		new /obj/item/clothing/suit/storage/armor/hos/jensen(src)
+		new /obj/item/clothing/suit/storage/armor/hos/commissar(src)
 		return
 
 
@@ -243,9 +247,6 @@
 		new /obj/item/weapon/fcardholder(src)
 		new /obj/item/device/radio/headset/headset_sec(src)
 		new /obj/item/device/detective_scanner(src)
-		new /obj/item/ammo_magazine/box/c38(src)
-		new /obj/item/ammo_magazine/box/c38(src)
-		//new /obj/item/weapon/gun/projectile/detective(src)
 		return
 
 /obj/structure/closet/secure_closet/detective/update_icon()
