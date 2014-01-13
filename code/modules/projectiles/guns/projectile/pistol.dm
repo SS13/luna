@@ -82,6 +82,8 @@
 	silenced = 0
 	origin_tech = "combat=2;materials=2;syndicate=2"
 	mag_type = /obj/item/ammo_magazine/external/mc9mm
+	fire_sound = 'sound/weapons/stechtkin_gunshot.ogg'
+
 
 /obj/item/weapon/gun/projectile/automatic/pistol/afterattack(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, flag)
 	..()

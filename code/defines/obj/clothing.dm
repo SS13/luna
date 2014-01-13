@@ -429,6 +429,14 @@
 	item_state = "jensencoat"
 	flags_inv = 0
 
+/obj/item/clothing/suit/storage/armor/hos/commissar
+	name = "Commissar Coat"
+	desc = "Coat of cruel commissar"
+	armor = list(melee = 20, bullet = 10, laser = 15, energy = 5, bomb = 5, bio = 0, rad = 0)
+	icon_state = "commissarcoat"
+	item_state = "commissarcoat"
+	flags_inv = 0
+
 /obj/item/clothing/suit/warden_jacket
 	name = "warden jacket"
 	icon_state = "warden_jacket"

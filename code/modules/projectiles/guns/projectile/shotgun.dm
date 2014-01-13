@@ -10,6 +10,7 @@
 	mag_type = /obj/item/ammo_magazine/internal/shot
 	var/recentpump = 0 // to prevent spammage
 	var/pumped = 0
+	fire_sound = 'sound/weapons/shotgun_gunshot.ogg'
 
 /obj/item/weapon/gun/projectile/shotgun/process_chambered()
 	var/obj/item/ammo_casing/AC = chambered //Find chambered round
@@ -74,6 +75,7 @@
 	slot_flags = SLOT_BACK
 	origin_tech = "combat=3;materials=1"
 	mag_type = /obj/item/ammo_magazine/internal/dualshot
+	fire_sound = 'sound/weapons/shotgun_gunshot.ogg'
 
 /obj/item/weapon/gun/projectile/revolver/doublebarrel/attackby(var/obj/item/A as obj, mob/user as mob)
 	..()

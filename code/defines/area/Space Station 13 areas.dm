@@ -854,6 +854,10 @@
 	name = "Prison"
 	icon_state = "brig"
 
+/area/security/prison_at_station
+	name = "Prison"
+	icon_state = "brig"
+
 /area/security/checkpointp
 	name = "Prison Checkpoint"
 	icon_state = "security"
