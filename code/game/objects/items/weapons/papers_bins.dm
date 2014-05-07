@@ -51,14 +51,14 @@ CLIPBOARDS
 /obj/item/weapon/pen/proc/formatText(var/s)
 	if (text_size < 2 || text_size > 7)
 		text_size = 3
-	if (!(text_color))
-		text_color = "#000000"
+	if (!(text_colour))
+		text_colour = "#000000"
 
 	var/textToAddHeader = ""
 	var/textToAddFooter = ""
 
-	if (text_color && text_size)
-		textToAddHeader = "<font size=[text_size] color=[text_color]>"
+	if (text_colour && text_size)
+		textToAddHeader = "<font size=[text_size] colour=[text_colour]>"
 		textToAddFooter = "</font>"
 
 	if (text_bold == 1)
@@ -94,62 +94,62 @@ CLIPBOARDS
 	dat += text("<A href='?src=\ref[src];size=6'><font size=6>6</font></A> ")
 	dat += text("<A href='?src=\ref[src];size=7'><font size=7>7<font></A><br><br>")
 
-	dat += text("<b>Color:</b><br>")
-	dat += text("<A href='?src=\ref[src];color=["000000"]'><font color=black>black:</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["222222"]'><font color=#222222>1</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["444444"]'><font color=#444444>2</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["666666"]'><font color=#666666>3</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["888888"]'><font color=#888888>4</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["AAAAAA"]'><font color=#AAAAAA>5</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["CCCCCC"]'><font color=#CCCCCC>6</font></A><br>")
+	dat += text("<b>colour:</b><br>")
+	dat += text("<A href='?src=\ref[src];colour=["000000"]'><font colour=black>black:</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["222222"]'><font colour=#222222>1</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["444444"]'><font colour=#444444>2</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["666666"]'><font colour=#666666>3</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["888888"]'><font colour=#888888>4</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["AAAAAA"]'><font colour=#AAAAAA>5</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["CCCCCC"]'><font colour=#CCCCCC>6</font></A><br>")
 
-	dat += text("<A href='?src=\ref[src];color=["FF0000"]'><font color=#FF0000>Red:</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["440000"]'><font color=#440000>1</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["880000"]'><font color=#880000>2</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["CC0000"]'><font color=#CC0000>3</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FF2222"]'><font color=#FF2222>4</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FF6666"]'><font color=#FF6666>5</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FFBBBB"]'><font color=#FFBBBB>6</font></A><br>")
+	dat += text("<A href='?src=\ref[src];colour=["FF0000"]'><font colour=#FF0000>Red:</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["440000"]'><font colour=#440000>1</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["880000"]'><font colour=#880000>2</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["CC0000"]'><font colour=#CC0000>3</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FF2222"]'><font colour=#FF2222>4</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FF6666"]'><font colour=#FF6666>5</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FFBBBB"]'><font colour=#FFBBBB>6</font></A><br>")
 
-	dat += text("<A href='?src=\ref[src];color=["FFFF00"]'><font color=#FFFF00>Yellow:</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["444400"]'><font color=#444400>1</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["888800"]'><font color=#888800>2</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["CCCC00"]'><font color=#CCCC00>3</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FFFF22"]'><font color=#FFFF22>4</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FFFF66"]'><font color=#FFFF66>5</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FFFFBB"]'><font color=#FFFFBB>6</font></A><br>")
+	dat += text("<A href='?src=\ref[src];colour=["FFFF00"]'><font colour=#FFFF00>Yellow:</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["444400"]'><font colour=#444400>1</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["888800"]'><font colour=#888800>2</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["CCCC00"]'><font colour=#CCCC00>3</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FFFF22"]'><font colour=#FFFF22>4</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FFFF66"]'><font colour=#FFFF66>5</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FFFFBB"]'><font colour=#FFFFBB>6</font></A><br>")
 
-	dat += text("<A href='?src=\ref[src];color=["00FF00"]'><font color=#00FF00>Green:</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["004400"]'><font color=#004400>1</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["008800"]'><font color=#008800>2</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["00CC00"]'><font color=#00CC00>3</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["22FF22"]'><font color=#22FF22>4</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["66FF66"]'><font color=#66FF66>5</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["BBFFBB"]'><font color=#BBFFBB>6</font></A><br>")
+	dat += text("<A href='?src=\ref[src];colour=["00FF00"]'><font colour=#00FF00>Green:</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["004400"]'><font colour=#004400>1</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["008800"]'><font colour=#008800>2</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["00CC00"]'><font colour=#00CC00>3</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["22FF22"]'><font colour=#22FF22>4</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["66FF66"]'><font colour=#66FF66>5</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["BBFFBB"]'><font colour=#BBFFBB>6</font></A><br>")
 
-	dat += text("<A href='?src=\ref[src];color=["00FFFF"]'><font color=#00FFFF>Cyan:</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["004444"]'><font color=#004444>1</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["008888"]'><font color=#008888>2</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["00CCCC"]'><font color=#00CCCC>3</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["22FFFF"]'><font color=#22FFFF>4</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["66FFFF"]'><font color=#66FFFF>5</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["BBFFFF"]'><font color=#BBFFFF>6</font></A><br>")
+	dat += text("<A href='?src=\ref[src];colour=["00FFFF"]'><font colour=#00FFFF>Cyan:</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["004444"]'><font colour=#004444>1</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["008888"]'><font colour=#008888>2</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["00CCCC"]'><font colour=#00CCCC>3</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["22FFFF"]'><font colour=#22FFFF>4</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["66FFFF"]'><font colour=#66FFFF>5</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["BBFFFF"]'><font colour=#BBFFFF>6</font></A><br>")
 
-	dat += text("<A href='?src=\ref[src];color=["0000FF"]'><font color=#0000FF>Blue:</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["000044"]'><font color=#000044>1</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["000088"]'><font color=#000088>2</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["0000CC"]'><font color=#0000CC>3</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["2222FF"]'><font color=#2222FF>4</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["6666FF"]'><font color=#6666FF>5</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["BBBBFF"]'><font color=#BBBBFF>6</font></A><br>")
+	dat += text("<A href='?src=\ref[src];colour=["0000FF"]'><font colour=#0000FF>Blue:</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["000044"]'><font colour=#000044>1</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["000088"]'><font colour=#000088>2</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["0000CC"]'><font colour=#0000CC>3</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["2222FF"]'><font colour=#2222FF>4</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["6666FF"]'><font colour=#6666FF>5</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["BBBBFF"]'><font colour=#BBBBFF>6</font></A><br>")
 
-	dat += text("<A href='?src=\ref[src];color=["000000"]'><font color=#FF00FF>Purple:</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["440044"]'><font color=#440044>1</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["880088"]'><font color=#880088>2</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["CC00CC"]'><font color=#CC00CC>3</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FF22FF"]'><font color=#FF22FF>4</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FF66FF"]'><font color=#FF66FF>5</font></A> ")
-	dat += text("<A href='?src=\ref[src];color=["FFBBFF"]'><font color=#FFBBFF>6</font></A><br><br>")
+	dat += text("<A href='?src=\ref[src];colour=["000000"]'><font colour=#FF00FF>Purple:</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["440044"]'><font colour=#440044>1</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["880088"]'><font colour=#880088>2</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["CC00CC"]'><font colour=#CC00CC>3</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FF22FF"]'><font colour=#FF22FF>4</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FF66FF"]'><font colour=#FF66FF>5</font></A> ")
+	dat += text("<A href='?src=\ref[src];colour=["FFBBFF"]'><font colour=#FFBBFF>6</font></A><br><br>")
 
 	if (text_bold)
 		dat += text("<b>Bold:</b> yes / <A href='?src=\ref[src];bold=[0]'>no</A><br>")
@@ -174,9 +174,9 @@ CLIPBOARDS
 
 /obj/item/weapon/pen/Topic(href, href_list)
 	usr.machine = src
-	if(href_list["color"])
-		src.text_color = "#"
-		src.text_color += href_list["color"]
+	if(href_list["colour"])
+		src.text_colour = "#"
+		src.text_colour += href_list["colour"]
 	if(href_list["size"])
 		src.text_size = text2num(href_list["size"])
 	if(href_list["bold"])
@@ -203,11 +203,11 @@ CLIPBOARDS
 	return
 
 /obj/item/weapon/paper/attack_ai(var/mob/living/silicon/ai/user as mob)
-	var/dist	
+	var/dist
 	if (istype(user) && user.current) //is AI
-		dist = get_dist(src, user.current) 
+		dist = get_dist(src, user.current)
 	else //cyborg or AI not seeing through a camera
-		dist = get_dist(src, user) 
+		dist = get_dist(src, user)
 	if (dist < 2)
 		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, src.info), text("window=[]", src.name))
 		onclose(usr, "[src.name]")

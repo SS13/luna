@@ -10,7 +10,7 @@ IMPLANTER
 
 /obj/item/weapon/implantcase/proc/update()
 	if (src.imp)
-		src.icon_state = text("implantcase-[]", src.imp.color)
+		src.icon_state = text("implantcase-[]", src.imp.colour)
 	else
 		src.icon_state = "implantcase-0"
 	return
@@ -167,7 +167,7 @@ ID (1-100):
 <b>Zone:</b> Right Hand> Near wrist<BR>
 <b>Power Source:</b> Lithium Ion Battery<BR>
 <b>Life:</b> optimum 5 uses<BR>
-<b>Important Notes: <font color='red'>Illegal</font></b><BR>
+<b>Important Notes: <font colour='red'>Illegal</font></b><BR>
 <HR>
 <b>Implant Details:</b> <BR>
 <b>Function:</b> Transmits a specialized cluster of signals to override handcuff locking

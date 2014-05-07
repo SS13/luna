@@ -222,14 +222,14 @@
 	var/output = "<b>Air Status:</b><br>"
 
 	if(total == 0)
-		output +={"<font color='red'><b>Warning: Cannot obtain air sample for analysis.</b></font>"}
+		output +={"<font colour='red'><b>Warning: Cannot obtain air sample for analysis.</b></font>"}
 		return output
 
 	output += {"
 <style>
-.dl0 { color: green; }
-.dl1 { color: orange; }
-.dl2 { color: red; font-weght: bold;}
+.dl0 { colour: green; }
+.dl1 { colour: orange; }
+.dl2 { colour: red; font-weght: bold;}
 </style>
 "}
 	var/datum/tlv/cur_tlv
@@ -315,9 +315,9 @@ Temperature: <span class='dl[temperature_dangerlevel]'>[environment.temperature]
 <HR>
 "}
 			if (mode==AALARM_MODE_PANIC)
-				output += "<font color='red'><B>PANIC SYPHON ACTIVE</B></font><br><A href='?src=\ref[src];mode=[AALARM_MODE_OFF]'>turn syphoning off</A>"
+				output += "<font colour='red'><B>PANIC SYPHON ACTIVE</B></font><br><A href='?src=\ref[src];mode=[AALARM_MODE_OFF]'>turn syphoning off</A>"
 			else
-				output += "<A href='?src=\ref[src];mode=[AALARM_MODE_PANIC]'><font color='red'><B>ACTIVATE PANIC SYPHON IN AREA</B></font></A>"
+				output += "<A href='?src=\ref[src];mode=[AALARM_MODE_PANIC]'><font colour='red'><B>ACTIVATE PANIC SYPHON IN AREA</B></font></A>"
 		if (AALARM_SCREEN_VENT)
 			var/sensor_data = ""
 			if(alarm_area.air_vent_names.len)
@@ -326,10 +326,10 @@ Temperature: <span class='dl[temperature_dangerlevel]'>[environment.temperature]
 					var/list/data = alarm_area.air_vent_info[id_tag]
 					var/state = ""
 					if(!data)
-						state = "<font color='red'> can not be found!</font>"
+						state = "<font colour='red'> can not be found!</font>"
 						data = list("external" = 0) //for "0" instead of empty string
 					else if (data["timestamp"]+AALARM_REPORT_TIMEOUT < world.time)
-						state = "<font color='red'> not responding!</font>"
+						state = "<font colour='red'> not responding!</font>"
 					sensor_data += {"
 <B>[long_name]</B>[state]<BR>
 <B>Operating:</B>
@@ -369,10 +369,10 @@ siphoning
 					var/list/data = alarm_area.air_scrub_info[id_tag]
 					var/state = ""
 					if(!data)
-						state = "<font color='red'> can not be found!</font>"
+						state = "<font colour='red'> can not be found!</font>"
 						data = list("external" = 0) //for "0" instead of empty string
 					else if (data["timestamp"]+AALARM_REPORT_TIMEOUT < world.time)
-						state = "<font color='red'> not responding!</font>"
+						state = "<font colour='red'> not responding!</font>"
 
 					sensor_data += {"
 <B>[long_name]</B>[state]<BR>
@@ -394,8 +394,8 @@ Nitrous Oxide
 <BR>
 "}
 					sensor_data += {"
-<B>Panic syphon:</B> [data["panic"]?"<font color='red'><B>PANIC SYPHON ACTIVATED</B></font>":""]
-<A href='?src=\ref[src];id_tag=[id_tag];command=panic_siphon;val=[!data["panic"]]'><font color='[(data["panic"]?"blue'>Dea":"red'>A")]ctivate</font></A><BR>
+<B>Panic syphon:</B> [data["panic"]?"<font colour='red'><B>PANIC SYPHON ACTIVATED</B></font>":""]
+<A href='?src=\ref[src];id_tag=[id_tag];command=panic_siphon;val=[!data["panic"]]'><font colour='[(data["panic"]?"blue'>Dea":"red'>A")]ctivate</font></A><BR>
 <HR>
 "}
 			else
@@ -409,8 +409,8 @@ Nitrous Oxide
 			var/list/modes = list(
 				AALARM_MODE_SCRUBBING   = "Filtering",
 				AALARM_MODE_VENTING     = "Draught",
-				AALARM_MODE_PANIC       = "<font color='red'>PANIC</font>",
-				AALARM_MODE_REPLACEMENT = "<font color='red'>REPLACE AIR</font>",
+				AALARM_MODE_PANIC       = "<font colour='red'>PANIC</font>",
+				AALARM_MODE_REPLACEMENT = "<font colour='red'>REPLACE AIR</font>",
 				AALARM_MODE_OFF         = "Off",
 			)
 			for (var/m=1,m<=modes.len,m++)
@@ -429,9 +429,9 @@ table td { border-left: 1px solid black; border-top: 1px solid black;}
 table tr:first-child th { border-left: 1px solid black;}
 table th:first-child { border-top: 1px solid black; font-weight: normal;}
 table tr:first-child th:first-child { border: none;}
-.dl0 { color: green; }
-.dl1 { color: orange; }
-.dl2 { color: red; font-weght: bold;}
+.dl0 { colour: green; }
+.dl1 { colour: orange; }
+.dl2 { colour: red; font-weght: bold;}
 </style>
 <table cellspacing=0>
 <TR><th></th><th class=dl2>min2</th><th class=dl1>min1</th><th class=dl1>max1</th><th class=dl2>max2</th></TR>
@@ -770,38 +770,38 @@ table tr:first-child th:first-child { border: none;}
 		t1 = T.n2 / turf_total * 100
 		t1 = round(t1, 0.0010)
 		if ((60 < t1 && t1 < 80))
-			t += text("<font color=blue>Nitrogen: []</font> ", t1)
+			t += text("<font colour=blue>Nitrogen: []</font> ", t1)
 		else
-			t += text("<font color=red>Nitrogen: []</font> ", t1)
+			t += text("<font colour=red>Nitrogen: []</font> ", t1)
 		t1 = T.oxygen / turf_total * 100
 		t1 = round(t1, 0.0010)
 		if ((20 < t1 && t1 < 24))
-			t += text("<font color=blue>Oxygen: []</font> ", t1)
+			t += text("<font colour=blue>Oxygen: []</font> ", t1)
 		else
-			t += text("<font color=red>Oxygen: []</font> ", t1)
+			t += text("<font colour=red>Oxygen: []</font> ", t1)
 		t1 = T.poison / turf_total * 100
 		t1 = round(t1, 0.0010)
 		if (t1 < 0.5)
-			t += text("<font color=blue>Plasma: []</font> ", t1)
+			t += text("<font colour=blue>Plasma: []</font> ", t1)
 		else
-			t += text("<font color=red>Plasma: []</font> ", t1)
+			t += text("<font colour=red>Plasma: []</font> ", t1)
 		t1 = T.co2 / turf_total * 100
 		t1 = round(t1, 0.0010)
 		if (t1 < 1)
-			t += text("<font color=blue>CO2: []</font> ", t1)
+			t += text("<font colour=blue>CO2: []</font> ", t1)
 		else
-			t += text("<font color=red>CO2: []</font> ", t1)
+			t += text("<font colour=red>CO2: []</font> ", t1)
 		t1 = T.sl_gas / turf_total * 100
 		t1 = round(t1, 0.0010)
 		if (t1 < 5)
-			t += text("<font color=blue>NO2: []</font>", t1)
+			t += text("<font colour=blue>NO2: []</font>", t1)
 		else
-			t += text("<font color=red>NO2: []</font>", t1)
+			t += text("<font colour=red>NO2: []</font>", t1)
 		t1 = T.temp - T0C
 		if (T.temp > 326.444 || T.temp < 282.591)
-			t += text("<br><font color=red>Temperature: []</font>", t1)
+			t += text("<br><font colour=red>Temperature: []</font>", t1)
 		else
-			t += text("<br><font color=blue>Temperature: []</font>", t1)
+			t += text("<br><font colour=blue>Temperature: []</font>", t1)
 		usr.show_message(t, 1)
 		return
 	else

@@ -37,7 +37,7 @@ datum/preferences/proc/savefile_save(mob/user)
 	F["UI"] << src.UI // Skie
 	F["be_alien"] << src.be_alien // Urist
 	F["midis"] << src.midis // Urist
-	F["ooccolor"] << src.ooccolor // Urist
+	F["ooccolour"] << src.ooccolour // Urist
 	F["lastchangelog"] << src.lastchangelog // rastaf0
 
 	return 1
@@ -94,7 +94,7 @@ datum/preferences/proc/savefile_load(mob/user, var/silent = 1)
 	F["UI"] >> src.UI // Skie
 	F["be_alien"] >> src.be_alien // Urist
 	F["midis"] >> src.midis // Urist
-	F["ooccolor"] >> src.ooccolor // Urist
+	F["ooccolour"] >> src.ooccolour // Urist
 	F["lastchangelog"] >> src.lastchangelog // rastaf0
 	return 1
 

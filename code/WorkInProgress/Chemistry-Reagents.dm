@@ -364,7 +364,7 @@ datum
 		oxygen
 			name = "Oxygen"
 			id = "oxygen"
-			description = "A colorless, odorless gas."
+			description = "A colourless, odorless gas."
 			reagent_state = GAS
 
 		copper
@@ -375,13 +375,13 @@ datum
 		nitrogen
 			name = "Nitrogen"
 			id = "nitrogen"
-			description = "A colorless, odorless, tasteless gas."
+			description = "A colourless, odorless, tasteless gas."
 			reagent_state = GAS
 
 		hydrogen
 			name = "Hydrogen"
 			id = "hydrogen"
-			description = "A colorless, odorless, nonmetallic, tasteless, highly combustible diatomic gas."
+			description = "A colourless, odorless, nonmetallic, tasteless, highly combustible diatomic gas."
 			reagent_state = GAS
 
 		potassium
@@ -591,7 +591,7 @@ datum
 		nitroglycerin
 			name = "Nitroglycerin"
 			id = "nitroglycerin"
-			description = "Nitroglycerin is a heavy, colorless, oily, explosive liquid obtained by nitrating glycerol."
+			description = "Nitroglycerin is a heavy, colourless, oily, explosive liquid obtained by nitrating glycerol."
 			reagent_state = LIQUID
 
 		radium
@@ -1436,7 +1436,7 @@ datum
 		sprinkles
 			name = "Sprinkles"
 			id = "sprinkles"
-			description = "Multi-colored little bits of sugar, commonly found on donuts. Loved by cops."
+			description = "Multi-coloured little bits of sugar, commonly found on donuts. Loved by cops."
 			nutriment_factor = 1 * REAGENTS_METABOLISM
 			on_mob_life(var/mob/living/M as mob)
 				M:nutrition += nutriment_factor

@@ -266,7 +266,7 @@
 				return 0
 			if(!check_resources(part))
 				src.visible_message("<b>[src]</b> beeps, \"Not enough resources. Queue processing stopped\".")
-				temp = {"<font color='red'>Not enough resources to build next part.</font><br>
+				temp = {"<font colour='red'>Not enough resources to build next part.</font><br>
 							<a href='?src=\ref[src];process_queue=1'>Try again</a> | <a href='?src=\ref[src];clear_temp=1'>Return</a><a>"}
 				return 0
 			remove_from_queue(1)
@@ -284,7 +284,7 @@
 			for(var/i=1;i<=queue.len;i++)
 				var/atom/part = listgetindex(src.queue, i)
 				if(istype(part))
-					output += "<li[!check_resources(part)?" style='color: #f00;'":null]>[part.name] - [i>1?"<a href='?src=\ref[src];queue_move=-1;index=[i]' class='arrow'>&uarr;</a>":null] [i<queue.len?"<a href='?src=\ref[src];queue_move=+1;index=[i]' class='arrow'>&darr;</a>":null] <a href='?src=\ref[src];remove_from_queue=[i]'>Remove</a></li>"
+					output += "<li[!check_resources(part)?" style='colour: #f00;'":null]>[part.name] - [i>1?"<a href='?src=\ref[src];queue_move=-1;index=[i]' class='arrow'>&uarr;</a>":null] [i<queue.len?"<a href='?src=\ref[src];queue_move=+1;index=[i]' class='arrow'>&darr;</a>":null] <a href='?src=\ref[src];remove_from_queue=[i]'>Remove</a></li>"
 			output += "</ol>"
 			output += "\[<a href='?src=\ref[src];process_queue=1'>Process queue</a> | <a href='?src=\ref[src];clear_queue=1'>Clear queue</a>\]"
 		return output
@@ -378,7 +378,7 @@
 				  <title>[src.name]</title>
 					<style>
 					.res_name {font-weight: bold; text-transform: capitalize;}
-					.red {color: #f00;}
+					.red {colour: #f00;}
 					.part {margin-bottom: 10px;}
 					.arrow {text-decoration: none; font-size: 10px;}
 					body, table {height: 100%;}

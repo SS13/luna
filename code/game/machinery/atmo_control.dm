@@ -163,7 +163,7 @@ obj/machinery/computer/general_air_control
 					sensor_part += "<HR>"
 
 				else
-					sensor_part = "<FONT color='red'>[long_name] can not be found!</FONT><BR>"
+					sensor_part = "<FONT colour='red'>[long_name] can not be found!</FONT><BR>"
 
 				sensor_data += sensor_part
 
@@ -211,7 +211,7 @@ Rate: [volume_rate] L/sec<BR>"}
 				output += "Command: <A href='?src=\ref[src];in_toggle_injector=1'>Toggle Power</A><BR>"
 
 			else
-				output += "<FONT color='red'>ERROR: Can not find input port</FONT> <A href='?src=\ref[src];in_refresh_status=1'>Search</A><BR>"
+				output += "<FONT colour='red'>ERROR: Can not find input port</FONT> <A href='?src=\ref[src];in_refresh_status=1'>Search</A><BR>"
 
 			output += "<BR>"
 
@@ -223,7 +223,7 @@ Max Output Pressure: [output_pressure] kPa<BR>"}
 				output += "Command: <A href='?src=\ref[src];out_toggle_power=1'>Toggle Power</A> <A href='?src=\ref[src];out_set_pressure=1'>Set Pressure</A><BR>"
 
 			else
-				output += "<FONT color='red'>ERROR: Can not find output port</FONT> <A href='?src=\ref[src];out_refresh_status=1'>Search</A><BR>"
+				output += "<FONT colour='red'>ERROR: Can not find output port</FONT> <A href='?src=\ref[src];out_refresh_status=1'>Search</A><BR>"
 
 			output += "Max Output Pressure Set: <A href='?src=\ref[src];adj_pressure=-100'>-</A> <A href='?src=\ref[src];adj_pressure=-1'>-</A> [pressure_setting] kPa <A href='?src=\ref[src];adj_pressure=1'>+</A> <A href='?src=\ref[src];adj_pressure=100'>+</A><BR>"
 
@@ -375,7 +375,7 @@ Rate: [volume_rate] L/sec<BR>"}
 					output += "Injector: <A href='?src=\ref[src];toggle_injector=1'>Toggle Power</A> <A href='?src=\ref[src];injection=1'>Inject (1 Cycle)</A><BR>"
 
 			else
-				output += "<FONT color='red'>ERROR: Can not find device</FONT> <A href='?src=\ref[src];refresh_status=1'>Search</A><BR>"
+				output += "<FONT colour='red'>ERROR: Can not find device</FONT> <A href='?src=\ref[src];refresh_status=1'>Search</A><BR>"
 
 			return output
 
@@ -496,7 +496,7 @@ Rate: [volume_rate] L/sec<BR>"}
 
 	if(priority_alarms.len)
 		for(var/zone in priority_alarms)
-			priority_text += "<FONT color='red'><B>[zone]</B></FONT>  <A href='?src=\ref[src];priority_clear=[ckey(zone)]'>X</A><BR>"
+			priority_text += "<FONT colour='red'><B>[zone]</B></FONT>  <A href='?src=\ref[src];priority_clear=[ckey(zone)]'>X</A><BR>"
 	else
 		priority_text = "No priority alerts detected.<BR>"
 

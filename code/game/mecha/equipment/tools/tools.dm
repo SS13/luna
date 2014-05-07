@@ -35,17 +35,17 @@
 							cargo_holder.cargo += O
 							O.loc = chassis
 							O.anchored = 0
-							chassis.occupant_message("<font color='blue'>[target] succesfully loaded.</font>")
+							chassis.occupant_message("<font colour='blue'>[target] succesfully loaded.</font>")
 							chassis.log_message("Loaded [O]. Cargo compartment capacity: [cargo_holder.cargo_capacity - cargo_holder.cargo.len]")
 						else
-							chassis.occupant_message("<font color='red'>You must hold still while handling objects.</font>")
+							chassis.occupant_message("<font colour='red'>You must hold still while handling objects.</font>")
 							O.anchored = initial(O.anchored)
 						set_ready_state(1)
 
 				else
-					chassis.occupant_message("<font color='red'>Not enough room in cargo compartment.</font>")
+					chassis.occupant_message("<font colour='red'>Not enough room in cargo compartment.</font>")
 			else
-				chassis.occupant_message("<font color='red'>[target] is firmly secured.</font>")
+				chassis.occupant_message("<font colour='red'>[target] is firmly secured.</font>")
 
 		else if(istype(target,/mob/living))
 			var/mob/living/M = target
@@ -77,14 +77,14 @@
 		if(!action_checks(target)) return
 		set_ready_state(0)
 		chassis.cell.use(energy_drain)
-		chassis.visible_message("<font color='red'><b>[chassis] starts to drill [target]</b></font>", "You hear the drill.")
-		chassis.occupant_message("<font color='red'><b>You start to drill [target]</b></font>")
+		chassis.visible_message("<font colour='red'><b>[chassis] starts to drill [target]</b></font>", "You hear the drill.")
+		chassis.occupant_message("<font colour='red'><b>You start to drill [target]</b></font>")
 		chassis.cell.use(energy_drain)
 		var/T = chassis.loc
 		if(do_after_cooldown())
 			if(T == chassis.loc && src == chassis.selected)
 				if(istype(target, /turf/simulated/wall/r_wall))
-					chassis.occupant_message("<font color='red'>[target] is too durable to drill through.</font>")
+					chassis.occupant_message("<font colour='red'>[target] is too durable to drill through.</font>")
 				else if(istype(target, /turf/simulated/mineral))
 					for(var/turf/simulated/mineral/M in range(chassis,1))
 						if(get_dir(chassis,M)&chassis.dir)
@@ -446,8 +446,8 @@
 			user << "\red The [W] bounces off [chassis] armor."
 			chassis.log_append_to_last("Armor saved.")
 		else
-			chassis.occupant_message("<font color='red'><b>[user] hits [chassis] with [W].</b></font>")
-			user.visible_message("<font color='red'><b>[user] hits [chassis] with [W].</b></font>", "<font color='red'><b>You hit [src] with [W].</b></font>")
+			chassis.occupant_message("<font colour='red'><b>[user] hits [chassis] with [W].</b></font>")
+			user.visible_message("<font colour='red'><b>[user] hits [chassis] with [W].</b></font>", "<font colour='red'><b>You hit [src] with [W].</b></font>")
 			chassis.take_damage(round(W.force*0.8),W.damtype)
 			chassis.check_for_internal_damage(list(MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST))
 		set_ready_state(0)

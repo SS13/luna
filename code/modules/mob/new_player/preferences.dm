@@ -8,7 +8,7 @@ datum/preferences
 	var/midis = 1
 	var/be_alien = 1
 	var/lastchangelog = 0 // size of last seen changelog file -- rastaf0 -- rastaf0
-	var/ooccolor = "#b82e00"
+	var/ooccolour = "#b82e00"
 	var/be_random_name = 0
 	var/underwear = 1
 
@@ -67,8 +67,8 @@ datum/preferences
 
 		src.s_tone = min(max(tone + rand (-25, 25), -185), 34)
 
-	proc/randomize_hair_color(var/target = "hair")
-		if (prob (75) && target == "facial") // Chance to inherit hair color
+	proc/randomize_hair_colour(var/target = "hair")
+		if (prob (75) && target == "facial") // Chance to inherit hair colour
 			r_facial = r_hair
 			g_facial = g_hair
 			b_facial = b_hair
@@ -127,7 +127,7 @@ datum/preferences
 				g_facial = green
 				b_facial = blue
 
-	proc/randomize_eyes_color()
+	proc/randomize_eyes_colour()
 		var/red
 		var/green
 		var/blue
@@ -296,7 +296,7 @@ datum/preferences
 			if(user.client.holder.rank)
 				if(user.client.holder.rank == "Game Master")
 					dat += "<hr><b>OOC</b><br>"
-					dat += "<a href='byond://?src=\ref[user];preferences=1;ooccolor=input'>Change colour</a> <font face=\"fixedsys\" size=\"3\" color=\"[ooccolor]\"><table bgcolor=\"[ooccolor]\"><tr><td>IM</td></tr></table></font>"
+					dat += "<a href='byond://?src=\ref[user];preferences=1;ooccolour=input'>Change colour</a> <font face=\"fixedsys\" size=\"3\" colour=\"[ooccolour]\"><table bgcolour=\"[ooccolour]\"><tr><td>IM</td></tr></table></font>"
 
 		dat += "<hr><b>Occupation Choices</b><br>"
 		if (destructive.Find(src.occupation1))
@@ -336,30 +336,30 @@ datum/preferences
 
 		dat += "<hr><b>Hair</b><br>"
 
-		dat += "<a href='byond://?src=\ref[user];preferences=1;hair=input'>Change Color</a> <font face=\"fixedsys\" size=\"3\" color=\"#[num2hex(src.r_hair, 2)][num2hex(src.g_hair, 2)][num2hex(src.b_hair, 2)]\"><table bgcolor=\"#[num2hex(src.r_hair, 2)][num2hex(src.g_hair, 2)][num2hex(src.b_hair)]\"><tr><td>IM</td></tr></table></font>"
+		dat += "<a href='byond://?src=\ref[user];preferences=1;hair=input'>Change colour</a> <font face=\"fixedsys\" size=\"3\" colour=\"#[num2hex(src.r_hair, 2)][num2hex(src.g_hair, 2)][num2hex(src.b_hair, 2)]\"><table bgcolour=\"#[num2hex(src.r_hair, 2)][num2hex(src.g_hair, 2)][num2hex(src.b_hair)]\"><tr><td>IM</td></tr></table></font>"
 /*
-		dat += " <font color=\"#[num2hex(src.r_hair, 2)]0000\">Red</font> - <a href='byond://?src=\ref[user];preferences=1;r_hair=input'>[src.r_hair]</a>"
-		dat += " <font color=\"#00[num2hex(src.g_hair, 2)]00\">Green</font> - <a href='byond://?src=\ref[user];preferences=1;g_hair=input'>[src.g_hair]</a>"
-		dat += " <font color=\"#0000[num2hex(src.b_hair, 2)]\">Blue</font> - <a href='byond://?src=\ref[user];preferences=1;b_hair=input'>[src.b_hair]</a><br>"
+		dat += " <font colour=\"#[num2hex(src.r_hair, 2)]0000\">Red</font> - <a href='byond://?src=\ref[user];preferences=1;r_hair=input'>[src.r_hair]</a>"
+		dat += " <font colour=\"#00[num2hex(src.g_hair, 2)]00\">Green</font> - <a href='byond://?src=\ref[user];preferences=1;g_hair=input'>[src.g_hair]</a>"
+		dat += " <font colour=\"#0000[num2hex(src.b_hair, 2)]\">Blue</font> - <a href='byond://?src=\ref[user];preferences=1;b_hair=input'>[src.b_hair]</a><br>"
 */
 		dat += "Style: <a href='byond://?src=\ref[user];preferences=1;h_style=input'>[src.h_style]</a>"
 
 		dat += "<hr><b>Facial</b><br>"
 
-		dat += "<a href='byond://?src=\ref[user];preferences=1;facial=input'>Change Color</a> <font face=\"fixedsys\" size=\"3\" color=\"#[num2hex(src.r_facial, 2)][num2hex(src.g_facial, 2)][num2hex(src.b_facial, 2)]\"><table bgcolor=\"#[num2hex(src.r_facial, 2)][num2hex(src.g_facial, 2)][num2hex(src.b_facial)]\"><tr><td>GO</td></tr></table></font>"
+		dat += "<a href='byond://?src=\ref[user];preferences=1;facial=input'>Change colour</a> <font face=\"fixedsys\" size=\"3\" colour=\"#[num2hex(src.r_facial, 2)][num2hex(src.g_facial, 2)][num2hex(src.b_facial, 2)]\"><table bgcolour=\"#[num2hex(src.r_facial, 2)][num2hex(src.g_facial, 2)][num2hex(src.b_facial)]\"><tr><td>GO</td></tr></table></font>"
 /*
-		dat += " <font color=\"#[num2hex(src.r_facial, 2)]0000\">Red</font> - <a href='byond://?src=\ref[user];preferences=1;r_facial=input'>[src.r_facial]</a>"
-		dat += " <font color=\"#00[num2hex(src.g_facial, 2)]00\">Green</font> - <a href='byond://?src=\ref[user];preferences=1;g_facial=input'>[src.g_facial]</a>"
-		dat += " <font color=\"#0000[num2hex(src.b_facial, 2)]\">Blue</font> - <a href='byond://?src=\ref[user];preferences=1;b_facial=input'>[src.b_facial]</a><br>"
+		dat += " <font colour=\"#[num2hex(src.r_facial, 2)]0000\">Red</font> - <a href='byond://?src=\ref[user];preferences=1;r_facial=input'>[src.r_facial]</a>"
+		dat += " <font colour=\"#00[num2hex(src.g_facial, 2)]00\">Green</font> - <a href='byond://?src=\ref[user];preferences=1;g_facial=input'>[src.g_facial]</a>"
+		dat += " <font colour=\"#0000[num2hex(src.b_facial, 2)]\">Blue</font> - <a href='byond://?src=\ref[user];preferences=1;b_facial=input'>[src.b_facial]</a><br>"
 */
 		dat += "Style: <a href='byond://?src=\ref[user];preferences=1;f_style=input'>[src.f_style]</a>"
 
 		dat += "<hr><b>Eyes</b><br>"
-		dat += "<a href='byond://?src=\ref[user];preferences=1;eyes=input'>Change Color</a> <font face=\"fixedsys\" size=\"3\" color=\"#[num2hex(src.r_eyes, 2)][num2hex(src.g_eyes, 2)][num2hex(src.b_eyes, 2)]\"><table bgcolor=\"#[num2hex(src.r_eyes, 2)][num2hex(src.g_eyes, 2)][num2hex(src.b_eyes)]\"><tr><td>KU</td></tr></table></font>"
+		dat += "<a href='byond://?src=\ref[user];preferences=1;eyes=input'>Change colour</a> <font face=\"fixedsys\" size=\"3\" colour=\"#[num2hex(src.r_eyes, 2)][num2hex(src.g_eyes, 2)][num2hex(src.b_eyes, 2)]\"><table bgcolour=\"#[num2hex(src.r_eyes, 2)][num2hex(src.g_eyes, 2)][num2hex(src.b_eyes)]\"><tr><td>KU</td></tr></table></font>"
 /*
-		dat += " <font color=\"#[num2hex(src.r_eyes, 2)]0000\">Red</font> - <a href='byond://?src=\ref[user];preferences=1;r_eyes=input'>[src.r_eyes]</a>"
-		dat += " <font color=\"#00[num2hex(src.g_eyes, 2)]00\">Green</font> - <a href='byond://?src=\ref[user];preferences=1;g_eyes=input'>[src.g_eyes]</a>"
-		dat += " <font color=\"#0000[num2hex(src.b_eyes, 2)]\">Blue</font> - <a href='byond://?src=\ref[user];preferences=1;b_eyes=input'>[src.b_eyes]</a>"
+		dat += " <font colour=\"#[num2hex(src.r_eyes, 2)]0000\">Red</font> - <a href='byond://?src=\ref[user];preferences=1;r_eyes=input'>[src.r_eyes]</a>"
+		dat += " <font colour=\"#00[num2hex(src.g_eyes, 2)]00\">Green</font> - <a href='byond://?src=\ref[user];preferences=1;g_eyes=input'>[src.g_eyes]</a>"
+		dat += " <font colour=\"#0000[num2hex(src.b_eyes, 2)]\">Blue</font> - <a href='byond://?src=\ref[user];preferences=1;b_eyes=input'>[src.b_eyes]</a>"
 */
 		dat += "<hr>"
 		dat += "<b>Be alien candidate:</b> <a href=\"byond://?src=\ref[user];preferences=1;be_alien=input\"><b>[src.be_alien == 1 ? "Yes" : "No"]</b></a><br>"
@@ -546,13 +546,13 @@ datum/preferences
 		if (link_tags["hair"])
 			switch(link_tags["hair"])
 				if ("input")
-					var/new_hair = input(user, "Please select hair color.", "Character Generation") as color
+					var/new_hair = input(user, "Please select hair colour.", "Character Generation") as color
 					if(new_hair)
 						src.r_hair = hex2num(copytext(new_hair, 2, 4))
 						src.g_hair = hex2num(copytext(new_hair, 4, 6))
 						src.b_hair = hex2num(copytext(new_hair, 6, 8))
 				if ("random")
-					randomize_hair_color("hair")
+					randomize_hair_colour("hair")
 
 /*
 		if (link_tags["r_hair"])
@@ -577,13 +577,13 @@ datum/preferences
 		if (link_tags["facial"])
 			switch(link_tags["facial"])
 				if ("input")
-					var/new_facial = input(user, "Please select facial hair color.", "Character Generation") as color
+					var/new_facial = input(user, "Please select facial hair colour.", "Character Generation") as color
 					if(new_facial)
 						src.r_facial = hex2num(copytext(new_facial, 2, 4))
 						src.g_facial = hex2num(copytext(new_facial, 4, 6))
 						src.b_facial = hex2num(copytext(new_facial, 6, 8))
 				if ("random")
-					randomize_hair_color("facial")
+					randomize_hair_colour("facial")
 
 /*
 		if (link_tags["r_facial"])
@@ -607,13 +607,13 @@ datum/preferences
 		if (link_tags["eyes"])
 			switch(link_tags["eyes"])
 				if ("input")
-					var/new_eyes = input(user, "Please select eye color.", "Character Generation") as color
+					var/new_eyes = input(user, "Please select eye colour.", "Character Generation") as color
 					if(new_eyes)
 						src.r_eyes = hex2num(copytext(new_eyes, 2, 4))
 						src.g_eyes = hex2num(copytext(new_eyes, 4, 6))
 						src.b_eyes = hex2num(copytext(new_eyes, 6, 8))
 				if ("random")
-					randomize_eyes_color()
+					randomize_eyes_colour()
 
 /*
 		if (link_tags["r_eyes"])
@@ -657,11 +657,11 @@ datum/preferences
 					if (new_style)
 						src.h_style = new_style
 
-		if (link_tags["ooccolor"])
-			var/ooccolor = input(user, "Please select OOC colour.", "OOC colour") as color
+		if (link_tags["ooccolour"])
+			var/ooccolour = input(user, "Please select OOC colour.", "OOC colour") as color
 
-			if(ooccolor)
-				src.ooccolor = ooccolor
+			if(ooccolour)
+				src.ooccolour = ooccolour
 
 		if (link_tags["f_style"])
 			switch(link_tags["f_style"])
@@ -841,7 +841,7 @@ datum/preferences
 		spawn(10)
 			if(character)
 				character.client.midis = midis
-				character.client.ooccolor = ooccolor
+				character.client.ooccolour = ooccolour
 				character.client.be_alien = be_alien
 
 /*

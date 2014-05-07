@@ -9,7 +9,7 @@
 	var/product_name = "generic"
 	var/product_path = null
 	var/amount = 0
-	var/display_color = "blue"
+	var/display_colour = "blue"
 
 /obj/machinery/vending/New()
 	..()
@@ -70,7 +70,7 @@
 		var/datum/data/vending_product/R = new /datum/data/vending_product(  )
 		R.product_name = capitalize(temp.name)
 		R.product_path = path_list[p]
-		R.display_color = pick("red","blue","green")
+		R.display_colour = pick("red","blue","green")
 //		R.amount = text2num(amt_list[p])
 //		src.product_records += R
 
@@ -132,7 +132,7 @@
 		)
 		var/pdat = "<B>Access Panel</B><br>"
 		for(var/wiredesc in vendwires)
-			var/is_uncut = src.wires & APCWireColorToFlag[vendwires[wiredesc]]
+			var/is_uncut = src.wires & APCWirecolourToFlag[vendwires[wiredesc]]
 			pdat += "[wiredesc] wire: "
 			if(!is_uncut)
 				pdat += "<a href='?src=\ref[src];cutwire=[vendwires[wiredesc]]'>Mend</a>"
@@ -153,19 +153,19 @@
 	var/dat = "<TT><b>Select an item:</b><br>"
 
 	if (src.product_records.len == 0)
-		dat += "<font color = 'red'>No product loaded!</font>"
+		dat += "<font colour = 'red'>No product loaded!</font>"
 	else
 		var/list/display_records = src.product_records
 		if(src.extended_inventory)
 			display_records = (src.product_records + src.hidden_records)
 
 		for (var/datum/data/vending_product/R in display_records)
-			dat += "<FONT color = '[R.display_color]'><B>[R.product_name]</B>:"
+			dat += "<FONT colour = '[R.display_colour]'><B>[R.product_name]</B>:"
 			dat += " [R.amount] </font>"
 			if (R.amount > 0)
 				dat += "<a href='byond://?src=\ref[src];vend=\ref[R]'>Vend</A>"
 			else
-				dat += "<font color = 'red'>SOLD OUT</font>"
+				dat += "<font colour = 'red'>SOLD OUT</font>"
 			dat += "<br>"
 
 		dat += "</TT>"
@@ -231,7 +231,7 @@
 			if (!( istype(usr.equipped(), /obj/item/weapon/wirecutters) ))
 				usr << "You need wirecutters!"
 				return
-			if (src.isWireColorCut(twire))
+			if (src.isWirecolourCut(twire))
 				src.mend(twire)
 			else
 				src.cut(twire)
@@ -241,7 +241,7 @@
 			if (!istype(usr.equipped(), /obj/item/device/multitool))
 				usr << "You need a multitool!"
 				return
-			if (src.isWireColorCut(twire))
+			if (src.isWirecolourCut(twire))
 				usr << "You can't pulse a cut wire."
 				return
 			else
@@ -340,17 +340,17 @@
 	src.visible_message("\red <b>[src] launches [throw_item.name] at [target.name]!</b>")
 	return 1
 
-/obj/machinery/vending/proc/isWireColorCut(var/wireColor)
-	var/wireFlag = APCWireColorToFlag[wireColor]
+/obj/machinery/vending/proc/isWirecolourCut(var/wirecolour)
+	var/wireFlag = APCWirecolourToFlag[wirecolour]
 	return ((src.wires & wireFlag) == 0)
 
 /obj/machinery/vending/proc/isWireCut(var/wireIndex)
 	var/wireFlag = APCIndexToFlag[wireIndex]
 	return ((src.wires & wireFlag) == 0)
 
-/obj/machinery/vending/proc/cut(var/wireColor)
-	var/wireFlag = APCWireColorToFlag[wireColor]
-	var/wireIndex = APCWireColorToIndex[wireColor]
+/obj/machinery/vending/proc/cut(var/wirecolour)
+	var/wireFlag = APCWirecolourToFlag[wirecolour]
+	var/wireIndex = APCWirecolourToIndex[wirecolour]
 	src.wires &= ~wireFlag
 	switch(wireIndex)
 		if(WIRE_EXTEND)
@@ -362,9 +362,9 @@
 				src.shoot_inventory = 1
 
 
-/obj/machinery/vending/proc/mend(var/wireColor)
-	var/wireFlag = APCWireColorToFlag[wireColor]
-	var/wireIndex = APCWireColorToIndex[wireColor] //not used in this function
+/obj/machinery/vending/proc/mend(var/wirecolour)
+	var/wireFlag = APCWirecolourToFlag[wirecolour]
+	var/wireIndex = APCWirecolourToIndex[wirecolour] //not used in this function
 	src.wires |= wireFlag
 	switch(wireIndex)
 //		if(WIRE_SCANID)
@@ -373,8 +373,8 @@
 		if (WIRE_SHOOTINV)
 			src.shoot_inventory = 0
 
-/obj/machinery/vending/proc/pulse(var/wireColor)
-	var/wireIndex = APCWireColorToIndex[wireColor]
+/obj/machinery/vending/proc/pulse(var/wirecolour)
+	var/wireIndex = APCWirecolourToIndex[wirecolour]
 	switch(wireIndex)
 		if(WIRE_EXTEND)
 			src.extended_inventory = !src.extended_inventory

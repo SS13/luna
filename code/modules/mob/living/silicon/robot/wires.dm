@@ -7,33 +7,33 @@
 	//to make this not randomize the wires, just set index to 1 and increment it in the flag for loop (after doing everything else).
 	var/list/Borgwires = list(0, 0, 0, 0)
 	BorgIndexToFlag = list(0, 0, 0, 0)
-	BorgIndexToWireColor = list(0, 0, 0, 0)
-	BorgWireColorToIndex = list(0, 0, 0, 0)
+	BorgIndexToWirecolour = list(0, 0, 0, 0)
+	BorgWirecolourToIndex = list(0, 0, 0, 0)
 	var/flagIndex = 1
 	for (var/flag=1, flag<16, flag+=flag)
 		var/valid = 0
 		while (!valid)
-			var/colorIndex = rand(1, 4)
-			if (Borgwires[colorIndex]==0)
+			var/colourIndex = rand(1, 4)
+			if (Borgwires[colourIndex]==0)
 				valid = 1
-				Borgwires[colorIndex] = flag
+				Borgwires[colourIndex] = flag
 				BorgIndexToFlag[flagIndex] = flag
-				BorgIndexToWireColor[flagIndex] = colorIndex
-				BorgWireColorToIndex[colorIndex] = flagIndex
+				BorgIndexToWirecolour[flagIndex] = colourIndex
+				BorgWirecolourToIndex[colourIndex] = flagIndex
 		flagIndex+=1
 	return Borgwires
 
-/mob/living/silicon/robot/proc/isWireColorCut(var/wireColor)
-	var/wireFlag = BorgWireColorToFlag[wireColor]
+/mob/living/silicon/robot/proc/isWirecolourCut(var/wirecolour)
+	var/wireFlag = BorgWirecolourToFlag[wirecolour]
 	return ((src.borgwires & wireFlag) == 0)
 
 /mob/living/silicon/robot/proc/isWireCut(var/wireIndex)
 	var/wireFlag = BorgIndexToFlag[wireIndex]
 	return ((src.borgwires & wireFlag) == 0)
 
-/mob/living/silicon/robot/proc/cut(var/wireColor)
-	var/wireFlag = BorgWireColorToFlag[wireColor]
-	var/wireIndex = BorgWireColorToIndex[wireColor]
+/mob/living/silicon/robot/proc/cut(var/wirecolour)
+	var/wireFlag = BorgWirecolourToFlag[wirecolour]
+	var/wireIndex = BorgWirecolourToIndex[wirecolour]
 	borgwires &= ~wireFlag
 	switch(wireIndex)
 		if(BORG_WIRE_LAWCHECK) //Cut the law wire, and the borg will no longer receive law updates from its AI
@@ -45,9 +45,9 @@
 				src.connected_ai = null
 	src.interact(usr)
 
-/mob/living/silicon/robot/proc/mend(var/wireColor)
-	var/wireFlag = BorgWireColorToFlag[wireColor]
-	var/wireIndex = BorgWireColorToIndex[wireColor]
+/mob/living/silicon/robot/proc/mend(var/wirecolour)
+	var/wireFlag = BorgWirecolourToFlag[wirecolour]
+	var/wireIndex = BorgWirecolourToIndex[wirecolour]
 	borgwires |= wireFlag
 	switch(wireIndex)
 		if(BORG_WIRE_LAWCHECK) //turns law updates back on assuming the borg hasn't been emagged
@@ -56,8 +56,8 @@
 	src.interact(usr)
 
 
-/mob/living/silicon/robot/proc/pulse(var/wireColor)
-	var/wireIndex = BorgWireColorToIndex[wireColor]
+/mob/living/silicon/robot/proc/pulse(var/wirecolour)
+	var/wireIndex = BorgWirecolourToIndex[wirecolour]
 	switch(wireIndex)
 		if(BORG_WIRE_LAWCHECK)	//Forces a law update if the borg is set to receive them. Since an update would happen when the borg checks its laws anyway, not much use, but eh
 			if (src.lawupdate)
@@ -79,7 +79,7 @@
 			"Yellow" = 4,
 		)
 		for(var/wiredesc in Borgwires)
-			var/is_uncut = src.borgwires & BorgWireColorToFlag[Borgwires[wiredesc]]
+			var/is_uncut = src.borgwires & BorgWirecolourToFlag[Borgwires[wiredesc]]
 			t1 += "[wiredesc] wire: "
 			if(!is_uncut)
 				t1 += "<a href='?src=\ref[src];borgwires=[Borgwires[wiredesc]]'>Mend</a>"
@@ -101,7 +101,7 @@
 			if (!( istype(usr.equipped(), /obj/item/weapon/wirecutters) ))
 				usr << "You need wirecutters!"
 				return
-			if (src.isWireColorCut(t1))
+			if (src.isWirecolourCut(t1))
 				src.mend(t1)
 			else
 				src.cut(t1)
@@ -110,7 +110,7 @@
 			if (!istype(usr.equipped(), /obj/item/device/multitool))
 				usr << "You need a multitool!"
 				return
-			if (src.isWireColorCut(t1))
+			if (src.isWirecolourCut(t1))
 				usr << "You can't pulse a cut wire."
 				return
 			else

@@ -163,21 +163,21 @@ var
 	rules = null
 	forceblob = 0
 
-	//airlockWireColorToIndex takes a number representing the wire color, e.g. the orange wire is always 1, the dark red wire is always 2, etc. It returns the index for whatever that wire does.
-	//airlockIndexToWireColor does the opposite thing - it takes the index for what the wire does, for example AIRLOCK_WIRE_IDSCAN is 1, AIRLOCK_WIRE_POWER1 is 2, etc. It returns the wire color number.
-	//airlockWireColorToFlag takes the wire color number and returns the flag for it (1, 2, 4, 8, 16, etc)
-	list/airlockWireColorToFlag = RandomAirlockWires()
+	//airlockWirecolourToIndex takes a number representing the wire colour, e.g. the orange wire is always 1, the dark red wire is always 2, etc. It returns the index for whatever that wire does.
+	//airlockIndexToWirecolour does the opposite thing - it takes the index for what the wire does, for example AIRLOCK_WIRE_IDSCAN is 1, AIRLOCK_WIRE_POWER1 is 2, etc. It returns the wire colour number.
+	//airlockWirecolourToFlag takes the wire colour number and returns the flag for it (1, 2, 4, 8, 16, etc)
+	list/airlockWirecolourToFlag = RandomAirlockWires()
 	list/airlockIndexToFlag
-	list/airlockIndexToWireColor
-	list/airlockWireColorToIndex
-	list/APCWireColorToFlag = RandomAPCWires()
+	list/airlockIndexToWirecolour
+	list/airlockWirecolourToIndex
+	list/APCWirecolourToFlag = RandomAPCWires()
 	list/APCIndexToFlag
-	list/APCIndexToWireColor
-	list/APCWireColorToIndex
-	list/BorgWireColorToFlag = RandomBorgWires()
+	list/APCIndexToWirecolour
+	list/APCWirecolourToIndex
+	list/BorgWirecolourToFlag = RandomBorgWires()
 	list/BorgIndexToFlag
-	list/BorgIndexToWireColor
-	list/BorgWireColorToIndex
+	list/BorgIndexToWirecolour
+	list/BorgWirecolourToIndex
 
 	const/SPEED_OF_LIGHT = 3e8 //not exact but hey!
 	const/SPEED_OF_LIGHT_SQ = 9e+16

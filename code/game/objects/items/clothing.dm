@@ -152,7 +152,7 @@ THERMAL GLASSES
 		user << "\red Pattern absorbed by the suit."
 
 /obj/item/clothing/under/chameleon/verb/change()
-	set name = "Change Color"
+	set name = "Change colour"
 	set category = "Object"
 	set src in usr
 
@@ -174,17 +174,17 @@ THERMAL GLASSES
 	name = A.name
 	icon_state = A.icon_state
 	item_state = A.item_state
-	color = A.color
+	colour = A.colour
 
 /obj/item/clothing/under/chameleon/emp_act(severity)
 	name = "psychedelic"
 	desc = "Groovy!"
 	icon_state = "psyche"
-	color = "psyche"
+	colour = "psyche"
 	spawn(200)
 		name = "Black Jumpsuit"
 		icon_state = "bl_suit"
-		color = "black"
+		colour = "black"
 		desc = null
 	..()
 

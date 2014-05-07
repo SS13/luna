@@ -230,7 +230,7 @@
 	set category = "Object"
 
 	var/mob/living/carbon/human/U = usr
-	var/dat = "<html><head><title>SpiderOS</title></head><body bgcolor=\"#3D5B43\" text=\"#DB2929\"><style>a, a:link, a:visited, a:active, a:hover { color: #DB2929; }img {border-style:none;}</style>"
+	var/dat = "<html><head><title>SpiderOS</title></head><body bgcolour=\"#3D5B43\" text=\"#DB2929\"><style>a, a:link, a:visited, a:active, a:hover { colour: #DB2929; }img {border-style:none;}</style>"
 	/*Here is where you would create a link for the cartridge used if the item has one.
 	As noted below, it's not worth the effort to make the cartridge removable unless it's done from the hub.*/
 	if(spideros==0)

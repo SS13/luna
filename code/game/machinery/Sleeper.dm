@@ -42,22 +42,22 @@
 		return
 	if (src.connected)
 		var/mob/occupant = src.connected.occupant
-		var/dat = "<font color='blue'><B>Occupant Statistics:</B></FONT><BR>"
+		var/dat = "<font colour='blue'><B>Occupant Statistics:</B></FONT><BR>"
 		if (occupant)
 			var/t1
 			switch(occupant.stat)
 				if(0)
 					t1 = "Conscious"
 				if(1)
-					t1 = "<font color='blue'>Unconscious</font>"
+					t1 = "<font colour='blue'>Unconscious</font>"
 				if(2)
-					t1 = "<font color='red'>*dead*</font>"
+					t1 = "<font colour='red'>*dead*</font>"
 				else
-			dat += text("[]\tHealth %: [] ([])</FONT><BR>", (occupant.health > 50 ? "<font color='blue'>" : "<font color='red'>"), occupant.health, t1)
-			dat += text("[]\t-Brute Damage %: []</FONT><BR>", (occupant.bruteloss < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.bruteloss)
-			dat += text("[]\t-Respiratory Damage %: []</FONT><BR>", (occupant.oxyloss < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.oxyloss)
-			dat += text("[]\t-Toxin Content %: []</FONT><BR>", (occupant.toxloss < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.toxloss)
-			dat += text("[]\t-Burn Severity %: []</FONT><BR>", (occupant.fireloss < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.fireloss)
+			dat += text("[]\tHealth %: [] ([])</FONT><BR>", (occupant.health > 50 ? "<font colour='blue'>" : "<font colour='red'>"), occupant.health, t1)
+			dat += text("[]\t-Brute Damage %: []</FONT><BR>", (occupant.bruteloss < 60 ? "<font colour='blue'>" : "<font colour='red'>"), occupant.bruteloss)
+			dat += text("[]\t-Respiratory Damage %: []</FONT><BR>", (occupant.oxyloss < 60 ? "<font colour='blue'>" : "<font colour='red'>"), occupant.oxyloss)
+			dat += text("[]\t-Toxin Content %: []</FONT><BR>", (occupant.toxloss < 60 ? "<font colour='blue'>" : "<font colour='red'>"), occupant.toxloss)
+			dat += text("[]\t-Burn Severity %: []</FONT><BR>", (occupant.fireloss < 60 ? "<font colour='blue'>" : "<font colour='red'>"), occupant.fireloss)
 			dat += text("<HR>Paralysis Summary %: [] ([] seconds left!)<BR>", occupant.paralysis, round(occupant.paralysis / 4))
 			dat += text("Rejuvenation chemicals: [] units<BR>", occupant.reagents.get_reagent_amount("inaprovaline"))
 			dat += text("Soporific: [] units<BR>", occupant.reagents.get_reagent_amount("stoxin"))
@@ -265,7 +265,7 @@
 				t1 = "*dead*"
 			else
 		user << text("[]\t Health %: [] ([])", (src.occupant.health > 50 ? "\blue " : "\red "), src.occupant.health, t1)
-		user << text("[]\t -Core Temperature: []&deg;C ([]&deg;F)</FONT><BR>", (src.occupant.bodytemperature > 50 ? "<font color='blue'>" : "<font color='red'>"), src.occupant.bodytemperature-T0C, src.occupant.bodytemperature*1.8-459.67)
+		user << text("[]\t -Core Temperature: []&deg;C ([]&deg;F)</FONT><BR>", (src.occupant.bodytemperature > 50 ? "<font colour='blue'>" : "<font colour='red'>"), src.occupant.bodytemperature-T0C, src.occupant.bodytemperature*1.8-459.67)
 		user << text("[]\t -Brute Damage %: []", (src.occupant.bruteloss < 60 ? "\blue " : "\red "), src.occupant.bruteloss)
 		user << text("[]\t -Respiratory Damage %: []", (src.occupant.oxyloss < 60 ? "\blue " : "\red "), src.occupant.oxyloss)
 		user << text("[]\t -Toxin Content %: []", (src.occupant.toxloss < 60 ? "\blue " : "\red "), src.occupant.toxloss)

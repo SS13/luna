@@ -32,10 +32,10 @@
 
 /obj/mecha/combat/honker/get_stats_part()
 	var/cell_charge = get_charge()
-	var/output = {"[internal_damage&MECHA_INT_FIRE?"<font color='red'><b>INTERNAL FIRE</b></font><br>":null]
-						[internal_damage&MECHA_INT_TEMP_CONTROL?"<font color='red'><b>CLOWN SUPPORT SYSTEM MALFUNCTION</b></font><br>":null]
-						[internal_damage&MECHA_INT_TANK_BREACH?"<font color='red'><b>GAS TANK HONK</b></font><br>":null]
-						[internal_damage&MECHA_INT_CONTROL_LOST?"<font color='red'><b>HONK-A-DOODLE</b></font> - <a href='?src=\ref[src];repair_int_control_lost=1'>Recalibrate</a><br>":null]
+	var/output = {"[internal_damage&MECHA_INT_FIRE?"<font colour='red'><b>INTERNAL FIRE</b></font><br>":null]
+						[internal_damage&MECHA_INT_TEMP_CONTROL?"<font colour='red'><b>CLOWN SUPPORT SYSTEM MALFUNCTION</b></font><br>":null]
+						[internal_damage&MECHA_INT_TANK_BREACH?"<font colour='red'><b>GAS TANK HONK</b></font><br>":null]
+						[internal_damage&MECHA_INT_CONTROL_LOST?"<font colour='red'><b>HONK-A-DOODLE</b></font> - <a href='?src=\ref[src];repair_int_control_lost=1'>Recalibrate</a><br>":null]
 						<b>IntegriHONK: </b> [health/initial(health)*100] %) <br>
 						<b>PowerHONK charge: </b>[isnull(cell_charge)?"Someone HONKed powerHonk!!!":"[cell.percent()]%"])<br>
 						<b>AirHONK pressure: </b>[src.return_pressure()]HoNKs<br>
@@ -51,7 +51,7 @@
 						<style>
 						.wr {margin-bottom: 5px;}
 						.header {cursor:pointer;}
-						.open, .closed {background: #32CD32; color:#000; padding:1px 2px;}
+						.open, .closed {background: #32CD32; colour:#000; padding:1px 2px;}
 						.links a {margin-bottom: 2px;}
 						.visible {display: block;}
 						.hidden {display: none;}
@@ -62,18 +62,18 @@
 						function ticker() {
 						    setInterval(function(){
 						        window.location='byond://?src=\ref[src]&update_content=1';
-						        document.body.style.color = get_rand_color_string();
-								  document.body.style.background = get_rand_color_string();
+						        document.body.style.colour = get_rand_colour_string();
+								  document.body.style.background = get_rand_colour_string();
 
 						    }, 1000);
 						}
 
-						function get_rand_color_string() {
-						    var color = new Array;
+						function get_rand_colour_string() {
+						    var colour = new Array;
 						    for(var i=0;i<3;i++){
-						        color.push(Math.floor(Math.random()*255));
+						        colour.push(Math.floor(Math.random()*255));
 						    }
-						    return "rgb("+color.toString()+")";
+						    return "rgb("+colour.toString()+")";
 						}
 
 						window.onload = function() {
@@ -82,7 +82,7 @@
 						}
 						</script>
 						</head>
-						<body style="color: #fff; background: #000; font: 14px 'Courier', monospace;">
+						<body style="colour: #fff; background: #000; font: 14px 'Courier', monospace;">
 						<div id='content'>
 						[src.get_stats_part()]
 						</div>
@@ -134,11 +134,11 @@ obj/mecha/combat/honker/Topic(href, href_list)
 				playsound(src, 'sadtrombone.ogg', 50)
 	return
 
-proc/rand_hex_color()
-	var/list/colors = list("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f")
-	var/color=""
+proc/rand_hex_colour()
+	var/list/colours = list("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f")
+	var/colour=""
 	for (var/i=0;i<6;i++)
-		color = color+pick(colors)
-	return color
+		colour = colour+pick(colours)
+	return colour
 
 
