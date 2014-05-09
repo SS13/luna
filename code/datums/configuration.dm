@@ -30,6 +30,7 @@
 	var/list/votable_modes = list()		// votable modes
 	var/list/probabilities = list()		// relative probability of each mode
 	var/allow_ai = 1					// allow ai job
+	var/usewhitelist = 1
 	var/hostedby = null
 	var/respawn = 1
 	var/guest_jobban = 1
@@ -178,6 +179,9 @@
 
 			if ("traitor_scaling")
 				config.traitor_scaling = 1
+
+//			if ("usewhitelist")
+//				config.usewhitelist = 1
 
 			if ("probability")
 				var/prob_pos = findtext(value, " ")
