@@ -36,6 +36,7 @@
 #define DEBUG
 // END_PREFERENCES
 // BEGIN_INCLUDE
+#include "dsgsdgs.dmm"
 #include "code\names.dm"
 #include "code\setup.dm"
 #include "code\stylesheet.dm"
@@ -195,7 +196,6 @@
 #include "code\game\throwing.dm"
 #include "code\game\topic.dm"
 #include "code\game\turf.dm"
-#include "code\game\type2type.dm"
 #include "code\game\vials.dm"
 #include "code\game\vote.dm"
 #include "code\game\area\ai_monitored.dm"
@@ -236,7 +236,6 @@
 #include "code\game\jobs\access.dm"
 #include "code\game\jobs\jobprocs.dm"
 #include "code\game\jobs\jobs.dm"
-#include "code\game\jobs\whitelist.dm"
 #include "code\game\machinery\ai_slipper.dm"
 #include "code\game\machinery\airlock_control.dm"
 #include "code\game\machinery\alarm.dm"

@@ -7,9 +7,6 @@ var/savefile/Banlist
 	var/id = clientvar.computer_id
 	var/key = clientvar.ckey
 
-	if(!check_whitelist(ckey(key)))
-		return list("reason"="not in whitelist", "desc"="\nIt's ain't you turn.")
-
 	Banlist.cd = "/base"
 	if (Banlist.dir.Find("[key][id]"))
 		Banlist.cd = "[key][id]"

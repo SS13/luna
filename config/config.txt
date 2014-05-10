@@ -19,9 +19,6 @@ LOG_VOTE
 # log client Whisper
 LOG_WHISPER
 
-#WHITELIST MF
-USEWHITELIST
-
 #disconnect players who did nothing during 10 minutes
 # KICK_INACTIVE
 
