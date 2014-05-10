@@ -9,7 +9,7 @@ editorrus
 jarlo
 account12
 martin_black
-andrewwil
+andrew_wil
 kopistko
 gazbax
 macleod962
@@ -31,3 +31,5 @@ armun
 morlab
 madmannobrain
 kazmap
+ltl
+atelerd
