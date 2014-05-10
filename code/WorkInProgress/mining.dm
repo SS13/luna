@@ -76,7 +76,7 @@ proc/check_craftlathe_recipe(var/list/param_recipe)
 
 	dat += text("<b>Crafting Table</b><p>")
 
-	dat += text("	<table bgcolor='#cccccc' cellpadding='4' cellspacing='0'>")
+	dat += text("	<table bgcolour='#cccccc' cellpadding='4' cellspacing='0'>")
 
 	var/j = 0
 	var/k = 0
@@ -1246,18 +1246,18 @@ proc/move_mining_shuttle()
 	var/dat
 	dat = text("input connection status: ")
 	if (input)
-		dat += text("<b><font color='green'>CONNECTED</font></b>")
+		dat += text("<b><font colour='green'>CONNECTED</font></b>")
 	else
-		dat += text("<b><font color='red'>NOT CONNECTED</font></b>")
+		dat += text("<b><font colour='red'>NOT CONNECTED</font></b>")
 	dat += text("<br>output connection status: ")
 	if (output)
-		dat += text("<b><font color='green'>CONNECTED</font></b>")
+		dat += text("<b><font colour='green'>CONNECTED</font></b>")
 	else
-		dat += text("<b><font color='red'>NOT CONNECTED</font></b>")
+		dat += text("<b><font colour='red'>NOT CONNECTED</font></b>")
 
 	dat += text("<br><br><A href='?src=\ref[src];purify=[input]'>Purify</A>")
 
-	dat += text("<br><br>found: <font color='green'><b>[processed]</b></font>")
+	dat += text("<br><br>found: <font colour='green'><b>[processed]</b></font>")
 	user << browse("[dat]", "window=purifier")
 
 /obj/machinery/mineral/purifier/Topic(href, href_list)
@@ -1360,9 +1360,9 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 	if(machine.ore_iron || machine.ore_glass || machine.ore_plasma || machine.ore_uranium || machine.ore_gold || machine.ore_silver || machine.ore_diamond || machine.ore_clown)
 		if(machine.ore_iron)
 			if (machine.selected_iron==1)
-				dat += text("<A href='?src=\ref[src];sel_iron=no'><font color='green'>Smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_iron=no'><font colour='green'>Smelting</font></A> ")
 			else
-				dat += text("<A href='?src=\ref[src];sel_iron=yes'><font color='red'>Not smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_iron=yes'><font colour='red'>Not smelting</font></A> ")
 			dat += text("Iron: [machine.ore_iron]<br>")
 		else
 			machine.selected_iron = 0
@@ -1370,9 +1370,9 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 		//sand - glass
 		if(machine.ore_glass)
 			if (machine.selected_glass==1)
-				dat += text("<A href='?src=\ref[src];sel_glass=no'><font color='green'>Smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_glass=no'><font colour='green'>Smelting</font></A> ")
 			else
-				dat += text("<A href='?src=\ref[src];sel_glass=yes'><font color='red'>Not smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_glass=yes'><font colour='red'>Not smelting</font></A> ")
 			dat += text("Sand: [machine.ore_glass]<br>")
 		else
 			machine.selected_glass = 0
@@ -1380,9 +1380,9 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 		//plasma
 		if(machine.ore_plasma)
 			if (machine.selected_plasma==1)
-				dat += text("<A href='?src=\ref[src];sel_plasma=no'><font color='green'>Smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_plasma=no'><font colour='green'>Smelting</font></A> ")
 			else
-				dat += text("<A href='?src=\ref[src];sel_plasma=yes'><font color='red'>Not smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_plasma=yes'><font colour='red'>Not smelting</font></A> ")
 			dat += text("Plasma: [machine.ore_plasma]<br>")
 		else
 			machine.selected_plasma = 0
@@ -1390,9 +1390,9 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 		//uranium
 		if(machine.ore_uranium)
 			if (machine.selected_uranium==1)
-				dat += text("<A href='?src=\ref[src];sel_uranium=no'><font color='green'>Smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_uranium=no'><font colour='green'>Smelting</font></A> ")
 			else
-				dat += text("<A href='?src=\ref[src];sel_uranium=yes'><font color='red'>Not smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_uranium=yes'><font colour='red'>Not smelting</font></A> ")
 			dat += text("Uranium: [machine.ore_uranium]<br>")
 		else
 			machine.selected_uranium = 0
@@ -1400,9 +1400,9 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 		//gold
 		if(machine.ore_gold)
 			if (machine.selected_gold==1)
-				dat += text("<A href='?src=\ref[src];sel_gold=no'><font color='green'>Smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_gold=no'><font colour='green'>Smelting</font></A> ")
 			else
-				dat += text("<A href='?src=\ref[src];sel_gold=yes'><font color='red'>Not smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_gold=yes'><font colour='red'>Not smelting</font></A> ")
 			dat += text("Gold: [machine.ore_gold]<br>")
 		else
 			machine.selected_gold = 0
@@ -1410,9 +1410,9 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 		//silver
 		if(machine.ore_silver)
 			if (machine.selected_silver==1)
-				dat += text("<A href='?src=\ref[src];sel_silver=no'><font color='green'>Smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_silver=no'><font colour='green'>Smelting</font></A> ")
 			else
-				dat += text("<A href='?src=\ref[src];sel_silver=yes'><font color='red'>Not smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_silver=yes'><font colour='red'>Not smelting</font></A> ")
 			dat += text("Silver: [machine.ore_silver]<br>")
 		else
 			machine.selected_silver = 0
@@ -1420,9 +1420,9 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 		//diamond
 		if(machine.ore_diamond)
 			if (machine.selected_diamond==1)
-				dat += text("<A href='?src=\ref[src];sel_diamond=no'><font color='green'>Smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_diamond=no'><font colour='green'>Smelting</font></A> ")
 			else
-				dat += text("<A href='?src=\ref[src];sel_diamond=yes'><font color='red'>Not smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_diamond=yes'><font colour='red'>Not smelting</font></A> ")
 			dat += text("Diamond: [machine.ore_diamond]<br>")
 		else
 			machine.selected_diamond = 0
@@ -1430,9 +1430,9 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 		//bananium
 		if(machine.ore_clown)
 			if (machine.selected_clown==1)
-				dat += text("<A href='?src=\ref[src];sel_clown=no'><font color='green'>Smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_clown=no'><font colour='green'>Smelting</font></A> ")
 			else
-				dat += text("<A href='?src=\ref[src];sel_clown=yes'><font color='red'>Not smelting</font></A> ")
+				dat += text("<A href='?src=\ref[src];sel_clown=yes'><font colour='red'>Not smelting</font></A> ")
 			dat += text("Bananium: [machine.ore_clown]<br>")
 		else
 			machine.selected_clown = 0
@@ -2109,43 +2109,43 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 
 	if (!input)
 		dat += text("input connection status: ")
-		dat += text("<b><font color='red'>NOT CONNECTED</font></b><br>")
+		dat += text("<b><font colour='red'>NOT CONNECTED</font></b><br>")
 	if (!output)
 		dat += text("<br>output connection status: ")
-		dat += text("<b><font color='red'>NOT CONNECTED</font></b><br>")
+		dat += text("<b><font colour='red'>NOT CONNECTED</font></b><br>")
 
-	dat += text("<br><font color='#ffcc00'><b>Gold inserted: </b>[amt_gold]</font> ")
+	dat += text("<br><font colour='#ffcc00'><b>Gold inserted: </b>[amt_gold]</font> ")
 	if (chosen == "gold")
 		dat += text("chosen")
 	else
 		dat += text("<A href='?src=\ref[src];choose=gold'>Choose</A>")
-	dat += text("<br><font color='#888888'><b>Silver inserted: </b>[amt_silver]</font> ")
+	dat += text("<br><font colour='#888888'><b>Silver inserted: </b>[amt_silver]</font> ")
 	if (chosen == "silver")
 		dat += text("chosen")
 	else
 		dat += text("<A href='?src=\ref[src];choose=silver'>Choose</A>")
-	dat += text("<br><font color='#555555'><b>Iron inserted: </b>[amt_iron]</font> ")
+	dat += text("<br><font colour='#555555'><b>Iron inserted: </b>[amt_iron]</font> ")
 	if (chosen == "metal")
 		dat += text("chosen")
 	else
 		dat += text("<A href='?src=\ref[src];choose=metal'>Choose</A>")
-	dat += text("<br><font color='#8888FF'><b>Diamond inserted: </b>[amt_diamond]</font> ")
+	dat += text("<br><font colour='#8888FF'><b>Diamond inserted: </b>[amt_diamond]</font> ")
 	if (chosen == "diamond")
 		dat += text("chosen")
 	else
 		dat += text("<A href='?src=\ref[src];choose=diamond'>Choose</A>")
-	dat += text("<br><font color='#FF8800'><b>Plasma inserted: </b>[amt_plasma]</font> ")
+	dat += text("<br><font colour='#FF8800'><b>Plasma inserted: </b>[amt_plasma]</font> ")
 	if (chosen == "plasma")
 		dat += text("chosen")
 	else
 		dat += text("<A href='?src=\ref[src];choose=plasma'>Choose</A>")
-	dat += text("<br><font color='#008800'><b>uranium inserted: </b>[amt_uranium]</font> ")
+	dat += text("<br><font colour='#008800'><b>uranium inserted: </b>[amt_uranium]</font> ")
 	if (chosen == "uranium")
 		dat += text("chosen")
 	else
 		dat += text("<A href='?src=\ref[src];choose=uranium'>Choose</A>")
 	if(amt_clown > 0)
-		dat += text("<br><font color='#AAAA00'><b>Bananium inserted: </b>[amt_clown]</font> ")
+		dat += text("<br><font colour='#AAAA00'><b>Bananium inserted: </b>[amt_clown]</font> ")
 		if (chosen == "clown")
 			dat += text("chosen")
 		else
@@ -2160,7 +2160,7 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 	dat += text("<A href='?src=\ref[src];chooseAmt=5'>+5</A> ")
 	dat += text("<A href='?src=\ref[src];chooseAmt=10'>+10</A> ")
 
-	dat += text("<br><br>In total this machine produced <font color='green'><b>[newCoins]</b></font> coins.")
+	dat += text("<br><br>In total this machine produced <font colour='green'><b>[newCoins]</b></font> coins.")
 	dat += text("<br><A href='?src=\ref[src];makeCoins=[1]'>Make coins</A>")
 	user << browse("[dat]", "window=mint")
 
@@ -2461,14 +2461,14 @@ var/list/datum/material_recipe/MATERIAL_RECIPES = list(
 	var/dat
 	dat = text("input connection status: ")
 	if (input)
-		dat += text("<b><font color='green'>CONNECTED</font></b>")
+		dat += text("<b><font colour='green'>CONNECTED</font></b>")
 	else
-		dat += text("<b><font color='red'>NOT CONNECTED</font></b>")
+		dat += text("<b><font colour='red'>NOT CONNECTED</font></b>")
 	dat += text("<br>output connection status: ")
 	if (output)
-		dat += text("<b><font color='green'>CONNECTED</font></b>")
+		dat += text("<b><font colour='green'>CONNECTED</font></b>")
 	else
-		dat += text("<b><font color='red'>NOT CONNECTED</font></b>")
+		dat += text("<b><font colour='red'>NOT CONNECTED</font></b>")
 
 	dat += text("<br><br><A href='?src=\ref[src];extract=[input]'>Extract gas</A>")
 
@@ -3218,7 +3218,7 @@ for (var/client/C)
 
 	var/dat
 	dat = text("<b>Ship fabricator</b><br><br>")
-	dat += text("Current ammount of <font color='gray'>Metal: <b>[metal_amount]</b></font><br><hr>")
+	dat += text("Current ammount of <font colour='gray'>Metal: <b>[metal_amount]</b></font><br><hr>")
 
 	if (currentShuttleArea)
 		dat += text("<b>Currently building</b><br><br>[currentShuttleName]<br><br>")

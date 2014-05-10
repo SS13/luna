@@ -111,7 +111,7 @@ var/list/radiochannels = list(
 )
 //depenging helpers
 var/list/DEPT_FREQS = list(1351,1355,1357,1359,1213,1441,1349,1347)
-var/const/COMM_FREQ = 1353 //command, colored gold in chat window
+var/const/COMM_FREQ = 1353 //command, coloured gold in chat window
 var/const/SYND_FREQ = 1213
 
 #define TRANSMISSION_WIRE	0
@@ -246,7 +246,7 @@ datum/radio_frequency
 				if (devices_line.len==0)
 					devices -= devices_filter
 					del(devices_line)
-					
+
 
 obj/proc
 	receive_signal(datum/signal/signal, receive_method, receive_param)

@@ -261,7 +261,7 @@ var/runedec = 0
 				icon_state = "1"
 				src.icon += rgb(200, 0, 0)
 				return
-			icon_state="[rand(1,6)]" //random shape and color for dummy runes
+			icon_state="[rand(1,6)]" //random shape and colour for dummy runes
 			src.icon -= rgb(255,255,255)
 			src.icon += rgb(rand(1,255),rand(1,255),rand(1,255))
 

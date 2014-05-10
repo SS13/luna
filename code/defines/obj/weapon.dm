@@ -864,12 +864,12 @@
 	name = "implant"
 	var/implanted = null
 	var/mob/imp_in = null
-	var/color = "b"
+	var/colour = "b"
 
 /obj/item/weapon/implant/freedom
 	name = "freedom"
 	var/uses = 1.0
-	color = "r"
+	colour = "r"
 	var/activation_emote = "chuckle"
 
 /obj/item/weapon/implant/tracking
@@ -979,7 +979,7 @@
 	name = "Paint Can"
 	icon = 'items.dmi'
 	icon_state = "paint_neutral"
-	var/color = "neutral"
+	var/colour = "neutral"
 	item_state = "paintcan"
 	w_class = 3.0
 
@@ -1137,7 +1137,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	throw_range = 15
 	m_amt = 10
 	var/text_size = 2
-	var/text_color = "#000000"
+	var/text_colour = "#000000"
 	var/text_bold = 0
 	var/text_italic = 0
 	var/text_underline = 0
@@ -1259,7 +1259,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	flags = FPRINT | TABLEPASS | NOSHIELD
 
 /obj/item/weapon/sword
-	var/color
+	var/colour
 	name = "energy sword"
 	icon_state = "sword0"
 	var/active = 0.0

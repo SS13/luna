@@ -42,7 +42,7 @@
 /datum/game_mode/monkey/proc/is_important_monkey(var/mob/living/carbon/monkey/M as mob)
 	var/turf/T = get_turf(M)
 	return  M.stat!=2 && istype(M.virus, /datum/disease/jungle_fever) && ( T.z==1 || istype(T.loc, /area/shuttle/escape/centcom) || istype(T.loc, /area/centcom))
-	
+
 /datum/game_mode/monkey/check_win()
 	if (state==MONKEY_MODE_SHUTTLE_CAPTURED || state==MONKEY_MODE_SHUTTLE_WITH_HUMANS)
 		return
@@ -75,7 +75,7 @@
 						break
 
 	if (monkeywin)
-		world << "<FONT size=3 color=red><B>The monkeys have won! Humanity is doomed!</B></FONT>"
+		world << "<FONT size=3 colour=red><B>The monkeys have won! Humanity is doomed!</B></FONT>"
 		for (var/mob/living/carbon/human/player in world)
 			if (player.client)
 				spawn(0)
@@ -85,13 +85,13 @@
 				world << "<B>[monkey_player.key] was a monkey. [monkey_player.stat == 2 ? "(DEAD)" : ""]</B>"
 		sleep(50)
 	else
-		world << "<FONT size=3 color=red><B>The Research Staff has stopped the monkey invasion!</B></FONT>"
+		world << "<FONT size=3 colour=red><B>The Research Staff has stopped the monkey invasion!</B></FONT>"
 		for(var/mob/living/carbon/monkey/monkey_player in world)
 			if (monkey_player.client)
 				world << "<B>[monkey_player.key] was a monkey. [monkey_player.stat == 2 ? "(DEAD)" : ""]</B>"
 
 	return 1
-	
+
 #undef MONKEY_MODE_RUNNING
 #undef MONKEY_MODE_NO_RABID_LEFT
 #undef MONKEY_MODE_SHUTTLE_CAPTURED

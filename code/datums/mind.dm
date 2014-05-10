@@ -51,24 +51,24 @@ datum/mind
 			if ("revolution")
 				if (src in current_mode:head_revolutionaries)
 					srole = "Head Revolutionary"
-					out += "<font color=red>Head Revolutionary</font> "
+					out += "<font colour=red>Head Revolutionary</font> "
 					cantoggle = 0
 				else if(src in current_mode:revolutionaries)
 					srole = "Revolutionary"
-					out += "<a href='?src=\ref[src];traitorize=headrev'>Head Revolutionary</a> <font color=red>Revolutionary</font> "
+					out += "<a href='?src=\ref[src];traitorize=headrev'>Head Revolutionary</a> <font colour=red>Revolutionary</font> "
 				else
 					out += "<a href='?src=\ref[src];traitorize=headrev'>Head Revolutionary</a> <a href='?src=\ref[src];traitorize=rev'>Revolutionary</a> "
 
 			if ("cult")
 				if (src in current_mode:cult)
 					srole = "Cultist"
-					out += "<font color=red>Cultist</font>"
+					out += "<font colour=red>Cultist</font>"
 					cantoggle = 0
 
 			if ("wizard")
 				if (current_mode:wizard && src == current_mode:wizard)
 					srole = "Wizard"
-					out += "<font color=red>Wizard</font>"
+					out += "<font colour=red>Wizard</font>"
 					cantoggle = 0
 				else
 					out = "<a href='?src=\ref[src];traitorize=wizard'>Wizard</a> "
@@ -76,7 +76,7 @@ datum/mind
 			if ("changeling")
 				if (src in current_mode:changelings)
 					srole = "Changeling"
-					out += "<font color=red>Changeling</font>"
+					out += "<font colour=red>Changeling</font>"
 					cantoggle = 0
 				else
 					out = "<a href='?src=\ref[src];traitorize=changeling'>Changeling</a> "
@@ -84,13 +84,13 @@ datum/mind
 			if ("malfunction")
 				if (src in current_mode:malf_ai)
 					srole = "Malfunction"
-					out += "<font color=red>Malfunction</font>"
+					out += "<font colour=red>Malfunction</font>"
 					cantoggle = 0
 
 			if ("nuclear")
 				if(src in current_mode:syndicates)
 					srole = "Syndicate"
-					out = "<font color=red>Syndicate</font>"
+					out = "<font colour=red>Syndicate</font>"
 					cantoggle = current_mode:syndicates.len > 1
 				else
 					out += "<a href='?src=\ref[src];traitorize=syndicate'>Syndicate</a> "
@@ -99,7 +99,7 @@ datum/mind
 			if(src in current_mode.traitors)
 				if (special_role == "Fake Wizard")
 					out += "<a href='?src=\ref[src];traitorize=traitor'>Traitor</a> "
-					out += "<font color=red>Fake Wizard</font> "
+					out += "<font colour=red>Fake Wizard</font> "
 					srole = "Fake Wizard"
 				else
 					out += "<b>Traitor</b> "
@@ -112,7 +112,7 @@ datum/mind
 			if (srole)
 				out += "<a href='?src=\ref[src];traitorize=civilian'>Civilian</a> "
 			else
-				out += "<font color=red>Civilian</font> "
+				out += "<font colour=red>Civilian</font> "
 
 		out += "<br>"
 

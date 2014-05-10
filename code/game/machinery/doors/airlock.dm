@@ -13,7 +13,7 @@
 	pulse - sends a pulse into a wire for hacking purposes
 	cut - cuts a wire and makes any necessary state changes
 	mend - mends a wire and makes any necessary state changes
-	isWireColorCut - returns 1 if that color wire is cut, or 0 if not
+	isWirecolourCut - returns 1 if that colour wire is cut, or 0 if not
 	isWireCut - returns 1 if that wire (e.g. AIRLOCK_WIRE_DOOR_BOLTS) is cut, or 0 if not
 	canAIControl - 1 if the AI can control the airlock, 0 if not (then check canAIHack to see if it can hack in)
 	canAIHack - 1 if the AI can hack into the airlock to recover control, 0 if not. Also returns 0 if the AI does not *need* to hack it.
@@ -32,27 +32,27 @@
 	//to make this not randomize the wires, just set index to 1 and increment it in the flag for loop (after doing everything else).
 	var/list/wires = list(0, 0, 0, 0, 0, 0, 0, 0, 0)
 	airlockIndexToFlag = list(0, 0, 0, 0, 0, 0, 0, 0, 0)
-	airlockIndexToWireColor = list(0, 0, 0, 0, 0, 0, 0, 0, 0)
-	airlockWireColorToIndex = list(0, 0, 0, 0, 0, 0, 0, 0, 0)
+	airlockIndexToWirecolour = list(0, 0, 0, 0, 0, 0, 0, 0, 0)
+	airlockWirecolourToIndex = list(0, 0, 0, 0, 0, 0, 0, 0, 0)
 	var/flagIndex = 1
 	for (var/flag=1, flag<512, flag+=flag)
 		var/valid = 0
 		while (!valid)
-			var/colorIndex = rand(1, 9)
-			if (wires[colorIndex]==0)
+			var/colourIndex = rand(1, 9)
+			if (wires[colourIndex]==0)
 				valid = 1
-				wires[colorIndex] = flag
+				wires[colourIndex] = flag
 				airlockIndexToFlag[flagIndex] = flag
-				airlockIndexToWireColor[flagIndex] = colorIndex
-				airlockWireColorToIndex[colorIndex] = flagIndex
+				airlockIndexToWirecolour[flagIndex] = colourIndex
+				airlockWirecolourToIndex[colourIndex] = flagIndex
 		flagIndex+=1
 	return wires
 
 /* Example:
-Airlock wires color -> flag are { 64, 128, 256, 2, 16, 4, 8, 32, 1 }.
-Airlock wires color -> index are { 7, 8, 9, 2, 5, 3, 4, 6, 1 }.
+Airlock wires colour -> flag are { 64, 128, 256, 2, 16, 4, 8, 32, 1 }.
+Airlock wires colour -> index are { 7, 8, 9, 2, 5, 3, 4, 6, 1 }.
 Airlock index -> flag are { 1, 2, 4, 8, 16, 32, 64, 128, 256 }.
-Airlock index -> wire color are { 9, 4, 6, 7, 5, 8, 1, 2, 3 }.
+Airlock index -> wire colour are { 9, 4, 6, 7, 5, 8, 1, 2, 3 }.
 */
 
 /obj/machinery/door/airlock
@@ -201,14 +201,14 @@ About the new airlock wires panel:
 	..(user)
 
 
-/obj/machinery/door/airlock/proc/pulse(var/wireColor)
-	//var/wireFlag = airlockWireColorToFlag[wireColor] //not used in this function
-	var/wireIndex = airlockWireColorToIndex[wireColor]
+/obj/machinery/door/airlock/proc/pulse(var/wirecolour)
+	//var/wireFlag = airlockWirecolourToFlag[wirecolour] //not used in this function
+	var/wireIndex = airlockWirecolourToIndex[wirecolour]
 	switch(wireIndex)
 		if(AIRLOCK_WIRE_IDSCAN)
 			//Sending a pulse through this flashes the red light on the door (if the door has power).
 			if ((src.arePowerSystemsOn()) && (!(stat & NOPOWER)))
-				animate("deny")
+				do_animate("deny")
 		if (AIRLOCK_WIRE_MAIN_POWER1 || AIRLOCK_WIRE_MAIN_POWER2)
 			//Sending a pulse through either one causes a breaker to trip, disabling the door for 10 seconds if backup power is connected, or 1 minute if not (or until backup power comes back on, whichever is shorter).
 			src.loseMainPower()
@@ -264,9 +264,9 @@ About the new airlock wires panel:
 
 
 
-/obj/machinery/door/airlock/proc/cut(var/wireColor)
-	var/wireFlag = airlockWireColorToFlag[wireColor]
-	var/wireIndex = airlockWireColorToIndex[wireColor]
+/obj/machinery/door/airlock/proc/cut(var/wirecolour)
+	var/wireFlag = airlockWirecolourToFlag[wirecolour]
+	var/wireIndex = airlockWirecolourToIndex[wirecolour]
 	wires &= ~wireFlag
 	switch(wireIndex)
 		if(AIRLOCK_WIRE_MAIN_POWER1 || AIRLOCK_WIRE_MAIN_POWER2)
@@ -299,9 +299,9 @@ About the new airlock wires panel:
 				src.secondsElectrified = -1
 
 
-/obj/machinery/door/airlock/proc/mend(var/wireColor)
-	var/wireFlag = airlockWireColorToFlag[wireColor]
-	var/wireIndex = airlockWireColorToIndex[wireColor] //not used in this function
+/obj/machinery/door/airlock/proc/mend(var/wirecolour)
+	var/wireFlag = airlockWirecolourToFlag[wirecolour]
+	var/wireIndex = airlockWirecolourToIndex[wirecolour] //not used in this function
 	wires |= wireFlag
 	switch(wireIndex)
 		if(AIRLOCK_WIRE_MAIN_POWER1 || AIRLOCK_WIRE_MAIN_POWER2)
@@ -331,8 +331,8 @@ About the new airlock wires panel:
 		return 1
 	else return 0
 
-/obj/machinery/door/airlock/proc/isWireColorCut(var/wireColor)
-	var/wireFlag = airlockWireColorToFlag[wireColor]
+/obj/machinery/door/airlock/proc/isWirecolourCut(var/wirecolour)
+	var/wireFlag = airlockWirecolourToFlag[wirecolour]
 	return ((src.wires & wireFlag) == 0)
 
 /obj/machinery/door/airlock/proc/isWireCut(var/wireIndex)
@@ -431,7 +431,7 @@ About the new airlock wires panel:
 
 	return
 
-/obj/machinery/door/airlock/animate(animation)
+/obj/machinery/door/airlock/do_animate(animation)
 	switch(animation)
 		if("opening")
 			if(overlays) overlays = null
@@ -614,7 +614,7 @@ About the new airlock wires panel:
 		user.machine = src
 		var/t1 = text("<B>Access Panel</B><br>\n")
 
-		//t1 += text("[]: ", airlockFeatureNames[airlockWireColorToIndex[9]])
+		//t1 += text("[]: ", airlockFeatureNames[airlockWirecolourToIndex[9]])
 		var/list/wires = list(
 			"Orange" = 1,
 			"Dark red" = 2,
@@ -627,7 +627,7 @@ About the new airlock wires panel:
 			"Black" = 9
 		)
 		for(var/wiredesc in wires)
-			var/is_uncut = src.wires & airlockWireColorToFlag[wires[wiredesc]]
+			var/is_uncut = src.wires & airlockWirecolourToFlag[wires[wiredesc]]
 			t1 += "[wiredesc] wire: "
 			if(!is_uncut)
 				t1 += "<a href='?src=\ref[src];wires=[wires[wiredesc]]'>Mend</a>"
@@ -671,7 +671,7 @@ About the new airlock wires panel:
 				if (!( istype(usr.equipped(), /obj/item/weapon/wirecutters) ))
 					usr << "You need wirecutters!"
 					return
-				if (src.isWireColorCut(t1))
+				if (src.isWirecolourCut(t1))
 					src.mend(t1)
 				else
 					src.cut(t1)
@@ -680,7 +680,7 @@ About the new airlock wires panel:
 				if (!istype(usr.equipped(), /obj/item/device/multitool))
 					usr << "You need a multitool!"
 					return
-				if (src.isWireColorCut(t1))
+				if (src.isWirecolourCut(t1))
 					usr << "You can't pulse a cut wire."
 					return
 				else
@@ -690,7 +690,7 @@ About the new airlock wires panel:
 				if(!istype(usr.equipped(), /obj/item/device/radio/signaler))
 					usr << "You need a signaller!"
 					return
-				if(src.isWireColorCut(wirenum))
+				if(src.isWirecolourCut(wirenum))
 					usr << "You can't attach a signaller to a cut wire."
 					return
 				var/obj/item/device/radio/signaler/R = usr.equipped()
@@ -900,7 +900,7 @@ About the new airlock wires panel:
 		if ((src.density) && (!( src.welded ) && !( src.operating ) && ((!src.arePowerSystemsOn()) || (stat & NOPOWER)) && !( src.locked )))
 			spawn( 0 )
 				src.operating = 1
-				animate("opening")
+				do_animate("opening")
 
 				sleep(15)
 
@@ -915,7 +915,7 @@ About the new airlock wires panel:
 			if ((!src.density) && (!( src.welded ) && !( src.operating ) && !( src.locked )))
 				spawn( 0 )
 					src.operating = 1
-					animate("closing")
+					do_animate("closing")
 
 					src.density = 1
 					sleep(15)

@@ -61,19 +61,19 @@
 	//to make this not randomize the wires, just set index to 1 and increment it in the flag for loop (after doing everything else).
 	var/list/apcwires = list(0, 0, 0, 0)
 	APCIndexToFlag = list(0, 0, 0, 0)
-	APCIndexToWireColor = list(0, 0, 0, 0)
-	APCWireColorToIndex = list(0, 0, 0, 0)
+	APCIndexToWirecolour = list(0, 0, 0, 0)
+	APCWirecolourToIndex = list(0, 0, 0, 0)
 	var/flagIndex = 1
 	for (var/flag=1, flag<16, flag+=flag)
 		var/valid = 0
 		while (!valid)
-			var/colorIndex = rand(1, 4)
-			if (apcwires[colorIndex]==0)
+			var/colourIndex = rand(1, 4)
+			if (apcwires[colourIndex]==0)
 				valid = 1
-				apcwires[colorIndex] = flag
+				apcwires[colourIndex] = flag
 				APCIndexToFlag[flagIndex] = flag
-				APCIndexToWireColor[flagIndex] = colorIndex
-				APCWireColorToIndex[colorIndex] = flagIndex
+				APCIndexToWirecolour[flagIndex] = colourIndex
+				APCWirecolourToIndex[colourIndex] = flagIndex
 		flagIndex+=1
 	return apcwires
 
@@ -487,7 +487,7 @@
 			"Yellow" = 4,
 		)
 		for(var/wiredesc in apcwires)
-			var/is_uncut = src.apcwires & APCWireColorToFlag[apcwires[wiredesc]]
+			var/is_uncut = src.apcwires & APCWirecolourToFlag[apcwires[wiredesc]]
 			t1 += "[wiredesc] wire: "
 			if(!is_uncut)
 				t1 += "<a href='?src=\ref[src];apcwires=[apcwires[wiredesc]]'>Mend</a>"
@@ -506,8 +506,8 @@
 	if(locked && (!istype(user, /mob/living/silicon)))
 		t += "<I>(Swipe ID card to unlock inteface.)</I><BR>"
 		t += "Main breaker : <B>[operating ? "On" : "Off"]</B><BR>"
-		t += "External power : <B>[ main_status ? (main_status ==2 ? "<FONT COLOR=#004000>Good</FONT>" : "<FONT COLOR=#D09000>Low</FONT>") : "<FONT COLOR=#F00000>None</FONT>"]</B><BR>"
-		t += "Power cell: <B>[cell ? "[round(cell.percent())]%" : "<FONT COLOR=red>Not connected.</FONT>"]</B>"
+		t += "External power : <B>[ main_status ? (main_status ==2 ? "<FONT colour=#004000>Good</FONT>" : "<FONT colour=#D09000>Low</FONT>") : "<FONT colour=#F00000>None</FONT>"]</B><BR>"
+		t += "Power cell: <B>[cell ? "[round(cell.percent())]%" : "<FONT colour=red>Not connected.</FONT>"]</B>"
 		if(cell)
 			t += " ([charging ? ( charging == 1 ? "Charging" : "Fully charged" ) : "Not charging"])"
 			t += " ([chargemode ? "Auto" : "Off"])"
@@ -527,14 +527,14 @@
 		if (!istype(user, /mob/living/silicon))
 			t += "<I>(Swipe ID card to lock interface.)</I><BR>"
 		t += "Main breaker: [operating ? "<B>On</B> <A href='?src=\ref[src];breaker=1'>Off</A>" : "<A href='?src=\ref[src];breaker=1'>On</A> <B>Off</B>" ]<BR>"
-		t += "External power : <B>[ main_status ? (main_status ==2 ? "<FONT COLOR=#004000>Good</FONT>" : "<FONT COLOR=#D09000>Low</FONT>") : "<FONT COLOR=#F00000>None</FONT>"]</B><BR>"
+		t += "External power : <B>[ main_status ? (main_status ==2 ? "<FONT colour=#004000>Good</FONT>" : "<FONT colour=#D09000>Low</FONT>") : "<FONT colour=#F00000>None</FONT>"]</B><BR>"
 		if(cell)
 			t += "Power cell: <B>[round(cell.percent())]%</B>"
 			t += " ([charging ? ( charging == 1 ? "Charging" : "Fully charged" ) : "Not charging"])"
 			t += " ([chargemode ? "<A href='?src=\ref[src];cmode=1'>Off</A> <B>Auto</B>" : "<B>Off</B> <A href='?src=\ref[src];cmode=1'>Auto</A>"])"
 
 		else
-			t += "Power cell: <B><FONT COLOR=red>Not connected.</FONT></B>"
+			t += "Power cell: <B><FONT colour=red>Not connected.</FONT></B>"
 
 		t += "<BR><HR>Power channels<BR><PRE>"
 
@@ -625,17 +625,17 @@
 //			world << "[area.power_equip]"
 	area.power_change()
 
-/obj/machinery/power/apc/proc/isWireColorCut(var/wireColor)
-	var/wireFlag = APCWireColorToFlag[wireColor]
+/obj/machinery/power/apc/proc/isWirecolourCut(var/wirecolour)
+	var/wireFlag = APCWirecolourToFlag[wirecolour]
 	return ((src.apcwires & wireFlag) == 0)
 
 /obj/machinery/power/apc/proc/isWireCut(var/wireIndex)
 	var/wireFlag = APCIndexToFlag[wireIndex]
 	return ((src.apcwires & wireFlag) == 0)
 
-/obj/machinery/power/apc/proc/cut(var/wireColor)
-	var/wireFlag = APCWireColorToFlag[wireColor]
-	var/wireIndex = APCWireColorToIndex[wireColor]
+/obj/machinery/power/apc/proc/cut(var/wirecolour)
+	var/wireFlag = APCWirecolourToFlag[wirecolour]
+	var/wireIndex = APCWirecolourToIndex[wirecolour]
 	apcwires &= ~wireFlag
 	switch(wireIndex)
 		if(APC_WIRE_MAIN_POWER1)
@@ -653,9 +653,9 @@
 //		if(APC_WIRE_IDSCAN)		nothing happens when you cut this wire, add in something if you want whatever
 
 
-/obj/machinery/power/apc/proc/mend(var/wireColor)
-	var/wireFlag = APCWireColorToFlag[wireColor]
-	var/wireIndex = APCWireColorToIndex[wireColor] //not used in this function
+/obj/machinery/power/apc/proc/mend(var/wirecolour)
+	var/wireFlag = APCWirecolourToFlag[wirecolour]
+	var/wireIndex = APCWirecolourToIndex[wirecolour] //not used in this function
 	apcwires |= wireFlag
 	switch(wireIndex)
 		if(APC_WIRE_MAIN_POWER1)
@@ -676,9 +676,9 @@
 			src.updateDialog()
 //		if(APC_WIRE_IDSCAN)		nothing happens when you cut this wire, add in something if you want whatever
 
-/obj/machinery/power/apc/proc/pulse(var/wireColor)
-	//var/wireFlag = apcWireColorToFlag[wireColor] //not used in this function
-	var/wireIndex = APCWireColorToIndex[wireColor]
+/obj/machinery/power/apc/proc/pulse(var/wirecolour)
+	//var/wireFlag = apcWirecolourToFlag[wirecolour] //not used in this function
+	var/wireIndex = APCWirecolourToIndex[wirecolour]
 	switch(wireIndex)
 		if(APC_WIRE_IDSCAN)			//unlocks the APC for 30 seconds, if you have a better way to hack an APC I'm all ears
 			src.locked = 0
@@ -718,7 +718,7 @@
 			if (!( istype(usr.equipped(), /obj/item/weapon/wirecutters) ))
 				usr << "You need wirecutters!"
 				return
-			if (src.isWireColorCut(t1))
+			if (src.isWirecolourCut(t1))
 				src.mend(t1)
 			else
 				src.cut(t1)
@@ -727,7 +727,7 @@
 			if (!istype(usr.equipped(), /obj/item/device/multitool))
 				usr << "You need a multitool!"
 				return
-			if (src.isWireColorCut(t1))
+			if (src.isWirecolourCut(t1))
 				usr << "You can't pulse a cut wire."
 				return
 			else

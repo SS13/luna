@@ -182,7 +182,7 @@ obj/machinery/atmospherics/pipe
 		update_icon()
 			if(node1&&node2)
 				var/C = ""
-				switch(color)
+				switch(colour)
 					if ("red") C = "-r"
 					if ("blue") C = "-b"
 					if ("cyan") C = "-c"
@@ -247,17 +247,17 @@ obj/machinery/atmospherics/pipe
 
 	simple/scrubbers
 		name="Scrubbers pipe"
-		color="red"
+		colour="red"
 		icon_state = ""
 
 	simple/supply
 		name="Air supply pipe"
-		color="blue"
+		colour="blue"
 		icon_state = ""
 
 	simple/general
 		name="Pipe"
-		color=""
+		colour=""
 		icon_state = ""
 
 	simple/scrubbers/visible
@@ -709,7 +709,7 @@ obj/machinery/atmospherics/pipe
 		update_icon()
 			if(node1&&node2&&node3)
 				var/C = ""
-				switch(color)
+				switch(colour)
 					if ("red") C = "-r"
 					if ("blue") C = "-b"
 					if ("cyan") C = "-c"
@@ -780,17 +780,17 @@ obj/machinery/atmospherics/pipe
 
 	manifold/scrubbers
 		name="Scrubbers pipe"
-		color="red"
+		colour="red"
 		icon_state = ""
 
 	manifold/supply
 		name="Air supply pipe"
-		color="blue"
+		colour="blue"
 		icon_state = ""
 
 	manifold/general
 		name="Air supply pipe"
-		color="gray"
+		colour="gray"
 		icon_state = ""
 
 	manifold/scrubbers/visible

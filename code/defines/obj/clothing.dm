@@ -5,7 +5,7 @@
 //	var/obj/item/clothing/master = null
 
 	var/see_face = 1.0
-	var/color = null
+	var/colour = null
 
 	var/body_parts_covered = 0 //see setup.dm for appropriate bit flags
 

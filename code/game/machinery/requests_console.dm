@@ -95,9 +95,9 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	if(!src.open)
 		if (src.screen == 0)
 			if (src.newmessagepriority == 1)
-				dat += text("<FONT COLOR='RED'>There are new messages</FONT><BR>")
+				dat += text("<FONT colour='RED'>There are new messages</FONT><BR>")
 			if (src.newmessagepriority == 2)
-				dat += text("<FONT COLOR='RED'><B>NEW PRIORITY MESSAGES</B></FONT><BR>")
+				dat += text("<FONT colour='RED'><B>NEW PRIORITY MESSAGES</B></FONT><BR>")
 			dat += text("<A href='?src=\ref[src];setScreen=[8]'>View Messages</A><BR><BR>")
 
 			dat += text("<A href='?src=\ref[src];setScreen=[1]'>Request Assistance</A><BR>")
@@ -139,10 +139,10 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 					dat += text(")<BR>")
 			dat += text("<BR><A href='?src=\ref[src];setScreen=[0]'>Back</A><BR>")
 		if (src.screen == 6)
-			dat += text("<FONT COLOR='GREEN'>Message sent</FONT><BR><BR>")
+			dat += text("<FONT colour='GREEN'>Message sent</FONT><BR><BR>")
 			dat += text("<A href='?src=\ref[src];setScreen=[0]'>Continue</A><BR>")
 		if (src.screen == 7)
-			dat += text("<FONT COLOR='RED'>An error occurred. </FONT><BR><BR>")
+			dat += text("<FONT colour='RED'>An error occurred. </FONT><BR><BR>")
 			dat += text("<A href='?src=\ref[src];setScreen=[0]'>Continue</A><BR>")
 		if (src.screen == 8)
 			for (var/obj/machinery/requests_console/CONSOLE in allConsoles)
@@ -212,7 +212,7 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 							playsound(CONSOLE.loc, 'twobeep.ogg', 50, 1)
 							for (var/mob/O in hearers(5, CONSOLE.loc))
 								O.show_message(text("\icon[CONSOLE] *The Requests Console beeps: 'PRIORITY Alert in [src.department]'"))
-						CONSOLE.messages += "<B><FONT color='red'>High Priority message from <A href='?src=\ref[CONSOLE];write=[ckey(src.department)]'>[src.department]</A></FONT></B><BR>[message]"
+						CONSOLE.messages += "<B><FONT colour='red'>High Priority message from <A href='?src=\ref[CONSOLE];write=[ckey(src.department)]'>[src.department]</A></FONT></B><BR>[message]"
 					else if(src.priority == "3"
 					) //Not implemanted, but will be
 						if(CONSOLE.newmessagepriority < 3)
@@ -222,7 +222,7 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 							playsound(CONSOLE.loc, 'twobeep.ogg', 50, 1)
 							for (var/mob/O in hearers(7, CONSOLE.loc))
 								O.show_message(text("\icon[CONSOLE] *The Requests Console yells: 'EXTREME PRIORITY alert in [src.department]'"))
-						CONSOLE.messages += "<B><FONT color='red'>Extreme Priority message from [ckey(src.department)]</FONT></B><BR>[message]"
+						CONSOLE.messages += "<B><FONT colour='red'>Extreme Priority message from [ckey(src.department)]</FONT></B><BR>[message]"
 					else							// Normal priority
 						if(CONSOLE.newmessagepriority < 1)
 							CONSOLE.newmessagepriority = 1
@@ -275,11 +275,11 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	if (istype(O, /obj/item/weapon/card/id))
 		if(src.screen == 9)
 			var/obj/item/weapon/card/id/T = O
-			src.msgVerified = text("<font color='green'><b>Verified by [T.registered] ([T.assignment])</b></font>")
+			src.msgVerified = text("<font colour='green'><b>Verified by [T.registered] ([T.assignment])</b></font>")
 			src.updateUsrDialog()
 	if (istype(O, /obj/item/weapon/stamp))
 		if(src.screen == 9)
 			var/obj/item/weapon/stamp/T = O
-			src.msgStamped = text("<font color='blue'><b>Stamped with the [T.name]</b></font>")
+			src.msgStamped = text("<font colour='blue'><b>Stamped with the [T.name]</b></font>")
 			src.updateUsrDialog()
 	return

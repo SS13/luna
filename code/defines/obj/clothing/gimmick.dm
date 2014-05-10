@@ -49,7 +49,7 @@
 	name = "Owl uniform"
 	desc = "Twoooo!"
 	icon_state = "owl"
-	color = "owl"
+	colour = "owl"
 
 /obj/item/clothing/gloves/cyborg
 	desc = "beep boop borp"
@@ -78,7 +78,7 @@
 	name = "Nazi uniform"
 	desc = "SIEG HEIL!"
 	icon_state = "nazi"
-	color = "nazi1"*/ //no direction sprites
+	colour = "nazi1"*/ //no direction sprites
 
 /obj/item/clothing/suit/greatcoat
 	name = "great coat"
@@ -91,7 +91,7 @@
 	name = "Johnny~~"
 	desc = "Johnny~~"
 	icon_state = "johnny"
-	color = "johnny"
+	colour = "johnny"
 
 /obj/item/clothing/suit/johnny_coat
 	name = "Johnny~~"
@@ -105,106 +105,106 @@
 	name = "rainbow"
 	desc = "rainbow"
 	icon_state = "rainbow"
-	color = "rainbow"
+	colour = "rainbow"
 
 /obj/item/clothing/under/cloud
 	name = "cloud"
 	desc = "cloud"
 	icon_state = "cloud"
-	color = "cloud"
+	colour = "cloud"
 
 /*/obj/item/clothing/under/yay
 	name = "yay"
 	desc = "Yay!"
 	icon_state = "yay"
-	color = "yay"*/ // no sprite --errorage
+	colour = "yay"*/ // no sprite --errorage
 
-// UNUSED COLORS
+// UNUSED colourS
 
 /obj/item/clothing/under/psyche
 	name = "psychedelic"
 	desc = "Groovy!"
 	icon_state = "psyche"
-	color = "psyche"
+	colour = "psyche"
 
 /*
 /obj/item/clothing/under/maroon
 	name = "maroon"
 	desc = "maroon"
 	icon_state = "maroon"
-	color = "maroon"*/ // no sprite -- errorage
+	colour = "maroon"*/ // no sprite -- errorage
 
 /obj/item/clothing/under/lightblue
 	name = "lightblue"
 	desc = "lightblue"
 	icon_state = "lightblue"
-	color = "lightblue"
+	colour = "lightblue"
 
 /obj/item/clothing/under/aqua
 	name = "aqua"
 	desc = "aqua"
 	icon_state = "aqua"
-	color = "aqua"
+	colour = "aqua"
 
 /obj/item/clothing/under/purple
 	name = "purple"
 	desc = "purple"
 	icon_state = "purple"
-	color = "purple"
+	colour = "purple"
 
 /obj/item/clothing/under/lightpurple
 	name = "lightpurple"
 	desc = "lightpurple"
 	icon_state = "lightpurple"
-	color = "lightpurple"
+	colour = "lightpurple"
 
 /obj/item/clothing/under/lightgreen
 	name = "lightgreen"
 	desc = "lightgreen"
 	icon_state = "lightgreen"
-	color = "lightgreen"
+	colour = "lightgreen"
 
 /obj/item/clothing/under/lightblue
 	name = "lightblue"
 	desc = "lightblue"
 	icon_state = "lightblue"
-	color = "lightblue"
+	colour = "lightblue"
 
 /obj/item/clothing/under/lightbrown
 	name = "lightbrown"
 	desc = "lightbrown"
 	icon_state = "lightbrown"
-	color = "lightbrown"
+	colour = "lightbrown"
 
 /obj/item/clothing/under/brown
 	name = "brown"
 	desc = "brown"
 	icon_state = "brown"
-	color = "brown"
+	colour = "brown"
 
 /obj/item/clothing/under/yellowgreen
 	name = "yellowgreen"
 	desc = "yellowgreen"
 	icon_state = "yellowgreen"
-	color = "yellowgreen"
+	colour = "yellowgreen"
 
 /obj/item/clothing/under/darkblue
 	name = "darkblue"
 	desc = "darkblue"
 	icon_state = "darkblue"
-	color = "darkblue"
+	colour = "darkblue"
 
 /obj/item/clothing/under/lightred
 	name = "lightred"
 	desc = "lightred"
 	icon_state = "lightred"
-	color = "lightred"
+	colour = "lightred"
 
 /obj/item/clothing/under/darkred
 	name = "darkred"
 	desc = "darkred"
 	icon_state = "darkred"
-	color = "darkred"
+	colour = "darkred"
 
 // STEAMPUNK STATION
 
@@ -219,48 +219,48 @@
 	desc = "A green suit and yellow necktie. Exemplifies authority."
 	icon_state = "green_suit"
 	item_state = "dg_suit"
-	color = "green_suit"
+	colour = "green_suit"
 
 /obj/item/clothing/under/gimmick/rank/head_of_personnel/suit
 	name = "Head of Personnel's Suit"
 	desc = "A teal suit and yellow necktie. An authoritative yet tacky ensemble."
 	icon_state = "teal_suit"
 	item_state = "g_suit"
-	color = "teal_suit"
+	colour = "teal_suit"
 
 /obj/item/clothing/under/suit_jacket
 	name = "Black Suit"
 	desc = "A black suit and red tie. Very formal."
 	icon_state = "black_suit"
 	item_state = "bl_suit"
-	color = "black_suit"
+	colour = "black_suit"
 
 /obj/item/clothing/under/suit_jacket/red
 	name = "Red Suit"
 	desc = "A red suit and blue tie. Somewhat formal."
 	icon_state = "red_suit"
 	item_state = "r_suit"
-	color = "red_suit"
+	colour = "red_suit"
 
 /obj/item/clothing/under/blackskirt
 	name = "Black skirt"
 	desc = "A black skirt, very fancy!"
 	icon_state = "blackskirt"
-	color = "blackskirt"
+	colour = "blackskirt"
 
 /obj/item/clothing/under/schoolgirl
 	name = "schoolgirl uniform"
 	desc = "It's just like one of my Japanese animes!"
 	icon_state = "schoolgirl"
 	item_state = "schoolgirl"
-	color = "schoolgirl"
+	colour = "schoolgirl"
 
 /obj/item/clothing/under/gimmick/rank/police
 	name = "Police Uniform"
 	desc = "Move along, nothing to see here."
 	icon_state = "police"
 	item_state = "b_suit"
-	color = "police"
+	colour = "police"
 
 /obj/item/clothing/head/helmet/bobby
 	name = "Custodian Helmet"
@@ -279,7 +279,7 @@
 	desc = "A set of durable overalls for getting the job done."
 	icon_state = "overalls"
 	item_state = "lb_suit"
-	color = "overalls"
+	colour = "overalls"
 
 /obj/item/weapon/classic_baton
 	name = "police baton"
@@ -295,7 +295,7 @@
 	desc = "Yarr."
 	icon_state = "pirate"
 	item_state = "pirate"
-	color = "pirate"
+	colour = "pirate"
 
 /obj/item/clothing/head/pirate
 	name = "pirate hat"
@@ -327,7 +327,7 @@
 	desc = "For the Motherland!"
 	icon_state = "soviet"
 	item_state = "soviet"
-	color = "soviet"
+	colour = "soviet"
 
 /obj/item/clothing/head/ushanka
 	name = "ushanka"
@@ -341,13 +341,13 @@
 	desc = "Worn by Italian plumbers everywhere.  Probably."
 	icon_state = "mario"
 	item_state = "mario"
-	color = "mario"
+	colour = "mario"
 
 /obj/item/clothing/under/luigi
 	name = "Mario costume"
 	desc = "Player two.  Couldn't you get the first controller?"
 	icon_state = "luigi"
 	item_state = "luigi"
-	color = "luigi"
+	colour = "luigi"
 */
 

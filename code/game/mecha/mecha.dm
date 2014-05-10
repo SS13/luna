@@ -288,7 +288,7 @@
 					while(null in equipment)
 						equipment -= null
 					destr.destroy()
-					src.occupant_message("<font color='red'>The [destr] is destroyed!</font>")
+					src.occupant_message("<font colour='red'>The [destr] is destroyed!</font>")
 					src.log_append_to_last("[destr] is destroyed.",1)
 					if(istype(destr, /obj/item/mecha_parts/mecha_equipment/weapon))
 						src.occupant << sound('weapdestr.ogg',volume=50)
@@ -315,9 +315,9 @@
 	if (user.mutations & 8 && !prob(src.deflect_chance))
 		src.take_damage(15)
 		src.check_for_internal_damage(list(MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST))
-		user.visible_message("<font color='red'><b>[user] hits [src.name], doing some damage.</b></font>", "<font color='red'><b>You hit [src.name] with all your might. The metal creaks and bends.</b></font>")
+		user.visible_message("<font colour='red'><b>[user] hits [src.name], doing some damage.</b></font>", "<font colour='red'><b>You hit [src.name] with all your might. The metal creaks and bends.</b></font>")
 	else
-		user.visible_message("<font color='red'><b>[user] hits [src.name]. Nothing happens</b></font>","<font color='red'><b>You hit [src.name] with no visible effect.</b></font>")
+		user.visible_message("<font colour='red'><b>[user] hits [src.name]. Nothing happens</b></font>","<font colour='red'><b>You hit [src.name] with no visible effect.</b></font>")
 		src.log_append_to_last("Armor saved.")
 	return
 
@@ -819,12 +819,12 @@
 
 /obj/mecha/proc/log_message(message as text,red=null)
 	log.len++
-	log[log.len] = list("time"=world.timeofday,"message"="[red?"<font color='red'>":null][message][red?"</font>":null]")
+	log[log.len] = list("time"=world.timeofday,"message"="[red?"<font colour='red'>":null][message][red?"</font>":null]")
 	return log.len
 
 /obj/mecha/proc/log_append_to_last(message as text,red=null)
 	var/list/last_entry = src.log[src.log.len]
-	last_entry["message"] += "<br>[red?"<font color='red'>":null][message][red?"</font>":null]"
+	last_entry["message"] += "<br>[red?"<font colour='red'>":null][message][red?"</font>":null]"
 	return
 
 
@@ -883,8 +883,8 @@
 				V.show_message("The [W] bounces off [src.name] armor.", 1)
 */
 	else
-		src.occupant_message("<font color='red'><b>[user] hits [src] with [W].</b></font>")
-		user.visible_message("<font color='red'><b>[user] hits [src] with [W].</b></font>", "<font color='red'><b>You hit [src] with [W].</b></font>")
+		src.occupant_message("<font colour='red'><b>[user] hits [src] with [W].</b></font>")
+		user.visible_message("<font colour='red'><b>[user] hits [src] with [W].</b></font>", "<font colour='red'><b>You hit [src] with [W].</b></font>")
 		src.take_damage(W.force,W.damtype)
 		src.check_for_internal_damage(list(MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST))
 	return
@@ -1008,8 +1008,8 @@
 					V.show_message("The [W] bounces off [src.name] armor.", 1)
 */
 		else
-			src.occupant_message("<font color='red'><b>[user] hits [src] with [W].</b></font>")
-			user.visible_message("<font color='red'><b>[user] hits [src] with [W].</b></font>", "<font color='red'><b>You hit [src] with [W].</b></font>")
+			src.occupant_message("<font colour='red'><b>[user] hits [src] with [W].</b></font>")
+			user.visible_message("<font colour='red'><b>[user] hits [src] with [W].</b></font>", "<font colour='red'><b>You hit [src] with [W].</b></font>")
 			src.take_damage(W.force,W.damtype)
 			src.check_for_internal_damage(list(MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST))
 */
@@ -1020,11 +1020,11 @@
 	var/output = {"<html>
 						<head><title>[src.name] data</title>
 						<style>
-						body {color: #00ff00; background: #000000; font: 13px 'Courier', monospace;}
-						hr {border: 1px solid #0f0; color: #0f0; background-color: #0f0;}
+						body {colour: #00ff00; background: #000000; font: 13px 'Courier', monospace;}
+						hr {border: 1px solid #0f0; colour: #0f0; background-colour: #0f0;}
 						.wr {margin-bottom: 5px;}
 						.header {cursor:pointer;}
-						.open, .closed {background: #32CD32; color:#000; padding:1px 2px;}
+						.open, .closed {background: #32CD32; colour:#000; padding:1px 2px;}
 						.links a {margin-bottom: 2px;}
 						.visible {display: block;}
 						.hidden {display: none;}
@@ -1061,11 +1061,11 @@
 /obj/mecha/proc/get_stats_part()
 	var/integrity = health/initial(health)*100
 	var/cell_charge = get_charge()
-	var/output = {"[internal_damage&MECHA_INT_FIRE?"<font color='red'><b>INTERNAL FIRE</b></font><br>":null]
-						[internal_damage&MECHA_INT_TEMP_CONTROL?"<font color='red'><b>LIFE SUPPORT SYSTEM MALFUNCTION</b></font><br>":null]
-						[internal_damage&MECHA_INT_TANK_BREACH?"<font color='red'><b>GAS TANK BREACH</b></font><br>":null]
-						[internal_damage&MECHA_INT_CONTROL_LOST?"<font color='red'><b>COORDINATION SYSTEM CALIBRATION FAILURE</b></font> - <a href='?src=\ref[src];repair_int_control_lost=1'>Recalibrate</a><br>":null]
-						[integrity<30?"<font color='red'><b>DAMAGE LEVEL CRITICAL</b></font><br>":null]
+	var/output = {"[internal_damage&MECHA_INT_FIRE?"<font colour='red'><b>INTERNAL FIRE</b></font><br>":null]
+						[internal_damage&MECHA_INT_TEMP_CONTROL?"<font colour='red'><b>LIFE SUPPORT SYSTEM MALFUNCTION</b></font><br>":null]
+						[internal_damage&MECHA_INT_TANK_BREACH?"<font colour='red'><b>GAS TANK BREACH</b></font><br>":null]
+						[internal_damage&MECHA_INT_CONTROL_LOST?"<font colour='red'><b>COORDINATION SYSTEM CALIBRATION FAILURE</b></font> - <a href='?src=\ref[src];repair_int_control_lost=1'>Recalibrate</a><br>":null]
+						[integrity<30?"<font colour='red'><b>DAMAGE LEVEL CRITICAL</b></font><br>":null]
 						<b>Integrity: </b> [integrity]%<br>
 						<b>Powercell charge: </b>[isnull(cell_charge)?"No powercell installed":"[cell.percent()]%"]<br>
 						<b>Air source: </b>[use_internal_tank?"Internal Airtank":"Environment"]<br>
@@ -1154,10 +1154,10 @@
 		if(do_after(100))
 			if(T == src.loc)
 				src.internal_damage &= ~MECHA_INT_CONTROL_LOST
-				src.occupant_message("<font color='blue'>Recalibration successful.</font>")
+				src.occupant_message("<font colour='blue'>Recalibration successful.</font>")
 				src.log_message("Recalibration of coordination system finished with 0 errors.")
 			else
-				src.occupant_message("<font color='red'>Recalibration failed.</font>")
+				src.occupant_message("<font colour='red'>Recalibration failed.</font>")
 				src.log_message("Recalibration of coordination system failed with 1 error.",1)
 	if(href_list["select_equip"])
 		var/obj/item/mecha_parts/mecha_equipment/equip = locate(href_list["select_equip"])
@@ -1276,7 +1276,7 @@
 		var/a_name = get_access_desc(a)
 		if(!a_name) continue //there's some strange access without a name
 		output += "[a_name] - <a href='?src=\ref[src];add_req_access=[a];user=\ref[user];id_card=\ref[id_card]'>Add</a><br>"
-	output += "<hr><a href='?src=\ref[src];finish_req_access=1;user=\ref[user]'>Finish</a> <font color='red'>(Warning! The ID upload panel will be locked. It can be unlocked only through Exosuit Interface.)</font>"
+	output += "<hr><a href='?src=\ref[src];finish_req_access=1;user=\ref[user]'>Finish</a> <font colour='red'>(Warning! The ID upload panel will be locked. It can be unlocked only through Exosuit Interface.)</font>"
 	output += "</body></html>"
 	user << browse(output, "window=exosuit_add_access")
 	onclose(user, "exosuit_add_access")
@@ -1320,7 +1320,7 @@
 				mecha.internal_damage |= MECHA_INT_TANK_BREACH
 			if(!(mecha.internal_damage & MECHA_INT_TEMP_CONTROL) && prob(5))
 				mecha.internal_damage &= ~MECHA_INT_FIRE
-				mecha.occupant_message("<font color='blue'><b>Internal fire extinquished.</b></font>")
+				mecha.occupant_message("<font colour='blue'><b>Internal fire extinquished.</b></font>")
 			if(int_tank_air && int_tank_air.volume>0) //heat the air_contents
 				int_tank_air.temperature = min(6000+T0C, int_tank_air.temperature+rand(10,15))
 				if(int_tank_air.temperature>mecha.max_temperature/2)//we assume that the tank contents include mecha pilot compartment.

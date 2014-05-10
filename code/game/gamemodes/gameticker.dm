@@ -21,7 +21,7 @@ var/global/datum/controller/gameticker/ticker
 	set background = 1
 
 	pregame_timeleft = 60
-	world << "<B><FONT color='blue'>Welcome to the pre-game lobby!</FONT></B>"
+	world << "<B><FONT colour='blue'>Welcome to the pre-game lobby!</FONT></B>"
 	world << "Please, setup your character and select ready. Game will start in [pregame_timeleft] seconds"
 
 	while(current_state == GAME_STATE_PREGAME)
@@ -30,7 +30,7 @@ var/global/datum/controller/gameticker/ticker
 		else
 			sleep(10)
 			pregame_timeleft--
- 
+
 		if(pregame_timeleft <= 0)
 			current_state = GAME_STATE_SETTING_UP
 
@@ -93,7 +93,7 @@ var/global/datum/controller/gameticker/ticker
 				del(S)
 
 		//Start master_controller.process()
-		world << "<FONT color='blue'><B>Enjoy the game!</B></FONT>"
+		world << "<FONT colour='blue'><B>Enjoy the game!</B></FONT>"
 		spawn(-1)
 			world << sound('welcome.ogg') // Skie
 

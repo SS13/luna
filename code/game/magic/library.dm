@@ -279,9 +279,9 @@
 				modedesc = "ERROR"
 		user << " - Mode [mode] : [modedesc]"
 		if(src.computer)
-			user << "<font color=green>Computer has been associated with this unit.</font>"
+			user << "<font colour=green>Computer has been associated with this unit.</font>"
 		else
-			user << "<font color=red>No associated computer found. Only local scans will function properly.</font>"
+			user << "<font colour=red>No associated computer found. Only local scans will function properly.</font>"
 		user << "\n"
 
 
@@ -335,9 +335,9 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 			var/DBConnection/dbcon = new()
 			dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 			if(!dbcon.IsConnected())
-				dat += "<font color=red><b>ERROR</b>: Unable to contact External Archive. Please contact your system administrator for assistance.</font><BR>"
+				dat += "<font colour=red><b>ERROR</b>: Unable to contact External Archive. Please contact your system administrator for assistance.</font><BR>"
 			else if(!SQLquery)
-				dat += "<font color=red><b>ERROR</b>: Malformed search request. Please contact your system administrator for assistance.</font><BR>"
+				dat += "<font colour=red><b>ERROR</b>: Malformed search request. Please contact your system administrator for assistance.</font><BR>"
 			else
 				dat += "<table>"
 				dat += "<tr><td>AUTHOR</td><td>TITLE</td><td>CATEGORY</td><td>SS<sup>13</sup>BN</td></tr>"
@@ -432,7 +432,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 				dat += "<A href='?src=\ref[src];switchscreen=7'>7. Access the Forbidden Lore Vault</A><BR>"
 			if(src.arcanecheckout)
 				new /obj/item/weapon/tome(src.loc)
-				user << "<font color=red>Your sanity barely endures the seconds spent in the vault's browsing window. The only thing to remind you of this when you stop browsing is a dusty old tome sitting on the desk. You don't really remember printing it.</font>"
+				user << "<font colour=red>Your sanity barely endures the seconds spent in the vault's browsing window. The only thing to remind you of this when you stop browsing is a dusty old tome sitting on the desk. You don't really remember printing it.</font>"
 				for (var/mob/V in hearers(src))
 					V.show_message("[usr] stares at the blank screen for a few moments, his expression frozen in fear. When he finally awakens from it, he looks a lot older.", 2)
 				src.arcanecheckout = 0
@@ -454,7 +454,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 				//timedue *= 10
 				timedue /= 600
 				if(timedue <= 0)
-					timedue = "<font color=red><b>(OVERDUE)</b> [timedue]</font>"
+					timedue = "<font colour=red><b>(OVERDUE)</b> [timedue]</font>"
 				else
 					timedue = round(timedue)
 				dat += "\"[b.bookname]\", Checked out to: [b.mobname]<BR>--- Taken: [timetaken] minutes ago, Due: in [timedue] minutes<BR>"
@@ -477,7 +477,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 			var/DBConnection/dbcon = new()
 			dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 			if(!dbcon.IsConnected())
-				dat += "<font color=red><b>ERROR</b>: Unable to contact External Archive. Please contact your system administrator for assistance.</font>"
+				dat += "<font colour=red><b>ERROR</b>: Unable to contact External Archive. Please contact your system administrator for assistance.</font>"
 			else
 				dat += "<A href='?src=\ref[src];orderbyid=1'>(Order book by SS<sup>13</sup>BN)</A><BR><BR>"
 				dat += "<table>"
@@ -502,9 +502,9 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 					scanner = S
 					break
 			if(!scanner)
-				dat += "<FONT color=red>No scanner found within wireless network range.</FONT><BR>"
+				dat += "<FONT colour=red>No scanner found within wireless network range.</FONT><BR>"
 			else if(!scanner.cache)
-				dat += "<FONT color=red>No data found in scanner memory.</FONT><BR>"
+				dat += "<FONT colour=red>No data found in scanner memory.</FONT><BR>"
 			else
 				dat += "<TT>Data marked for upload...</TT><BR>"
 				dat += "<TT>Title: </TT>[scanner.cache.name]<BR>"
@@ -681,7 +681,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 	usr.machine = src
 	var/dat = "<HEAD><TITLE>Scanner Control Interface</TITLE></HEAD><BODY>\n" // <META HTTP-EQUIV='Refresh' CONTENT='10'>
 	if(cache)
-		dat += "<FONT color=#005500>Data stored in memory.</FONT><BR>"
+		dat += "<FONT colour=#005500>Data stored in memory.</FONT><BR>"
 	else
 		dat += "No data stored in memory.<BR>"
 	dat += "<A href='?src=\ref[src];scan=1'>\[Scan\]</A>"

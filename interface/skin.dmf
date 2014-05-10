@@ -44,12 +44,28 @@ macro "macro"
 		command = ".options"
 		is-disabled = false
 	elem 
+		name = "F2"
+		command = "ooc"
+		is-disabled = false
+	elem 
 		name = "F2+REP"
 		command = ".screenshot auto"
 		is-disabled = false
 	elem 
 		name = "SHIFT+F2+REP"
 		command = ".screenshot"
+		is-disabled = false
+	elem 
+		name = "F3"
+		command = "say"
+		is-disabled = false
+	elem 
+		name = "F4"
+		command = "me"
+		is-disabled = false
+	elem 
+		name = "F5"
+		command = "asay"
 		is-disabled = false
 
 
@@ -193,6 +209,7 @@ window "mainwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "pos;size;is-minimized;is-maximized"
+		on-size = ""
 		title = "Space Station 13"
 		titlebar = true
 		statusbar = true
@@ -231,6 +248,7 @@ window "mainwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "splitter"
+		on-size = ""
 		left = ""
 		right = "rpane"
 		is-vert = true
@@ -256,6 +274,7 @@ window "mainwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "command"
+		on-size = ""
 		command = ""
 		multi-line = false
 		is-password = false
@@ -279,6 +298,7 @@ window "mainwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "is-checked"
+		on-size = ""
 		text = "Chat"
 		image = ""
 		command = ".winset \"saybutton.is-checked=true?input.command=\"!say \\\"\" macrobutton.is-checked=false:input.command=\""
@@ -306,6 +326,7 @@ window "mainwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "is-checked"
+		on-size = ""
 		text = "Alt"
 		image = ""
 		command = ".winset \"macrobutton.is-checked=true?input.command=\"!.alt \" saybutton.is-checked=false:input.command=\""
@@ -333,6 +354,7 @@ window "mainwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "is-checked"
+		on-size = ""
 		text = "Host..."
 		image = ""
 		command = ".host"
@@ -362,6 +384,7 @@ window "mapwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "pos;size;is-minimized;is-maximized"
+		on-size = ""
 		title = ""
 		titlebar = false
 		statusbar = false
@@ -400,10 +423,14 @@ window "mapwindow"
 		drop-zone = true
 		right-click = false
 		saved-params = "icon-size"
+		on-size = ""
 		icon-size = 0
 		text-mode = false
+		letterbox = true
+		zoom = 0
 		on-show = ".winset\"mainwindow.mainvsplit.left=mapwindow\""
 		on-hide = ".winset\"mainwindow.mainvsplit.left=\""
+		style = ""
 
 window "outputwindow"
 	elem "outputwindow"
@@ -425,6 +452,7 @@ window "outputwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "pos;size;is-minimized;is-maximized"
+		on-size = ""
 		title = ""
 		titlebar = false
 		statusbar = false
@@ -463,6 +491,7 @@ window "outputwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "max-lines"
+		on-size = ""
 		link-color = #0000ff
 		visited-color = #ff00ff
 		style = ".system {color:#ff0000;}"
@@ -490,6 +519,7 @@ window "rpane"
 		drop-zone = false
 		right-click = false
 		saved-params = "pos;size;is-minimized;is-maximized"
+		on-size = ""
 		title = ""
 		titlebar = true
 		statusbar = true
@@ -528,6 +558,7 @@ window "rpane"
 		drop-zone = false
 		right-click = false
 		saved-params = "splitter"
+		on-size = ""
 		left = ""
 		right = "outputwindow"
 		is-vert = false
@@ -553,6 +584,7 @@ window "rpane"
 		drop-zone = false
 		right-click = false
 		saved-params = "is-checked"
+		on-size = ""
 		text = "Text"
 		image = ""
 		command = ".winset \"rpanewindow.left=;\""
@@ -580,6 +612,7 @@ window "rpane"
 		drop-zone = false
 		right-click = false
 		saved-params = "is-checked"
+		on-size = ""
 		text = "Browser"
 		image = ""
 		command = ".winset \"rpanewindow.left=browserwindow\""
@@ -607,6 +640,7 @@ window "rpane"
 		drop-zone = false
 		right-click = false
 		saved-params = "is-checked"
+		on-size = ""
 		text = "Info"
 		image = ""
 		command = ".winset \"rpanewindow.left=infowindow\""
@@ -636,6 +670,7 @@ window "browserwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "pos;size;is-minimized;is-maximized"
+		on-size = ""
 		title = "Browser"
 		titlebar = true
 		statusbar = true
@@ -674,6 +709,7 @@ window "browserwindow"
 		drop-zone = false
 		right-click = false
 		saved-params = ""
+		on-size = ""
 		show-history = true
 		show-url = false
 		auto-format = true
@@ -701,6 +737,7 @@ window "infowindow"
 		drop-zone = false
 		right-click = false
 		saved-params = "pos;size;is-minimized;is-maximized"
+		on-size = ""
 		title = "Info"
 		titlebar = true
 		statusbar = true
@@ -739,6 +776,7 @@ window "infowindow"
 		drop-zone = true
 		right-click = false
 		saved-params = ""
+		on-size = ""
 		highlight-color = #00aa00
 		tab-text-color = #000000
 		tab-background-color = none
@@ -750,4 +788,6 @@ window "infowindow"
 		on-show = ".winset\"rpane.infob.is-visible=true;rpane.browseb.is-visible=true?rpane.infob.pos=130,0:rpane.infob.pos=65,0 rpane.textb.is-visible=true rpane.infob.is-checked=true rpane.rpanewindow.pos=0,30 rpane.rpanewindow.size=0x0 rpane.rpanewindow.left=infowindow\""
 		on-hide = ".winset\"rpane.infob.is-visible=false;rpane.browseb.is-visible=true?rpane.browseb.is-checked=true rpane.rpanewindow.left=browserwindow:rpane.textb.is-visible=false rpane.rpanewindow.pos=0,0 rpane.rpanewindow.size=0x0 rpane.rpanewindow.left=\""
 		on-tab = ""
+		prefix-color = none
+		suffix-color = none
 

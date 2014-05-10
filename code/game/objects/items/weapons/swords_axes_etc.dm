@@ -14,7 +14,7 @@ STUN BATON
 	..()
 
 /obj/item/weapon/sword/New()
-	color = pick("red","blue","green","purple")
+	colour = pick("red","blue","green","purple")
 
 /obj/item/weapon/sword/attack_self(mob/living/user as mob)
 	if ((user.mutations & 16) && prob(50))
@@ -27,7 +27,7 @@ STUN BATON
 		if(istype(src,/obj/item/weapon/sword/pirate))
 			src.icon_state = "cutlass1"
 		else
-			src.icon_state = "sword[color]"
+			src.icon_state = "sword[colour]"
 		src.w_class = 4
 		playsound(user, 'saberon.ogg', 50, 1)
 	else
@@ -44,11 +44,11 @@ STUN BATON
 
 /obj/item/weapon/sword/green
 	New()
-		color = "green"
+		colour = "green"
 
 /obj/item/weapon/sword/red
 	New()
-		color = "red"
+		colour = "red"
 
 
 // BLADE

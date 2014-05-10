@@ -112,8 +112,8 @@ var/list/sacrificed = list()
 				M.visible_message("\red [M] writhes in pain as the markings below him glow a bloody red.", \
 				"\red AAAAAAHHHH!.", \
 				"\red You hear an anguished scream.")
-				M << "<font color=\"purple\"><b><i>Your blood pulses. Your head throbs. The world goes red. All at once you are aware of a horrible, horrible truth. The veil of reality has been ripped away and in the festering wound left behind something sinister takes root.</b></i></font>"
-				M << "<font color=\"purple\"><b><i>Assist your new compatriots in their dark dealings. Their goal is yours, and yours is theirs. You serve the Dark One above all else. Bring It back.</b></i></font>"
+				M << "<font colour=\"purple\"><b><i>Your blood pulses. Your head throbs. The world goes red. All at once you are aware of a horrible, horrible truth. The veil of reality has been ripped away and in the festering wound left behind something sinister takes root.</b></i></font>"
+				M << "<font colour=\"purple\"><b><i>Assist your new compatriots in their dark dealings. Their goal is yours, and yours is theirs. You serve the Dark One above all else. Bring It back.</b></i></font>"
 				return
 			return fizzle()
 
@@ -238,7 +238,7 @@ var/list/sacrificed = list()
 				if (corpse_is_target)
 					usr << "\red The Geometer of blood wants this mortal for himself."
 				return fizzle()
-			
+
 
 			var/sacrifice_is_target = 0
 			find_sacrifice:
@@ -258,12 +258,12 @@ var/list/sacrificed = list()
 				else
 					usr << "\red You need a dead corpse as source of energy to put soul in new body."
 				return fizzle()
-			
+
 			for(var/mob/dead/observer/O in src.loc)
 				if(!O.client)
 					continue
 				ghost = O
-				
+
 			if (!ghost)
 				usr << "\red You do not feel an ethernal immaterial soul here."
 				return fizzle()
@@ -306,8 +306,8 @@ var/list/sacrificed = list()
 				ticker.mode:add_cultist(body_to_sacrifice.mind)
 			else
 				ticker.mode.cult+=body_to_sacrifice.mind
-			corpse_to_raise << "<font color=\"purple\"><b><i>Your blood pulses. Your head throbs. The world goes red. All at once you are aware of a horrible, horrible truth. The veil of reality has been ripped away and in the festering wound left behind something sinister takes root.</b></i></font>"
-			corpse_to_raise << "<font color=\"purple\"><b><i>Assist your new compatriots in their dark dealings. Their goal is yours, and yours is theirs. You serve the Dark One above all else. Bring It back.</b></i></font>"
+			corpse_to_raise << "<font colour=\"purple\"><b><i>Your blood pulses. Your head throbs. The world goes red. All at once you are aware of a horrible, horrible truth. The veil of reality has been ripped away and in the festering wound left behind something sinister takes root.</b></i></font>"
+			corpse_to_raise << "<font colour=\"purple\"><b><i>Assist your new compatriots in their dark dealings. Their goal is yours, and yours is theirs. You serve the Dark One above all else. Bring It back.</b></i></font>"
 			return
 
 
@@ -379,7 +379,7 @@ var/list/sacrificed = list()
 				break
 			if(!ghost)
 				return this_rune.fizzle()
-			
+
 			usr.say("Gal'h'rfikk harfrandid mud'gib!")
 			var/mob/living/carbon/human/dummy/D = new(this_rune.loc)
 			usr.visible_message("\red A shape forms in the center of the rune. A shape of... a man.", \
@@ -407,8 +407,8 @@ var/list/sacrificed = list()
 				ticker.mode:add_cultist(D.mind)
 			else
 				ticker.mode.cult+=D.mind
-			D << "<font color=\"purple\"><b><i>Your blood pulses. Your head throbs. The world goes red. All at once you are aware of a horrible, horrible truth. The veil of reality has been ripped away and in the festering wound left behind something sinister takes root.</b></i></font>"
-			D << "<font color=\"purple\"><b><i>Assist your new compatriots in their dark dealings. Their goal is yours, and yours is theirs. You serve the Dark One above all else. Bring It back.</b></i></font>"
+			D << "<font colour=\"purple\"><b><i>Your blood pulses. Your head throbs. The world goes red. All at once you are aware of a horrible, horrible truth. The veil of reality has been ripped away and in the festering wound left behind something sinister takes root.</b></i></font>"
+			D << "<font colour=\"purple\"><b><i>Assist your new compatriots in their dark dealings. Their goal is yours, and yours is theirs. You serve the Dark One above all else. Bring It back.</b></i></font>"
 			var/mob/living/user = usr
 			while(this_rune && user && user.stat==0 && user.client && user.loc==this_rune.loc)
 				user.take_organ_damage(1, 0)
@@ -440,7 +440,7 @@ var/list/sacrificed = list()
 				if (unsuitable_newtalisman)
 					usr << "\red The blank is tainted. It is unsuitable."
 				return fizzle()
-		
+
 			var/obj/rune/imbued_from
 			var/obj/item/weapon/paper/talisman/T
 			for(var/obj/rune/R in orange(1,src))

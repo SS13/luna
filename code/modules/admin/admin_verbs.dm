@@ -29,7 +29,7 @@
 
 			// Settings
 
-			src.verbs += /client/proc/colorooc // -- Urist
+			src.verbs += /client/proc/colourooc // -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -171,7 +171,7 @@
 			src.holder.level = 5
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -304,7 +304,7 @@
 			src.holder.level = 4
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -460,7 +460,7 @@
 				src.verbs += /client/proc/cmd_admin_drop_everything
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -606,7 +606,7 @@
 				src.verbs += /client/proc/jumptomob
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			//src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			//src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			//src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -748,7 +748,7 @@
 				// Admin game intrusion
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			//src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			//src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			//src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -873,7 +873,7 @@
 			src.holder.level = 0
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			//src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			//src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			//src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -1029,7 +1029,7 @@
 	src.verbs -= /client/proc/unstealthadmin
 
 	// Settings
-	src.verbs -= /client/proc/colorooc // -- Urist
+	src.verbs -= /client/proc/colourooc // -- Urist
 	src.verbs -= /obj/admins/proc/adjump				//toggle admin jumping
 	src.verbs -= /obj/admins/proc/adrev					//toggle admin revives
 	src.verbs -= /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -1284,10 +1284,10 @@
 		log_admin("[key_name(usr)] has used boom boom boom shake the room")
 		message_admins("[key_name_admin(usr)] has used boom boom boom shake the room", 1)
 
-/client/proc/colorooc()
+/client/proc/colourooc()
 	set category = "Fun"
-	set name = "OOC Text Color"
-	src.ooccolor = input(src, "Please select your OOC colour.", "OOC colour") as color
+	set name = "OOC Text colour"
+	src.ooccolour = input(src, "Please select your OOC colour.", "OOC colour") as color
 	return
 
 /client/proc/stealth()
@@ -1445,7 +1445,7 @@
 	switch (src.holder.rank)
 		if ("Game Master") //Former Host
 			// Settings
-			//src.verbs += /client/proc/colorooc // -- Urist
+			//src.verbs += /client/proc/colourooc // -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -1476,7 +1476,7 @@
 
 		if ("Game Admin") //Former Coder
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -1507,7 +1507,7 @@
 
 		if ("Badmin") //Former Shit Guy
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -1545,7 +1545,7 @@
 				src.verbs += /obj/admins/proc/toggletraitorscaling
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -1583,7 +1583,7 @@
 				src.verbs += /obj/admins/proc/toggletraitorscaling
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -1609,7 +1609,7 @@
 				src.verbs += /obj/admins/proc/toggleoocdead         //toggle ooc for dead/unc
 
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			//src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			//src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			//src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
@@ -1640,7 +1640,7 @@
 
 		if ("Moderator") //Former Moderator
 			// Settings
-			//src.verbs += /client/proc/colorooc 				// -- Urist
+			//src.verbs += /client/proc/colourooc 				// -- Urist
 			//src.verbs += /obj/admins/proc/adjump				//toggle admin jumping
 			//src.verbs += /obj/admins/proc/adrev					//toggle admin revives
 			//src.verbs += /obj/admins/proc/adspawn				//toggle admin item spawning

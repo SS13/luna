@@ -200,7 +200,7 @@ Pod/Blast Doors computer
 				accesses += "<b>[get_region_accesses_name(i)]:</b> "
 				for(var/A in get_region_accesses(i))
 					if(A in src.modify.access)
-						accesses += "<a href='?src=\ref[src];access=[A];allowed=0'><font color=\"red\">[dd_replacetext(get_access_desc(A), " ", "&nbsp")]</font></a> "
+						accesses += "<a href='?src=\ref[src];access=[A];allowed=0'><font colour=\"red\">[dd_replacetext(get_access_desc(A), " ", "&nbsp")]</font></a> "
 					else
 						accesses += "<a href='?src=\ref[src];access=[A];allowed=1'>[dd_replacetext(get_access_desc(A), " ", "&nbsp")]</a> "
 				accesses += "<br>"

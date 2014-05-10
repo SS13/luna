@@ -166,7 +166,7 @@
 			alpha = alpha**0.80
 
 		var/icon/I = icon('beam.dmi')
-		I.MapColors(red,0,0,0, 0,green,0,0, 0,0,blue,0, 0,0,0,alpha, 0,0,0,0)
+		I.Mapcolours(red,0,0,0, 0,green,0,0, 0,0,blue,0, 0,0,0,alpha, 0,0,0,0)
 		icon = I
 
 		beam_icons["[w]"] = I

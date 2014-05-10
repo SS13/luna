@@ -67,9 +67,9 @@
 
 		src.temp = ""
 		if (isnull(src.scanner))
-			src.temp += " <font color=red>SCNR-ERROR</font>"
+			src.temp += " <font colour=red>SCNR-ERROR</font>"
 		if (isnull(src.pod1))
-			src.temp += " <font color=red>POD1-ERROR</font>"
+			src.temp += " <font colour=red>POD1-ERROR</font>"
 		else
 			src.pod1.connected = src
 
@@ -155,7 +155,7 @@
 			dat += "<a href='byond://?src=\ref[src];menu=2'>Back</a><br>"
 
 			if (!src.active_record)
-				dat += "<font color=red>ERROR: Record not found.</font>"
+				dat += "<font colour=red>ERROR: Record not found.</font>"
 			else
 				dat += "<br><font size=1><a href='byond://?src=\ref[src];del_rec=1'>Delete Record</a></font><br>"
 				dat += "<b>Name:</b> [src.active_record.fields["name"]]<br>"
@@ -165,7 +165,7 @@
 				if ((H) && (istype(H)))
 					dat += "<b>Health:</b> [H.sensehealth()] | OXY-BURN-TOX-BRUTE<br>"
 				else
-					dat += "<font color=red>Unable to locate implant.</font><br>"
+					dat += "<font colour=red>Unable to locate implant.</font><br>"
 
 				if (!isnull(src.diskette))
 					dat += "<a href='byond://?src=\ref[src];disk=load'>Load from disk.</a>"
@@ -393,8 +393,8 @@
 //Disk stuff.
 /obj/item/weapon/disk/data/New()
 	..()
-	var/diskcolor = pick(0,1,2)
-	src.icon_state = "datadisk[diskcolor]"
+	var/diskcolour = pick(0,1,2)
+	src.icon_state = "datadisk[diskcolour]"
 
 /obj/item/weapon/disk/data/attack_self(mob/user as mob)
 	src.read_only = !src.read_only

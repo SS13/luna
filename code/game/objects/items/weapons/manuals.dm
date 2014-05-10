@@ -30,60 +30,60 @@
 
 				<h4>   Rods </h4>
 
-				Use <font color='gray'><b>metal</b></font> and click "2x metal rods" (makes two sets of rods)
+				Use <font colour='gray'><b>metal</b></font> and click "2x metal rods" (makes two sets of rods)
 
 				<h4>   Floor tiles </h4>
 
-				Use <font color='gray'><b>metal</b></font> and click "4x floor tiles" (makes 4 floor tiles)
+				Use <font colour='gray'><b>metal</b></font> and click "4x floor tiles" (makes 4 floor tiles)
 
 
 				<h4>   Reinforced Glass </h4>
 
-				Use <font color='gray'><b>rods</b></font> on <font color='blue'><b>glass</b></font>
+				Use <font colour='gray'><b>rods</b></font> on <font colour='blue'><b>glass</b></font>
 
 				<h4>   Reinforced Metal </h4>
 
-				Click the <font color='gray'></b>metal<b></font> in your hand to open the construction panel,
+				Click the <font colour='gray'></b>metal<b></font> in your hand to open the construction panel,
 				<br>Choose 'Reinforced sheets' form the list
 
 				<h3>  Floor </h3>
 
-				Use the <font color="gray"><b>rods</b></font> on <b>space</b>
-				<br>Use the <font color="gray"><b>floor tile</b></font> on <b>space</b> with lattice
-				<br>Use another <font color="gray"><b>floor tile</b></font> on the plating
-				<br>Alternate method - Click on <font color="gray"></b>floor tile</b></font> in hand while on top of an area of <b>space</b>. No need for <font color="gray"><b>rods</b></font> with this method.
+				Use the <font colour="gray"><b>rods</b></font> on <b>space</b>
+				<br>Use the <font colour="gray"><b>floor tile</b></font> on <b>space</b> with lattice
+				<br>Use another <font colour="gray"><b>floor tile</b></font> on the plating
+				<br>Alternate method - Click on <font colour="gray"></b>floor tile</b></font> in hand while on top of an area of <b>space</b>. No need for <font colour="gray"><b>rods</b></font> with this method.
 
 				<h3>  Walls </h3>
 
-				Click the <font color='gray'><b>metal</b></font> in your hand to open the construction panel,
+				Click the <font colour='gray'><b>metal</b></font> in your hand to open the construction panel,
 				<br>Choose 'Build wall girders' form the list
-				<br>Use the remaining 2 sheets of <font color='gray'><b>metal</b></font> on the girders
+				<br>Use the remaining 2 sheets of <font colour='gray'><b>metal</b></font> on the girders
 
 				<h3>  Reinforced walls </h3>
 
-				Click the <font color='gray'><b>metal</b></font> in your hand to open the construction panel,
+				Click the <font colour='gray'><b>metal</b></font> in your hand to open the construction panel,
 				<br>Choose 'Build wall girders' form the list
-				<br>Use the <font color='gray'><b>reinforced metal</b></font> on the girders to reinforce them
-				<br>Use the last <font color='gray'><b>reinforced metal</b></font> sheet reinforced girders to finish the wall
+				<br>Use the <font colour='gray'><b>reinforced metal</b></font> on the girders to reinforce them
+				<br>Use the last <font colour='gray'><b>reinforced metal</b></font> sheet reinforced girders to finish the wall
 
 
 				<h3>  Grille </h3>
 
 				Stand where you wish the grille to be placed
-				<br>Click on the stack of 2 <font color="gray"><b>rods</b></font> with the hand you have them in
+				<br>Click on the stack of 2 <font colour="gray"><b>rods</b></font> with the hand you have them in
 
 				<h3>  Glass panels </h3>
 
 				<h4>   One directional </h4>
 
-				Click the <font color="blue"><b>glass</b></font> pane
+				Click the <font colour="blue"><b>glass</b></font> pane
 				<br>Click the "one direct" button
 				<br>Right-click the new pane and rotate it
 				<br>Use the screwdriver to fasten it down
 
 				<h4>   Full </h4>
 
-				Click the <font color="blue"><b>glass</b></font> pane
+				Click the <font colour="blue"><b>glass</b></font> pane
 				<br>Click the "full" button
 				<br>Use the screwdriver to fasten it down
 
@@ -91,7 +91,7 @@
 
 				<h4>   One directional </h4>
 
-				Click the <font color="blue"><b>reinforced glass</b></font> pane
+				Click the <font colour="blue"><b>reinforced glass</b></font> pane
 				<br>Click the "one direct" button
 				<br>Right-click the new pane and rotate it
 				<br>Screwdriver (Unsecure pane.)
@@ -102,7 +102,7 @@
 
 				<h4>   Full </h4>
 
-				Click the <font color="blue"><b>reinforced glass</b></font> pane
+				Click the <font colour="blue"><b>reinforced glass</b></font> pane
 				<br>Click the "full" button
 				<br>Screwdriver
 				<br>Crowbar
@@ -110,23 +110,23 @@
 
 				<h3>  Hidden Door </h3>
 
-				Click the <font color='gray'><b>metal</b></font> in your hand to open the construction panel,
+				Click the <font colour='gray'><b>metal</b></font> in your hand to open the construction panel,
 				<br>Choose 'Build wall girders' form the list
 				<br>Use crowbar on girders and wait a few seconds for the girders to dislodge.
-				<br>Use the remaining 2 sheets of <font color='gray'><b>metal</b></font> on the girders
+				<br>Use the remaining 2 sheets of <font colour='gray'><b>metal</b></font> on the girders
 
 				To turn a wall into a hidden door, follow the deconstruction guide for the wall type until the final wrenching, and instead proceed from the "Use crowbar on girders" line above.
 
 				<h4>   Reinforced </h4>
 
-				Click the <font color='gray'><b>metal</b></font> in your hand to open the construction panel,
+				Click the <font colour='gray'><b>metal</b></font> in your hand to open the construction panel,
 				<br>Choose 'Build wall girders' form the list
 				<br>Use crowbar on girders and wait a few seconds for the girders to dislodge.
-				<br>Use the <font color='gray'><b>reinforced metal</b></font> on the dislodged girders twice to finish it
+				<br>Use the <font colour='gray'><b>reinforced metal</b></font> on the dislodged girders twice to finish it
 
 				<h3>  APC </h3>
 
-				Use the <font color='gray'><b>metal</b></font> and make an APC Assembly
+				Use the <font colour='gray'><b>metal</b></font> and make an APC Assembly
 				<br>Use the assembly on the wall you want the APC on.
 				<br>Fit it with the wire coil.
 				<br>Fit it with the Power Control Module.
@@ -136,7 +136,7 @@
 
 				<h3>  Airlock </h3>
 
-				Use the <font color='gray'><b>metal</b></font> and make an Airlock Assembly
+				Use the <font colour='gray'><b>metal</b></font> and make an Airlock Assembly
 				<br>Wrench it inplace
 				<br>Add reinforced glass (Only if you wish to make a glass airlock)
 				<br>Add wires
@@ -147,24 +147,24 @@
 
 				<h3>  Computers </h3>
 
-				Use the <font color='gray'><b>metal</b></font> to open the construction panel
+				Use the <font colour='gray'><b>metal</b></font> to open the construction panel
 				<br>Choose Computer frame
 				<br>Wrench it inplace
 				<br>Insert Circuitboard
 				<br>Screwdriver
 				<br>Wires
-				<br><font color='blue'><b>glass</b></font>
+				<br><font colour='blue'><b>glass</b></font>
 				<br>Screwdriver to finish
 
 				<h3>  AI Core </h3>
 
-				Build Frame from 4 <font color='fray'><b>reinforced sheets</b></font>
+				Build Frame from 4 <font colour='fray'><b>reinforced sheets</b></font>
 				<br>Wrench into place
 				<br>Add Circuit board
 				<br>Screwdriver
 				<br>Add wires
 				<br>Add brain (only if you want a NEW AI)
-				<br>Add <font color='blue'><b>reinforced glass</b></font>
+				<br>Add <font colour='blue'><b>reinforced glass</b></font>
 				<br>Screwdriver
 
 				<h2> Deconstruction </h2>
@@ -282,7 +282,7 @@
 					<li>Open the control panel</li>
 					<li>Set the speed to 2</li>
 					<li>Start firing at the singularity generator</li>
-					<li><font color='red'><b>When the singularity reaches a large enough size so it starts moving on it's own set the speed down to 0, but don't shut it off</b></font></li>
+					<li><font colour='red'><b>When the singularity reaches a large enough size so it starts moving on it's own set the speed down to 0, but don't shut it off</b></font></li>
 					<li>Remember to wear a radiation suit when working with this machine... we did tell you that at the start, right?</li>
 				</ol>
 
@@ -462,21 +462,21 @@
 				<p><img src='http://tgstation13.servehttp.com/wiki/images/7/72/Engineers_loadout.png'>
 
 				<p><table cellpadding=3 cellspacing=0 border=1>
-				<tr bgcolor='#ddaa77'>
+				<tr bgcolour='#ddaa77'>
 				<td><b>Container picture</b></td>
 				<td><b>Container name</b></td>
 				<td><b>Contents</b></td>
-				<tr bgcolor='#eeccaa' align='center'>
+				<tr bgcolour='#eeccaa' align='center'>
 				<td><img src='http://tgstation13.servehttp.com/wiki/images/1/17/Eng_toolbelt.PNG'></td>
 				<td><b>Utility belt</b></td>
 				<td><img src='http://tgstation13.servehttp.com/wiki/images/e/e2/Toolbelt.png'></td>
 				</tr>
-				<tr bgcolor='#eeccaa' align='center'>
+				<tr bgcolour='#eeccaa' align='center'>
 				<td><img src='http://tgstation13.servehttp.com/wiki/images/e/eb/Eng_backpack.PNG'></td>
 				<td><b>Backpack</b></td>
 				<td><img src='http://tgstation13.servehttp.com/wiki/images/9/97/Engineers_backpack_contents.png'></td>
 				</tr>
-				<tr bgcolor='#eeccaa' align='center'>
+				<tr bgcolour='#eeccaa' align='center'>
 				<td><img src='http://tgstation13.servehttp.com/wiki/images/f/fc/Eng_box.PNG'></td>
 				<td><b>Box</b></td>
 				<td><img src='http://tgstation13.servehttp.com/wiki/images/b/b1/Engineers_box_contents.PNG'></td>
@@ -582,7 +582,7 @@
 
 				A power problem has made the entire station loose power? Could be station-wide wiring problems or syndicate power sinks. In any case follow these steps:
 				<p>
-				<b>Step one:</b> <b><font color='red'>PANIC!</font></b><br>
+				<b>Step one:</b> <b><font colour='red'>PANIC!</font></b><br>
 				<b>Step two:</b> Get your ass over to engineering! <b>QUICKLY!!!</b><br>
 				<b>Step three:</b> Get to the <b>Area Power Controller</b> which controls the power to the emitters.<br>
 				<b>Step four:</b> Swipe it with your <b>ID card</b> - if it doesn't unlock, continue with step 15.<br>

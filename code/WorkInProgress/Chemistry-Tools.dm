@@ -2453,7 +2453,7 @@
 				if("tequilla")
 					icon_state = "tequillaglass"
 					name = "Glass of Tequilla"
-					desc = "Now all that's missing is the weird colored shades!"
+					desc = "Now all that's missing is the weird coloured shades!"
 				if("rum")
 					icon_state = "rumglass"
 					name = "Glass of Rum"

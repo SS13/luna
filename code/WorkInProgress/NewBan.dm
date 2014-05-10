@@ -7,6 +7,9 @@ var/savefile/Banlist
 	var/id = clientvar.computer_id
 	var/key = clientvar.ckey
 
+	if(!check_whitelist(ckey(key)))
+		return list("reason"="not in whitelist", "desc"="\nIt's ain't you turn.")
+
 	Banlist.cd = "/base"
 	if (Banlist.dir.Find("[key][id]"))
 		Banlist.cd = "[key][id]"
@@ -153,7 +156,7 @@ var/savefile/Banlist
 		dat += text("<tr><td><A href='?src=\ref[src];unbanf=[Banlist["key"]][Banlist["id"]]'>(U)</A><A href='?src=\ref[src];unbane=[Banlist["key"]][Banlist["id"]]'>(E)</A> Key: <B>[Banlist["key"]]</B></td><td> ([Banlist["temp"] ? "[GetExp(Banlist["minutes"]) ? GetExp(Banlist["minutes"]) : "Removal pending" ]" : "Permaban"])</td><td>(By: [Banlist["bannedby"]])</td><td>(Reason: [Banlist["reason"]])</td></tr>")
 
 	dat += "</table>"
-	dat = "<HR><B>Bans:</B> <FONT COLOR=blue>(U) = Unban , (E) = Edit Ban</FONT> - <FONT COLOR=green>([count] Bans)</FONT><HR><table border=1 rules=all frame=void cellspacing=0 cellpadding=3 >[dat]"
+	dat = "<HR><B>Bans:</B> <FONT colour=blue>(U) = Unban , (E) = Edit Ban</FONT> - <FONT colour=green>([count] Bans)</FONT><HR><table border=1 rules=all frame=void cellspacing=0 cellpadding=3 >[dat]"
 	usr << browse(dat, "window=unbanp;size=875x400")
 
 //////////////////////////////////// DEBUG ////////////////////////////////////

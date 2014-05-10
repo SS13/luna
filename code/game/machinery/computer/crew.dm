@@ -80,15 +80,15 @@
 									t += "<tr><td>[H.wear_id.name]</td><td>"
 								else
 									t += "<tr><td>Unknown:</td><td>"
-								t+= "[H.stat > 1 ? "<font color=red>Deceased</font>" : "Living"]</td><td>Not Available</td></tr>"
+								t+= "[H.stat > 1 ? "<font colour=red>Deceased</font>" : "Living"]</td><td>Not Available</td></tr>"
 							if(2)
 								if(H.wear_id)
 									t += "<tr><td>[H.wear_id.name]</td><td>"
 								else
 									t += "<tr><td>Unknown:</td><td>"
-								t += "[H.stat > 1 ? "<font color=red>Deceased</font>" : "Living"], [dam1] - [dam2] - [dam3] - [dam4]</td><td>Not Available</td></tr>"
+								t += "[H.stat > 1 ? "<font colour=red>Deceased</font>" : "Living"], [dam1] - [dam2] - [dam3] - [dam4]</td><td>Not Available</td></tr>"
 							if(3)
-								t += "<tr><td>[H.name]</td><td>[H.stat > 1 ? "<font color=red>Deceased</font>" : "Living"], [dam2] - [dam2] - [dam3] - [dam4]</td><td>[get_area(H)] ([H.x], [H.y])</td></tr>"
+								t += "<tr><td>[H.name]</td><td>[H.stat > 1 ? "<font colour=red>Deceased</font>" : "Living"], [dam2] - [dam2] - [dam3] - [dam4]</td><td>[get_area(H)] ([H.x], [H.y])</td></tr>"
 			t += "</table>"
 			t += "</FONT></PRE></TT>"
 			user << browse(t, "window=crewcomp;size=500x800")
