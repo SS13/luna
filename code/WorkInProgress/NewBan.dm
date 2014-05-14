@@ -201,11 +201,11 @@ var/list/bwhitelist
 	log_admin("Loading whitelist")
 	bwhitelist = list()
 	var/DBConnection/dbcon1 = new()
-	dbcon1.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+	dbcon1.Connect("dbi:mysql:forum2:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 	if(!dbcon1.IsConnected())
 		log_admin("Failed to load bwhitelist. Error: [dbcon1.ErrorMsg()]")
 		return
-	var/DBQuery/query = dbcon1.NewQuery("SELECT byond FROM whitelist ORDER BY byond ASC")
+	var/DBQuery/query = dbcon1.NewQuery("SELECT byond FROM Z_whitelist ORDER BY byond ASC")
 	query.Execute()
 	while(query.NextRow())
 		bwhitelist += "[query.item[1]]"
