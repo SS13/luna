@@ -85,7 +85,7 @@
 	src.load_motd()
 	src.load_rules()
 	src.load_admins()
-	load_bwhitelist()
+	src.load_whitelist()
 
 	src.update_status()
 

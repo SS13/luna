@@ -1,6 +1,5 @@
 var/CMinutes = null
 var/savefile/Banlist
-var/list/bwhitelist
 
 
 /proc/CheckBan(var/client/clientvar)
@@ -8,9 +7,8 @@ var/list/bwhitelist
 	var/id = clientvar.computer_id
 	var/key = clientvar.ckey
 
-	//whitelist
-	if(!check_bwhitelist(ckey(key)))
-		return list("reason"="not in whitelist", "desc"="\nYou are not in whitelist.")
+	if(!check_whitelist(ckey(key)))
+		return list("reason"="not in whitelist", "desc"="\nIt's ain't you turn.")
 
 	Banlist.cd = "/base"
 	if (Banlist.dir.Find("[key][id]"))
@@ -196,31 +194,4 @@ var/list/bwhitelist
 	Banlist.cd = "/base"
 	for (var/A in Banlist.dir)
 		RemoveBan(A)
-
-/proc/load_bwhitelist()
-	log_admin("Loading whitelist")
-	bwhitelist = list()
-	var/DBConnection/dbcon1 = new()
-	dbcon1.Connect("dbi:mysql:forum2:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
-	if(!dbcon1.IsConnected())
-		log_admin("Failed to load bwhitelist. Error: [dbcon1.ErrorMsg()]")
-		return
-	var/DBQuery/query = dbcon1.NewQuery("SELECT byond FROM Z_whitelist ORDER BY byond ASC")
-	query.Execute()
-	while(query.NextRow())
-		bwhitelist += "[query.item[1]]"
-	if (bwhitelist==list(  ))
-		log_admin("Failed to load bwhitelist or its empty")
-		return
-	dbcon1.Disconnect()
-
-/proc/check_bwhitelist(var/K)
-	if (!bwhitelist)
-		load_bwhitelist()
-		if (!bwhitelist)
-			return 0
-	if (K in bwhitelist)
-		return 1
-	return 0
-
 
