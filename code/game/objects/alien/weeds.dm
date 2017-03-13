@@ -138,6 +138,15 @@
 			else
 				del(B)
 
+	for(var/mob/living/carbon/alien/h in src.loc)
+		if(health >= 100)
+			if(h.toxloss <= h.toxgainmax - h.toxgain)
+				h.toxloss += h.toxgain
+			else
+				h.toxloss = h.toxgainmax
+		else
+			h.bruteloss -= 5
+			h.fireloss -= 5
 	/*
 	for(var/mob/living/carbon/human/h in src.loc)
 		h.hallucination += 10
